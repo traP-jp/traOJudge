@@ -22,7 +22,7 @@ thiserror = "1.0.63"
 validator = { version = "0.14.0", features = ["derive"] }
 bcrypt = "0.15"
 async-session = "3.0.0"
-sqlx = { version = "0.7", features = [ "mysql", "runtime-async-std-native-tls", "migrate" ] }
+sqlx = { version = "0.7", features = [ "mysql", "runtime-async-std-native-tls", "migrate", "chrono"] }
 
 [dependencies.async-sqlx-session]
 git = "https://github.com/maxcountryman/async-sqlx-session.git"

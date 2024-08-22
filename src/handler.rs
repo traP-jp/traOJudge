@@ -2,12 +2,12 @@ use axum::{routing::get, Router};
 
 use crate::repository::Repository;
 
-async fn pong() -> &'static str {
-    "pong"
-}
+mod users;
 
 pub fn make_router(app_state: Repository) -> Router {
-    let root_router = Router::new().route("/ping", get(pong));
+    let users_router = Router::new().route("/me", get(users::get_me));
 
-    Router::new().nest("/", root_router).with_state(app_state)
+    Router::new()
+        .nest("/users", users_router)
+        .with_state(app_state)
 }

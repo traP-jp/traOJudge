@@ -4,6 +4,9 @@ use sqlx::{
     MySqlPool,
 };
 
+mod users;
+mod users_session;
+
 #[derive(Clone)]
 pub struct Repository {
     pool: MySqlPool,
