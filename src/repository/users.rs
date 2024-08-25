@@ -12,7 +12,6 @@ pub enum UserRole {
     admin = 2,
 }
 
-
 #[derive(Debug, FromRow, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
