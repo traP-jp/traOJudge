@@ -20,6 +20,12 @@ CREATE TABLE IF NOT EXISTS `mail_verifications` (
 	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS `reset_passwords` (
+	`reset_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`email` VARCHAR(255) NOT NULL,
+	`token` VARCHAR(255) NOT NULL,
+	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 
 CREATE TABLE IF NOT EXISTS `normal_problems` (
