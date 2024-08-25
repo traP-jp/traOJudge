@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 	`icon_url` VARCHAR(255),
 	`submit_count` INT DEFAULT 0,
 	`post_problem_count` INT DEFAULT 0,
-	`role` VARCHAR(255),
+	`role` INT DEFAULT 0,
 	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`email` VARCHAR(255),
