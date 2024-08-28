@@ -6,6 +6,7 @@ use sqlx::{
 
 mod users;
 mod users_session;
+mod signup_jwt;
 
 #[derive(Clone)]
 pub struct Repository {
