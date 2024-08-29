@@ -1,10 +1,5 @@
 use axum::{extract::State, Json};
-use lettre::{
-    message::Mailbox,
-    message::{header, SinglePart},
-    transport::smtp::authentication::Credentials,
-    Address, Message, SmtpTransport, Transport,
-};
+use lettre::Address;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
@@ -23,9 +18,6 @@ pub async fn sign_up_request(
         .email
         .parse::<Address>()
         .map_err(|_| StatusCode::BAD_REQUEST)?;
-    let app_address = std::env::var("MAIL_ADDRESS").unwrap();
-    let app_password = std::env::var("MAIL_PASSWORD").unwrap();
-    let smtp = "smtp.gmail.com";
 
     let jwt = state
         .save_email_varifications(&body.email)
@@ -34,33 +26,13 @@ pub async fn sign_up_request(
 
     let message = format!(
         "これはテストメールです。
-    以下のリンクをクリックしてください。
-    https://link/{jwt}"
+以下のリンクをクリックしてください。
+https://link/{jwt}"
     );
 
-    let email = Message::builder()
-        .from(Mailbox::new(
-            Some("traOJudge".to_owned()),
-            app_address.parse::<Address>().unwrap(),
-        ))
-        .to(Mailbox::new(None, user_address))
-        .subject("テストメール")
-        .singlepart(
-            SinglePart::builder()
-                .header(header::ContentType::TEXT_PLAIN)
-                .body(message.to_owned()),
-        )
+    crate::utils::mail::send_email(user_address, "traOJudgeメール認証", &message)
+        .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let credentials = Credentials::new(app_address, app_password);
-
-    let mailer = SmtpTransport::starttls_relay(smtp)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
-        .credentials(credentials)
-        .build();
-
-    match mailer.send(&email) {
-        Ok(_) => Ok(StatusCode::CREATED),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
-    }
+    Ok(StatusCode::CREATED)
 }
