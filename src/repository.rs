@@ -4,9 +4,9 @@ use sqlx::{
     MySqlPool,
 };
 
+mod signup_jwt;
 mod users;
 mod users_session;
-mod signup_jwt;
 
 #[derive(Clone)]
 pub struct Repository {
