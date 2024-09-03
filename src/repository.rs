@@ -4,6 +4,7 @@ use sqlx::{
     MySqlPool,
 };
 
+mod signup_jwt;
 mod users;
 mod users_session;
 
