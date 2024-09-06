@@ -6,6 +6,7 @@ info:
 tags:
   - name: authentication
   - name: editorials
+  - name: language
   - name: me
   - name: oauth2
   - name: problems
@@ -27,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditorialDetail'
+                $ref: '#/components/schemas/Editorial'
         '400':
           description: Bad Request
         '404':
@@ -49,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Editorial'
+                $ref: '#/components/schemas/EditorialSummary'
         '400':
           description: Bad Request
         '403':
@@ -179,7 +180,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problems'
+                $ref: '#/components/schemas/ProblemSummaries'
         '400':
           description: Bad Request
         '404':
@@ -228,7 +229,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/ProblemSummary'
         '400':
           description: Bad Request
         '403':
@@ -278,7 +279,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Editorials'
+                $ref: '#/components/schemas/EditorialSummaries'
         '400':
           description: Bad Request
         '404':
@@ -302,7 +303,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditorialDetail'
+                $ref: '#/components/schemas/Editorial'
         '400':
           description: Bad Request
         '401':
@@ -337,7 +338,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testcases'
+                $ref: '#/components/schemas/TestcaseSummaries'
         '400':
           description: Bad Request
         '401':
@@ -362,7 +363,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testcases'
+                $ref: '#/components/schemas/TestcaseSummaries'
         '400':
           description: Bad Request
         '404':
@@ -370,9 +371,14 @@ paths:
       description: 全てのテストケースを取得
       tags:
         - testcases
-  '/problems/{problemId}/submissions''':
+  '/problems/{problemId}/submissions':
     parameters:
-      - $ref: '#/components/parameters/problemIdInPath'
+      - name: problemId
+        in: path
+        description: 問題ID
+        required: true
+        schema:
+          type: number
     get:
       summary: getSubmissionsForProblem
       operationId: getSubmissionsForProblem
@@ -391,7 +397,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Submissions'
+                $ref: '#/components/schemas/SubmissionSummaries'
         '403':
           description: |-
             Forbidden
@@ -417,7 +423,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SubmissionDetail'
+                $ref: '#/components/schemas/Submission'
         '400':
           description: Bad Request
         '403':
@@ -429,30 +435,6 @@ paths:
             Not Found
             提出が存在しません. (または提出の閲覧権限がありません.)
       description: ソースコードを提出する
-  /submissions:
-    get:
-      summary: getSubmissions
-      operationId: getSubmissions
-      tags:
-        - submissions
-      parameters:
-        - $ref: '#/components/parameters/submissionsOrderByInQuery'
-        - $ref: '#/components/parameters/judgeStatusInQuery'
-        - $ref: '#/components/parameters/codeLanguageInQuery'
-        - $ref: '#/components/parameters/userNameInQuery'
-        - $ref: '#/components/parameters/userIdInQuery'
-        - $ref: '#/components/parameters/limitInQuery'
-        - $ref: '#/components/parameters/offsetInQuery'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Submissions'
-        '400':
-          description: Bad Request
-      description: 提出一覧を取得する
   '/submissions/{submissionId}':
     parameters:
       - $ref: '#/components/parameters/submissionIdInPath'
@@ -467,7 +449,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SubmissionDetail'
+                $ref: '#/components/schemas/Submission'
         '400':
           description: Bad Request
         '404':
@@ -562,7 +544,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Submission'
+                  $ref: '#/components/schemas/SubmissionSummary'
         '401':
           description: |-
             Unauthorized
@@ -888,6 +870,28 @@ paths:
                   message:
                     type: string
       description: GithubOAuthのトークンを削除する
+  /languages:
+    get:
+      summary: getLanguages
+      tags:
+        - language
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      operationId: getLanguages
+      description: 使用できる言語の一覧
+      requestBody:
+        content: {}
 components:
   schemas:
     Problem:
@@ -896,7 +900,7 @@ components:
       description: 問題の詳細
       properties:
         id:
-          type: integer
+          type: string
           description: 問題ID
         title:
           type: string
@@ -923,6 +927,8 @@ components:
         memoryLimit:
           type: integer
           description: メモリ制限 (MiB)
+        solvedCount:
+          type: integer
         testcases:
           type: array
           items:
@@ -939,12 +945,63 @@ components:
         - authorId
         - isPublic
         - difficulty
+        - statement
         - timeLimit
         - memoryLimit
+        - solvedCount
         - testcases
         - createdAt
         - updatedAt
-    Problems:
+    ProblemSummary:
+      title: ProblemSummary
+      type: object
+      description: 問題の要約
+      properties:
+        id:
+          type: string
+          description: 問題ID
+        title:
+          type: string
+          description: 問題タイトル
+        authorId:
+          type: integer
+          description: 作問者のユーザーID
+        isPublic:
+          type: boolean
+          description: |-
+            問題が全体公開かどうか.
+
+            * `true` - 公開
+            * `false` - 非公開 (問題の作者のみ閲覧可)
+        difficulty:
+          type: integer
+          description: 難易度
+        timeLimit:
+          type: integer
+          description: 実行時間制限 (ms)
+        memoryLimit:
+          type: integer
+          description: メモリ制限 (MiB)
+        solvedCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - authorId
+        - isPublic
+        - difficulty
+        - timeLimit
+        - memoryLimit
+        - solvedCount
+        - createdAt
+        - updatedAt
+    ProblemSummaries:
       title: Problems
       type: object
       properties:
@@ -953,7 +1010,7 @@ components:
         problems:
           type: array
           items:
-            $ref: '#/components/schemas/Problem'
+            $ref: '#/components/schemas/ProblemSummary'
       required:
         - total
         - problems
@@ -977,10 +1034,6 @@ components:
         memoryLimit:
           type: integer
           description: メモリ制限 (MiB)
-        testcases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Testcase'
       required:
         - title
         - difficulty
@@ -1014,10 +1067,6 @@ components:
         memoryLimit:
           type: integer
           description: メモリ制限 (MiB)
-        testcases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Testcase'
       required:
         - title
         - isPublic
@@ -1030,7 +1079,7 @@ components:
       description: ユーザー情報
       properties:
         id:
-          type: integer
+          type: string
           description: ユーザーID
         name:
           type: string
@@ -1044,9 +1093,9 @@ components:
         iconUrl:
           type: string
         postProblems:
-          $ref: '#/components/schemas/Problems'
+          $ref: '#/components/schemas/ProblemSummaries'
         submitProblems:
-          $ref: '#/components/schemas/Submissions'
+          $ref: '#/components/schemas/SubmissionSummaries'
         xLink:
           type: string
         githubLink:
@@ -1094,22 +1143,22 @@ components:
       required:
         - oldPassword
         - newPassword
-    Submission:
-      title: Submission
+    SubmissionSummary:
+      title: SubmissionSummary
       type: object
       description: 提出
       properties:
         id:
-          type: integer
-          description: 提出ID
-        userName:
           type: string
+          description: 提出ID
         problemId:
           type: integer
           description: 問題ID
         userId:
           type: integer
           description: 提出ユーザーID
+        userName:
+          type: string
         submittedAt:
           type: string
           format: date-time
@@ -1126,21 +1175,24 @@ components:
         maxMemory:
           type: number
           description: メモリ使用量の最大値 (MiB)
+        codeLength:
+          type: number
         judgeStatus:
           $ref: '#/components/schemas/JudgeStatus'
       required:
         - id
-        - userName
         - problemId
         - userId
+        - userName
         - submittedAt
         - languageId
         - totalScore
         - maxTime
         - maxMemory
+        - codeLength
         - judgeStatus
-    Submissions:
-      title: Submissions
+    SubmissionSummaries:
+      title: SubmissionSummaries
       description: 提出一覧
       type: object
       properties:
@@ -1149,18 +1201,20 @@ components:
         problems:
           type: array
           items:
-            $ref: '#/components/schemas/Submission'
-    SubmissionDetail:
-      title: SubmissionDetail
+            $ref: '#/components/schemas/SubmissionSummary'
+    Submission:
+      title: Submission
       type: object
       description: 提出の詳細
       properties:
         id:
-          type: integer
+          type: string
           description: 提出ID
         userId:
           type: integer
           description: 提出ユーザーID
+        userName:
+          type: string
         problemId:
           type: integer
           description: 問題ID
@@ -1171,9 +1225,6 @@ components:
         languageId:
           type: integer
           description: 提出コードの言語ID
-        source:
-          type: string
-          description: 提出コード
         totalScore:
           type: integer
           description: スコアの合計
@@ -1183,25 +1234,24 @@ components:
         maxMemory:
           type: number
           description: メモリ使用量の最大値 (MiB)
+        codeLength:
+          type: number
         overallJudgeStatus:
           $ref: '#/components/schemas/JudgeStatus'
         judgeResults:
           type: array
-          description: ジャッジ結果の配列
           items:
             $ref: '#/components/schemas/JudgeResult'
       required:
         - id
         - userId
+        - userName
         - problemId
         - submittedAt
         - languageId
-        - source
         - totalScore
         - maxTime
         - maxMemory
-        - overallJudgeStatus
-        - judgeResults
     PostSubmissionRequest:
       title: PostProblemRequest
       type: object
@@ -1213,8 +1263,8 @@ components:
         source:
           type: string
           description: ソースコード
-    Editorial:
-      title: Editorial
+    EditorialSummary:
+      title: EditorialSummary
       description: 解説
       type: object
       properties:
@@ -1239,14 +1289,14 @@ components:
             * `true` - 公開
             * `false` - 非公開 (問題の作者のみ閲覧可)
           type: boolean
-    Editorials:
-      title: Editorials
+    EditorialSummaries:
+      title: EditorialSummaries
       description: 解説一覧
       type: array
       items:
-        $ref: '#/components/schemas/Editorial'
-    EditorialDetail:
-      title: EditorialDetail
+        $ref: '#/components/schemas/EditorialSummary'
+    Editorial:
+      title: Editorial
       description: 解説の詳細
       type: object
       properties:
@@ -1453,18 +1503,6 @@ components:
         - testOutput
         - createdAt
         - updatedAt
-    Testcases:
-      title: Testcases
-      type: object
-      description: Testcaseの配列
-      properties:
-        total:
-          type: string
-        testcases:
-          $ref: '#/components/schemas/Testcase'
-      required:
-        - total
-        - testcases
     PostTestcaseRequest:
       title: PostTestcasesRequest
       type: array
@@ -1521,6 +1559,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TestcaseSummary'
+    Language:
+      title: Language
+      type: object
+      description: プログラミング言語についての情報
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
   parameters:
     problemIdInPath:
       name: problemId
@@ -1528,7 +1578,7 @@ components:
       description: 問題ID
       required: true
       schema:
-        type: number
+        type: string
     problemsOrderByInQuery:
       name: orderBy
       in: query
@@ -1566,20 +1616,25 @@ components:
 
         文字列の先頭に `-` が付いていれば降順, 付いていなければ昇順.
 
-        * `createdAt` - 提出日時
+        * `submittedAt` - 提出日時
         * `timeConsumption` - 実行時間
+        * `score` - スコア
         * `memoryConsumption` - メモリ量
-      required: false
+        * `codeLength` - コード長
       schema:
         type: string
-        default: '-createdAt'
+        default: '-submittedAt'
         enum:
-          - createdAt
-          - '-createdAt'
+          - submittedAt
+          - '-submittedAt'
           - timeConsumption
           - '-timeConsumption'
+          - score
+          - '-score'
           - memoryConsumption
           - '-memoryConsumption'
+          - codeLength
+          - '-codeLength'
     limitInQuery:
       name: limit
       in: query
@@ -1610,7 +1665,7 @@ components:
       description: ソースコードの言語
       required: false
       schema:
-        type: integer
+        type: string
     userNameInQuery:
       name: username
       in: query
@@ -1622,21 +1677,21 @@ components:
       in: query
       description: ユーザーID
       schema:
-        type: integer
+        type: string
     userIdInPath:
       name: userId
       in: path
       description: ユーザーID
       required: true
       schema:
-        type: number
+        type: string
     editorialIdInPath:
       name: editorialId
       in: path
       description: 解説ID
       required: true
       schema:
-        type: integer
+        type: string
     token:
       name: token
       in: query
