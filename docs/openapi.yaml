@@ -1555,8 +1555,6 @@ components:
       title: TestcaseSummaries
       type: object
       properties:
-        total:
-          type: integer
         testcaseSummaries:
           type: array
           items:
