@@ -1120,6 +1120,8 @@ components:
       title: PutMeRequest
       type: object
       properties:
+        userName:
+          type: string
         icon:
           type: string
           format: binary
