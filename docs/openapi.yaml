@@ -379,34 +379,6 @@ paths:
         required: true
         schema:
           type: number
-    get:
-      summary: getSubmissionsForProblem
-      operationId: getSubmissionsForProblem
-      tags:
-        - submissions
-      parameters:
-        - $ref: '#/components/parameters/submissionsOrderByInQuery'
-        - $ref: '#/components/parameters/judgeStatusInQuery'
-        - $ref: '#/components/parameters/codeLanguageInQuery'
-        - $ref: '#/components/parameters/userNameInQuery'
-        - $ref: '#/components/parameters/limitInQuery'
-        - $ref: '#/components/parameters/offsetInQuery'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubmissionSummaries'
-        '403':
-          description: |-
-            Forbidden
-            提出一覧を取得する権限がありません.
-        '404':
-          description: |-
-            Not Found
-            問題が存在しません. (または問題の閲覧権限がありません.)
-      description: 問題への提出一覧を取得する
     post:
       summary: postSubmission
       operationId: postSubmission
@@ -435,6 +407,33 @@ paths:
             Not Found
             提出が存在しません. (または提出の閲覧権限がありません.)
       description: ソースコードを提出する
+  /submissions:
+    get:
+      summary: getSubmissions
+      tags:
+        - submissions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionSummaries'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      operationId: getSubmissions
+      parameters:
+        - $ref: '#/components/parameters/submissionsOrderByInQuery'
+        - $ref: '#/components/parameters/judgeStatusInQuery'
+        - $ref: '#/components/parameters/codeLanguageInQuery'
+        - $ref: '#/components/parameters/userNameInQuery'
+        - $ref: '#/components/parameters/userIdInQuery'
+        - $ref: '#/components/parameters/limitInQuery'
+        - $ref: '#/components/parameters/offsetInQuery'
+        - $ref: '#/components/parameters/problemIdInQuery'
+      description: 全ての提出を取得
   '/submissions/{submissionId}':
     parameters:
       - $ref: '#/components/parameters/submissionIdInPath'
@@ -522,34 +521,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PutMeRequest'
       description: アイコンなど自身に関連する情報の編集をします
-  /users/me/submissions:
-    get:
-      summary: getMeSubmissions
-      operationId: getMeSubmissions
-      tags:
-        - me
-      parameters:
-        - $ref: '#/components/parameters/submissionsOrderByInQuery'
-        - $ref: '#/components/parameters/judgeStatusInQuery'
-        - $ref: '#/components/parameters/codeLanguageInQuery'
-        - $ref: '#/components/parameters/userNameInQuery'
-        - $ref: '#/components/parameters/userIdInQuery'
-        - $ref: '#/components/parameters/limitInQuery'
-        - $ref: '#/components/parameters/offsetInQuery'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SubmissionSummary'
-        '401':
-          description: |-
-            Unauthorized
-            ログインしていません
-      description: 自分の提出を全て取得する
+  /users/me/submissions: {}
   /users/me/email:
     put:
       summary: putMeEmail
@@ -1706,3 +1678,10 @@ components:
       schema:
         type: string
       description: テストケースID
+    problemIdInQuery:
+      name: problemIdInQuery
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 問題のID
