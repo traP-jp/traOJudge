@@ -6,6 +6,7 @@ use sqlx::{
 
 mod signup_jwt;
 pub mod users;
+mod users_jwt;
 mod users_session;
 
 #[derive(Clone)]
