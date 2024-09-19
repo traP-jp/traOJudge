@@ -33,7 +33,7 @@ pub struct User {
 
 impl Repository {
     pub async fn get_user_by_id(&self, user_id: i64) -> anyhow::Result<User> {
-        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE user_id = ?")
+        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(user_id)
             .fetch_one(&self.pool)
             .await?;
