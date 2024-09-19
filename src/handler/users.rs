@@ -47,7 +47,7 @@ pub async fn put_me_email(
     let email = body
         .email
         .parse::<Address>()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
 
     let jwt = state
         .encode_email_update_jwt(user_id, &body.email)
