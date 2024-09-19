@@ -25,7 +25,6 @@ async-session = "3.0.0"
 sqlx = { version = "0.7", features = [ "mysql", "runtime-async-std-native-tls", "migrate", "chrono"] }
 jsonwebtoken = "9.3.0"
 lettre = "0.11.7"
-regex = "1.10.6"
 
 [dependencies.async-sqlx-session]
 git = "https://github.com/maxcountryman/async-sqlx-session.git"

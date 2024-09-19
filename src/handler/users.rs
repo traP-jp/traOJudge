@@ -35,10 +35,6 @@ pub async fn put_me_email(
     State(state): State<Repository>,
     Json(body): Json<EmailUpdate>,
 ) -> anyhow::Result<StatusCode, StatusCode> {
-    if !crate::utils::mail::is_valid_email(&body.email) {
-        return Err(StatusCode::BAD_REQUEST);
-    }
-
     let email = body
         .email
         .parse::<Address>()

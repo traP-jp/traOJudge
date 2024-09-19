@@ -3,12 +3,6 @@ use lettre::{
     transport::smtp::authentication::Credentials,
     Address, Message, SmtpTransport, Transport,
 };
-use regex::Regex;
-
-pub fn is_valid_email(email: &str) -> bool {
-    let email_regex = Regex::new(r"^[\w\.-]+@[\w\.-]+\.\w{2,}$").unwrap();
-    email_regex.is_match(email)
-}
 
 pub async fn send_email(send_to: Address, subject: &str, message: &str) -> anyhow::Result<()> {
     let app_address = std::env::var("MAIL_ADDRESS").unwrap();
