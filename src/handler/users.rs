@@ -33,15 +33,24 @@ pub async fn get_me(
 
 pub async fn put_me_email(
     State(state): State<Repository>,
+    TypedHeader(cookie): TypedHeader<Cookie>,
     Json(body): Json<EmailUpdate>,
 ) -> anyhow::Result<StatusCode, StatusCode> {
+    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let user_id = state
+        .get_user_id_by_session_id(session_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
     let email = body
         .email
         .parse::<Address>()
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let jwt = state
-        .save_email_varifications(&body.email)
+        .encode_email_update_jwt(user_id, &body.email)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     let message = format!(
