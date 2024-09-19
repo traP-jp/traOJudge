@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `users` (
-	`user_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`username` VARCHAR(255) NOT NULL,
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+	`name` VARCHAR(255) NOT NULL,
 	`traq_id` VARCHAR(255),
 	`github_id` VARCHAR(255),
 	`icon_url` VARCHAR(255),
