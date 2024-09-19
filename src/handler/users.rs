@@ -1,8 +1,15 @@
 use axum::{extract::State, response::IntoResponse, Json};
 use axum_extra::{headers::Cookie, TypedHeader};
+use lettre::Address;
 use reqwest::StatusCode;
+use serde::Deserialize;
 
 use crate::repository::Repository;
+
+#[derive(Deserialize)]
+pub struct EmailUpdate {
+    email: String,
+}
 
 pub async fn get_me(
     State(state): State<Repository>,
@@ -22,4 +29,33 @@ pub async fn get_me(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(user))
+}
+
+pub async fn put_me_email(
+    State(state): State<Repository>,
+    Json(body): Json<EmailUpdate>,
+) -> anyhow::Result<StatusCode, StatusCode> {
+    if !crate::utils::mail::is_valid_email(&body.email) {
+        return Err(StatusCode::BAD_REQUEST);
+    }
+
+    let email = body
+        .email
+        .parse::<Address>()
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let jwt = state
+        .save_email_varifications(&body.email)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let message = format!(
+        "以下のリンクをクリックして、メールアドレスの変更を確認してください。
+https://link/{jwt}"
+    );
+
+    crate::utils::mail::send_email(email, "「traOJudge」メール変更の確認", &message)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(StatusCode::NO_CONTENT)
 }
