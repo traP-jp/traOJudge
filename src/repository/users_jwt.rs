@@ -18,7 +18,7 @@ impl Repository {
     ) -> anyhow::Result<String> {
         let exp = (Utc::now() + Duration::minutes(60)).timestamp();
         let claims = SignupClaims {
-            user_id: user_id,
+            user_id,
             email: email.to_owned(),
             exp,
         };
