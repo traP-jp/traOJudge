@@ -1,10 +1,17 @@
+# pull request template
+
 ## 関連Issue
-- close {Issue番号}（例: close #123）
+
+- close `#{Issue_id}`
 
 ## 概要
-このPull Requestの目的を簡潔に説明してください。
+
+<!—
+なぜこの変更をするのかなど、概要を記載
+—>
 
 ## 変更内容
+
 - 変更点1
 - 変更点2
 - 変更点3
