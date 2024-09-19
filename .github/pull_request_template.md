@@ -1,5 +1,3 @@
-# pull request template
-
 ## 関連Issue
 
 - close `#{Issue_id}`
