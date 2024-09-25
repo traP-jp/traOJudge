@@ -1555,24 +1555,27 @@ components:
       name: orderBy
       in: query
       description: |-
-        問題一覧一覧の並び替え
+        問題一覧の並び替え
 
-        文字列の先頭に `-` が付いていれば降順, 付いていなければ昇順.
+        `Asc` は昇順, `Desc` は降順を示す.
 
-        * `createdAt` - 提出日時
-        * `updatedAt` - 更新日時
-        * `difficulty` - 難易度
+        * `createdAtAsc` - 提出日時の昇順
+        * `createdAtDesc` - 提出日時の降順
+        * `updatedAtAsc` - 更新日時の昇順
+        * `updatedAtDesc` - 更新日時の降順
+        * `difficultyAsc` - 難易度の昇順
+        * `difficultyDesc` - 難易度の降順
       required: false
       schema:
         type: string
-        default: '-createdAt'
+        default: createdAtDesc
         enum:
-          - createdAt
-          - '-createdAt'
-          - updatedAt
-          - '-updatedAt'
-          - difficulty
-          - '-difficulty'
+          - createdAtAsc
+          - createdAtDesc
+          - updatedAtAsc
+          - updatedAtDesc
+          - difficultyAsc
+          - difficultyDesc
     submissionIdInPath:
       name: submissionId
       in: path
