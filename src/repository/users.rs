@@ -1,6 +1,5 @@
 use serde::Serialize;
 use sqlx::{types::chrono, FromRow};
-use validator::Validate;
 
 use super::Repository;
 
@@ -32,18 +31,11 @@ pub struct User {
     pub updated_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(serde::Deserialize, Validate, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct PutMeRequest {
-    #[validate(length(min = 1, max = 255))]
+pub struct UpdateUser {
     pub user_name: Option<String>,
-    #[validate(length(max = 255))]
-    pub icon: Option<String>,
-    #[validate(length(max = 255))]
+    pub icon_url: Option<String>,
     pub x_link: Option<String>,
-    #[validate(length(max = 255))]
     pub github_link: Option<String>,
-    #[validate(length(max = 10000))]
     pub self_introduction: Option<String>,
 }
 
@@ -56,11 +48,11 @@ impl Repository {
 
         Ok(user)
     }
-    pub async fn update_user(&self, user_id: i64, body: PutMeRequest) -> anyhow::Result<()> {
+    pub async fn update_user(&self, user_id: i64, body: UpdateUser) -> anyhow::Result<()> {
         let user = self.get_user_by_id(user_id).await?;
         sqlx::query("UPDATE users SET name = ?, icon_url = ?, x_link = ?, github_link = ?, self_introduction = ? WHERE id = ?")
             .bind(body.user_name.unwrap_or(user.name))
-            .bind(body.icon.unwrap_or(user.icon_url))
+            .bind(body.icon_url.unwrap_or(user.icon_url))
             .bind(body.x_link.unwrap_or(user.x_link.unwrap_or_default()))
             .bind(body.github_link.unwrap_or(user.github_link.unwrap_or_default()))
             .bind(body.self_introduction.unwrap_or(user.self_introduction))

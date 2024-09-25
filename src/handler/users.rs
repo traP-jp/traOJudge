@@ -5,7 +5,7 @@ use reqwest::StatusCode;
 use serde::Deserialize;
 use validator::Validate;
 
-use crate::repository::users::PutMeRequest;
+use crate::repository::users::UpdateUser;
 use crate::repository::Repository;
 
 #[derive(Deserialize)]
@@ -67,6 +67,26 @@ https://link/{jwt}"
     Ok(StatusCode::NO_CONTENT)
 }
 
+#[derive(serde::Deserialize, Validate, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PutMeRequest {
+    #[validate(length(min = 1, max = 255))]
+    pub user_name: Option<String>,
+    #[validate(length(max = 255))]
+    pub icon: Option<String>,
+    #[validate(length(max = 255))]
+    pub x_link: Option<String>,
+    #[validate(length(max = 255))]
+    pub github_link: Option<String>,
+    #[validate(length(max = 10000))]
+    pub self_introduction: Option<String>,
+}
+
+// todo どのファイルに書くべきかわからない&関数名がイケてない
+async fn encode_icon_to_icon_url(icon: Option<String>) -> Option<String> {
+    icon
+}
+
 pub async fn put_me(
     State(state): State<Repository>,
     TypedHeader(cookie): TypedHeader<Cookie>,
@@ -82,11 +102,16 @@ pub async fn put_me(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
-    // todo: icon -> icon_url
-    let new_body = body.clone();
+    let new_body = UpdateUser {
+        user_name: body.user_name,
+        icon_url: encode_icon_to_icon_url(body.icon).await,
+        x_link: body.x_link,
+        github_link: body.github_link,
+        self_introduction: body.self_introduction,
+    };
 
     // iconの値がない場合空文字列を返すことになるが、この挙動はよくない気がする
-    let icon_url = new_body.icon.clone().unwrap_or_default();
+    let icon_url = new_body.icon_url.clone().unwrap_or_default();
 
     state
         .update_user(user_id, new_body)
