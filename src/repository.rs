@@ -5,7 +5,7 @@ use sqlx::{
 };
 
 mod signup_jwt;
-mod users;
+pub mod users;
 mod users_jwt;
 mod users_session;
 
