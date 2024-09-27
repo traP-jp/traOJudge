@@ -32,11 +32,11 @@ pub struct User {
 }
 
 pub struct UpdateUser {
-    pub user_name: Option<String>,
-    pub icon_url: Option<String>,
+    pub user_name: String,
+    pub icon_url: String,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
-    pub self_introduction: Option<String>,
+    pub self_introduction: String,
 }
 
 impl Repository {
@@ -49,13 +49,12 @@ impl Repository {
         Ok(user)
     }
     pub async fn update_user(&self, user_id: i64, body: UpdateUser) -> anyhow::Result<()> {
-        let user = self.get_user_by_id(user_id).await?;
         sqlx::query("UPDATE users SET name = ?, icon_url = ?, x_link = ?, github_link = ?, self_introduction = ? WHERE id = ?")
-            .bind(body.user_name.unwrap_or(user.name))
-            .bind(body.icon_url.unwrap_or(user.icon_url))
-            .bind(body.x_link.unwrap_or(user.x_link.unwrap_or_default()))
-            .bind(body.github_link.unwrap_or(user.github_link.unwrap_or_default()))
-            .bind(body.self_introduction.unwrap_or(user.self_introduction))
+            .bind(body.user_name)
+            .bind(body.icon_url)
+            .bind(body.x_link)
+            .bind(body.github_link)
+            .bind(body.self_introduction)
             .bind(user_id)
             .execute(&self.pool).await?;
         Ok(())

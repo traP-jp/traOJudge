@@ -72,7 +72,7 @@ https://link/{jwt}"
 pub struct PutMeRequest {
     #[validate(length(min = 1, max = 255))]
     pub user_name: Option<String>,
-    #[validate(length(max = 255))]
+    #[validate(length(max = 10000))]
     pub icon: Option<String>,
     #[validate(length(max = 255))]
     pub x_link: Option<String>,
@@ -82,8 +82,8 @@ pub struct PutMeRequest {
     pub self_introduction: Option<String>,
 }
 
-// todo どのファイルに書くべきかわからない&関数名がイケてない
-async fn encode_icon_to_icon_url(icon: Option<String>) -> Option<String> {
+// todo とりえずの仮置き
+fn encode_icon_to_icon_url(icon: String) -> String {
     icon
 }
 
@@ -102,16 +102,20 @@ pub async fn put_me(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
+    let user = state
+        .get_user_by_id(user_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
     let new_body = UpdateUser {
-        user_name: body.user_name,
-        icon_url: encode_icon_to_icon_url(body.icon).await,
-        x_link: body.x_link,
-        github_link: body.github_link,
-        self_introduction: body.self_introduction,
+        user_name: body.user_name.unwrap_or(user.name),
+        icon_url: body.icon.map_or(user.icon_url, encode_icon_to_icon_url),
+        x_link: body.x_link.or(user.x_link),
+        github_link: body.github_link.or(user.github_link),
+        self_introduction: body.self_introduction.unwrap_or(user.self_introduction),
     };
 
-    // iconの値がない場合空文字列を返すことになるが、この挙動はよくない気がする
-    let icon_url = new_body.icon_url.clone().unwrap_or_default();
+    let icon_url = new_body.icon_url.clone();
 
     state
         .update_user(user_id, new_body)
