@@ -505,12 +505,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  iconUrl:
-                    type: string
-                required:
-                  - iconUrl
+                $ref: '#/components/schemas/User'
         '400':
           description: 不正なリクエストです
       tags:
@@ -521,7 +516,6 @@ paths:
             schema:
               $ref: '#/components/schemas/PutMeRequest'
       description: アイコンなど自身に関連する情報の編集をします
-  /users/me/submissions: {}
   /users/me/email:
     put:
       summary: putMeEmail
@@ -594,6 +588,8 @@ paths:
       description: |-
         email+passwordによるユーザー登録
         クエリパラメタにtokenを持ち，それでメール情報を管理する
+        リクエストを受け取ったら`/activate?payload=JWT`のような形式のメール有効化用エンドポイントを含むメールをバックエンドからユーザーに送る。
+        ユーザーがそのアドレスをクリックしたら，メール有効化処理をし，適切に終了したらログイン画面にリダイレクトする。
       parameters:
         - $ref: '#/components/parameters/token'
   /login:
@@ -632,7 +628,10 @@ paths:
         '204':
           description: 正常にリセットメールを送信しました
       operationId: postRequestResetPassword
-      description: パスワード変更のリクエスト
+      description: |-
+        パスワード変更のリクエスト
+        リクエストを受け取ったら`/reset-password?token=JWT`のような形式のエンドポイントを含むメールをバックエンドからユーザーに送る。
+        ユーザーがそれをクリックするとリセット用画面に遷移する。
       requestBody:
         content:
           application/json:
@@ -1589,27 +1588,32 @@ components:
       description: |-
         提出一覧の並び替え
 
-        文字列の先頭に `-` が付いていれば降順, 付いていなければ昇順.
+        `Asc` は昇順, `Desc` は降順を示す.
 
-        * `submittedAt` - 提出日時
-        * `timeConsumption` - 実行時間
-        * `score` - スコア
-        * `memoryConsumption` - メモリ量
-        * `codeLength` - コード長
+        * `submittedAtAsc` - 提出日時（昇順）
+        * `submittedAtDesc` - 提出日時（降順）
+        * `timeConsumptionAsc` - 実行時間（昇順）
+        * `timeConsumptionDesc` - 実行時間（降順）
+        * `scoreAsc` - スコア（昇順）
+        * `scoreDesc` - スコア（降順）
+        * `memoryConsumptionAsc` - メモリ量（昇順）
+        * `memoryConsumptionDesc` - メモリ量（降順）
+        * `codeLengthAsc` - コード長（昇順）
+        * `codeLengthDesc` - コード長（降順）
       schema:
         type: string
-        default: '-submittedAt'
+        default: submittedAtDesc
         enum:
-          - submittedAt
-          - '-submittedAt'
-          - timeConsumption
-          - '-timeConsumption'
-          - score
-          - '-score'
-          - memoryConsumption
-          - '-memoryConsumption'
-          - codeLength
-          - '-codeLength'
+          - submittedAtAsc
+          - submittedAtDesc
+          - timeConsumptionAsc
+          - timeConsumptionDesc
+          - scoreAsc
+          - scoreDesc
+          - memoryConsumptionAsc
+          - memoryConsumptionDesc
+          - codeLengthAsc
+          - codeLengthDesc
     limitInQuery:
       name: limit
       in: query
@@ -1673,7 +1677,15 @@ components:
       required: false
       schema:
         type: string
-      description: JWTトークン
+      description: |-
+        JWTトークン。次のフィールドを持ちます:
+
+        - `exp` (int): トークンの有効期限（UNIXタイムスタンプ）。
+        - `iat` (int): トークンが発行された時刻（UNIXタイムスタンプ）。
+        - `nbf` (int): トークンが有効となる最早時刻（UNIXタイムスタンプ）。
+        - `userId` (string): ユーザーのID。
+        - `email` (string): ユーザーのメールアドレス。
+        - `action` (string): トークンのアクションタイプ。`reset_password`または`activate_email`
     testcaseIdInPath:
       name: testcaseId
       in: path
