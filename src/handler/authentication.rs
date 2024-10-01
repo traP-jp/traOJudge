@@ -20,7 +20,7 @@ pub async fn sign_up_request(
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
     let jwt = state
-        .save_email_varifications(&body.email)
+        .encode_email_signup_jwt(&body.email)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
