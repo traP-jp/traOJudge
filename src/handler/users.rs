@@ -84,7 +84,7 @@ pub struct PutMeRequest {
 }
 
 // todo とりえずの仮置き
-fn encode_icon_to_icon_url(icon: String) -> String {
+fn encode_icon_to_icon_url(icon: Option<String>) -> Option<String> {
     icon
 }
 
@@ -111,7 +111,9 @@ pub async fn put_me(
 
     let new_body = UpdateUser {
         user_name: body.user_name.unwrap_or(user.name),
-        icon_url: body.icon.map_or(user.icon_url, encode_icon_to_icon_url),
+        icon_url: body
+            .icon
+            .map_or(user.icon_url, |icon| encode_icon_to_icon_url(Some(icon))),
         x_link: body.x_link.or(user.x_link),
         github_link: body.github_link.or(user.github_link),
         self_introduction: body.self_introduction.unwrap_or(user.self_introduction),

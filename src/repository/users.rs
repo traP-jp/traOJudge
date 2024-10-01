@@ -19,7 +19,7 @@ pub struct User {
     pub name: String,
     pub traq_id: Option<String>,
     pub github_id: Option<String>,
-    pub icon_url: String,
+    pub icon_url: Option<String>,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
     pub self_introduction: String,
@@ -33,7 +33,7 @@ pub struct User {
 
 pub struct UpdateUser {
     pub user_name: String,
-    pub icon_url: String,
+    pub icon_url: Option<String>,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
     pub self_introduction: String,
