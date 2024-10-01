@@ -57,7 +57,7 @@ impl Repository {
 
         Ok(user)
     }
-    
+
     pub async fn update_user(&self, user_id: i64, body: UpdateUser) -> anyhow::Result<()> {
         sqlx::query("UPDATE users SET name = ?, icon_url = ?, x_link = ?, github_link = ?, self_introduction = ? WHERE id = ?")
             .bind(body.user_name)

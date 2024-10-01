@@ -1,4 +1,4 @@
-use axum::{extract::State, extract::Path, response::IntoResponse, Json};
+use axum::{extract::Path, extract::State, response::IntoResponse, Json};
 use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::StatusCode;
@@ -129,7 +129,6 @@ pub async fn get_user(
     State(state): State<Repository>,
     Path(user_id): Path<String>,
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
-
     let user_id: i64 = match user_id.parse() {
         Ok(num) => num,
         Err(_) => return Err(StatusCode::BAD_REQUEST),
