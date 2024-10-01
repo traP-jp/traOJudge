@@ -40,16 +40,7 @@ pub struct UpdateUser {
 }
 
 impl Repository {
-    pub async fn get_user_by_id(&self, user_id: i64) -> anyhow::Result<User> {
-        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
-            .bind(user_id)
-            .fetch_one(&self.pool)
-            .await?;
-
-        Ok(user)
-    }
-
-    pub async fn try_get_user_by_id(&self, user_id: i64) -> anyhow::Result<Option<User>> {
+    pub async fn get_user_by_id(&self, user_id: i64) -> anyhow::Result<Option<User>> {
         let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(user_id)
             .fetch_optional(&self.pool)

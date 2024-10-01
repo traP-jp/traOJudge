@@ -28,7 +28,8 @@ pub async fn get_me(
     let user = state
         .get_user_by_id(user_id)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(user))
 }
@@ -105,7 +106,8 @@ pub async fn put_me(
     let user = state
         .get_user_by_id(user_id)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let new_body = UpdateUser {
         user_name: body.user_name.unwrap_or(user.name),
@@ -135,7 +137,7 @@ pub async fn get_user(
     };
 
     let user = state
-        .try_get_user_by_id(user_id)
+        .get_user_by_id(user_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::NOT_FOUND)?;
