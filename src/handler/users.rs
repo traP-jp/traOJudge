@@ -1,4 +1,4 @@
-use axum::{extract::State, response::IntoResponse, Json};
+use axum::{extract::State, extract::Path, response::IntoResponse, Json};
 use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::StatusCode;
@@ -123,4 +123,23 @@ pub async fn put_me(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(serde_json::json!({"iconUrl": icon_url})))
+}
+
+pub async fn get_user(
+    State(state): State<Repository>,
+    Path(user_id): Path<String>,
+) -> anyhow::Result<impl IntoResponse, StatusCode> {
+
+    let user_id: i64 = match user_id.parse() {
+        Ok(num) => num,
+        Err(_) => return Err(StatusCode::BAD_REQUEST),
+    };
+
+    let user = state
+        .try_get_user_by_id(user_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::NOT_FOUND)?;
+
+    Ok(Json(user))
 }

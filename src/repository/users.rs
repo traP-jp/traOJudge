@@ -48,6 +48,16 @@ impl Repository {
 
         Ok(user)
     }
+
+    pub async fn try_get_user_by_id(&self, user_id: i64) -> anyhow::Result<Option<User>> {
+        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
+            .bind(user_id)
+            .fetch_optional(&self.pool)
+            .await?;
+
+        Ok(user)
+    }
+    
     pub async fn update_user(&self, user_id: i64, body: UpdateUser) -> anyhow::Result<()> {
         sqlx::query("UPDATE users SET name = ?, icon_url = ?, x_link = ?, github_link = ?, self_introduction = ? WHERE id = ?")
             .bind(body.user_name)
