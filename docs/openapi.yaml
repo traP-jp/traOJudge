@@ -29,8 +29,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Editorial'
-        '400':
-          description: Bad Request
         '404':
           description: 解説が存在しません(または解説の閲覧権限がありません)
       description: 個別の解説を取得する
@@ -45,12 +43,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PutEditorialRequest'
       responses:
-        '200':
-          description: 正常に変更されました.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EditorialSummary'
+        '204':
+          description: 正常に変更されました
         '400':
           description: Bad Request
         '403':
@@ -70,8 +64,6 @@ paths:
       responses:
         '204':
           description: 正常に削除されました.
-        '400':
-          description: Bad Request
         '403':
           description: |-
             Forbidden
@@ -97,10 +89,6 @@ paths:
                 $ref: '#/components/schemas/Testcase'
         '400':
           description: Bad Request
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
         '404':
           description: Not Found
       operationId: getTestcase
@@ -109,12 +97,9 @@ paths:
       summary: putTestcase
       operationId: putTestcase
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Testcase'
+        '204':
+          description: 正常に変更されました
+          content: {}
         '400':
           description: Bad Request
         '403':
@@ -136,10 +121,8 @@ paths:
       responses:
         '204':
           description: 正常に削除されました
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
           description: Not Found
       description: 単一のテストケースの削除
@@ -151,7 +134,7 @@ paths:
       description: |-
         問題を新規作成・投稿する
         このとき作成された問題は必ず非公開になる
-        公開する場合は PATCH で変更する必要がある
+        公開する場合は PUT で変更する必要がある
       operationId: postProblem
       tags:
         - problems
@@ -175,8 +158,8 @@ paths:
       summary: getProblems
       operationId: getProblems
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
@@ -211,8 +194,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '400':
-          description: Bad Request
         '404':
           description: |-
             Not Found
@@ -224,12 +205,9 @@ paths:
       tags:
         - problems
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemSummary'
+        '204':
+          description: 正常に変更されました
+          content: {}
         '400':
           description: Bad Request
         '403':
@@ -254,8 +232,6 @@ paths:
       responses:
         '204':
           description: 正常に削除されました.
-        '400':
-          description: Bad Request
         '403':
           description: |-
             Forbidden
@@ -280,8 +256,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EditorialSummaries'
-        '400':
-          description: Bad Request
         '404':
           description: |-
             Not Found
@@ -298,18 +272,14 @@ paths:
             schema:
               $ref: '#/components/schemas/PostEditorialRequest'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Editorial'
         '400':
           description: Bad Request
-        '401':
-          description: |-
-            Unauthorized
-            ログインしていません.
         '403':
           description: |-
             Forbidden
@@ -333,18 +303,14 @@ paths:
             schema:
               $ref: '#/components/schemas/PostTestcaseRequest'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TestcaseSummaries'
         '400':
           description: Bad Request
-        '401':
-          description: |-
-            Unauthorized
-            ログインしていません.
         '403':
           description: |-
             Forbidden
@@ -364,8 +330,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TestcaseSummaries'
-        '400':
-          description: Bad Request
         '404':
           description: Not Found
       description: 全てのテストケースを取得
@@ -390,8 +354,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PostSubmissionRequest'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
@@ -449,8 +413,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Submission'
-        '400':
-          description: Bad Request
         '404':
           description: |-
             Not Found
@@ -471,8 +433,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
-          description: Bad Request
         '404':
           description: |-
             Not Found
@@ -601,6 +561,8 @@ paths:
           description: No Content
         '400':
           description: 不正なリクエストです　ユーザー名とパスワードを確認してください
+        '401':
+          description: Unauthorized
       tags:
         - authentication
       requestBody:
