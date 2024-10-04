@@ -7,6 +7,7 @@ use super::Repository;
 struct SignupClaims {
     exp: i64,
     iat: i64,
+    nbf: i64,
     email: String,
 }
 
@@ -17,11 +18,12 @@ impl Repository {
     ) -> anyhow::Result<String> {
         let exp = (Utc::now() + Duration::minutes(60)).timestamp();
         let iat = Utc::now().timestamp();
-
+        let nbf = Utc::now().timestamp();
 
         let claims = SignupClaims {
             exp,
             iat,
+            nbf,
             email: email.to_owned(),
         };
 
