@@ -19,7 +19,7 @@ pub struct User {
     pub name: String,
     pub traq_id: Option<String>,
     pub github_id: Option<String>,
-    pub icon_url: String,
+    pub icon_url: Option<String>,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
     pub self_introduction: String,
@@ -33,21 +33,22 @@ pub struct User {
 
 pub struct UpdateUser {
     pub user_name: String,
-    pub icon_url: String,
+    pub icon_url: Option<String>,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
     pub self_introduction: String,
 }
 
 impl Repository {
-    pub async fn get_user_by_id(&self, user_id: i64) -> anyhow::Result<User> {
+    pub async fn get_user_by_id(&self, user_id: i64) -> anyhow::Result<Option<User>> {
         let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(user_id)
-            .fetch_one(&self.pool)
+            .fetch_optional(&self.pool)
             .await?;
 
         Ok(user)
     }
+
     pub async fn update_user(&self, user_id: i64, body: UpdateUser) -> anyhow::Result<()> {
         sqlx::query("UPDATE users SET name = ?, icon_url = ?, x_link = ?, github_link = ?, self_introduction = ? WHERE id = ?")
             .bind(body.user_name)

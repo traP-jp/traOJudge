@@ -1,4 +1,4 @@
-use axum::{extract::State, response::IntoResponse, Json};
+use axum::{extract::Path, extract::State, response::IntoResponse, Json};
 use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::StatusCode;
@@ -28,7 +28,8 @@ pub async fn get_me(
     let user = state
         .get_user_by_id(user_id)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(user))
 }
@@ -83,7 +84,7 @@ pub struct PutMeRequest {
 }
 
 // todo とりえずの仮置き
-fn encode_icon_to_icon_url(icon: String) -> String {
+fn encode_icon_to_icon_url(icon: Option<String>) -> Option<String> {
     icon
 }
 
@@ -105,11 +106,14 @@ pub async fn put_me(
     let user = state
         .get_user_by_id(user_id)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let new_body = UpdateUser {
         user_name: body.user_name.unwrap_or(user.name),
-        icon_url: body.icon.map_or(user.icon_url, encode_icon_to_icon_url),
+        icon_url: body
+            .icon
+            .map_or(user.icon_url, |icon| encode_icon_to_icon_url(Some(icon))),
         x_link: body.x_link.or(user.x_link),
         github_link: body.github_link.or(user.github_link),
         self_introduction: body.self_introduction.unwrap_or(user.self_introduction),
@@ -123,4 +127,22 @@ pub async fn put_me(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(serde_json::json!({"iconUrl": icon_url})))
+}
+
+pub async fn get_user(
+    State(state): State<Repository>,
+    Path(user_id): Path<String>,
+) -> anyhow::Result<impl IntoResponse, StatusCode> {
+    let user_id: i64 = match user_id.parse() {
+        Ok(num) => num,
+        Err(_) => return Err(StatusCode::BAD_REQUEST),
+    };
+
+    let user = state
+        .get_user_by_id(user_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::NOT_FOUND)?;
+
+    Ok(Json(user))
 }
