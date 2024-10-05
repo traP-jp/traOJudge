@@ -6,6 +6,7 @@ info:
 tags:
   - name: authentication
   - name: editorials
+  - name: email
   - name: language
   - name: me
   - name: oauth2
@@ -551,7 +552,7 @@ paths:
         リクエストを受け取ったら`/activate?payload=JWT`のような形式のメール有効化用エンドポイントを含むメールをバックエンドからユーザーに送る。
         ユーザーがそのアドレスをクリックしたら，メール有効化処理をし，適切に終了したらログイン画面にリダイレクトする。
       parameters:
-        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/JWTWithoutUserId'
   /login:
     post:
       summary: postLogin
@@ -615,7 +616,26 @@ paths:
       tags:
         - authentication
       parameters:
-        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/JWTWithUserId'
+  /activate:
+    get:
+      summary: getActivateEmailAddress
+      parameters:
+        - $ref: '#/components/parameters/JWTWithUserId'
+        - $ref: '#/components/parameters/JWTWithoutUserId'
+      responses:
+        '200':
+          description: メールアドレスが正常に有効化されました
+        '400':
+          description: Invalid token or bad request
+        '401':
+          description: Unauthorized or expired token
+        '404':
+          description: User not found
+      operationId: getActivate
+      description: メールアドレスの有効化
+      tags:
+        - email
   /google-oauth2/params:
     get:
       summary: getGoogleOAuth2Params
@@ -1633,21 +1653,35 @@ components:
       required: true
       schema:
         type: string
-    token:
-      name: token
+    JWTWithUserId:
+      name: token-with-userid
       in: query
       required: false
       schema:
         type: string
       description: |-
-        JWTトークン。次のフィールドを持ちます:
-
+        パスワードリセットまたはメールアドレス変更の際に使われるJWT。
+        次のフィールドを持つ:
         - `exp` (int): トークンの有効期限（UNIXタイムスタンプ）。
         - `iat` (int): トークンが発行された時刻（UNIXタイムスタンプ）。
         - `nbf` (int): トークンが有効となる最早時刻（UNIXタイムスタンプ）。
         - `userId` (string): ユーザーのID。
         - `email` (string): ユーザーのメールアドレス。
-        - `action` (string): トークンのアクションタイプ。`reset_password`または`activate_email`
+        - `action` (string): トークンのアクションタイプ。`reset_password`または`change_email`。
+    JWTWithoutUserId:
+      name: token-without-userid
+      in: query
+      required: false
+      schema:
+        type: string
+      description: |-
+        初回のユーザー登録(メールアドレスの登録)の際に使われるJWT。
+        次のフィールドを持つ:
+        - `exp` (int): トークンの有効期限（UNIXタイムスタンプ）。
+        - `iat` (int): トークンが発行された時刻（UNIXタイムスタンプ）。
+        - `nbf` (int): トークンが有効となる最早時刻（UNIXタイムスタンプ）。
+        - `email` (string): ユーザーのメールアドレス。
+        - `action` (string): トークンのアクションタイプ。`register_email`。
     testcaseIdInPath:
       name: testcaseId
       in: path
