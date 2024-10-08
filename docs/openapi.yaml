@@ -534,7 +534,7 @@ paths:
       operationId: postSignup
       responses:
         '201':
-          description: 正常にユーザーを作成できました　メール認証を行なってください
+          description: 正常にユーザーを作成できました
         '400':
           description: 不正なリクエストです
         '401':
