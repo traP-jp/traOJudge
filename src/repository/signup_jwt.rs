@@ -3,13 +3,21 @@ use serde::{Deserialize, Serialize};
 
 use super::Repository;
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+enum Action {
+    register_email
+}
+
 #[derive(Serialize, Deserialize)]
-struct SignupClaims {
+struct TokenWithoutUserid {
     exp: i64,
     iat: i64,
     nbf: i64,
     email: String,
+    action: Action,
 }
+
 
 impl Repository {
     pub async fn encode_email_signup_jwt(
@@ -20,11 +28,12 @@ impl Repository {
         let iat = Utc::now().timestamp();
         let nbf = Utc::now().timestamp();
 
-        let claims = SignupClaims {
+        let claims = TokenWithoutUserid {
             exp,
             iat,
             nbf,
             email: email.to_owned(),
+            action: Action::register_email,
         };
 
         let encode_key: String = std::env::var("JWT_SECRET")?;

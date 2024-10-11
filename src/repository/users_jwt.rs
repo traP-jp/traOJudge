@@ -3,11 +3,22 @@ use serde::{Deserialize, Serialize};
 
 use super::Repository;
 
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+enum Action {
+    reset_password,
+    change_email,
+}
+
 #[derive(Serialize, Deserialize)]
-struct SignupClaims {
+struct TokenWithUserid {
+    exp: i64,
+    iat: i64,
+    nbf: i64,
     user_id: i64,
     email: String,
-    exp: i64,
+    action: Action,
 }
 
 impl Repository {
@@ -17,10 +28,16 @@ impl Repository {
         email: &str,
     ) -> anyhow::Result<String> {
         let exp = (Utc::now() + Duration::minutes(60)).timestamp();
-        let claims = SignupClaims {
+        let iat = Utc::now().timestamp();
+        let nbf = Utc::now().timestamp();
+
+        let claims = TokenWithUserid {
+            exp,
+            iat,
+            nbf,
             user_id,
             email: email.to_owned(),
-            exp,
+            action: Action::change_email,
         };
 
         let encode_key: String = std::env::var("JWT_SECRET")?;
