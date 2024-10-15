@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use super::Repository;
 
-
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 enum Action {
@@ -58,11 +57,8 @@ impl Repository {
 
         claims.to_jwt()
     }
-    
-    pub async fn encode_email_signup_jwt(
-        &self,
-        email: &str,
-    ) -> anyhow::Result<String> {
+
+    pub async fn encode_email_signup_jwt(&self, email: &str) -> anyhow::Result<String> {
         let exp = (Utc::now() + Duration::minutes(60)).timestamp();
         let iat = Utc::now().timestamp();
         let nbf = Utc::now().timestamp();
