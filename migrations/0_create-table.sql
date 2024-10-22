@@ -18,29 +18,6 @@ CREATE TABLE IF NOT EXISTS `users_passwords` (
 	`hashed_pass` VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `mail_verifications` (
-	`request_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`email` VARCHAR(255) NOT NULL,
-	`token` VARCHAR(255) NOT NULL,
-	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS `put_mail_varifications` (
-	`request_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`user_id` INT NOT NULL,
-	`email` VARCHAR(255) NOT NULL,
-	`token` VARCHAR(255) NOT NULL,
-	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS `reset_passwords` (
-	`request_id` INT AUTO_INCREMENT PRIMARY KEY, 
-	`email` VARCHAR(255) NOT NULL,
-	`token` VARCHAR(255) NOT NULL,
-	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-
 CREATE TABLE IF NOT EXISTS `normal_problems` (
 	`problem_id` INT AUTO_INCREMENT PRIMARY KEY,
 	`auther_id` INT NOT NULL,
