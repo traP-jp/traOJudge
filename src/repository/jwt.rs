@@ -34,6 +34,7 @@ impl EmailToken {
 
         Ok(jwt)
     }
+
     fn verify(jwt: &str) -> anyhow::Result<()> {
         let encode_key: String = std::env::var("JWT_SECRET")?;
 
