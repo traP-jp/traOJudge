@@ -5,6 +5,7 @@ use sqlx::{
 };
 
 mod jwt;
+mod user_password;
 pub mod users;
 mod users_session;
 
@@ -12,6 +13,7 @@ mod users_session;
 pub struct Repository {
     pool: MySqlPool,
     session_store: MySqlSessionStore,
+    bcrypt_cost: u32,
 }
 
 impl Repository {
@@ -29,6 +31,7 @@ impl Repository {
         Ok(Self {
             pool,
             session_store,
+            bcrypt_cost: bcrypt::DEFAULT_COST,
         })
     }
 
