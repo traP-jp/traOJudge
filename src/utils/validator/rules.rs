@@ -1,6 +1,3 @@
-// 登録するEmailのルール
-pub const EMAIL_RULE: &str = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
 // ユーザー名のルール
 pub const USER_NAME_RULE: &str = r"^[a-zA-Z0-9](?:[a-zA-Z0-9_-]{0,30}[a-zA-Z0-9])?$";
 

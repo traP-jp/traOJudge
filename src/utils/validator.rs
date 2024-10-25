@@ -1,7 +1,6 @@
 pub mod rules;
 
 pub enum RuleType {
-    Email,
     UserName,
     Password,
     Icon,
@@ -13,7 +12,6 @@ pub enum RuleType {
 impl RuleType {
     fn get_rule(&self) -> &'static str {
         match self {
-            RuleType::Email => rules::EMAIL_RULE,
             RuleType::UserName => rules::USER_NAME_RULE,
             RuleType::Password => rules::PASSWORD_RULE,
             RuleType::Icon => rules::ICON_RULE,
