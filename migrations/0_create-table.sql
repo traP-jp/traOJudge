@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `users` (
 	`id` VARCHAR(255) PRIMARY KEY NOT NULL,
-	`display_id` VARCHAR(255) AUTO_INCREMENT NOT NULL,
+	`display_id` INT AUTO_INCREMENT NOT NULL,
 	`name` VARCHAR(255) NOT NULL,
 	`traq_id` VARCHAR(255),
 	`github_id` VARCHAR(255),
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `users_passwords` (
 	`user_id` INT PRIMARY KEY,
-	`hashed_pass` VARCHAR(255) NOT NULL
+	`password` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `normal_problems` (
