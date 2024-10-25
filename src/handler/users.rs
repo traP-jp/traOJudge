@@ -3,10 +3,10 @@ use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::StatusCode;
 use serde::Deserialize;
-use validator::Validate;
 
 use crate::repository::users::UpdateUser;
 use crate::repository::Repository;
+use crate::utils::validator::{RuleType, Validator};
 
 #[derive(Deserialize)]
 pub struct EmailUpdate {
@@ -68,19 +68,32 @@ https://link/{jwt}"
     Ok(StatusCode::NO_CONTENT)
 }
 
-#[derive(serde::Deserialize, Validate, Clone)]
+#[derive(serde::Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PutMeRequest {
-    #[validate(length(min = 1, max = 255))]
     pub user_name: Option<String>,
-    #[validate(length(max = 10000))]
     pub icon: Option<String>,
-    #[validate(length(max = 255))]
     pub x_link: Option<String>,
-    #[validate(length(max = 255))]
     pub github_link: Option<String>,
-    #[validate(length(max = 10000))]
     pub self_introduction: Option<String>,
+}
+
+impl Validator for PutMeRequest {
+    fn validate(&self) -> anyhow::Result<()> {
+        let rules = vec![
+            (&self.user_name, RuleType::UserName),
+            (&self.icon, RuleType::Icon),
+            (&self.x_link, RuleType::XLink),
+            (&self.github_link, RuleType::GitHubLink),
+            (&self.self_introduction, RuleType::SelfIntroduction),
+        ];
+        for (value, rule) in rules {
+            if let Some(value) = value {
+                rule.validate(value)?;
+            }
+        }
+        Ok(())
+    }
 }
 
 // todo とりえずの仮置き
