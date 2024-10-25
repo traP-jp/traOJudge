@@ -1,4 +1,9 @@
+use fancy_regex::Regex;
+
 pub mod rules;
+
+#[cfg(test)]
+mod validate_test;
 
 pub enum RuleType {
     UserName,
@@ -22,12 +27,16 @@ impl RuleType {
     }
     pub fn validate(&self, value: &str) -> anyhow::Result<()> {
         let rule = self.get_rule();
-        let re = regex::Regex::new(rule)?;
-        if re.is_match(value) {
-            Ok(())
-        } else {
-            Err(anyhow::anyhow!("Invalid value"))
-        }
+        let re = Regex::new(rule)?;
+        re.is_match(value)
+            .map_err(|e| anyhow::anyhow!(e))
+            .and_then(|is_match| {
+                if is_match {
+                    Ok(())
+                } else {
+                    Err(anyhow::anyhow!("Invalid value: {}", value))
+                }
+            })
     }
 }
 
