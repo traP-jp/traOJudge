@@ -7,7 +7,6 @@ impl Repository {
         sqlx::query("INSERT INTO user_passwords (user_id, password) VALUES (?, ?)")
             .bind(id)
             .bind(&hash)
-            .bind(&hash)
             .execute(&self.pool)
             .await?;
 
