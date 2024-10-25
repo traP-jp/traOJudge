@@ -3,7 +3,10 @@ use lettre::Address;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-use crate::repository::Repository;
+use crate::{
+    repository::Repository,
+    utils::validator::{RuleType, Validator},
+};
 
 #[derive(Deserialize)]
 pub struct SignUpRequest {
@@ -34,5 +37,46 @@ https://link/{jwt}"
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
+    Ok(StatusCode::CREATED)
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SignUp {
+    pub user_name: String,
+    pub password: String,
+    pub token: String,
+}
+
+impl Validator for SignUp {
+    fn validate(&self) -> anyhow::Result<()> {
+        let rules = vec![
+            ("user_name", RuleType::UserName),
+            ("password", RuleType::Password),
+        ];
+        for (field, rule) in rules {
+            rule.validate(field)?;
+        }
+        Ok(())
+    }
+}
+
+pub async fn sign_up(
+    State(state): State<Repository>,
+    Json(body): Json<SignUp>,
+) -> Result<StatusCode, StatusCode> {
+    body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
+    state
+        .verify_email_jwt(&body.token)
+        .await
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+    let id = state
+        .create_user(body.user_name)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    state
+        .save_raw_password(id, &body.password)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     Ok(StatusCode::CREATED)
 }
