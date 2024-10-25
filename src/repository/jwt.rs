@@ -34,6 +34,17 @@ impl EmailToken {
 
         Ok(jwt)
     }
+    fn verify(jwt: &str) -> anyhow::Result<()> {
+        let encode_key: String = std::env::var("JWT_SECRET")?;
+
+        jsonwebtoken::decode::<Self>(
+            jwt,
+            &jsonwebtoken::DecodingKey::from_secret(encode_key.as_ref()),
+            &jsonwebtoken::Validation::default(),
+        )?;
+
+        Ok(())
+    }
 }
 
 impl Repository {
@@ -73,5 +84,9 @@ impl Repository {
         };
 
         claims.to_jwt()
+    }
+
+    pub async fn verify_email_jwt(&self, jwt: &str) -> anyhow::Result<()> {
+        EmailToken::verify(jwt)
     }
 }
