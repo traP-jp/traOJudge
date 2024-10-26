@@ -116,13 +116,14 @@ impl Repository {
         Ok(user)
     }
 
-    pub async fn create_user(&self, name: String) -> anyhow::Result<UserId> {
+    pub async fn create_user_by_email(&self, name: &str, email: &str) -> anyhow::Result<UserId> {
         let ts = Timestamp::now(ContextV7::new());
         let id = UserId::new(Uuid::new_v7(ts));
 
-        sqlx::query("INSERT INTO users (id, name) VALUES (?, ?)")
+        sqlx::query("INSERT INTO users (id, name, email) VALUES (?, ?, ?)")
             .bind(id)
             .bind(name)
+            .bind(email)
             .execute(&self.pool)
             .await?;
 

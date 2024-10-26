@@ -66,12 +66,12 @@ pub async fn sign_up(
     Json(body): Json<SignUp>,
 ) -> Result<StatusCode, StatusCode> {
     body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
-    state
-        .verify_email_jwt(&body.token)
+    let email = state
+        .get_email_by_email_jwt(&body.token)
         .await
-        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     let id = state
-        .create_user(body.user_name)
+        .create_user_by_email(&body.user_name, &email)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     state
