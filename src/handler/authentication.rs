@@ -51,8 +51,8 @@ pub struct SignUp {
 impl Validator for SignUp {
     fn validate(&self) -> anyhow::Result<()> {
         let rules = vec![
-            ("user_name", RuleType::UserName),
-            ("password", RuleType::Password),
+            (&self.user_name, RuleType::UserName),
+            (&self.password, RuleType::Password),
         ];
         for (field, rule) in rules {
             rule.validate(field)?;
