@@ -69,7 +69,7 @@ pub async fn sign_up(
     let email = state
         .get_email_by_email_jwt(&body.token)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
     let id = state
         .create_user_by_email(&body.user_name, &email)
         .await
