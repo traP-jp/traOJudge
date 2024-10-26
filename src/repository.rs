@@ -1,20 +1,12 @@
 use async_sqlx_session::MySqlSessionStore;
-use sqlx::{
-    mysql::{MySqlConnectOptions, MySqlPoolOptions},
-    MySqlPool,
-};
+use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions};
+
+use super::Repository;
 
 mod jwt;
 mod user_password;
 pub mod users;
 mod users_session;
-
-#[derive(Clone)]
-pub struct Repository {
-    pool: MySqlPool,
-    session_store: MySqlSessionStore,
-    bcrypt_cost: u32,
-}
 
 impl Repository {
     pub async fn connect() -> anyhow::Result<Self> {

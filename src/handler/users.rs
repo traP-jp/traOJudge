@@ -4,8 +4,8 @@ use lettre::Address;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
+use super::Repository;
 use crate::repository::users::UpdateUser;
-use crate::repository::Repository;
 use crate::utils::validator::{RuleType, Validator};
 
 #[derive(Deserialize)]

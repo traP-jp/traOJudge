@@ -4,8 +4,8 @@ use reqwest::StatusCode;
 use serde::Deserialize;
 
 use crate::{
-    repository::Repository,
     utils::validator::{RuleType, Validator},
+    Repository,
 };
 
 #[derive(Deserialize)]

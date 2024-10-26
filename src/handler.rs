@@ -3,7 +3,7 @@ use axum::{
     Router,
 };
 
-use crate::repository::Repository;
+use super::Repository;
 
 mod authentication;
 mod users;
