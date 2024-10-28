@@ -75,6 +75,12 @@ pub async fn sign_up(
         .get_email_by_email_jwt(&body.token)
         .await
         .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+    // 既に登録されているメールアドレスのとき、正常時と同じステータスコードを返す
+    if let Ok(true) = state.is_exist_email(&email).await {
+        return Ok(StatusCode::CREATED);
+    }
+
     let id = state
         .create_user_by_email(&body.user_name, &email)
         .await
