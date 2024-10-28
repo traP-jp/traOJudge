@@ -22,6 +22,11 @@ pub async fn sign_up_request(
         .parse::<Address>()
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
+    // 既に登録されているメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
+    if let Ok(true) = state.is_exist_email(&body.email).await {
+        return Ok(StatusCode::CREATED);
+    }
+
     let jwt = state
         .encode_email_signup_jwt(&body.email)
         .await
