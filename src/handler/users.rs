@@ -52,6 +52,11 @@ pub async fn put_me_email(
         .parse::<Address>()
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
+    // 既に登録されているメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
+    if let Ok(()) = state.is_exist_email(&body.email).await {
+        return Ok(StatusCode::NO_CONTENT);
+    }
+
     let jwt = state
         .encode_email_update_jwt(display_id, &body.email)
         .await
