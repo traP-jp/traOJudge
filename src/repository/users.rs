@@ -104,6 +104,9 @@ impl Type<MySql> for UserId {
     fn type_info() -> sqlx::mysql::MySqlTypeInfo {
         <Uuid as Type<MySql>>::type_info()
     }
+    fn compatible(ty: &<MySql as sqlx::Database>::TypeInfo) -> bool {
+        <Uuid as Type<MySql>>::compatible(ty)
+    }
 }
 
 impl Repository {
