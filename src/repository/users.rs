@@ -4,7 +4,7 @@ use serde::Serialize;
 use sqlx::FromRow;
 use sqlx::Type;
 use sqlx::{types::chrono, Decode, Encode, MySql};
-use uuid::{ContextV7, Timestamp, Uuid};
+use uuid::Uuid;
 
 use super::Repository;
 
@@ -117,8 +117,7 @@ impl Repository {
     }
 
     pub async fn create_user_by_email(&self, name: &str, email: &str) -> anyhow::Result<UserId> {
-        let ts = Timestamp::now(ContextV7::new());
-        let id = UserId::new(Uuid::new_v7(ts));
+        let id = UserId::new(Uuid::now_v7());
 
         sqlx::query("INSERT INTO users (id, name, email) VALUES (?, ?, ?)")
             .bind(id)
