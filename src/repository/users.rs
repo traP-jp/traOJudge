@@ -142,12 +142,12 @@ impl Repository {
         Ok(())
     }
 
-    pub async fn is_exist_email(&self, email: &str) -> anyhow::Result<()> {
-        sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ?")
+    pub async fn is_exist_email(&self, email: &str) -> anyhow::Result<bool> {
+        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ?")
             .bind(email)
             .fetch_optional(&self.pool)
             .await?;
 
-        Ok(())
+        Ok(user.is_some())
     }
 }
