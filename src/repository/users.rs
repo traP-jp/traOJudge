@@ -119,6 +119,15 @@ impl Repository {
         Ok(user)
     }
 
+    pub async fn get_user_by_email(&self, email: &str) -> anyhow::Result<Option<User>> {
+        let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = ?")
+            .bind(email)
+            .fetch_optional(&self.pool)
+            .await?;
+
+        Ok(user)
+    }
+
     pub async fn create_user_by_email(&self, name: &str, email: &str) -> anyhow::Result<UserId> {
         let id = UserId::new(Uuid::now_v7());
 
