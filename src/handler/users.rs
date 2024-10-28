@@ -3,10 +3,10 @@ use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::StatusCode;
 use serde::Deserialize;
-use validator::Validate;
 
+use super::Repository;
 use crate::repository::users::UpdateUser;
-use crate::repository::Repository;
+use crate::utils::validator::{RuleType, Validator};
 
 #[derive(Deserialize)]
 pub struct EmailUpdate {
@@ -19,14 +19,14 @@ pub async fn get_me(
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
     let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
 
-    let user_id = state
-        .get_user_id_by_session_id(session_id)
+    let display_id = state
+        .get_display_id_by_session_id(session_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
     let user = state
-        .get_user_by_id(user_id)
+        .get_user_by_display_id(display_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
@@ -41,8 +41,8 @@ pub async fn put_me_email(
 ) -> anyhow::Result<StatusCode, StatusCode> {
     let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
 
-    let user_id = state
-        .get_user_id_by_session_id(session_id)
+    let display_id = state
+        .get_display_id_by_session_id(session_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
@@ -52,8 +52,13 @@ pub async fn put_me_email(
         .parse::<Address>()
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
+    // 既に登録されているメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
+    if let Ok(true) = state.is_exist_email(&body.email).await {
+        return Ok(StatusCode::NO_CONTENT);
+    }
+
     let jwt = state
-        .encode_email_update_jwt(user_id, &body.email)
+        .encode_email_update_jwt(display_id, &body.email)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     let message = format!(
@@ -68,19 +73,32 @@ https://link/{jwt}"
     Ok(StatusCode::NO_CONTENT)
 }
 
-#[derive(serde::Deserialize, Validate, Clone)]
+#[derive(serde::Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PutMeRequest {
-    #[validate(length(min = 1, max = 255))]
     pub user_name: Option<String>,
-    #[validate(length(max = 10000))]
     pub icon: Option<String>,
-    #[validate(length(max = 255))]
     pub x_link: Option<String>,
-    #[validate(length(max = 255))]
     pub github_link: Option<String>,
-    #[validate(length(max = 10000))]
     pub self_introduction: Option<String>,
+}
+
+impl Validator for PutMeRequest {
+    fn validate(&self) -> anyhow::Result<()> {
+        let rules = vec![
+            (&self.user_name, RuleType::UserName),
+            (&self.icon, RuleType::Icon),
+            (&self.x_link, RuleType::XLink),
+            (&self.github_link, RuleType::GitHubLink),
+            (&self.self_introduction, RuleType::SelfIntroduction),
+        ];
+        for (value, rule) in rules {
+            if let Some(value) = value {
+                rule.validate(value)?;
+            }
+        }
+        Ok(())
+    }
 }
 
 // todo とりえずの仮置き
@@ -97,14 +115,14 @@ pub async fn put_me(
 
     let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
 
-    let user_id = state
-        .get_user_id_by_session_id(session_id)
+    let display_id = state
+        .get_display_id_by_session_id(session_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
     let user = state
-        .get_user_by_id(user_id)
+        .get_user_by_display_id(display_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
@@ -122,7 +140,7 @@ pub async fn put_me(
     let icon_url = new_body.icon_url.clone();
 
     state
-        .update_user(user_id, new_body)
+        .update_user(user.display_id, new_body)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
@@ -131,15 +149,14 @@ pub async fn put_me(
 
 pub async fn get_user(
     State(state): State<Repository>,
-    Path(user_id): Path<String>,
+    Path(display_id): Path<String>,
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
-    let user_id: i64 = match user_id.parse() {
-        Ok(num) => num,
-        Err(_) => return Err(StatusCode::BAD_REQUEST),
-    };
+    let display_id = display_id
+        .parse::<i64>()
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
 
     let user = state
-        .get_user_by_id(user_id)
+        .get_user_by_display_id(display_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::NOT_FOUND)?;

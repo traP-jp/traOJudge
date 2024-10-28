@@ -3,14 +3,15 @@ use axum::{
     Router,
 };
 
-use crate::repository::Repository;
+use super::Repository;
 
 mod authentication;
 mod users;
 
 pub fn make_router(app_state: Repository) -> Router {
-    let authentication_router =
-        Router::new().route("/signup/request", post(authentication::sign_up_request));
+    let authentication_router = Router::new()
+        .route("/signup/request", post(authentication::sign_up_request))
+        .route("/signup", post(authentication::sign_up));
 
     let users_router = Router::new()
         .route("/me", get(users::get_me).put(users::put_me))

@@ -1,18 +1,12 @@
 use async_sqlx_session::MySqlSessionStore;
-use sqlx::{
-    mysql::{MySqlConnectOptions, MySqlPoolOptions},
-    MySqlPool,
-};
+use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions};
+
+use super::Repository;
 
 mod jwt;
+mod user_password;
 pub mod users;
 mod users_session;
-
-#[derive(Clone)]
-pub struct Repository {
-    pool: MySqlPool,
-    session_store: MySqlSessionStore,
-}
 
 impl Repository {
     pub async fn connect() -> anyhow::Result<Self> {
@@ -29,6 +23,7 @@ impl Repository {
         Ok(Self {
             pool,
             session_store,
+            bcrypt_cost: bcrypt::DEFAULT_COST,
         })
     }
 
@@ -43,7 +38,9 @@ impl Repository {
 
 fn get_option_from_env() -> anyhow::Result<MySqlConnectOptions> {
     let host = std::env::var("DB_HOSTNAME")?;
-    let port = std::env::var("DB_PORT")?.parse()?;
+    let port = std::env::var("DB_PORT")?
+        .parse()
+        .map_err(|_| anyhow::anyhow!("DB_PORT must be a number"))?;
     let user = std::env::var("DB_USERNAME")?;
     let password = std::env::var("DB_PASSWORD")?;
     let db_name = std::env::var("DB_DATABASE")?;
