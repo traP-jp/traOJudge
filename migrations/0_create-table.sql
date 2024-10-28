@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 
 CREATE TABLE IF NOT EXISTS `users_passwords` (
-	`user_id` INT PRIMARY KEY,
+	`user_id` BINARY(16) PRIMARY KEY,
 	`password` VARCHAR(255) NOT NULL
 );
 
