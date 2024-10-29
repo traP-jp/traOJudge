@@ -179,7 +179,7 @@ pub async fn reset_password_request(
         .parse::<Address>()
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
-    // 既に登録されているメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
+    // 登録されていないメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
     if let Ok(false) = state.is_exist_email(&body.email).await {
         return Ok(StatusCode::CREATED);
     }
