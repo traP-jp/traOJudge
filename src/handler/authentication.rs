@@ -162,5 +162,5 @@ pub async fn logout(
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
     );
 
-    Ok((StatusCode::OK, headers))
+    Ok((StatusCode::NO_CONTENT, headers))
 }
