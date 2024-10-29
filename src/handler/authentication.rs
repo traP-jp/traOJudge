@@ -133,7 +133,7 @@ pub async fn login(
     let mut headers = HeaderMap::new();
     headers.insert(
         SET_COOKIE,
-        format!("session_id={}, HttpOnly, SameSite=Strict", session_id)
+        format!("session_id={}; HttpOnly; SameSite=Strict", session_id)
             .parse()
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
     );
