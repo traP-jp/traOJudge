@@ -1,4 +1,4 @@
-use super::Repository;
+use super::{users::UserId, Repository};
 use anyhow::Context;
 use async_session::{Session, SessionStore};
 
@@ -38,13 +38,20 @@ impl Repository {
         Ok(Some(()))
     }
 
-    pub async fn get_user_id_by_session_id(&self, session_id: &str) -> anyhow::Result<Option<i64>> {
+    pub async fn get_user_id_by_session_id(
+        &self,
+        session_id: &str,
+    ) -> anyhow::Result<Option<UserId>> {
         let session = self
             .session_store
             .load_session(session_id.to_string())
             .await?;
 
-        Ok(session.and_then(|s| s.get("user_id")))
+        let user_id = session
+            .and_then(|s| s.get("user_id"))
+            .map(|id: uuid::Uuid| UserId::new(id));
+
+        Ok(user_id)
     }
 
     pub async fn get_display_id_by_session_id(
