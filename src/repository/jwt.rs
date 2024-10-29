@@ -99,6 +99,23 @@ impl Repository {
         claims.to_jwt()
     }
 
+    pub async fn encode_email_reset_password_jwt(&self, email: &str) -> anyhow::Result<String> {
+        let exp = (Utc::now() + Duration::minutes(60)).timestamp();
+        let iat = Utc::now().timestamp();
+        let nbf = Utc::now().timestamp();
+
+        let claims = EmailToken {
+            exp,
+            iat,
+            nbf,
+            user_id: None,
+            email: email.to_string(),
+            action: Action::reset_password,
+        };
+
+        claims.to_jwt()
+    }
+
     pub async fn verify_email_jwt(&self, jwt: &str) -> anyhow::Result<()> {
         EmailToken::verify(jwt)
     }

@@ -164,3 +164,40 @@ pub async fn logout(
 
     Ok((StatusCode::NO_CONTENT, headers))
 }
+
+#[derive(Deserialize)]
+pub struct ResetPasswordRequest {
+    email: String,
+}
+
+pub async fn reset_password_request(
+    State(state): State<Repository>,
+    Json(body): Json<ResetPasswordRequest>,
+) -> Result<StatusCode, StatusCode> {
+    let user_address = body
+        .email
+        .parse::<Address>()
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    // 登録されていないメールアドレスのとき、正常時と同じステータスコードを返すが実際にメールを送信しない
+    if let Ok(false) = state.is_exist_email(&body.email).await {
+        return Ok(StatusCode::CREATED);
+    }
+
+    let jwt = state
+        .encode_email_reset_password_jwt(&body.email)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let message = format!(
+        "これはテストメールです。
+以下のリンクをクリックしてください。
+https://link/{jwt}"
+    );
+
+    crate::utils::mail::send_email(user_address, "traOJudgeパスワードリセット", &message)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(StatusCode::CREATED)
+}
