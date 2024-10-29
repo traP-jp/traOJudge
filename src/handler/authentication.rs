@@ -93,6 +93,55 @@ pub async fn sign_up(
     Ok(StatusCode::CREATED)
 }
 
+#[derive(Deserialize)]
+pub struct LogIn {
+    email: String,
+    password: String,
+}
+
+impl Validator for LogIn {
+    fn validate(&self) -> anyhow::Result<()> {
+        RuleType::Password.validate(&self.password)?;
+        Ok(())
+    }
+}
+
+pub async fn login(
+    State(state): State<Repository>,
+    Json(body): Json<LogIn>,
+) -> Result<impl IntoResponse, StatusCode> {
+    body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
+    let user = state
+        .get_user_by_email(&body.email)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let verification = state
+        .verify_user_password(user.id, &body.password)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    if !verification {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    let session_id = state
+        .create_session(user)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        SET_COOKIE,
+        format!("session_id={}; HttpOnly; SameSite=Lax", session_id)
+            .parse()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    );
+
+    Ok((StatusCode::OK, headers))
+}
+
 pub async fn logout(
     State(state): State<Repository>,
     TypedHeader(cookie): TypedHeader<Cookie>,
