@@ -1,4 +1,5 @@
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
+use axum_extra::{headers::Cookie, TypedHeader};
 use lettre::Address;
 use reqwest::{header::SET_COOKIE, StatusCode};
 use serde::Deserialize;
@@ -138,5 +139,28 @@ pub async fn login(
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
     );
 
-    Ok((StatusCode::OK, headers))
+    Ok((StatusCode::NO_CONTENT, headers))
+}
+
+pub async fn logout(
+    State(state): State<Repository>,
+    TypedHeader(cookie): TypedHeader<Cookie>,
+) -> Result<impl IntoResponse, StatusCode> {
+    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
+
+    state
+        .delete_session(session_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        SET_COOKIE,
+        "session_id=; HttpOnly; SameSite=Lax; Max-Age=-1"
+            .parse()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    );
+
+    Ok((StatusCode::NO_CONTENT, headers))
 }
