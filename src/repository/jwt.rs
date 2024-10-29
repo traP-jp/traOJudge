@@ -75,7 +75,7 @@ impl Repository {
             iat,
             nbf,
             user_id: Some(user_id),
-            email: email.to_owned(),
+            email: email.to_string(),
             action: Action::change_email,
         };
 
@@ -92,7 +92,7 @@ impl Repository {
             iat,
             nbf,
             user_id: None,
-            email: email.to_owned(),
+            email: email.to_string(),
             action: Action::register_email,
         };
 

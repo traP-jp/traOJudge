@@ -11,7 +11,7 @@ pub async fn send_email(send_to: Address, subject: &str, message: &str) -> anyho
 
     let email = Message::builder()
         .from(Mailbox::new(
-            Some("traOJudge".to_owned()),
+            Some("traOJudge".to_string()),
             app_address.parse::<Address>().unwrap(),
         ))
         .to(Mailbox::new(None, send_to))
@@ -19,7 +19,7 @@ pub async fn send_email(send_to: Address, subject: &str, message: &str) -> anyho
         .singlepart(
             SinglePart::builder()
                 .header(header::ContentType::TEXT_PLAIN)
-                .body(message.to_owned()),
+                .body(message.to_string()),
         )?;
 
     let credentials = Credentials::new(app_address, app_password);
