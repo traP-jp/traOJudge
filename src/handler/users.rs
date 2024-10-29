@@ -96,25 +96,16 @@ pub async fn put_me_password(
     body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
     let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
 
-    let display_id = state
-        .get_display_id_by_session_id(session_id)
+    let id = state
+        .get_user_id_by_session_id(session_id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
-    let user = state
-        .get_user_by_display_id(display_id)
-        .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
-        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
-
-    match state
-        .verify_user_password(user.id, &body.old_password)
-        .await
-    {
+    match state.verify_user_password(id, &body.old_password).await {
         Ok(true) => {
             state
-                .update_user_password(user.id, &body.new_password)
+                .update_user_password(id, &body.new_password)
                 .await
                 .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
             Ok(StatusCode::NO_CONTENT)
