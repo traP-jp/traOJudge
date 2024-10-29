@@ -16,6 +16,7 @@ pub fn make_router(app_state: Repository) -> Router {
     let users_router = Router::new()
         .route("/me", get(users::get_me).put(users::put_me))
         .route("/me/email", put(users::put_me_email))
+        .route("/me/password", put(users::put_me_password))
         .route("/:userId", get(users::get_user));
 
     Router::new()
