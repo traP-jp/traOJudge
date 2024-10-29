@@ -164,3 +164,41 @@ pub async fn logout(
 
     Ok((StatusCode::NO_CONTENT, headers))
 }
+
+#[derive(Deserialize)]
+pub struct ResetPassword {
+    password: String,
+    token: String,
+}
+
+impl Validator for ResetPassword {
+    fn validate(&self) -> anyhow::Result<()> {
+        RuleType::Password.validate(&self.password)?;
+        Ok(())
+    }
+}
+
+pub async fn reset_password(
+    State(state): State<Repository>,
+    Json(body): Json<ResetPassword>,
+) -> Result<StatusCode, StatusCode> {
+    body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    let email = state
+        .get_email_by_email_jwt(&body.token)
+        .await
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+    let user = state
+        .get_user_by_email(&email)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    state
+        .update_user_password(user.id, &body.password)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
