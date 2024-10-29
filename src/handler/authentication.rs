@@ -86,7 +86,7 @@ pub async fn sign_up(
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     state
-        .save_raw_password(id, &body.password)
+        .save_user_password(id, &body.password)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     Ok(StatusCode::CREATED)

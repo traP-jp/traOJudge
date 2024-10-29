@@ -8,11 +8,6 @@ use super::Repository;
 use crate::repository::users::UpdateUser;
 use crate::utils::validator::{RuleType, Validator};
 
-#[derive(Deserialize)]
-pub struct EmailUpdate {
-    email: String,
-}
-
 pub async fn get_me(
     State(state): State<Repository>,
     TypedHeader(cookie): TypedHeader<Cookie>,
@@ -32,6 +27,11 @@ pub async fn get_me(
         .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(user))
+}
+
+#[derive(Deserialize)]
+pub struct EmailUpdate {
+    email: String,
 }
 
 pub async fn put_me_email(
@@ -71,6 +71,56 @@ https://link/{jwt}"
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(StatusCode::NO_CONTENT)
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PasswordUpdate {
+    old_password: String,
+    new_password: String,
+}
+
+impl Validator for PasswordUpdate {
+    fn validate(&self) -> anyhow::Result<()> {
+        RuleType::Password.validate(&self.old_password)?;
+        RuleType::Password.validate(&self.new_password)?;
+        Ok(())
+    }
+}
+
+pub async fn put_me_password(
+    State(state): State<Repository>,
+    TypedHeader(cookie): TypedHeader<Cookie>,
+    Json(body): Json<PasswordUpdate>,
+) -> anyhow::Result<StatusCode, StatusCode> {
+    body.validate().map_err(|_| StatusCode::BAD_REQUEST)?;
+    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let display_id = state
+        .get_display_id_by_session_id(session_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let user = state
+        .get_user_by_display_id(display_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    match state
+        .verify_user_password(user.id, &body.old_password)
+        .await
+    {
+        Ok(true) => {
+            state
+                .update_user_password(user.id, &body.new_password)
+                .await
+                .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+            Ok(StatusCode::NO_CONTENT)
+        }
+        _ => Err(StatusCode::UNAUTHORIZED),
+    }
 }
 
 #[derive(serde::Deserialize, Clone)]
