@@ -165,6 +165,7 @@ pub async fn logout(
     Ok((StatusCode::NO_CONTENT, headers))
 }
 
+#[derive(Deserialize)]
 pub struct ResetPasswordRequest {
     email: String,
 }
@@ -201,6 +202,7 @@ https://link/{jwt}"
     Ok(StatusCode::CREATED)
 }
 
+#[derive(Deserialize)]
 pub struct ResetPassword {
     password: String,
     token: String,
