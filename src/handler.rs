@@ -14,6 +14,10 @@ pub fn make_router(app_state: Repository) -> Router {
         .route("/signup", post(authentication::sign_up))
         .route("/login", post(authentication::login))
         .route("/logout", post(authentication::logout))
+        .route(
+            "/reset-password/request",
+            post(authentication::reset_password_request),
+        )
         .route("/reset-password", post(authentication::reset_password));
 
     let users_router = Router::new()
