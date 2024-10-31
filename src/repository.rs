@@ -38,6 +38,7 @@ impl Repository {
     pub async fn create_by_pool(pool: sqlx::MySqlPool) -> anyhow::Result<Self> {
         let session_store =
             MySqlSessionStore::from_client(pool.clone()).with_table_name("user_sessions");
+        session_store.migrate().await?;
 
         Ok(Self {
             pool,
