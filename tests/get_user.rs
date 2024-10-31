@@ -3,7 +3,7 @@ use std::borrow::BorrowMut;
 use axum::{body::Body, http::Request};
 use http_body_util::BodyExt;
 use serde_json::Value;
-use tower::util::ServiceExt;
+use tower::ServiceExt;
 use trao_judge_backend::{make_router, Repository};
 
 #[sqlx::test(fixtures("common"))]
