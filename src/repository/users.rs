@@ -12,7 +12,9 @@ use super::Repository;
 #[derive(Debug, Clone, PartialEq, sqlx::Type, Serialize)]
 #[repr(i32)]
 pub enum UserRole {
+    #[serde(rename = "commonUser")]
     common_user = 0,
+    #[serde(rename = "traPUser")]
     traP_user = 1,
     admin = 2,
 }
