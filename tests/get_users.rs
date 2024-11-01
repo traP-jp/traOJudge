@@ -1,6 +1,9 @@
 use std::borrow::BorrowMut;
 
-use axum::{body::Body, http::{self, Request}};
+use axum::{
+    body::Body,
+    http::{self, Request},
+};
 use common::check::users_check_by_id;
 use http_body_util::BodyExt;
 use serde_json::Value;

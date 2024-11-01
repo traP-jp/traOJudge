@@ -1,6 +1,9 @@
 use std::borrow::BorrowMut;
 
-use axum::{body::Body, http::{self, Request}};
+use axum::{
+    body::Body,
+    http::{self, Request},
+};
 use common::RequestBuilderExt;
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
@@ -16,31 +19,35 @@ async fn put_user_me(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
     let mut app = make_router(state.clone());
 
     let tests = vec![
-        (1, json!({
-            "userName": "tt",
-            "selfIntroduction": "hello",
-        }), vec![
-            ("name", "tt"),
-            ("selfIntroduction", "hello"),
-        ]),
-
-        (2, json!({
-            "userName": "t-t",
-            "xLink": "https://x.com/test",
-        }), vec![
-            ("name", "t-t"),
-            ("xLink", "https://x.com/test"),
-        ]),
-
-        (3, json!({
-            "userName": "t-t",
-            "xLink": "https://x.com/tester/t",
-            "selfIntroduction": "hello",
-        }), vec![
-            ("name", "t-t"),
-            ("xLink", "https://x.com/tester/t"),
-            ("selfIntroduction", "hello"),
-        ]),
+        (
+            1,
+            json!({
+                "userName": "tt",
+                "selfIntroduction": "hello",
+            }),
+            vec![("name", "tt"), ("selfIntroduction", "hello")],
+        ),
+        (
+            2,
+            json!({
+                "userName": "t-t",
+                "xLink": "https://x.com/test",
+            }),
+            vec![("name", "t-t"), ("xLink", "https://x.com/test")],
+        ),
+        (
+            3,
+            json!({
+                "userName": "t-t",
+                "xLink": "https://x.com/tester/t",
+                "selfIntroduction": "hello",
+            }),
+            vec![
+                ("name", "t-t"),
+                ("xLink", "https://x.com/tester/t"),
+                ("selfIntroduction", "hello"),
+            ],
+        ),
     ];
 
     for (id, req_json, changes) in tests {
@@ -67,7 +74,6 @@ async fn put_user_me(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
         for (key, value) in changes {
             assert_eq!(resp_json[key], value);
         }
-
 
         // get_users/me との比較
         let get_user_response = app
@@ -128,7 +134,7 @@ async fn put_user_me_invalid(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
         json!({
             "userName": "t-t",
             "selfIntroduction": "hello",
-        })
+        }),
     ];
 
     for req_json in tests {
@@ -148,4 +154,3 @@ async fn put_user_me_invalid(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
 
     Ok(())
 }
-
