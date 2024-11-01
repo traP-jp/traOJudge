@@ -129,10 +129,10 @@ async fn put_user_me_invalid(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
         }),
         json!({
             "userName": "t-t",
-            "xLink": "http://x.com/tester/t",
+            "xLink": "https://x.com",
         }),
         json!({
-            "userName": "t-t",
+            "userName": "Test/Test",
             "selfIntroduction": "hello",
         }),
     ];
