@@ -8,7 +8,15 @@ VALUES
     "test_github_id_1",
     "https://github.com/test_user_1",
     "test_self_introduction_1",
-    "test_email_1"
+    "test1@test.com"
+);
+
+INSERT INTO users_passwords
+(user_id, password)
+VALUES
+(
+    UNHEX(REPLACE('11111111-1111-1111-1111-111111111111','-','')),
+    "test_password_1"
 );
 
 INSERT INTO 
