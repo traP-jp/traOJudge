@@ -4,14 +4,11 @@ use axum::{
     body::Body,
     http::{self, Request},
 };
-use common::RequestBuilderExt;
+use super::common::RequestBuilderExt;
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
 use tower::ServiceExt;
 use trao_judge_backend::{make_router, Repository};
-
-#[allow(dead_code)]
-mod common;
 
 #[sqlx::test(fixtures("common"))]
 async fn put_user_me(pool: sqlx::MySqlPool) -> anyhow::Result<()> {
