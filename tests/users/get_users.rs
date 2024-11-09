@@ -1,15 +1,14 @@
 use std::borrow::BorrowMut;
 
+use super::common::check::users_check_by_id;
 use axum::{
     body::Body,
     http::{self, Request},
 };
-use super::common::check::users_check_by_id;
 use http_body_util::BodyExt;
 use serde_json::Value;
 use tower::ServiceExt;
 use trao_judge_backend::{make_router, Repository};
-
 
 #[sqlx::test(fixtures("common"))]
 async fn get_user_by_id(pool: sqlx::MySqlPool) -> anyhow::Result<()> {

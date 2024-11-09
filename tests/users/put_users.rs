@@ -1,10 +1,10 @@
 use std::borrow::BorrowMut;
 
+use super::common::RequestBuilderExt;
 use axum::{
     body::Body,
     http::{self, Request},
 };
-use super::common::RequestBuilderExt;
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
 use tower::ServiceExt;
