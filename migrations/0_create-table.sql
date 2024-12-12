@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS `normal_problems` (
 );
 
 CREATE TABLE IF NOT EXISTS `testcases` (
-	`testcase_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`problem_id` INT NOT NULL,
-	`testcase_name` VARCHAR(255) NOT NULL,
-	`testcase_path` VARCHAR(255) NOT NULL
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+	`name` VARCHAR(255) NOT NULL,
+	`path` VARCHAR(255) NOT NULL,
+	`problem_id` INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `editiorials` (
