@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `users_passwords` (
 );
 
 CREATE TABLE IF NOT EXISTS `normal_problems` (
-	`problem_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`auther_id` INT NOT NULL,
 	`title` VARCHAR(255) NOT NULL,
 	`statement` TEXT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `testcases` (
 );
 
 CREATE TABLE IF NOT EXISTS `editiorials` (
-	`editorial_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`problem_id` INT NOT NULL,
 	`auther_id` INT NOT NULL,
 	`statement` TEXT NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `editiorials` (
 );
 
 CREATE TABLE IF NOT EXISTS `submissions` (
-	`submission_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`problem_id` INT NOT NULL,
 	`auther_id` INT NOT NULL,
 	`language_id` INT NOT NULL,
@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 );
 
 CREATE TABLE IF NOT EXISTS `submission_testcases` (
-	`testcase_id` INT AUTO_INCREMENT PRIMARY KEY,
 	`submission_id` INT NOT NULL,
+	`testcase_id` INT NOT NULL,
 	`testcase_name` VARCHAR(255) NOT NULL,
 	`judge_status` VARCHAR(4) NOT NULL,
 	`score` BIGINT NOT NULL,
