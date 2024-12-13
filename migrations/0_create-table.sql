@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`problem_id` INT NOT NULL,
 	`user_id` INT NOT NULL,
+	`user_name` VARCHAR(255) NOT NULL,
 	`language_id` INT NOT NULL,
 	`source` TEXT NOT NULL,
 	`judge_status` VARCHAR(4) NOT NULL,
