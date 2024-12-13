@@ -37,7 +37,9 @@ CREATE TABLE IF NOT EXISTS `testcases` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`name` VARCHAR(255) NOT NULL,
 	`path` VARCHAR(255) NOT NULL,
-	`problem_id` INT NOT NULL
+	`problem_id` INT NOT NULL,
+	`created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `editiorials` (
@@ -52,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `editiorials` (
 CREATE TABLE IF NOT EXISTS `submissions` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`problem_id` INT NOT NULL,
-	`auther_id` INT NOT NULL,
+	`user_id` INT NOT NULL,
 	`language_id` INT NOT NULL,
 	`source` TEXT NOT NULL,
 	`judge_status` VARCHAR(4) NOT NULL,
