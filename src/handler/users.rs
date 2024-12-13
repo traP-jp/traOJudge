@@ -178,14 +178,18 @@ pub async fn put_me(
         self_introduction: body.self_introduction.unwrap_or(user.self_introduction),
     };
 
-    let icon_url = new_body.icon_url.clone();
-
     state
         .update_user(user.display_id, new_body)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    Ok(Json(serde_json::json!({"iconUrl": icon_url})))
+    let new_user = state
+        .get_user_by_display_id(display_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(new_user))
 }
 
 pub async fn get_user(
