@@ -10,6 +10,8 @@ mod utils;
 pub struct Repository {
     pool: MySqlPool,
     session_store: MySqlSessionStore,
+    s3_client: aws_sdk_s3::Client,
+    bucket_name: String,
     bcrypt_cost: u32,
 }
 
