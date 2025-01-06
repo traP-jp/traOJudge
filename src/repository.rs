@@ -8,6 +8,8 @@ mod user_password;
 pub mod users;
 mod users_session;
 
+pub mod problems;
+
 impl Repository {
     pub async fn connect() -> anyhow::Result<Self> {
         let options = get_option_from_env()?;

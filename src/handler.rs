@@ -6,6 +6,7 @@ use axum::{
 use super::Repository;
 
 mod authentication;
+mod problems;
 mod users;
 
 pub fn make_router(app_state: Repository) -> Router {
@@ -26,8 +27,11 @@ pub fn make_router(app_state: Repository) -> Router {
         .route("/me/password", put(users::put_me_password))
         .route("/:userId", get(users::get_user));
 
+    let problems_router = Router::new().route("/", post(problems::post_problems));
+
     Router::new()
         .nest("/", authentication_router)
         .nest("/users", users_router)
+        .nest("/problems", problems_router)
         .with_state(app_state)
 }
