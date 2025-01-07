@@ -24,7 +24,7 @@ impl Repository {
 
         let config = get_config_from_env()?;
         let s3_client = aws_sdk_s3::Client::from_conf(config);
-        let bucket_name = std::env::var("OBJECT_STORAGE_BUCKET_NAME")?;
+        let bucket_name = std::env::var("OBJECT_STORAGE_BUCKET")?;
         let _ = s3_client.create_bucket().bucket(&bucket_name).send().await;
 
         Ok(Self {
@@ -51,7 +51,7 @@ impl Repository {
 
         let config = get_config_from_env()?;
         let s3_client = aws_sdk_s3::Client::from_conf(config);
-        let bucket_name = std::env::var("OBJECT_STORAGE_BUCKET_NAME")?;
+        let bucket_name = std::env::var("OBJECT_STORAGE_BUCKET")?;
         let _ = s3_client.create_bucket().bucket(&bucket_name).send().await;
 
         Ok(Self {
