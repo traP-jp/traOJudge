@@ -17,11 +17,15 @@ pub struct NormalProblems {
 }
 
 impl Repository {
-    pub async fn get_normal_problem_by_id(&self, id: i32) -> anyhow::Result<Option<NormalProblems>> {
-        let problem = sqlx::query_as::<_, NormalProblems>("SELECT * FROM normal_problems WHERE id = ?")
-            .bind(id)
-            .fetch_optional(&self.pool)
-            .await?;
+    pub async fn get_normal_problem_by_id(
+        &self,
+        id: i32,
+    ) -> anyhow::Result<Option<NormalProblems>> {
+        let problem =
+            sqlx::query_as::<_, NormalProblems>("SELECT * FROM normal_problems WHERE id = ?")
+                .bind(id)
+                .fetch_optional(&self.pool)
+                .await?;
 
         Ok(problem)
     }

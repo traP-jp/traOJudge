@@ -6,8 +6,8 @@ use axum::{
 use super::Repository;
 
 mod authentication;
-mod users;
 mod submissions;
+mod users;
 
 pub fn make_router(app_state: Repository) -> Router {
     let authentication_router = Router::new()
@@ -27,8 +27,8 @@ pub fn make_router(app_state: Repository) -> Router {
         .route("/me/password", put(users::put_me_password))
         .route("/:userId", get(users::get_user));
 
-    let submissions_router = Router::new()
-        .route("/:submissionId", get(submissions::get_submission));
+    let submissions_router =
+        Router::new().route("/:submissionId", get(submissions::get_submission));
 
     Router::new()
         .nest("/", authentication_router)

@@ -1,4 +1,8 @@
-use axum::{extract::{Path, State}, response::IntoResponse, Json};
+use axum::{
+    extract::{Path, State},
+    response::IntoResponse,
+    Json,
+};
 use axum_extra::{headers::Cookie, TypedHeader};
 use reqwest::StatusCode;
 use serde::Serialize;
@@ -39,7 +43,6 @@ pub async fn get_submission(
     TypedHeader(cookie): TypedHeader<Cookie>,
     Path(path): Path<i64>,
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
-
     let submission = state
         .get_submission_by_id(path)
         .await
@@ -62,7 +65,7 @@ pub async fn get_submission(
             .ok_or(StatusCode::NOT_FOUND)?;
 
         if display_id != problem.author_id {
-            return Err(StatusCode::NOT_FOUND)
+            return Err(StatusCode::NOT_FOUND);
         }
     }
 

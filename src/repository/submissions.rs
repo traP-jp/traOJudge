@@ -1,4 +1,4 @@
-use sqlx::{FromRow, types::chrono};
+use sqlx::{types::chrono, FromRow};
 
 use super::Repository;
 
@@ -38,11 +38,15 @@ impl Repository {
         Ok(submission)
     }
 
-    pub async fn get_testcases_by_submission_id(&self, submission_id: i32) -> anyhow::Result<Vec<Testcase>> {
-        let testcases = sqlx::query_as::<_, Testcase>("SELECT * FROM testcases WHERE submission_id = ?")
-            .bind(submission_id)
-            .fetch_all(&self.pool)
-            .await?;
+    pub async fn get_testcases_by_submission_id(
+        &self,
+        submission_id: i32,
+    ) -> anyhow::Result<Vec<Testcase>> {
+        let testcases =
+            sqlx::query_as::<_, Testcase>("SELECT * FROM testcases WHERE submission_id = ?")
+                .bind(submission_id)
+                .fetch_all(&self.pool)
+                .await?;
 
         Ok(testcases)
     }

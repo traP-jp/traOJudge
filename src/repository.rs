@@ -4,11 +4,11 @@ use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions};
 use super::Repository;
 
 mod jwt;
+mod normal_problems;
+mod submissions;
 mod user_password;
 pub mod users;
 mod users_session;
-mod submissions;
-mod normal_problems;
 
 impl Repository {
     pub async fn connect() -> anyhow::Result<Self> {
