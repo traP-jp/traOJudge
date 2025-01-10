@@ -7,7 +7,8 @@ mod jwt;
 mod user_password;
 pub mod users;
 mod users_session;
-pub mod submissions;
+mod submissions;
+mod normal_problems;
 
 impl Repository {
     pub async fn connect() -> anyhow::Result<Self> {

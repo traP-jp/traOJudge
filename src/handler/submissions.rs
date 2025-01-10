@@ -1,4 +1,5 @@
 use axum::{extract::{Path, State}, response::IntoResponse, Json};
+use axum_extra::{headers::Cookie, TypedHeader};
 use reqwest::StatusCode;
 use serde::Serialize;
 use sqlx::types::chrono;
@@ -33,13 +34,32 @@ struct TestcaseResponse {
 
 pub async fn get_submission(
     State(state): State<Repository>,
+    TypedHeader(cookie): TypedHeader<Cookie>,
     Path(path): Path<i64>,
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
+    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
+
+    let display_id = state
+        .get_display_id_by_session_id(session_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
     let submission = state
         .get_submission_by_id(path)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::NOT_FOUND)?;
+
+    let problem = state
+        .get_normal_problem_by_id(submission.problem_id)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::NOT_FOUND)?;
+
+    if !problem.is_public && display_id != problem.author_id {
+        return Err(StatusCode::NOT_FOUND)
+    }
 
     let testcases = state
         .get_testcases_by_submission_id(submission.id)
