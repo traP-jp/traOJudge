@@ -7,6 +7,7 @@ use super::Repository;
 
 mod authentication;
 mod users;
+mod submissions;
 
 pub fn make_router(app_state: Repository) -> Router {
     let authentication_router = Router::new()
@@ -26,8 +27,12 @@ pub fn make_router(app_state: Repository) -> Router {
         .route("/me/password", put(users::put_me_password))
         .route("/:userId", get(users::get_user));
 
+    let submissions_router = Router::new()
+        .route("/:submissionId", get(submissions::get_submission));
+
     Router::new()
         .nest("/", authentication_router)
         .nest("/users", users_router)
+        .nest("/submissions", submissions_router)
         .with_state(app_state)
 }
