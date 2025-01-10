@@ -4,6 +4,8 @@ use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions};
 use super::Repository;
 
 mod jwt;
+mod normal_problems;
+mod submissions;
 mod user_password;
 pub mod users;
 mod users_session;
