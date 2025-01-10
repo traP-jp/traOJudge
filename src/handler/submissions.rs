@@ -7,6 +7,7 @@ use sqlx::types::chrono;
 use super::Repository;
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct SubmissionResponse {
     id: String,
     user_id: i32,
@@ -23,6 +24,7 @@ struct SubmissionResponse {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct TestcaseResponse {
     testcase_id: i32,
     testcase_name: String,
@@ -37,13 +39,6 @@ pub async fn get_submission(
     TypedHeader(cookie): TypedHeader<Cookie>,
     Path(path): Path<i64>,
 ) -> anyhow::Result<impl IntoResponse, StatusCode> {
-    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
-
-    let display_id = state
-        .get_display_id_by_session_id(session_id)
-        .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
-        .ok_or(StatusCode::UNAUTHORIZED)?;
 
     let submission = state
         .get_submission_by_id(path)
@@ -57,8 +52,18 @@ pub async fn get_submission(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .ok_or(StatusCode::NOT_FOUND)?;
 
-    if !problem.is_public && display_id != problem.author_id {
-        return Err(StatusCode::NOT_FOUND)
+    if !problem.is_public {
+        let session_id = cookie.get("session_id").ok_or(StatusCode::NOT_FOUND)?;
+
+        let display_id = state
+            .get_display_id_by_session_id(session_id)
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+            .ok_or(StatusCode::NOT_FOUND)?;
+
+        if display_id != problem.author_id {
+            return Err(StatusCode::NOT_FOUND)
+        }
     }
 
     let testcases = state
