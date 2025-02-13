@@ -1,18 +1,11 @@
-use async_sqlx_session::MySqlSessionStore;
-use sqlx::MySqlPool;
+use di::DiContainer;
 
-mod handler;
-mod repository;
-mod utils;
+pub mod di;
+pub mod domain;
+pub mod infrastructure;
+pub mod presentation;
+pub mod usecase;
 
-#[must_use]
-#[derive(Clone)]
-pub struct Repository {
-    pool: MySqlPool,
-    session_store: MySqlSessionStore,
-    bcrypt_cost: u32,
-}
-
-pub fn make_router(app_state: Repository) -> axum::Router {
-    handler::make_router(app_state)
+pub fn make_router(app_state: DiContainer) -> axum::Router {
+    
 }

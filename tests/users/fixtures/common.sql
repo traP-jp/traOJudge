@@ -39,3 +39,18 @@ VALUES
     2,
     "https://icon.com/test_user_3"
 );
+
+INSERT INTO normal_problems
+(auther_id, title, statement, time_limit, memory_limit, difficulty, judgecode_path, is_public)
+VALUES
+(
+    1,
+    'test',
+    'a',
+    10,
+    10,
+    1,
+    'w',
+    TRUE
+);
+
