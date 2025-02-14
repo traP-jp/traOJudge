@@ -1,4 +1,4 @@
-use crate::{domain::model::rules::RuleType, presentation::context::validate::Validator};
+use crate::domain::model::rules::RuleType;
 
 pub struct UpdateUserData {
     pub user_name: Option<String>,
@@ -8,8 +8,8 @@ pub struct UpdateUserData {
     pub self_introduction: Option<String>,
 }
 
-impl Validator for UpdateUserData {
-    fn validate(&self) -> anyhow::Result<()> {
+impl UpdateUserData {
+    pub fn validate(&self) -> anyhow::Result<()> {
         let rules = vec![
             (&self.user_name, RuleType::UserName),
             (&self.icon_url, RuleType::Icon),
@@ -31,8 +31,8 @@ pub struct UpdatePasswordData {
     pub new_password: String,
 }
 
-impl Validator for UpdatePasswordData {
-    fn validate(&self) -> anyhow::Result<()> {
+impl UpdatePasswordData {
+    pub fn validate(&self) -> anyhow::Result<()> {
         RuleType::Password.validate(&self.old_password)?;
         RuleType::Password.validate(&self.new_password)?;
         Ok(())

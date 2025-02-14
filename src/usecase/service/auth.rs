@@ -1,5 +1,6 @@
 use crate::domain::repository::session::SessionRepository;
 use lettre::Address;
+use tracing::info;
 
 use crate::usecase::model::auth::ResetPasswordData;
 use crate::{
@@ -8,7 +9,6 @@ use crate::{
         model::jwt::EmailToken,
         repository::{auth::AuthRepository, user::UserRepository},
     },
-    presentation::context::validate::Validator,
     usecase::model::auth::{LoginData, SignUpData},
 };
 
@@ -63,7 +63,7 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
         }
 
         let encode_key =
-            std::env::var("JWT_ENCODE_KEY").map_err(|_| AuthError::InternalServerError)?;
+            std::env::var("JWT_SECRET_KEY").map_err(|_| AuthError::InternalServerError)?;
 
         let jwt = EmailToken::encode_email_signup_jwt(&email, encode_key)
             .map_err(|_| AuthError::InternalServerError)?;
@@ -87,7 +87,7 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
         data.validate().map_err(|_| AuthError::ValidateError)?;
 
         let encode_key =
-            std::env::var("JWT_ENCODE_KEY").map_err(|_| AuthError::InternalServerError)?;
+            std::env::var("JWT_SECRET_KEY").map_err(|_| AuthError::InternalServerError)?;
 
         let email =
             EmailToken::get_email(&data.token, encode_key).map_err(|_| AuthError::Unauthorized)?;
@@ -135,6 +135,8 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
             .await
             .map_err(|_| AuthError::InternalServerError)?;
 
+        info!("login success: {}", session_id);
+
         Ok(session_id)
     }
 
@@ -144,7 +146,6 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
             .await
             .map_err(|_| AuthError::InternalServerError)?
             .ok_or(AuthError::Unauthorized)?;
-
         Ok(())
     }
 
@@ -158,7 +159,7 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
         }
 
         let encode_key =
-            std::env::var("JWT_ENCODE_KEY").map_err(|_| AuthError::InternalServerError)?;
+            std::env::var("JWT_SECRET_KEY").map_err(|_| AuthError::InternalServerError)?;
 
         let jwt = EmailToken::encode_email_reset_password_jwt(&email, encode_key)
             .map_err(|_| AuthError::InternalServerError)?;
@@ -182,7 +183,7 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
         data.validate().map_err(|_| AuthError::ValidateError)?;
 
         let encode_key =
-            std::env::var("JWT_ENCODE_KEY").map_err(|_| AuthError::InternalServerError)?;
+            std::env::var("JWT_SECRET_KEY").map_err(|_| AuthError::InternalServerError)?;
 
         let email =
             EmailToken::get_email(&data.token, encode_key).map_err(|_| AuthError::Unauthorized)?;

@@ -30,20 +30,19 @@ impl fmt::Display for UserId {
     }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum UserRole {
-    common_user,
-    traP_user,
-    admin,
+    CommonUser,
+    TrapUser,
+    Admin,
 }
 
 impl From<UserRole> for i32 {
     fn from(role: UserRole) -> Self {
         match role {
-            UserRole::common_user => 0,
-            UserRole::traP_user => 1,
-            UserRole::admin => 2,
+            UserRole::CommonUser => 0,
+            UserRole::TrapUser => 1,
+            UserRole::Admin => 2,
         }
     }
 }
@@ -51,9 +50,9 @@ impl From<UserRole> for i32 {
 impl UserRole {
     pub fn new(role: i32) -> anyhow::Result<Self> {
         match role {
-            0 => Ok(UserRole::common_user),
-            1 => Ok(UserRole::traP_user),
-            2 => Ok(UserRole::admin),
+            0 => Ok(UserRole::CommonUser),
+            1 => Ok(UserRole::TrapUser),
+            2 => Ok(UserRole::Admin),
             _ => anyhow::bail!("invalid role number"),
         }
     }

@@ -9,7 +9,6 @@ use crate::{
         },
         repository::{auth::AuthRepository, session::SessionRepository, user::UserRepository},
     },
-    presentation::context::validate::Validator,
     usecase::model::user::{UpdatePasswordData, UpdateUserData},
 };
 
@@ -67,10 +66,10 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
         Ok(user)
     }
 
-    pub async fn get_me(&self, session_id: String) -> anyhow::Result<User, UserError> {
+    pub async fn get_me(&self, session_id: &str) -> anyhow::Result<User, UserError> {
         let user_id = self
             .session_repository
-            .get_display_id_by_session_id(&session_id)
+            .get_display_id_by_session_id(session_id)
             .await
             .map_err(|_| UserError::InternalServerError)?
             .ok_or(UserError::Unauthorized)?;
@@ -88,14 +87,14 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
 
     pub async fn update_me(
         &self,
-        session_id: String,
+        session_id: &str,
         body: UpdateUserData,
     ) -> anyhow::Result<User, UserError> {
         body.validate().map_err(|_| UserError::ValidateError)?;
 
         let user_id = self
             .session_repository
-            .get_display_id_by_session_id(&session_id)
+            .get_display_id_by_session_id(session_id)
             .await
             .map_err(|_| UserError::InternalServerError)?
             .ok_or(UserError::Unauthorized)?;
@@ -108,7 +107,7 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
             .ok_or(UserError::InternalServerError)?;
 
         // todo (icon)
-        let icon_url = body.icon_url.map(|icon| icon);
+        let icon_url = body.icon_url.map(|_| "todo".to_string());
 
         self.user_repository
             .update_user(
@@ -135,9 +134,9 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
         Ok(new_user)
     }
 
-    pub async fn change_email(
+    pub async fn update_email(
         &self,
-        session_id: String,
+        session_id: &str,
         email: String,
     ) -> anyhow::Result<(), UserError> {
         let user_address = email
@@ -146,7 +145,7 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
 
         let display_id = self
             .session_repository
-            .get_display_id_by_session_id(&session_id)
+            .get_display_id_by_session_id(session_id)
             .await
             .map_err(|_| UserError::InternalServerError)?
             .ok_or(UserError::Unauthorized)?;
@@ -160,7 +159,7 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
             return Err(UserError::ValidateError);
         }
 
-        let encode_key = std::env::var("ENCODE_KEY").unwrap();
+        let encode_key = std::env::var("JWT_SECRET_KEY").unwrap();
         let jwt = EmailToken::encode_email_update_jwt(display_id, &email, encode_key)
             .map_err(|_| UserError::InternalServerError)?;
 
@@ -179,16 +178,16 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
         Ok(())
     }
 
-    pub async fn reset_password(
+    pub async fn update_password(
         &self,
-        session_id: String,
+        session_id: &str,
         data: UpdatePasswordData,
     ) -> anyhow::Result<(), UserError> {
         data.validate().map_err(|_| UserError::ValidateError)?;
 
         let user_id = self
             .session_repository
-            .get_user_id_by_session_id(&session_id)
+            .get_user_id_by_session_id(session_id)
             .await
             .map_err(|_| UserError::InternalServerError)?
             .ok_or(UserError::Unauthorized)?;
@@ -205,8 +204,8 @@ impl<UR: UserRepository, SR: SessionRepository, AR: AuthRepository, C: MailClien
                     .map_err(|_| UserError::InternalServerError)?;
                 Ok(())
             }
-            Ok(false) => return Err(UserError::Unauthorized),
-            Err(_) => return Err(UserError::InternalServerError),
+            Ok(false) => Err(UserError::Unauthorized),
+            Err(_) => Err(UserError::InternalServerError),
         }
     }
 }

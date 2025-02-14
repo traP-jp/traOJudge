@@ -16,7 +16,7 @@ impl MailClientImpl {
     pub fn new() -> anyhow::Result<Self> {
         let app_address = std::env::var("MAIL_ADDRESS").unwrap();
         let app_password = std::env::var("MAIL_PASSWORD").unwrap();
-        let smtp = std::env::var("MAIL_PASSWORD").unwrap();
+        let smtp = std::env::var("MAIL_SMTP").unwrap();
 
         let credentials = Credentials::new(app_address.clone(), app_password.clone());
 

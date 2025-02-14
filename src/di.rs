@@ -27,7 +27,7 @@ pub struct DiContainer {
 }
 
 impl DiContainer {
-    async fn new() -> Self {
+    pub async fn new() -> Self {
         let provider = Provider::new().await.unwrap();
 
         Self {
@@ -46,14 +46,14 @@ impl DiContainer {
         }
     }
 
-    fn user_service(
+    pub fn user_service(
         &self,
     ) -> &UserService<UserRepositoryImpl, SessionRepositoryImpl, AuthRepositoryImpl, MailClientImpl>
     {
         &self.user_service
     }
 
-    fn auth_service(
+    pub fn auth_service(
         &self,
     ) -> &AuthenticationService<
         AuthRepositoryImpl,
