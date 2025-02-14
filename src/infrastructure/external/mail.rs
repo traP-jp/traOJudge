@@ -7,6 +7,7 @@ use lettre::{
 
 use crate::domain::external::mail::MailClient;
 
+#[derive(Clone)]
 pub struct MailClientImpl {
     mailer: SmtpTransport,
 }

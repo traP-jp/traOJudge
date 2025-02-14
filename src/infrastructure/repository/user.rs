@@ -3,7 +3,7 @@ use sqlx::MySqlPool;
 use uuid::Uuid;
 
 use crate::domain::{
-    entities::user::{UpdateUser, User, UserId, UserRole},
+    model::user::{UpdateUser, User, UserId},
     repository::user::UserRepository,
 };
 
@@ -28,20 +28,7 @@ impl UserRepository for UserRepositoryImpl {
             .fetch_optional(&self.pool)
             .await?;
 
-        Ok(user.map(|user| User {
-            id: UserId(user.id.0),
-            display_id: user.display_id,
-            name: user.name,
-            traq_id: user.traq_id,
-            github_id: user.github_id,
-            icon_url: user.icon_url,
-            x_link: user.x_link,
-            github_link: user.github_link,
-            self_introduction: user.self_introduction,
-            role: UserRole::new(user.role).unwrap(),
-            created_at: user.created_at,
-            updated_at: user.updated_at,
-        }))
+        Ok(user.map(|user| user.into()))
     }
 
     async fn get_user_by_email(&self, email: &str) -> anyhow::Result<Option<User>> {
@@ -50,20 +37,7 @@ impl UserRepository for UserRepositoryImpl {
             .fetch_optional(&self.pool)
             .await?;
 
-        Ok(user.map(|user| User {
-            id: UserId(user.id.0),
-            display_id: user.display_id,
-            name: user.name,
-            traq_id: user.traq_id,
-            github_id: user.github_id,
-            icon_url: user.icon_url,
-            x_link: user.x_link,
-            github_link: user.github_link,
-            self_introduction: user.self_introduction,
-            role: UserRole::new(user.role).unwrap(),
-            created_at: user.created_at,
-            updated_at: user.updated_at,
-        }))
+        Ok(user.map(|user| user.into()))
     }
 
     async fn create_user_by_email(&self, name: &str, email: &str) -> anyhow::Result<UserId> {
@@ -93,11 +67,11 @@ impl UserRepository for UserRepositoryImpl {
     }
 
     async fn is_exist_email(&self, email: &str) -> anyhow::Result<bool> {
-        let user = sqlx::query_as::<_, UserRow>("SELECT * FROM users WHERE email = ?")
+        let count = sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM users WHERE email = ?")
             .bind(email)
-            .fetch_optional(&self.pool)
+            .fetch_one(&self.pool)
             .await?;
 
-        Ok(user.is_some())
+        Ok(count > 0)
     }
 }

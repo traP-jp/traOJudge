@@ -1,4 +1,7 @@
-use crate::domain::{entities::user::User, repository::session::SessionRepository};
+use crate::domain::{
+    model::user::{User, UserId},
+    repository::session::SessionRepository,
+};
 use anyhow::Context;
 use async_session::{Session, SessionStore};
 use async_sqlx_session::MySqlSessionStore;
@@ -50,7 +53,7 @@ impl SessionRepository for SessionRepositoryImpl {
         Ok(Some(()))
     }
 
-    async fn get_user_id_by_session_id(&self, session_id: &str) -> anyhow::Result<Option<String>> {
+    async fn get_user_id_by_session_id(&self, session_id: &str) -> anyhow::Result<Option<UserId>> {
         let session = self
             .session_store
             .load_session(session_id.to_string())
@@ -58,7 +61,7 @@ impl SessionRepository for SessionRepositoryImpl {
 
         let user_id = session
             .and_then(|s| s.get("user_id"))
-            .map(|id: uuid::Uuid| id.to_string());
+            .map(|id: uuid::Uuid| id.into());
 
         Ok(user_id)
     }

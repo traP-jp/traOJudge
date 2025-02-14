@@ -1,7 +1,7 @@
 use axum::async_trait;
 use sqlx::MySqlPool;
 
-use crate::domain::{entities::user::UserId, repository::auth::AuthRepository};
+use crate::domain::{model::user::UserId, repository::auth::AuthRepository};
 
 use super::model::UserIdRow;
 

@@ -1,4 +1,4 @@
-use crate::domain::entities::rules::RuleType;
+use crate::domain::model::rules::RuleType;
 
 #[test]
 fn test_user_name_validate() {

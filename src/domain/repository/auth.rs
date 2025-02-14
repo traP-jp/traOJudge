@@ -1,6 +1,6 @@
 use axum::async_trait;
 
-use crate::domain::entities::user::UserId;
+use crate::domain::model::user::UserId;
 
 #[async_trait]
 pub trait AuthRepository {

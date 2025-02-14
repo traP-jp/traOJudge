@@ -1,15 +1,22 @@
 use crate::{
     infrastructure::{
+        external::mail::MailClientImpl,
         provider::Provider,
-        repository::{auth::AuthRepositoryImpl, user::UserRepositoryImpl},
+        repository::{
+            auth::AuthRepositoryImpl, session::SessionRepositoryImpl, user::UserRepositoryImpl,
+        },
     },
     usecase::service::{auth::AuthenticationService, user::UserService},
 };
 
-
 #[derive(Clone)]
 pub struct DiContainer {
-    auth_service: AuthenticationService<AuthRepositoryImpl>,
+    auth_service: AuthenticationService<
+        AuthRepositoryImpl,
+        UserRepositoryImpl,
+        SessionRepositoryImpl,
+        MailClientImpl,
+    >,
     user_service: UserService<UserRepositoryImpl>,
 }
 
@@ -18,7 +25,12 @@ impl DiContainer {
         let provider = Provider::new().await.unwrap();
 
         Self {
-            auth_service: AuthenticationService::new(provider.provide_auth_repository()),
+            auth_service: AuthenticationService::new(
+                provider.provide_auth_repository(),
+                provider.provide_user_repository(),
+                provider.provide_session_repository(),
+                provider.provide_mail_client(),
+            ),
             user_service: UserService::new(provider.provide_user_repository()),
         }
     }
@@ -27,7 +39,14 @@ impl DiContainer {
         &self.user_service
     }
 
-    fn auth_service(&self) -> &AuthenticationService<AuthRepositoryImpl> {
+    fn auth_service(
+        &self,
+    ) -> &AuthenticationService<
+        AuthRepositoryImpl,
+        UserRepositoryImpl,
+        SessionRepositoryImpl,
+        MailClientImpl,
+    > {
         &self.auth_service
     }
 }

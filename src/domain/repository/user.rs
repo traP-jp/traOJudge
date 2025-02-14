@@ -1,6 +1,6 @@
 use axum::async_trait;
 
-use crate::domain::entities::user::{UpdateUser, User, UserId};
+use crate::domain::model::user::{UpdateUser, User, UserId};
 
 #[async_trait]
 pub trait UserRepository {

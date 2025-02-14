@@ -1,39 +1,40 @@
-use crate::domain::entities::user::UpdateUser;
+use crate::{domain::model::rules::RuleType, presentation::context::validate::Validator};
 
-pub struct UpdateUserRequest {
-    pub user_name: String,
+pub struct UpdateUserData {
+    pub user_name: Option<String>,
     pub icon_url: Option<String>,
     pub x_link: Option<String>,
     pub github_link: Option<String>,
-    pub self_introduction: String,
+    pub self_introduction: Option<String>,
 }
 
-impl UpdateUserRequest {
-    pub fn new(
-        user_name: String,
-        icon_url: Option<String>,
-        x_link: Option<String>,
-        github_link: Option<String>,
-        self_introduction: String,
-    ) -> Self {
-        Self {
-            user_name,
-            icon_url,
-            x_link,
-            github_link,
-            self_introduction,
+impl Validator for UpdateUserData {
+    fn validate(&self) -> anyhow::Result<()> {
+        let rules = vec![
+            (&self.user_name, RuleType::UserName),
+            (&self.icon_url, RuleType::Icon),
+            (&self.x_link, RuleType::XLink),
+            (&self.github_link, RuleType::GitHubLink),
+            (&self.self_introduction, RuleType::SelfIntroduction),
+        ];
+        for (value, rule) in rules {
+            if let Some(value) = value {
+                rule.validate(value)?;
+            }
         }
+        Ok(())
     }
 }
 
-impl From<UpdateUserRequest> for UpdateUser {
-    fn from(req: UpdateUserRequest) -> Self {
-        Self {
-            user_name: req.user_name,
-            icon_url: req.icon_url,
-            x_link: req.x_link,
-            github_link: req.github_link,
-            self_introduction: req.self_introduction,
-        }
+pub struct UpdatePasswordData {
+    pub old_password: String,
+    pub new_password: String,
+}
+
+impl Validator for UpdatePasswordData {
+    fn validate(&self) -> anyhow::Result<()> {
+        RuleType::Password.validate(&self.old_password)?;
+        RuleType::Password.validate(&self.new_password)?;
+        Ok(())
     }
 }
