@@ -2,12 +2,11 @@ use axum::async_trait;
 use sqlx::MySqlPool;
 use uuid::Uuid;
 
-use crate::domain::{
+use crate::{domain::{
     model::user::{UpdateUser, User, UserId},
     repository::user::UserRepository,
-};
+}, infrastructure::model::user::{UserIdRow, UserRow}};
 
-use super::model::{UserIdRow, UserRow};
 
 #[derive(Clone)]
 pub struct UserRepositoryImpl {

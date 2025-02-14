@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::{
     infrastructure::{
         external::mail::MailClientImpl,
@@ -11,13 +13,17 @@ use crate::{
 
 #[derive(Clone)]
 pub struct DiContainer {
-    auth_service: AuthenticationService<
-        AuthRepositoryImpl,
-        UserRepositoryImpl,
-        SessionRepositoryImpl,
-        MailClientImpl,
+    auth_service: Arc<
+        AuthenticationService<
+            AuthRepositoryImpl,
+            UserRepositoryImpl,
+            SessionRepositoryImpl,
+            MailClientImpl,
+        >,
     >,
-    user_service: UserService<UserRepositoryImpl>,
+    user_service: Arc<
+        UserService<UserRepositoryImpl, SessionRepositoryImpl, AuthRepositoryImpl, MailClientImpl>,
+    >,
 }
 
 impl DiContainer {
@@ -25,17 +31,25 @@ impl DiContainer {
         let provider = Provider::new().await.unwrap();
 
         Self {
-            auth_service: AuthenticationService::new(
+            auth_service: Arc::new(AuthenticationService::new(
                 provider.provide_auth_repository(),
                 provider.provide_user_repository(),
                 provider.provide_session_repository(),
                 provider.provide_mail_client(),
-            ),
-            user_service: UserService::new(provider.provide_user_repository()),
+            )),
+            user_service: Arc::new(UserService::new(
+                provider.provide_user_repository(),
+                provider.provide_session_repository(),
+                provider.provide_auth_repository(),
+                provider.provide_mail_client(),
+            )),
         }
     }
 
-    fn user_service(&self) -> &UserService<UserRepositoryImpl> {
+    fn user_service(
+        &self,
+    ) -> &UserService<UserRepositoryImpl, SessionRepositoryImpl, AuthRepositoryImpl, MailClientImpl>
+    {
         &self.user_service
     }
 

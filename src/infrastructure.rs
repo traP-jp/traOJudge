@@ -1,4 +1,4 @@
 pub mod external;
-pub mod module;
+pub mod model;
 pub mod provider;
 pub mod repository;

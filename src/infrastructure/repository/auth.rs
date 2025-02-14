@@ -1,9 +1,8 @@
 use axum::async_trait;
 use sqlx::MySqlPool;
 
-use crate::domain::{model::user::UserId, repository::auth::AuthRepository};
+use crate::{domain::{model::user::UserId, repository::auth::AuthRepository}, infrastructure::model::user::UserIdRow};
 
-use super::model::UserIdRow;
 
 #[derive(Clone)]
 pub struct AuthRepositoryImpl {
