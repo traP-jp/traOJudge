@@ -1,4 +1,5 @@
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
+use axum_extra::{headers::Cookie, TypedHeader};
 use reqwest::{header::SET_COOKIE, StatusCode};
 
 use crate::{
@@ -81,8 +82,10 @@ pub async fn login(
 
 pub async fn logout(
     State(di_container): State<DiContainer>,
-    session_id: String,
+    TypedHeader(cookie): TypedHeader<Cookie>,
 ) -> Result<impl IntoResponse, StatusCode> {
+    let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
+
     match di_container.auth_service().logout(session_id).await {
         Ok(_) => {
             let mut headers = HeaderMap::new();

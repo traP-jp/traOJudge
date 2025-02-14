@@ -1,6 +1,5 @@
 use crate::domain::repository::session::SessionRepository;
 use lettre::Address;
-use tracing::info;
 
 use crate::usecase::model::auth::ResetPasswordData;
 use crate::{
@@ -135,14 +134,12 @@ impl<AR: AuthRepository, UR: UserRepository, SR: SessionRepository, C: MailClien
             .await
             .map_err(|_| AuthError::InternalServerError)?;
 
-        info!("login success: {}", session_id);
-
         Ok(session_id)
     }
 
-    pub async fn logout(&self, session_id: String) -> anyhow::Result<(), AuthError> {
+    pub async fn logout(&self, session_id: &str) -> anyhow::Result<(), AuthError> {
         self.session_repository
-            .delete_session(&session_id)
+            .delete_session(session_id)
             .await
             .map_err(|_| AuthError::InternalServerError)?
             .ok_or(AuthError::Unauthorized)?;

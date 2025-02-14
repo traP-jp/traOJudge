@@ -1,11 +1,18 @@
-use axum::{extract::{Path, State}, response::IntoResponse, Json};
+use axum::{
+    extract::{Path, State},
+    response::IntoResponse,
+    Json,
+};
 use axum_extra::{headers::Cookie, TypedHeader};
 use reqwest::StatusCode;
 
 use crate::{
     di::DiContainer,
     presentation::model::users::{UpdateEmail, UpdateMe, UpdatePassword, UserResponse},
-    usecase::{model::user::{UpdatePasswordData, UpdateUserData}, service::user::UserError},
+    usecase::{
+        model::user::{UpdatePasswordData, UpdateUserData},
+        service::user::UserError,
+    },
 };
 
 pub async fn get_me(
@@ -59,10 +66,13 @@ pub async fn put_me_password(
 
     match di_container
         .user_service()
-        .update_password(session_id, UpdatePasswordData {
-            old_password: body.old_password,
-            new_password: body.new_password,
-        })
+        .update_password(
+            session_id,
+            UpdatePasswordData {
+                old_password: body.old_password,
+                new_password: body.new_password,
+            },
+        )
         .await
     {
         Ok(_) => Ok(StatusCode::NO_CONTENT),
@@ -82,13 +92,20 @@ pub async fn put_me(
 ) -> Result<impl IntoResponse, StatusCode> {
     let session_id = cookie.get("session_id").ok_or(StatusCode::UNAUTHORIZED)?;
 
-    match di_container.user_service().update_me(session_id, UpdateUserData {
-        user_name: body.user_name,
-        icon_url: body.icon,
-        x_link: body.x_link,
-        github_link: body.github_link,
-        self_introduction: body.self_introduction,
-    }).await {
+    match di_container
+        .user_service()
+        .update_me(
+            session_id,
+            UpdateUserData {
+                user_name: body.user_name,
+                icon_url: body.icon,
+                x_link: body.x_link,
+                github_link: body.github_link,
+                self_introduction: body.self_introduction,
+            },
+        )
+        .await
+    {
         Ok(user) => {
             let resp = UserResponse::from(user);
             Ok((StatusCode::OK, Json(resp)))
