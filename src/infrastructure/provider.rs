@@ -10,7 +10,8 @@ use sqlx::{
 use super::{
     external::{mail::MailClientImpl, object_strage::ObjectStorageClientImpl},
     repository::{
-        auth::AuthRepositoryImpl, session::SessionRepositoryImpl, user::UserRepositoryImpl,
+        auth::AuthRepositoryImpl, problem::ProblemRepositoryImpl, session::SessionRepositoryImpl,
+        submission::SubmissionRepositoryImpl, user::UserRepositoryImpl,
     },
 };
 
@@ -83,6 +84,14 @@ impl Provider {
 
     pub fn provide_user_repository(&self) -> UserRepositoryImpl {
         UserRepositoryImpl::new(self.pool.clone())
+    }
+
+    pub fn provide_submission_repository(&self) -> SubmissionRepositoryImpl {
+        SubmissionRepositoryImpl::new(self.pool.clone())
+    }
+
+    pub fn provide_problem_repository(&self) -> ProblemRepositoryImpl {
+        ProblemRepositoryImpl::new(self.pool.clone())
     }
 
     pub fn provide_mail_client(&self) -> MailClientImpl {

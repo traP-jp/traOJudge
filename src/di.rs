@@ -5,10 +5,14 @@ use crate::{
         external::mail::MailClientImpl,
         provider::Provider,
         repository::{
-            auth::AuthRepositoryImpl, session::SessionRepositoryImpl, user::UserRepositoryImpl,
+            auth::AuthRepositoryImpl, problem::ProblemRepositoryImpl,
+            session::SessionRepositoryImpl, submission::SubmissionRepositoryImpl,
+            user::UserRepositoryImpl,
         },
     },
-    usecase::service::{auth::AuthenticationService, user::UserService},
+    usecase::service::{
+        auth::AuthenticationService, submission::SubmissionService, user::UserService,
+    },
 };
 
 #[derive(Clone)]
@@ -23,6 +27,9 @@ pub struct DiContainer {
     >,
     user_service: Arc<
         UserService<UserRepositoryImpl, SessionRepositoryImpl, AuthRepositoryImpl, MailClientImpl>,
+    >,
+    submission_service: Arc<
+        SubmissionService<SessionRepositoryImpl, SubmissionRepositoryImpl, ProblemRepositoryImpl>,
     >,
 }
 
@@ -40,6 +47,11 @@ impl DiContainer {
                 provider.provide_session_repository(),
                 provider.provide_auth_repository(),
                 provider.provide_mail_client(),
+            )),
+            submission_service: Arc::new(SubmissionService::new(
+                provider.provide_session_repository(),
+                provider.provide_submission_repository(),
+                provider.provide_problem_repository(),
             )),
         }
     }
@@ -60,5 +72,12 @@ impl DiContainer {
         MailClientImpl,
     > {
         &self.auth_service
+    }
+
+    pub fn submission_service(
+        &self,
+    ) -> &SubmissionService<SessionRepositoryImpl, SubmissionRepositoryImpl, ProblemRepositoryImpl>
+    {
+        &self.submission_service
     }
 }

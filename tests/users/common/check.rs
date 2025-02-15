@@ -2,7 +2,6 @@ use serde_json::{json, Value};
 
 pub fn users_check_by_id(id: i64, resp_json: &mut Value) -> anyhow::Result<()> {
     let users_json = match id {
-
         1 => json!({
             "id": "11111111-1111-1111-1111-111111111111",
             "displayId": 1,
