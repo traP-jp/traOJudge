@@ -27,9 +27,7 @@ pub struct DiContainer {
 }
 
 impl DiContainer {
-    pub async fn new() -> Self {
-        let provider = Provider::new().await.unwrap();
-
+    pub async fn new(provider: Provider) -> Self {
         Self {
             auth_service: Arc::new(AuthenticationService::new(
                 provider.provide_auth_repository(),

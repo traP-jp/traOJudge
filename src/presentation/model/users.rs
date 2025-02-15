@@ -25,6 +25,7 @@ impl From<UserRole> for UserRoleResponse {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserResponse {
     pub id: Uuid,
     pub display_id: i64,

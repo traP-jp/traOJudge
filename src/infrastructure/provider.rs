@@ -4,7 +4,7 @@ use aws_sdk_s3::{config::Credentials, Config};
 use sqlx::{
     migrate,
     mysql::{MySqlConnectOptions, MySqlPoolOptions},
-    MySqlPool,
+    MySql, MySqlPool, Pool,
 };
 
 use super::{
@@ -14,6 +14,7 @@ use super::{
     },
 };
 
+#[derive(Clone, Debug)]
 pub struct Provider {
     pool: MySqlPool,
     session_store: MySqlSessionStore,
@@ -31,6 +32,27 @@ impl Provider {
             .connect_with(options)
             .await?;
 
+        let session_store =
+            MySqlSessionStore::from_client(pool.clone()).with_table_name("user_sessions");
+
+        migrate!("./migrations").run(&pool).await?;
+        session_store.migrate().await?;
+
+        let config = get_config_from_env()?;
+        let s3_client = aws_sdk_s3::Client::from_conf(config);
+        let bucket_name = std::env::var("OBJECT_STORAGE_BUCKET")?;
+        let _ = s3_client.create_bucket().bucket(&bucket_name).send().await;
+
+        Ok(Self {
+            pool,
+            session_store,
+            bcrypt_cost: bcrypt::DEFAULT_COST,
+            s3_client,
+            bucket_name,
+        })
+    }
+
+    pub async fn create_by_pool(pool: Pool<MySql>) -> anyhow::Result<Self> {
         let session_store =
             MySqlSessionStore::from_client(pool.clone()).with_table_name("user_sessions");
 
