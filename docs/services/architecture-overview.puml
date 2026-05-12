@@ -1,0 +1,46 @@
+@startuml overview
+
+title traOJudge services overview
+
+!define PUSH_ARROW -[#2E7D32]->
+!define POLLING_ARROW -[#C47F00,dashed]->
+!define PULL_ARROW -[#1E88E5]->
+
+rectangle contestant {
+	actor Contestant
+}
+
+rectangle writer {
+	actor Writer
+	component TraoPy
+}
+
+rectangle neoShowcase {
+	component ApiServer
+	component WebUI
+	database Database
+}
+
+rectangle cloudService {
+	queue JobRequestQueue
+	queue JobResponseQueue
+	component JobRunner
+	storage Storage
+}
+
+Contestant <-> WebUI
+Writer <-> WebUI
+
+ApiServer <-> Database
+
+TraoPy PUSH_ARROW Storage : push
+
+ApiServer PUSH_ARROW JobRequestQueue : push
+JobRunner POLLING_ARROW JobRequestQueue : polling
+
+JobRunner PUSH_ARROW JobResponseQueue : push
+ApiServer POLLING_ARROW JobResponseQueue: polling
+
+JobRunner PULL_ARROW Storage : pull
+
+@enduml
