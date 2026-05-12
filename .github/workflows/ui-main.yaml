@@ -1,0 +1,39 @@
+name: CI (UI)
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+    paths:
+      - 'UI/**'
+      - '.github/workflows/ui-main.yaml'
+
+defaults:
+  run:
+    working-directory: UI
+
+jobs:
+  package:
+    name: node package install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: UI/.node-version
+          cache: npm
+          cache-dependency-path: UI/package-lock.json
+      - run: npm ci
+  build:
+    name: type and build check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: UI/.node-version
+          cache: npm
+          cache-dependency-path: UI/package-lock.json
+      - run: npm ci
+      - run: ./scripts/gen-api.sh development
+      - run: npm run build
