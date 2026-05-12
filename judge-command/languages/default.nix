@@ -1,0 +1,10 @@
+{ ... }:
+{
+  perSystem =
+    { ... }:
+    {
+      imports = [
+        ./cpp-gcc
+      ];
+    };
+}
