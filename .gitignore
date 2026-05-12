@@ -1,0 +1,14 @@
+# typescript
+node_modules
+
+# rust
+target
+
+# nix
+result
+
+# formatter
+treefmt.toml
+
+# editor
+.vscode
