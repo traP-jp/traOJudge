@@ -1,8 +1,12 @@
 [package]
-name = "traojudge-apps"
+name = "traojudge-backend_app"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
+axum.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
