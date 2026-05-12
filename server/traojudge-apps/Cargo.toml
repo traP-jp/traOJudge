@@ -1,0 +1,8 @@
+[package]
+name = "traojudge-apps"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+traojudge-core.workspace = true
+traojudge-infra.workspace = true

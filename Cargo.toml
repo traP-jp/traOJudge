@@ -1,0 +1,14 @@
+[workspace]
+members = ["server/*"]
+resolver = "3"
+
+[workspace.package]
+name = "traojudge"
+version = "0.1.0"
+edition = "2024"
+
+[workspace.dependencies]
+traojudge-apps = { path = "server/traojudge-apps" }
+traojudge-core = { path = "server/traojudge-core" }
+traojudge-infra = { path = "server/traojudge-infra" }
+traojudge-test = { path = "server/traojudge-test" }

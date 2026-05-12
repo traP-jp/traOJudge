@@ -1,0 +1,6 @@
+[package]
+name = "traojudge-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
