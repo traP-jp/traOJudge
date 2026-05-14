@@ -9,9 +9,7 @@ import { ref, watch } from 'vue'
 
 const props = defineProps<{
   displayUsername?: boolean
-  loadSubmissions: (
-    page: number
-  ) => Promise<{
+  loadSubmissions: (page: number) => Promise<{
     submissions: Map<string, SubmissionSummary>
     totalPage: number
   }>
@@ -48,11 +46,11 @@ watch([page], () => updateSubmissions(), {
 </script>
 
 <template>
-  <ListingTable 
-    v-if="isLoaded" 
-    :cols="cols.filter(col => 
-      (props.displayUsername ? col.id !== 'title' : col.id !== 'userName')
-    )" 
+  <ListingTable
+    v-if="isLoaded"
+    :cols="
+      cols.filter((col) => (props.displayUsername ? col.id !== 'title' : col.id !== 'userName'))
+    "
     :row-ids="[...submissions.keys()]"
   >
     <template #head="{ colId }">

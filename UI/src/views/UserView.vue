@@ -43,7 +43,11 @@ watch(
 <template>
   <div class="flex gap-8 px-container-x">
     <nav class="sticky top-14 h-header-offset">
-      <SideMenuUserPage :user-id="userId" :username="user?.name ?? ''" :icon-url="user?.iconUrl ?? ''" />
+      <SideMenuUserPage
+        :user-id="userId"
+        :username="user?.name ?? ''"
+        :icon-url="user?.iconUrl ?? ''"
+      />
     </nav>
     <main class="flex-auto py-6">
       <RouterView :user-id="userId" :user="user" />

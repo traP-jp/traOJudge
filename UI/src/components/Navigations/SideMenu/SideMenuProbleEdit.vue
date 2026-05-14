@@ -58,18 +58,16 @@ watch(
   { immediate: true }
 )
 
-watch(
-  () => problemId,
-  fetchProblemTitle,
-  { immediate: true }
-)
+watch(() => problemId, fetchProblemTitle, { immediate: true })
 </script>
 
 <template>
   <SideMenuBase v-model="currentTab" :main-contents="mainContents">
     <div class="flex w-full flex-col justify-center">
       <span class="mt-2 font-primary text-xl font-semibold text-text-primary">問題設定</span>
-      <span class="mt-2 font-primary text-base font-semibold text-text-tertiary">{{ problemTitle }}</span>
+      <span class="mt-2 font-primary text-base font-semibold text-text-tertiary">{{
+        problemTitle
+      }}</span>
     </div>
   </SideMenuBase>
 </template>
