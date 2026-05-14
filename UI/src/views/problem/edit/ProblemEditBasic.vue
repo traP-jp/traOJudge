@@ -186,11 +186,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <LabeledCheckbox
-          id="is-public"
-          v-model="isPublic"
-          label="問題を公開する"
-        />
+        <LabeledCheckbox id="is-public" v-model="isPublic" label="問題を公開する" />
 
         <PrimaryButton
           class="h-10 w-18 px-3 py-2"

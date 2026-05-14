@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import MaterialIcon, { type Icon } from '@/components/MaterialIcon.vue'
 
-const { disabled = false, padding, leftIcon, rightIcon } = defineProps<{
+const {
+  disabled = false,
+  padding,
+  leftIcon,
+  rightIcon
+} = defineProps<{
   disabled?: boolean
   padding?: string
   leftIcon?: Icon

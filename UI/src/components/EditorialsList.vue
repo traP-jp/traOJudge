@@ -30,8 +30,8 @@ async function loadEditorials() {
     editorialIds.value = summaries.map(({ id }) => id)
     editorials.value = new Map(summaries.map((editorial) => [editorial.id, editorial]))
 
-    const userIds = [...new Set(summaries.map(e => e.authorId))]
-    const userPromises = userIds.map(userId => usersApi.getUser({ userId }))
+    const userIds = [...new Set(summaries.map((e) => e.authorId))]
+    const userPromises = userIds.map((userId) => usersApi.getUser({ userId }))
     const userProfiles = await Promise.all(userPromises)
     users.value = new Map(userProfiles.map((user: User) => [user.id, user]))
   } catch (error) {
@@ -62,12 +62,7 @@ function handleUserClick(userId: string) {
 </script>
 
 <template>
-  <ListingTable
-    v-if="isLoaded"
-    :cols="cols"
-    :row-ids="editorialIds"
-    :selected-rows="[]"
-  >
+  <ListingTable v-if="isLoaded" :cols="cols" :row-ids="editorialIds" :selected-rows="[]">
     <template #head="{ colId }">
       {{ cols.find(({ id }) => id === colId)?.name }}
     </template>

@@ -167,7 +167,7 @@ router.beforeEach(async (to, _, next) => {
 
   await userStore.initialize()
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!userStore.isAuthenticated) {
       next({
         path: '/login',
@@ -177,7 +177,7 @@ router.beforeEach(async (to, _, next) => {
     }
   }
 
-  if (to.matched.some(record => record.meta.requiresTraqAuth)) {
+  if (to.matched.some((record) => record.meta.requiresTraqAuth)) {
     const isAdmin = userStore.user?.role === 'Admin'
     const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
     if (!isAdmin && !isTraqAuthenticated) {
