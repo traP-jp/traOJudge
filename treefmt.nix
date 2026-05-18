@@ -14,20 +14,18 @@
       treefmt = {
         projectRootFile = "flake.nix";
 
-        programs.biome = {
-          enable = true;
-          formatCommand = "format";
-        };
+        programs.prettier.enable = true;
         programs.nixfmt.enable = true;
         programs.rustfmt = {
           enable = true;
           package = config.packages.rust-toolchain;
         };
-        settings.formatter.biome.includes = [
-          "*.ts"
-          "*.tsx"
-          "*.md"
-        ];
+        settings.formatter.prettier = {
+          options = [
+            "--config"
+            "UI/.prettierrc.json"
+          ];
+        };
       };
 
       packages."ci:treefmt:sync" = pkgs.writeShellApplication {
