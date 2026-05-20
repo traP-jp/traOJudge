@@ -28,14 +28,14 @@ onMounted(async () => {
       }) || ''
     editorialStatement.value = response.statement
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      if (error.response.status === 404) {
-        console.error('解説が存在しません(または解説の閲覧権限がありません)')
-      } else {
-        console.error('Unknown error: ' + error.response.status)
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       console.error('Get Editorial Error', error)
+      return
+    }
+    if (error.response.status === 404) {
+      console.error('解説が存在しません(または解説の閲覧権限がありません)')
+    } else {
+      console.error('Unknown error: ' + error.response.status)
     }
   }
 })

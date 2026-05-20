@@ -42,6 +42,28 @@ try {
   console.error('Signup Register Error:', error)
 }
 
+const validatePasswordFields = (): boolean => {
+  let invalid = false
+  const [isPasswordValid, passwordError] = passwordValidator(password.value)
+  if (!isPasswordValid) {
+    passwordErrorMessage.value = passwordError
+    invalid = true
+  } else {
+    passwordErrorMessage.value = ''
+  }
+
+  if (!confirmPassword.value) {
+    confirmPasswordErrorMessage.value = '必須項目です。'
+    invalid = true
+  } else if (password.value !== confirmPassword.value) {
+    confirmPasswordErrorMessage.value = '入力されたパスワードが一致しません。'
+    invalid = true
+  } else {
+    confirmPasswordErrorMessage.value = ''
+  }
+  return invalid
+}
+
 async function onSignupRegister() {
   let hasError = false
 
@@ -53,24 +75,8 @@ async function onSignupRegister() {
     usernameErrorMessage.value = ''
   }
 
-  if (!oauth.value) {
-    const [isPasswordValid, passwordError] = passwordValidator(password.value)
-    if (!isPasswordValid) {
-      passwordErrorMessage.value = passwordError
-      hasError = true
-    } else {
-      passwordErrorMessage.value = ''
-    }
-
-    if (!confirmPassword.value) {
-      confirmPasswordErrorMessage.value = '必須項目です。'
-      hasError = true
-    } else if (password.value !== confirmPassword.value) {
-      confirmPasswordErrorMessage.value = '入力されたパスワードが一致しません。'
-      hasError = true
-    } else {
-      confirmPasswordErrorMessage.value = ''
-    }
+  if (!oauth.value && validatePasswordFields()) {
+    hasError = true
   }
 
   if (hasError) return
@@ -89,18 +95,18 @@ async function onSignupRegister() {
     await userStore.fetchCurrentUser()
     router.push('/')
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      const status = error.response.status
-      if (status === 400) {
-        formError.value = '入力内容に問題があります。もう一度確認してください。'
-      } else if (status === 401) {
-        formError.value = '認証に失敗しました。リンクが無効か期限切れです。'
-      } else {
-        formError.value = 'エラーが発生しました。もう一度お試しください。'
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       formError.value = '予期せぬエラーが発生しました。もう一度お試しください。'
       console.error('サインアップエラー:', error)
+      return
+    }
+    const status = error.response.status
+    if (status === 400) {
+      formError.value = '入力内容に問題があります。もう一度確認してください。'
+    } else if (status === 401) {
+      formError.value = '認証に失敗しました。リンクが無効か期限切れです。'
+    } else {
+      formError.value = 'エラーが発生しました。もう一度お試しください。'
     }
   } finally {
     isSubmitting.value = false

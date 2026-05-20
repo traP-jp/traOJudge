@@ -20,20 +20,18 @@ export const useOAuthStore = defineStore('oauth', () => {
     const now = Date.now()
 
     keys.forEach((key) => {
-      if (key.startsWith('oauth_state_')) {
-        try {
-          const stateData = sessionStorage.getItem(key)
-          if (stateData) {
-            const state = JSON.parse(stateData)
-            // 10分以上古いstateは削除
-            // TODO: 有効期限はどうする？
-            if (now - state.timestamp > 10 * 60 * 1000) {
-              sessionStorage.removeItem(key)
-            }
-          }
-        } catch {
+      if (!key.startsWith('oauth_state_')) return
+      try {
+        const stateData = sessionStorage.getItem(key)
+        if (!stateData) return
+        const state = JSON.parse(stateData)
+        // 10分以上古いstateは削除
+        // TODO: 有効期限はどうする？
+        if (now - state.timestamp > 10 * 60 * 1000) {
           sessionStorage.removeItem(key)
         }
+      } catch {
+        sessionStorage.removeItem(key)
       }
     })
   }

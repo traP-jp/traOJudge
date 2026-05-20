@@ -139,20 +139,22 @@ async function handleCopy(id: string) {
 
 async function handleDelete(id: string) {
   const testcase = testcases.value.get(id)
-  if (testcase && confirm(`テストケース「${testcase.name}」を削除しますか？`)) {
-    try {
-      await requireTraqAuth(() => testcasesApi.deleteTestcase({ testcaseId: id }))
+  if (!testcase || !confirm(`テストケース「${testcase.name}」を削除しますか？`)) {
+    dropdownOpenId.value = null
+    return
+  }
+  try {
+    await requireTraqAuth(() => testcasesApi.deleteTestcase({ testcaseId: id }))
 
-      testcases.value.delete(id)
-      testcaseDetails.value.delete(id)
-      testcaseIds.value = Array.from(testcases.value.keys())
+    testcases.value.delete(id)
+    testcaseDetails.value.delete(id)
+    testcaseIds.value = Array.from(testcases.value.keys())
 
-      if (editingTestcase.value?.id === id) {
-        closeEditArea()
-      }
-    } catch (error) {
-      alert(error instanceof Error ? error.message : 'テストケースの削除に失敗しました')
+    if (editingTestcase.value?.id === id) {
+      closeEditArea()
     }
+  } catch (error) {
+    alert(error instanceof Error ? error.message : 'テストケースの削除に失敗しました')
   }
   dropdownOpenId.value = null
 }

@@ -37,18 +37,18 @@ const handleSignupRequest = async () => {
     signupStore.setEmail(email.value)
     router.push('/signup/mail-send')
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      const status = error.response.status
-      // TODO: エラーハンドリングの文章
-      if (status === 400) {
-        emailErrorMessage.value = 'リクエストが不正です。入力内容を確認してください。'
-      } else {
-        emailErrorMessage.value = 'エラーが発生しました。もう一度お試しください。'
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       // TODO: エラーハンドリングの文章
       emailErrorMessage.value = '予期せぬエラーが発生しました。もう一度お試しください。'
       console.error(error)
+      return
+    }
+    const status = error.response.status
+    // TODO: エラーハンドリングの文章
+    if (status === 400) {
+      emailErrorMessage.value = 'リクエストが不正です。入力内容を確認してください。'
+    } else {
+      emailErrorMessage.value = 'エラーが発生しました。もう一度お試しください。'
     }
   }
 }

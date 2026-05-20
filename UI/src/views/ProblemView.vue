@@ -24,14 +24,14 @@ onMounted(async () => {
     problemName.value = response.title
     problemAuthorId.value = response.authorId
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      if (error.response.status === 404) {
-        console.error('Not Found 問題が存在しません. (または問題の閲覧権限がありません.)')
-      } else {
-        console.error('Unknown error: ' + error.response.status)
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       console.error('Get Problem Info Error', error)
+      return
+    }
+    if (error.response.status === 404) {
+      console.error('Not Found 問題が存在しません. (または問題の閲覧権限がありません.)')
+    } else {
+      console.error('Unknown error: ' + error.response.status)
     }
   }
 })
