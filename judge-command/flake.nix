@@ -24,7 +24,7 @@
       perSystem =
         { config, ... }:
         {
-          packages.default = config.trao.languages.cpp-gcc-23.internal.sampleBuild;
+          packages.default = config.trao.languages.cpp-23-gcc.internal.prebuild;
         };
     };
 }

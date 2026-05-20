@@ -56,7 +56,7 @@
                 };
               };
               config = {
-                internal.sampleBuild = config.builder config.sampleSource;
+                internal.prebuild = config.builder config.prebuildSourceFile;
               };
             }
           )
