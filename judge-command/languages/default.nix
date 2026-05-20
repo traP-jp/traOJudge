@@ -4,7 +4,7 @@
     { ... }:
     {
       imports = [
-        ./cpp-gcc
+        ./cpp
       ];
     };
 }
