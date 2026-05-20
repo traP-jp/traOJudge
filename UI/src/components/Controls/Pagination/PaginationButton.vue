@@ -4,7 +4,7 @@ const { disabled = false, current = false } = defineProps<{
   padding?: string
   current?: boolean
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits<{ (e: 'click'): void }>()
 
 function onClick() {
   emit('click')

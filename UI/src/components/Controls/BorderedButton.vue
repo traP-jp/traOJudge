@@ -6,7 +6,7 @@ const { disabled = false } = defineProps<{
   padding?: string
   icon?: Icon
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits<{ (e: 'click'): void }>()
 function onClick() {
   emit('click')
 }
