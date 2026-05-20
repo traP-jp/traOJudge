@@ -108,7 +108,7 @@ onMounted(async () => {
 <template>
   <div class="flex h-header-offset items-center justify-center bg-background-secondary p-6">
     <div
-      class="flex w-[360px] flex-col items-center justify-center gap-6 rounded-15 bg-background-primary px-8 py-6"
+      class="flex w-auth-form flex-col items-center justify-center gap-6 rounded-15 bg-background-primary px-8 py-6"
     >
       <div v-if="isProcessing" class="flex flex-col items-center gap-4">
         <div class="size-8 animate-spin rounded-full border-b-2 border-text-primary"></div>

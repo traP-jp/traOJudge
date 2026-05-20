@@ -42,7 +42,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-[1_0_0] flex-col items-start gap-6 py-6">
+  <div class="flex flex-1 flex-col items-start gap-6 py-6">
     <div class="flex flex-col items-start gap-1 self-stretch">
       <div class="fontstyle-ui-subtitle text-text-primary">{{ editorialTitle }}</div>
       <div class="flex flex-col items-start">
@@ -58,7 +58,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-[#000000]">
+    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-text-primary">
       {{ editorialStatement }}
     </div>
   </div>
