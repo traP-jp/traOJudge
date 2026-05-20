@@ -72,5 +72,3 @@ watch(
     </div>
   </SideMenuBase>
 </template>
-
-<style scoped></style>

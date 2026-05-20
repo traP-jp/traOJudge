@@ -71,5 +71,3 @@ watch(() => problemId, fetchProblemTitle, { immediate: true })
     </div>
   </SideMenuBase>
 </template>
-
-<style scoped></style>

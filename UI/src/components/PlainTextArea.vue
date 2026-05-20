@@ -108,5 +108,3 @@ const onClickInnerBorder = (e: MouseEvent) => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

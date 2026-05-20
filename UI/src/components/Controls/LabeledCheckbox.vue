@@ -41,5 +41,3 @@ const isDisabled = computed(() => attrs.disabled !== undefined && attrs.disabled
     </p>
   </div>
 </template>
-
-<style scoped></style>

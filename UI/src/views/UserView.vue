@@ -54,5 +54,3 @@ watch(
     </main>
   </div>
 </template>
-
-<style scoped></style>

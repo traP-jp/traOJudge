@@ -80,5 +80,3 @@ const onChange = (event: Event) => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

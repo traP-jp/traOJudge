@@ -99,5 +99,3 @@ const updateValue = (value: string | undefined) => {
     />
   </div>
 </template>
-
-<style scoped></style>

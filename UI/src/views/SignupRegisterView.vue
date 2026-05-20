@@ -158,5 +158,3 @@ async function onSignupRegister() {
     </div>
   </div>
 </template>
-
-<style scoped></style>

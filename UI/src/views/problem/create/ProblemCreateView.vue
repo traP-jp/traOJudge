@@ -168,5 +168,3 @@ async function createProblem() {
     </div>
   </div>
 </template>
-
-<style scoped></style>

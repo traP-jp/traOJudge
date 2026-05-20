@@ -17,5 +17,3 @@ const toggleVisibility = () => (visible.value = !visible.value)
     @click-right="toggleVisibility"
   />
 </template>
-
-<style scoped></style>

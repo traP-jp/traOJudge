@@ -30,5 +30,3 @@ const toggleFilterMenu = () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

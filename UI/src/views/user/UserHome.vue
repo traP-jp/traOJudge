@@ -80,5 +80,3 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
     </div>
   </div>
 </template>
-
-<style scoped></style>

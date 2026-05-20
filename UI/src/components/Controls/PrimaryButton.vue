@@ -30,5 +30,3 @@ function onClick() {
     <MaterialIcon v-if="rightIcon" :icon="rightIcon" size="20px" />
   </button>
 </template>
-
-<style scoped></style>

@@ -22,5 +22,3 @@ const { href, newTab = false } = defineProps<{
     </a>
   </span>
 </template>
-
-<style scoped></style>

@@ -25,5 +25,3 @@ function onClick() {
     </span>
   </button>
 </template>
-
-<style scoped></style>

@@ -79,5 +79,3 @@ const currentTab = defineModel<number>({ default: 0 })
     </div>
   </nav>
 </template>
-
-<style scoped></style>

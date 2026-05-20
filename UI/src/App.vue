@@ -20,5 +20,3 @@ const userStore = useUserStore()
     <BottomNavbar />
   </template>
 </template>
-
-<style scoped></style>

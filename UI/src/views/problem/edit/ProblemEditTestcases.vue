@@ -361,5 +361,3 @@ watch(problemId, () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

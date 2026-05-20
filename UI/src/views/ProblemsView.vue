@@ -47,5 +47,3 @@ const loadProblems = async (page: number, difficultyBegin: number, difficultyEnd
     </ProblemsList>
   </section>
 </template>
-
-<style scoped></style>

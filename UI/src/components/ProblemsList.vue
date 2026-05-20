@@ -154,5 +154,3 @@ const filterDifficultyRangeError = computed(
   <div v-else>読み込み中...</div>
   <SimplePagination v-model="page" :end="totalPage" class="mt-6" />
 </template>
-
-<style scoped></style>

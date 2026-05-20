@@ -93,5 +93,3 @@ watch([page], () => updateSubmissions(), {
   <div v-else>読み込み中...</div>
   <SimplePagination v-if="totalPage > 1" v-model="page" :end="totalPage" class="mt-6" />
 </template>
-
-<style scoped></style>

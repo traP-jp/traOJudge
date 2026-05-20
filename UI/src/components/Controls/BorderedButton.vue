@@ -23,5 +23,3 @@ function onClick() {
     <MaterialIcon v-if="icon" :icon="icon" size="24px" class="ml-2" />
   </button>
 </template>
-
-<style scoped></style>

@@ -58,5 +58,3 @@ async function onOAuthClick() {
     >
   </button>
 </template>
-
-<style scoped></style>

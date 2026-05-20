@@ -10,5 +10,3 @@ import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
     </div>
   </div>
 </template>
-
-<style scoped></style>

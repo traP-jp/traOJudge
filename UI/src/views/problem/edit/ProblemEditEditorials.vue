@@ -23,5 +23,3 @@ watch(
     </EditableEditorialsList>
   </section>
 </template>
-
-<style scoped></style>
