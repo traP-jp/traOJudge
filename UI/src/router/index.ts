@@ -167,23 +167,21 @@ router.beforeEach(async (to, _, next) => {
 
   await userStore.initialize()
 
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!userStore.isAuthenticated) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-      return
-    }
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  if (requiresAuth && !userStore.isAuthenticated) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+    return
   }
 
-  if (to.matched.some((record) => record.meta.requiresTraqAuth)) {
-    const isAdmin = userStore.user?.role === 'Admin'
-    const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
-    if (!isAdmin && !isTraqAuthenticated) {
-      next('/')
-      return
-    }
+  const requiresTraqAuth = to.matched.some((record) => record.meta.requiresTraqAuth)
+  const isAdmin = userStore.user?.role === 'Admin'
+  const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
+  if (requiresTraqAuth && !isAdmin && !isTraqAuthenticated) {
+    next('/')
+    return
   }
 
   if (to.path === '/login' && userStore.isAuthenticated) {

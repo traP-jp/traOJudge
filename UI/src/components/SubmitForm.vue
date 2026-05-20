@@ -47,7 +47,7 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true
   try {
-    const submission = await new SubmissionsApi().postSubmission({
+    await new SubmissionsApi().postSubmission({
       problemId: problemId,
       postSubmissionRequest: {
         languageId: selectedLanguage.value.id,
@@ -100,5 +100,3 @@ const handleSubmit = async () => {
     </template>
   </div>
 </template>
-
-<style scoped></style>

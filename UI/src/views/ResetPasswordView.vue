@@ -59,5 +59,3 @@ const requestResetPassword = async () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

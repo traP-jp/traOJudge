@@ -24,7 +24,11 @@ const {
   rightIcon?: Icon
   supportingText?: string
 }>()
-const emit = defineEmits(['clickRight', 'focusin', 'blur'])
+const emit = defineEmits<{
+  (e: 'clickRight'): void
+  (e: 'focusin'): void
+  (e: 'blur'): void
+}>()
 const value = defineModel<string>()
 const displaysError = computed(() => error || errorMessage != '')
 const displaysLeftIcon = computed(() => leftIcon != null)
@@ -104,5 +108,3 @@ const onClickInnerBorder = (e: MouseEvent) => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

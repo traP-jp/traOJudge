@@ -37,18 +37,18 @@ const handleSignupRequest = async () => {
     signupStore.setEmail(email.value)
     router.push('/signup/mail-send')
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      const status = error.response.status
-      // TODO: エラーハンドリングの文章
-      if (status === 400) {
-        emailErrorMessage.value = 'リクエストが不正です。入力内容を確認してください。'
-      } else {
-        emailErrorMessage.value = 'エラーが発生しました。もう一度お試しください。'
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       // TODO: エラーハンドリングの文章
       emailErrorMessage.value = '予期せぬエラーが発生しました。もう一度お試しください。'
       console.error(error)
+      return
+    }
+    const status = error.response.status
+    // TODO: エラーハンドリングの文章
+    if (status === 400) {
+      emailErrorMessage.value = 'リクエストが不正です。入力内容を確認してください。'
+    } else {
+      emailErrorMessage.value = 'エラーが発生しました。もう一度お試しください。'
     }
   }
 }
@@ -57,7 +57,7 @@ const handleSignupRequest = async () => {
 <template>
   <div class="flex h-header-offset items-start justify-center bg-background-secondary p-6">
     <div
-      class="flex w-[360px] flex-col items-start justify-center gap-6 rounded-15 bg-background-primary px-8 py-6"
+      class="flex w-auth-form flex-col items-start justify-center gap-6 rounded-15 bg-background-primary px-8 py-6"
     >
       <h1 class="fontstyle-ui-subtitle leading-7 text-text-primary">新規登録</h1>
 

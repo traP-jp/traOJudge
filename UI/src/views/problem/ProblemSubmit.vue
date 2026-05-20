@@ -11,5 +11,3 @@ const problemId = route.params.id as string
     <SubmitForm :problem-id="problemId" />
   </div>
 </template>
-
-<style scoped></style>

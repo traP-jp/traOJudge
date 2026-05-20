@@ -6,7 +6,7 @@ import AlertBox from '@/components/AlertBox.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
 import MaterialIcon from '@/components/MaterialIcon.vue'
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import {
   EditorialsApi,
   ResponseError,
@@ -166,12 +166,12 @@ onMounted(() => {
   <div class="flex font-primary">
     <div class="flex w-full flex-col">
       <div class="flex w-full flex-col items-start justify-start gap-4">
-        <Link href="../editorials">
+        <TextLink href="../editorials">
           <span class="inline-flex items-center gap-1">
             <MaterialIcon icon="arrow_left_alt" class="inline-block" />
             <span class="underline underline-offset-2">解説一覧に戻る</span>
           </span>
-        </Link>
+        </TextLink>
 
         <h2 class="text-xl font-medium">解説の編集</h2>
 
@@ -212,5 +212,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

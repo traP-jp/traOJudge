@@ -53,15 +53,15 @@ onMounted(async () => {
     <template v-else>
       <div class="flex flex-col gap-4">
         <h2 class="fontstyle-ui-subtitle text-text-primary">問題文</h2>
+        <!-- eslint-disable vue/no-v-html -- markdown-itの出力をレンダリング。raw HTML は escape され URL も markdown-it 側で検証されるため XSS は限定的。完全サニタイズはこのファイル冒頭の TODO を参照。 -->
         <div
           class="prose prose-sm max-w-none text-text-primary [&>h1]:text-2xl [&>h1]:font-bold [&>h2]:text-xl [&>h2]:font-semibold"
           v-html="renderedStatement"
         ></div>
+        <!-- eslint-enable vue/no-v-html -->
       </div>
       <hr class="border-t border-border-secondary" />
       <SubmitForm :problem-id="problemId" />
     </template>
   </div>
 </template>
-
-<style scoped></style>

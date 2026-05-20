@@ -44,5 +44,3 @@ const { cols, rowIds, selectedRows } = defineProps<{
     </tbody>
   </table>
 </template>
-
-<style scoped></style>

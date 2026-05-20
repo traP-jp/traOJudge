@@ -36,5 +36,3 @@ watch(
     <h1 class="fontstyle-ui-subtitle">設定</h1>
   </SideMenuBase>
 </template>
-
-<style scoped></style>

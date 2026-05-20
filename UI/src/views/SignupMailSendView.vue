@@ -39,15 +39,15 @@ const handleResendEmail = async () => {
     signupStore.setEmail(signupStore.email)
   } catch (error: unknown) {
     console.error('メール再送信エラー:', error)
-    if (error instanceof ResponseError) {
-      const status = error.response.status
-      if (status === 400) {
-        alert('リクエストが不正です。入力内容を確認してください。')
-      } else {
-        alert('エラーが発生しました。もう一度お試しください。')
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       alert('予期せぬエラーが発生しました。もう一度お試しください。')
+      return
+    }
+    const status = error.response.status
+    if (status === 400) {
+      alert('リクエストが不正です。入力内容を確認してください。')
+    } else {
+      alert('エラーが発生しました。もう一度お試しください。')
     }
   }
 }

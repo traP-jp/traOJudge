@@ -1,0 +1,15 @@
+# dependencies
+node_modules
+
+# build outputs
+dist
+build
+coverage
+target
+result
+
+# generated
+UI/src/api/
+
+# tooling artifacts
+treefmt.toml

@@ -10,7 +10,7 @@ const props = defineProps<{
   type?: 'info' | 'error'
 }>()
 
-const emit = defineEmits(['update:show'])
+const emit = defineEmits<{ (e: 'update:show', value: boolean): void }>()
 const handleClose = () => {
   emit('update:show', false)
 }

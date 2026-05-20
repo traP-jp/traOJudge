@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import { EditorialsApi } from '@/api/generated/apis/EditorialsApi.ts'
 import { ResponseError } from '@/api/generated/runtime'
 import { useRoute } from 'vue-router'
@@ -28,29 +28,29 @@ onMounted(async () => {
       }) || ''
     editorialStatement.value = response.statement
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      if (error.response.status === 404) {
-        console.error('解説が存在しません(または解説の閲覧権限がありません)')
-      } else {
-        console.error('Unknown error: ' + error.response.status)
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       console.error('Get Editorial Error', error)
+      return
+    }
+    if (error.response.status === 404) {
+      console.error('解説が存在しません(または解説の閲覧権限がありません)')
+    } else {
+      console.error('Unknown error: ' + error.response.status)
     }
   }
 })
 </script>
 
 <template>
-  <div class="flex flex-[1_0_0] flex-col items-start gap-6 py-6">
+  <div class="flex flex-1 flex-col items-start gap-6 py-6">
     <div class="flex flex-col items-start gap-1 self-stretch">
       <div class="fontstyle-ui-subtitle text-text-primary">{{ editorialTitle }}</div>
       <div class="flex flex-col items-start">
         <div class="flex items-center justify-center gap-3">
           <div class="fontstyle-ui-body-2 text-text-secondary">著者</div>
-          <Link :href="'/users/' + editorialAuthroId" new-tab>
+          <TextLink :href="'/users/' + editorialAuthroId" new-tab>
             {{ editorialAuthroId }}
-          </Link>
+          </TextLink>
         </div>
         <div class="fontstyle-ui-body-2 flex items-center justify-center gap-3 text-text-secondary">
           <div>最終更新</div>
@@ -58,10 +58,8 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-[#000000]">
+    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-text-primary">
       {{ editorialStatement }}
     </div>
   </div>
 </template>
-
-<style scoped></style>

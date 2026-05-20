@@ -45,14 +45,11 @@ const getSyntaxName = (languageName: string): BundledLanguage | undefined => {
 
 const setLanguage = async (language?: Language) => {
   if (editor == undefined) return
-  let syntaxName: BundledLanguage | undefined
-  if (language != undefined) {
-    syntaxName = getSyntaxName(language.name)
-    if (syntaxName) {
-      await highlighter.loadLanguage(syntaxName)
-      monaco.languages.register({ id: syntaxName })
-      shikiToMonaco(highlighter, monaco)
-    }
+  const syntaxName = language != undefined ? getSyntaxName(language.name) : undefined
+  if (syntaxName) {
+    await highlighter.loadLanguage(syntaxName)
+    monaco.languages.register({ id: syntaxName })
+    shikiToMonaco(highlighter, monaco)
   }
   // 対応していない言語の場合、textフォーマッタを使用
   monaco.editor.setModelLanguage(editor!.getModel()!, syntaxName || 'text')

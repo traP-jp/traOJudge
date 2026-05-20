@@ -27,7 +27,7 @@ const {
   containerClass?: string
 }>()
 
-const emit = defineEmits(['change'])
+const emit = defineEmits<{ (e: 'change', option: SelectOption): void }>()
 const value = defineModel<SelectOption>()
 
 const displaysError = computed(() => error || errorMessage !== '')
@@ -80,5 +80,3 @@ const onChange = (event: Event) => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

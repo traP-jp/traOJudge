@@ -24,15 +24,15 @@ async function onOAuthClick() {
       throw new Error('Unknown OAuth app: ' + app)
     }
   } catch (error: unknown) {
-    if (error instanceof ResponseError) {
-      if (error.response.status === 500) {
-        const responseJson = await error.response.json()
-        console.error('Internal Server Error: ' + responseJson.message)
-      } else {
-        console.error('Unknown error: ' + error.response.status)
-      }
-    } else {
+    if (!(error instanceof ResponseError)) {
       console.error('OAuth Error:', error)
+      return
+    }
+    if (error.response.status === 500) {
+      const responseJson = await error.response.json()
+      console.error('Internal Server Error: ' + responseJson.message)
+    } else {
+      console.error('Unknown error: ' + error.response.status)
     }
   }
 }
@@ -58,5 +58,3 @@ async function onOAuthClick() {
     >
   </button>
 </template>
-
-<style scoped></style>

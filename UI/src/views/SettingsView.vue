@@ -12,5 +12,3 @@ import SideMenuUserSetting from '@/components/Navigations/SideMenu/SideMenuUserS
     </main>
   </div>
 </template>
-
-<style scoped></style>
