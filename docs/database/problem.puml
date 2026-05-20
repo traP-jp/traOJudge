@@ -1,0 +1,70 @@
+@startuml problem_database
+
+title traOJudge problem database schema
+
+hide circle
+skinparam linetype ortho
+
+entity users <<external>> {
+  * id : uuid <<PK>>
+}
+
+entity problems {
+  * id : uuid <<PK>>
+  --
+  * author_user_id : uuid <<FK>>
+  * title : text
+  * statement : text
+  * difficulty : integer
+  * time_limit_ms : integer
+  * memory_limit_mib : integer
+  * is_public : boolean
+  * created_at : timestamptz
+  * updated_at : timestamptz
+  deleted_at : timestamptz?
+}
+
+entity editorials {
+  * id : uuid <<PK>>
+  --
+  * problem_id : uuid <<FK>>
+  * author_user_id : uuid <<FK>>
+  * title : text
+  * statement : text
+  * is_public : boolean
+  * created_at : timestamptz
+  * updated_at : timestamptz
+  deleted_at : timestamptz?
+}
+
+users ||--o{ problems : author
+users ||--o{ editorials : author
+problems ||--o{ editorials
+
+legend bottom
+  記法:
+  * は NOT NULL。
+  ? は nullable。
+  <<PK>> は primary key。
+  <<FK>> は foreign key。
+  <<external>> は別図で定義されるテーブル。
+  <<unique>> と unique(...) は unique 制約。
+end legend
+
+note bottom of problems
+  問題の安定したメタデータを保存する。
+  新規作成時は is_public = false。
+  is_public は通常の問題一覧・問題詳細での全体公開を表す。
+  solved_count は保存せず、AC submission から集計する。
+  削除は deleted_at による soft delete とし、提出・解説履歴を残す。
+end note
+
+note bottom of editorials
+  解説本文を保存する。
+  is_public = false の解説は、解説作者、問題作者、Admin が閲覧できる。
+  1ユーザーが同じ問題に複数解説を作成できる設計にする。
+  API の path problemId を正とし、body に problemId がある場合は一致必須。
+  削除は deleted_at による soft delete とする。
+end note
+
+@enduml

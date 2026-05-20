@@ -1696,6 +1696,7 @@ components:
         - id
         - problemId
         - createdAt
+        - updatedAt
         - authorId
         - isPublic
         - title
@@ -1742,6 +1743,7 @@ components:
         - id
         - problemId
         - createdAt
+        - updatedAt
         - authorId
         - statement
         - isPublic
