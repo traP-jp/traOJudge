@@ -9,6 +9,14 @@ entity users <<external>> {
   * id : uuid <<PK>>
 }
 
+entity languages <<external>> {
+  * id : text <<PK>>
+}
+
+entity testcases <<external>> {
+  * id : uuid <<PK>>
+}
+
 entity problems {
   * id : uuid <<PK>>
   --
@@ -37,9 +45,86 @@ entity editorials {
   deleted_at : timestamptz?
 }
 
+entity submissions {
+  * id : uuid <<PK>>
+  --
+  * problem_id : uuid <<FK>>
+  * user_id : uuid <<FK>>
+  * language_id : text <<FK>>
+  * code_length_bytes : integer
+  * overall_judge_status : judge_status
+  * total_score : integer
+  * max_time_ms : integer
+  * max_memory_mib : integer
+  * submitted_at : timestamptz
+  judged_at : timestamptz?
+}
+
+entity submission_sources {
+  * submission_id : uuid <<PK, FK>>
+  --
+  * source_bundle : bytea
+}
+
+entity submission_judge_runs {
+  * id : uuid <<PK>>
+  --
+  * submission_id : uuid <<FK>>
+  * run_number : integer
+  * overall_judge_status : judge_status
+  * total_score : integer
+  * max_time_ms : integer
+  * max_memory_mib : integer
+  * is_current : boolean
+  * requested_at : timestamptz
+  started_at : timestamptz?
+  finished_at : timestamptz?
+  --
+  unique(submission_id, run_number)
+}
+
+entity submission_judge_results {
+  * judge_run_id : uuid <<PK, FK>>
+  * testcase_id : uuid <<PK, FK>>
+  --
+  * judge_status : judge_status
+  * score : integer
+  * time_ms : integer
+  * memory_mib : integer
+}
+
+entity problem_solved_users {
+  * problem_id : uuid <<PK, FK>>
+  * user_id : uuid <<PK, FK>>
+  --
+  * first_accepted_submission_id : uuid <<FK>>
+  * solved_at : timestamptz
+}
+
+enum judge_status {
+  AC
+  WA
+  CE
+  IE
+  MLE
+  RE
+  TLE
+  WJ
+}
+
 users ||--o{ problems : author
 users ||--o{ editorials : author
+users ||--o{ submissions : submitter
 problems ||--o{ editorials
+problems ||--o{ submissions
+languages ||--o{ submissions
+submissions ||--|| submission_sources
+submissions ||--o{ submission_judge_runs
+submission_judge_runs ||--o{ submission_judge_results
+testcases ||--o{ submission_judge_results
+problems ||--o{ problem_solved_users
+users ||--o{ problem_solved_users
+submissions ||--o{ problem_solved_users : first_ac
 
 legend bottom
   記法:
@@ -55,7 +140,7 @@ note bottom of problems
   問題の安定したメタデータを保存する。
   新規作成時は is_public = false。
   is_public は通常の問題一覧・問題詳細での全体公開を表す。
-  solved_count は保存せず、AC submission から集計する。
+  solved_count は problem_solved_users から集計する。
   削除は deleted_at による soft delete とし、提出・解説履歴を残す。
 end note
 
@@ -65,6 +150,49 @@ note bottom of editorials
   1ユーザーが同じ問題に複数解説を作成できる設計にする。
   API の path problemId を正とし、body に problemId がある場合は一致必須。
   削除は deleted_at による soft delete とする。
+end note
+
+note bottom of submissions
+  提出のメタデータと一覧用の集約値を保存する。
+  code_length_bytes は source_bundle のバイト長から設定し、一覧の表示・ソートに使う。
+  overall_judge_status / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
+  提出直後や rejudge 待ちの WJ 中は score/time/memory に 0 を入れる。
+  judge 完了時に current run の集約値で更新する。
+end note
+
+note bottom of submission_sources
+  提出の source 本体を DB に保存する。
+  複数ファイル提出は frontend が zip 化し、source_bundle に保存する。
+  backend はアップロードサイズを検証する。
+  zip の展開、path 検証、zip bomb 対策は judge 側で行う。
+  展開後サイズやファイル数の制限は judge 側で判定する。
+end note
+
+note bottom of submission_judge_runs
+  judge / rejudge の実行履歴を保存する。
+  run_number は submission 内の連番。
+  current run が WJ でないときだけ rejudge run を新規作成する。
+  current run が WJ の間の rejudge 要求では新しい run を作らない。
+  rejudge 開始時に新しい run を作り、is_current を true にする。
+  同じ submission で is_current = true の run は1つだけにする。
+  WJ 中は score/time/memory に 0 を入れる。
+  完了時に submissions の現在値へ反映する。
+end note
+
+note bottom of submission_judge_results
+  judge run ごとのテストケース結果を保存する。
+  Submission 詳細 API の judgeResults は current run の結果から返す。
+  run の集約値は、この結果を元に judge 完了時に更新する。
+end note
+
+note bottom of problem_solved_users
+  問題を解いたユーザーを保存する。
+  judge 完了時、初めて AC になった user/problem の組だけ insert する。
+  PK(problem_id, user_id) で重複 AC を防ぐ。
+  first_accepted_submission_id は最初の AC submission を指す。
+  first_accepted_submission_id は同じ problem_id / user_id の submission に限る。
+  rejudge で AC 状態が変わった場合は、このテーブルを再計算して更新する。
+  problems の solvedCount はこのテーブルの件数から返す。
 end note
 
 @enduml

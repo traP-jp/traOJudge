@@ -1612,7 +1612,8 @@ components:
           description: 問題ID
         sourceCode:
           type: string
-          description: 提出コード
+          format: byte
+          description: 提出コード（base64 encoded string）
         submittedAt:
           type: string
           format: date-time
@@ -1631,6 +1632,7 @@ components:
           description: メモリ使用量の最大値 (MiB)
         codeLength:
           type: number
+          description: base64 decode 後のソースコードのバイト長
         overallJudgeStatus:
           $ref: "#/components/schemas/JudgeStatus"
         judgeResults:
@@ -1659,9 +1661,11 @@ components:
           description: 提出コードの言語ID
         source:
           type: string
-          description: ソースコード
+          format: byte
+          description: ソースコード（base64 encoded string）
       required:
         - languageId
+        - source
     EditorialSummary:
       title: EditorialSummary
       description: 解説
