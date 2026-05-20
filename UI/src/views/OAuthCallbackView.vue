@@ -115,10 +115,10 @@ onMounted(async () => {
         <p class="fontstyle-ui-body text-text-primary">認証処理中...</p>
       </div>
       <div v-else-if="error" class="flex flex-col items-center gap-4 text-center">
-        <h1 class="fontstyle-ui-subtitle text-red-500">認証エラー</h1>
+        <h1 class="fontstyle-ui-subtitle text-status-error">認証エラー</h1>
         <p class="fontstyle-ui-body text-text-secondary">{{ error }}</p>
         <button
-          class="fontstyle-ui-control-strong bg-primary-500 hover:bg-primary-600 rounded-lg px-4 py-2 text-white"
+          class="fontstyle-ui-control-strong rounded-lg bg-brand-primary px-4 py-2 text-white hover:bg-brand-secondary"
           @click="goToLogin"
         >
           ログイン画面へ戻る
