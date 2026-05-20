@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import { EditorialsApi } from '@/api/generated/apis/EditorialsApi.ts'
 import { ResponseError } from '@/api/generated/runtime'
 import { useRoute } from 'vue-router'
@@ -48,9 +48,9 @@ onMounted(async () => {
       <div class="flex flex-col items-start">
         <div class="flex items-center justify-center gap-3">
           <div class="fontstyle-ui-body-2 text-text-secondary">著者</div>
-          <Link :href="'/users/' + editorialAuthroId" new-tab>
+          <TextLink :href="'/users/' + editorialAuthroId" new-tab>
             {{ editorialAuthroId }}
-          </Link>
+          </TextLink>
         </div>
         <div class="fontstyle-ui-body-2 flex items-center justify-center gap-3 text-text-secondary">
           <div>最終更新</div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { dateToString } from '@/utils/date'
 import SimplePagination from '@/components/Controls/Pagination/SimplePagination.vue'
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
 import type { SubmissionSummary } from '@/api/generated'
@@ -61,14 +61,14 @@ watch([page], () => updateSubmissions(), {
         {{ dateToString(submissions.get(rowId)?.submittedAt) }}
       </template>
       <template v-else-if="colId === 'title'">
-        <Link :href="`/problems/${submissions.get(rowId)?.problemId}`" :new-tab="true">
+        <TextLink :href="`/problems/${submissions.get(rowId)?.problemId}`" :new-tab="true">
           {{ submissions.get(rowId)?.title }}
-        </Link>
+        </TextLink>
       </template>
       <template v-else-if="colId === 'userName'">
-        <Link :href="`/users/${submissions.get(rowId)?.userId}`" :new-tab="true">
+        <TextLink :href="`/users/${submissions.get(rowId)?.userId}`" :new-tab="true">
           {{ submissions.get(rowId)?.userName }}
-        </Link>
+        </TextLink>
       </template>
       <template v-else-if="colId === 'totalScore'">
         {{ submissions.get(rowId)?.totalScore }}
