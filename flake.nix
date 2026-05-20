@@ -1,5 +1,5 @@
 {
-  description = "kinugasa-mocap development flake";
+  description = "traojudge development flake";
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -13,6 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     systems.url = "github:nix-systems/default";
+    traojudge-judge-command.url = "./judge-command";
   };
 
   outputs =
@@ -40,6 +41,7 @@
 
             packages = with pkgs; [
               cargo-hakari
+              treefmt
 
               # PlantUML
               graphviz

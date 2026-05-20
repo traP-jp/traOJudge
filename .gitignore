@@ -4,6 +4,9 @@ node_modules
 # rust
 target
 
+# environment
+.env
+
 # nix
 result
 
