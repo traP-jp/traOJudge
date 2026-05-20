@@ -39,7 +39,11 @@ onMounted(async () => {
 
 <template>
   <div class="flex items-start gap-8 px-container-x">
-    <SideMenuProblem :problem-name="problemName" :is-editorial-available="true" :is-admin="isAuthor" />
+    <SideMenuProblem
+      :problem-name="problemName"
+      :is-editorial-available="true"
+      :is-admin="isAuthor"
+    />
     <RouterView />
   </div>
 </template>

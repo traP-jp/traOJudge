@@ -7,7 +7,11 @@ import { ref, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-const { isLoggedIn = false, userId = '', username = '' } = defineProps<{
+const {
+  isLoggedIn = false,
+  userId = '',
+  username = ''
+} = defineProps<{
   isLoggedIn: boolean
   userId: string
   username: string
@@ -17,8 +21,8 @@ const isMenuOpen = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
-const canCreateProblem = computed(() =>
-  userStore.user?.role === 'Admin' || !!userStore.user?.authentication?.traqAuth
+const canCreateProblem = computed(
+  () => userStore.user?.role === 'Admin' || !!userStore.user?.authentication?.traqAuth
 )
 
 const modalHandler = (e: MouseEvent) => {
@@ -67,15 +71,17 @@ const handleSettings = () => {
       <span class="text-xl font-semibold">traO Judge</span>
     </RouterLink>
     <span class="fontstyle-ui-control-strong ml-auto flex items-center gap-5">
-      <RouterLink v-if="canCreateProblem" to="/problems/create" class="hover:text-text-secondary">問題作成</RouterLink>
-      <RouterLink to="/problems" class="hover:text-text-secondary">問題一覧</RouterLink>
-      <RouterLink v-if="isLoggedIn" :to="`/users/${userId}/submissions`" class="hover:text-text-secondary">提出一覧</RouterLink>
-      <PrimaryButton
-        v-if="!isLoggedIn"
-        padding="1rem"
-        class="h-10 px-3 py-2"
-        @click="handleLogin"
+      <RouterLink v-if="canCreateProblem" to="/problems/create" class="hover:text-text-secondary"
+        >問題作成</RouterLink
       >
+      <RouterLink to="/problems" class="hover:text-text-secondary">問題一覧</RouterLink>
+      <RouterLink
+        v-if="isLoggedIn"
+        :to="`/users/${userId}/submissions`"
+        class="hover:text-text-secondary"
+        >提出一覧</RouterLink
+      >
+      <PrimaryButton v-if="!isLoggedIn" padding="1rem" class="h-10 px-3 py-2" @click="handleLogin">
         ログイン
       </PrimaryButton>
       <div id="top-navbar-menu" class="relative">
@@ -90,24 +96,9 @@ const handleSettings = () => {
           v-if="isMenuOpen"
           class="absolute right-0 top-7 flex w-50 flex-col gap-y-1 rounded-lg border border-border-secondary bg-background-primary p-2"
         >
-          <MenuButton
-            icon="person"
-            @click="handleProfile"
-          >
-            プロフィール
-          </MenuButton>
-          <MenuButton
-            icon="settings"
-            @click="handleSettings"
-          >
-            設定
-          </MenuButton>
-          <MenuButton
-            icon="logout"
-            @click="handleLogout"
-          >
-            ログアウト
-          </MenuButton>
+          <MenuButton icon="person" @click="handleProfile"> プロフィール </MenuButton>
+          <MenuButton icon="settings" @click="handleSettings"> 設定 </MenuButton>
+          <MenuButton icon="logout" @click="handleLogout"> ログアウト </MenuButton>
         </div>
       </div>
     </span>

@@ -29,7 +29,7 @@ try {
   if (route.query.oauth !== undefined) {
     oauth.value = route.query.oauth === 'true'
   }
-  
+
   if (typeof route.query.token !== 'string') {
     throw new Error('Invalid token')
   }
@@ -145,11 +145,7 @@ async function onSignupRegister() {
 
       <!-- TODO: form全体の横幅の扱いが確定したらここの横幅も変える -->
       <form class="flex flex-col items-center" @submit.prevent="onSignupRegister">
-        <PrimaryButton
-          class="h-10 w-5/12 px-4 py-3"
-          type="submit"
-          :disabled="isSubmitting"
-        >
+        <PrimaryButton class="h-10 w-5/12 px-4 py-3" type="submit" :disabled="isSubmitting">
           {{ isSubmitting ? '登録中...' : '次へ' }}
         </PrimaryButton>
       </form>

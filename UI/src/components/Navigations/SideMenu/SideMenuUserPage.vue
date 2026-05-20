@@ -7,7 +7,12 @@ import SideMenuBase, {
 
 const route = useRoute()
 
-const { isMe = false, userId, username, iconUrl = '' } = defineProps<{
+const {
+  isMe = false,
+  userId,
+  username,
+  iconUrl = ''
+} = defineProps<{
   isMe?: boolean
   userId: string
   username: string

@@ -9,7 +9,11 @@ const userStore = useUserStore()
 
 <template>
   <template v-if="userStore.isInitialized">
-    <TopNavbar :is-logged-in="userStore.isAuthenticated" :user-id="userStore.userId" :username="userStore.username" />
+    <TopNavbar
+      :is-logged-in="userStore.isAuthenticated"
+      :user-id="userStore.userId"
+      :username="userStore.username"
+    />
     <main>
       <RouterView />
     </main>
