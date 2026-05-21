@@ -51,8 +51,10 @@ entity submissions {
   * problem_id : uuid <<FK>>
   * user_id : uuid <<FK>>
   * language_id : text <<FK>>
+  * current_judge_id : uuid <<FK>>
   * code_length_bytes : integer
   * overall_judge_status : judge_status
+  * judge_progress_step : integer
   * total_score : integer
   * max_time_ms : integer
   * max_memory_mib : integer
@@ -67,24 +69,21 @@ entity submission_sources {
 }
 
 entity submission_judge_runs {
-  * id : uuid <<PK>>
+  * judge_id : uuid <<PK>>
   --
   * submission_id : uuid <<FK>>
-  * run_number : integer
   * overall_judge_status : judge_status
+  * judge_progress_step : integer
   * total_score : integer
   * max_time_ms : integer
   * max_memory_mib : integer
-  * is_current : boolean
   * requested_at : timestamptz
   started_at : timestamptz?
   finished_at : timestamptz?
-  --
-  unique(submission_id, run_number)
 }
 
 entity submission_judge_results {
-  * judge_run_id : uuid <<PK, FK>>
+  * judge_id : uuid <<PK, FK>>
   * testcase_id : uuid <<PK, FK>>
   --
   * judge_status : judge_status
@@ -120,6 +119,7 @@ problems ||--o{ submissions
 languages ||--o{ submissions
 submissions ||--|| submission_sources
 submissions ||--o{ submission_judge_runs
+submissions ||--o| submission_judge_runs : current
 submission_judge_runs ||--o{ submission_judge_results
 testcases ||--o{ submission_judge_results
 problems ||--o{ problem_solved_users
@@ -154,8 +154,11 @@ end note
 
 note bottom of submissions
   提出のメタデータと一覧用の集約値を保存する。
-  code_length_bytes は source_bundle のバイト長から設定し、一覧の表示・ソートに使う。
-  overall_judge_status / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
+  current_judge_id は現在表示対象の judge run を指す。
+  提出作成時は最初の judge run と current_judge_id を同じ transaction で作る。
+  code_length_bytes は source_bundle のバイト長から設定する。
+  複数ファイル提出では zip のバイト長を code_length_bytes とする。
+  overall_judge_status / judge_progress_step / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
   提出直後や rejudge 待ちの WJ 中は score/time/memory に 0 を入れる。
   judge 完了時に current run の集約値で更新する。
 end note
@@ -170,18 +173,18 @@ end note
 
 note bottom of submission_judge_runs
   judge / rejudge の実行履歴を保存する。
-  run_number は submission 内の連番。
-  current run が WJ でないときだけ rejudge run を新規作成する。
-  current run が WJ の間の rejudge 要求では新しい run を作らない。
-  rejudge 開始時に新しい run を作り、is_current を true にする。
-  同じ submission で is_current = true の run は1つだけにする。
+  judge_id は judge run ごとの ID。
+  judge_progress_step は testcase 数とは別の judge 内部進捗段階。
+  current_judge_id が指す run が WJ でないときだけ rejudge run を新規作成する。
+  current judge が WJ の間の rejudge 要求では新しい run を作らない。
+  rejudge 開始時に新しい run を作り、submissions.current_judge_id を更新する。
   WJ 中は score/time/memory に 0 を入れる。
   完了時に submissions の現在値へ反映する。
 end note
 
 note bottom of submission_judge_results
-  judge run ごとのテストケース結果を保存する。
-  Submission 詳細 API の judgeResults は current run の結果から返す。
+  judge_id ごとのテストケース結果を保存する。
+  Submission 詳細 API の judgeResults は current_judge_id が指す結果から返す。
   run の集約値は、この結果を元に judge 完了時に更新する。
 end note
 

@@ -344,6 +344,7 @@ paths:
       tags:
         - submissions
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1565,9 +1566,13 @@ components:
           type: number
           description: メモリ使用量の最大値 (MiB)
         codeLength:
-          type: number
+          type: integer
+          description: 提出 source bundle のバイト長
         judgeStatus:
           $ref: "#/components/schemas/JudgeStatus"
+        judgeProgressStep:
+          type: integer
+          description: 現在の judge run における進捗段階
       required:
         - id
         - title
@@ -1581,6 +1586,7 @@ components:
         - maxMemory
         - codeLength
         - judgeStatus
+        - judgeProgressStep
     SubmissionSummaries:
       title: SubmissionSummaries
       description: 提出一覧
@@ -1592,6 +1598,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/SubmissionSummary"
+      required:
+        - total
+        - submissions
     Submission:
       title: Submission
       type: object
@@ -1631,12 +1640,16 @@ components:
           type: number
           description: メモリ使用量の最大値 (MiB)
         codeLength:
-          type: number
-          description: base64 decode 後のソースコードのバイト長
+          type: integer
+          description: base64 decode 後の提出 source bundle のバイト長。複数ファイル提出では zip のバイト長。
         overallJudgeStatus:
           $ref: "#/components/schemas/JudgeStatus"
+        judgeProgressStep:
+          type: integer
+          description: 現在の judge run における進捗段階
         judgeResults:
           type: array
+          description: WJ 中は空配列
           items:
             $ref: "#/components/schemas/JudgeResult"
       required:
@@ -1651,8 +1664,12 @@ components:
         - languageId
         - maxTime
         - maxMemory
+        - codeLength
+        - overallJudgeStatus
+        - judgeProgressStep
+        - judgeResults
     PostSubmissionRequest:
-      title: PostProblemRequest
+      title: PostSubmissionRequest
       type: object
       description: 回答の提出リクエスト
       properties:
