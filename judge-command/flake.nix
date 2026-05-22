@@ -20,11 +20,5 @@
         ./lib
         ./languages
       ];
-
-      perSystem =
-        { config, ... }:
-        {
-          packages.default = config.trao.languages.cpp-23-gcc.internal.prebuild;
-        };
     };
 }
