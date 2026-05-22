@@ -11,3 +11,13 @@
 ```
 nix flake check ./judge-command
 ```
+
+### Pre-build
+
+```
+nix build ./judge-command#prebuild_<lang-name>
+```
+
+```
+nix build ./judge-command#prebuild-all
+```
