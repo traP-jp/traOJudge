@@ -52,74 +52,94 @@ const services = ref<Service[]>([
   { name: 'traQ', linked: false, ID: '', icon: traQIcon }
 ])
 
+const unlinkGitHubGoogle = async (service: Service) => {
+  try {
+    const oauth2Api = new Oauth2Api()
+    if (service.name === 'GitHub') {
+      await oauth2Api.revokeGithubAuth()
+    } else {
+      await oauth2Api.revokeGoogleAuth()
+    }
+    service.linked = false
+    service.ID = ''
+  } catch (error) {
+    if (!(error instanceof ResponseError)) {
+      console.error(`Revoke ${service.name} OAuth Error:`, error)
+      return
+    }
+    const responseJson = await error.response.json()
+    switch (error.response.status) {
+      case 400:
+        throw new Error(`Bad Request: ${responseJson.message}`)
+      case 401:
+        throw new Error(`Unauthorized: ${responseJson.message}`)
+      case 404:
+        throw new Error(`Not Found: ${responseJson.message}`)
+      case 500:
+        throw new Error(`Internal Server Error: ${responseJson.message}`)
+      default:
+        throw new Error(`Unknown error: ${error.response.status}`)
+    }
+  }
+}
+
+const linkGitHubGoogle = async (service: Service) => {
+  try {
+    const oauth2Api = new Oauth2Api()
+    const response =
+      service.name === 'GitHub'
+        ? await oauth2Api.getgithubAuthParams({ oauthAction: 'bind' })
+        : await oauth2Api.getGoogleAuthParams({ oauthAction: 'bind' })
+    router.push(response.url)
+  } catch (error: unknown) {
+    if (!(error instanceof ResponseError)) {
+      console.error(`Bind ${service.name} OAuth Error:`, error)
+      return
+    }
+    if (error.response.status === 500) {
+      const responseJson = await error.response.json()
+      throw new Error(`Internal Server Error: ${responseJson.message}`)
+    }
+    throw new Error(`Unknown error: ${error.response.status}`)
+  }
+}
+
+const unlinkTraq = async (service: Service) => {
+  try {
+    const oauth2Api = new Oauth2Api()
+    await oauth2Api.revokeTraqAuth({
+      revokeTraqAuthRequest: { token: '' }
+    })
+    service.linked = false
+    service.ID = ''
+  } catch (error) {
+    console.error('Revoke traQ OAuth Error:', error)
+  }
+}
+
+const linkTraq = () => {
+  const callbackPath = '/oauth/traq/bind/callback?redirect=/settings/account'
+  const encodedCallbackPath = encodeURIComponent(callbackPath)
+  window.location.href = `/_oauth/login?redirect=${encodedCallbackPath}`
+}
+
 async function toggleLink(service: Service) {
-  if (service.name === 'GitHub' || service.name === 'Google') {
-    if (service.linked) {
-      try {
-        const oauth2Api = new Oauth2Api()
-        if (service.name === 'GitHub') {
-          await oauth2Api.revokeGithubAuth()
-        } else {
-          await oauth2Api.revokeGoogleAuth()
-        }
-        service.linked = false
-        service.ID = ''
-      } catch (error) {
-        if (error instanceof ResponseError) {
-          const responseJson = await error.response.json()
-          switch (error.response.status) {
-            case 400:
-              throw new Error(`Bad Request: ${responseJson.message}`)
-            case 401:
-              throw new Error(`Unauthorized: ${responseJson.message}`)
-            case 404:
-              throw new Error(`Not Found: ${responseJson.message}`)
-            case 500:
-              throw new Error(`Internal Server Error: ${responseJson.message}`)
-            default:
-              throw new Error(`Unknown error: ${error.response.status}`)
-          }
-        }
-        console.error(`Revoke ${service.name} OAuth Error:`, error)
+  switch (service.name) {
+    case 'GitHub':
+    case 'Google':
+      if (service.linked) {
+        await unlinkGitHubGoogle(service)
+      } else {
+        await linkGitHubGoogle(service)
       }
-    } else {
-      try {
-        const oauth2Api = new Oauth2Api()
-        const response =
-          service.name === 'GitHub'
-            ? await oauth2Api.getgithubAuthParams({ oauthAction: 'bind' })
-            : await oauth2Api.getGoogleAuthParams({ oauthAction: 'bind' })
-        router.push(response.url)
-      } catch (error: unknown) {
-        if (error instanceof ResponseError) {
-          if (error.response.status === 500) {
-            const responseJson = await error.response.json()
-            throw new Error(`Internal Server Error: ${responseJson.message}`)
-          }
-
-          throw new Error(`Unknown error: ${error.response.status}`)
-        }
-        console.error(`Bind ${service.name} OAuth Error:`, error)
+      break
+    case 'traQ':
+      if (service.linked) {
+        await unlinkTraq(service)
+      } else {
+        linkTraq()
       }
-    }
-  } else if (service.name === 'traQ') {
-    if (service.linked) {
-      try {
-        const oauth2Api = new Oauth2Api()
-        await oauth2Api.revokeTraqAuth({
-          revokeTraqAuthRequest: { token: '' }
-        })
-        service.linked = false
-        service.ID = ''
-      } catch (error) {
-        console.error('Revoke traQ OAuth Error:', error)
-      }
-    } else {
-      const callbackPath = '/oauth/traq/bind/callback?redirect=/settings/account'
-
-      const encodedCallbackPath = encodeURIComponent(callbackPath)
-      window.location.href = `/_oauth/login?redirect=${encodedCallbackPath}`
-    }
+      break
   }
 }
 
@@ -438,5 +458,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

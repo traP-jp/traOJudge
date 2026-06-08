@@ -33,5 +33,3 @@ function onChange() {
 <template>
   <PlainTextbox v-model="valueString" type="number" @change="onChange" />
 </template>
-
-<style scoped></style>

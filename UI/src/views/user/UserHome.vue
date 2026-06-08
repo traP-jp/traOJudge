@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import { computed } from 'vue'
 import type { User } from '@/api/generated'
 
@@ -55,8 +55,8 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
         <img src="/src/assets/service_icons/github.svg" class="size-5" />
       </span>
       <span class="px-2">
-        <Link v-if="isGithubIdValid" :href="`https://github.com/${githubId}`" new-tab
-          >@{{ githubId }}</Link
+        <TextLink v-if="isGithubIdValid" :href="`https://github.com/${githubId}`" new-tab
+          >@{{ githubId }}</TextLink
         >
         <span v-else>@{{ githubId }}</span>
       </span>
@@ -66,8 +66,8 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
         <img src="/src/assets/service_icons/x.svg" class="size-5" />
       </span>
       <span class="px-2">
-        <Link v-if="isXIdValid" :href="`https://x.com/intent/user?screen_name=${xId}`" new-tab
-          >@{{ xId }}</Link
+        <TextLink v-if="isXIdValid" :href="`https://x.com/intent/user?screen_name=${xId}`" new-tab
+          >@{{ xId }}</TextLink
         >
         <span v-else>@{{ xId }}</span>
       </span>
@@ -80,5 +80,3 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
     </div>
   </div>
 </template>
-
-<style scoped></style>

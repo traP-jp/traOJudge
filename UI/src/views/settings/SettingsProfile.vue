@@ -4,7 +4,7 @@ import { MeApi } from '@/api/generated/apis/MeApi'
 import AlertBox from '@/components/AlertBox.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import SNSTextbox from '@/components/Controls/Textbox/SNSTextbox.vue'
+import SnsTextbox from '@/components/Controls/Textbox/SnsTextbox.vue'
 import { onMounted, ref } from 'vue'
 
 const displayName = ref<string>('')
@@ -121,7 +121,7 @@ onMounted(() => {
               <img src="@/assets/service_icons/github.svg" alt="GitHub" class="size-5" />
             </div>
             <div class="flex-1">
-              <SNSTextbox v-model="githubAccount" placeholder="GitHubユーザー名" />
+              <SnsTextbox v-model="githubAccount" placeholder="GitHubユーザー名" />
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -129,7 +129,7 @@ onMounted(() => {
               <img src="@/assets/service_icons/x.svg" alt="X" class="size-5" />
             </div>
             <div class="flex-1">
-              <SNSTextbox v-model="xAccount" placeholder="Xユーザー名" />
+              <SnsTextbox v-model="xAccount" placeholder="Xユーザー名" />
             </div>
           </div>
         </div>
@@ -142,5 +142,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

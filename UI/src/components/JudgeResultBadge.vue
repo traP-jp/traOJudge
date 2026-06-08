@@ -17,5 +17,3 @@ const config = statusConfig[props.status] || statusConfig.WJ
     {{ config.label }}
   </div>
 </template>
-
-<style scoped></style>

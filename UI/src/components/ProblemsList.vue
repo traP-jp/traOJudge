@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { dateToString } from '@/utils/date'
 import SimplePagination from '@/components/Controls/Pagination/SimplePagination.vue'
-import Link from '@/components/Link.vue'
+import TextLink from '@/components/TextLink.vue'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import DifficultyStar from '@/components/DifficultyStar.vue'
 import type { ProblemSummary } from '@/api/generated'
@@ -135,9 +135,9 @@ const filterDifficultyRangeError = computed(
         {{ dateToString(problems.get(rowId)?.createdAt) }}
       </template>
       <template v-else-if="colId === 'title'">
-        <Link :href="`/problems/${problems.get(rowId)?.id}`" new-tab>
+        <TextLink :href="`/problems/${problems.get(rowId)?.id}`" new-tab>
           {{ problems.get(rowId)?.title }}
-        </Link>
+        </TextLink>
       </template>
       <template v-else-if="colId === 'difficulty'">
         <div class="flex">
@@ -154,5 +154,3 @@ const filterDifficultyRangeError = computed(
   <div v-else>読み込み中...</div>
   <SimplePagination v-model="page" :end="totalPage" class="mt-6" />
 </template>
-
-<style scoped></style>

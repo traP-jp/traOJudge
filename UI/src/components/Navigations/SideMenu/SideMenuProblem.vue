@@ -87,5 +87,3 @@ watch(
     <h1 class="fontstyle-ui-subtitle">{{ problemName }}</h1>
   </SideMenuBase>
 </template>
-
-<style scoped></style>

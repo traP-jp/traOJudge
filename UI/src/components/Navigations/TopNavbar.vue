@@ -104,5 +104,3 @@ const handleSettings = () => {
     </span>
   </header>
 </template>
-
-<style scoped></style>

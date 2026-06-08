@@ -150,5 +150,3 @@ function closeActionMenu() {
   </ListingTable>
   <div v-else>読み込み中...</div>
 </template>
-
-<style scoped></style>

@@ -6,7 +6,7 @@ const { disabled = false } = defineProps<{
   padding?: string
   icon?: Icon
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits<{ (e: 'click'): void }>()
 function onClick() {
   emit('click')
 }
@@ -23,5 +23,3 @@ function onClick() {
     <MaterialIcon v-if="icon" :icon="icon" size="24px" class="ml-2" />
   </button>
 </template>
-
-<style scoped></style>

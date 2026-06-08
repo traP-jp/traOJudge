@@ -5,7 +5,7 @@ const { selected = false } = defineProps<{
   icon?: Icon
   selected?: boolean
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits<{ (e: 'click'): void }>()
 
 function onClick() {
   emit('click')
@@ -25,5 +25,3 @@ function onClick() {
     </span>
   </button>
 </template>
-
-<style scoped></style>

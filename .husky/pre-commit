@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+UI_DIR="$REPO_ROOT/UI"
+
+# Run UI checks only if UI files are staged
+if git diff --cached --name-only | grep -q '^UI/'; then
+  cd "$UI_DIR"
+  npx lint-staged
+  npm run type-check
+fi

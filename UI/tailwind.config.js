@@ -25,7 +25,8 @@ export default {
       transparent: 'transparent'
     },
     fontFamily: {
-      primary: ['Open Sans', 'Noto Sans JP', 'sans-serif']
+      primary: ['Open Sans', 'Noto Sans JP', 'sans-serif'],
+      'noto-sans-jp': ['Noto Sans JP', 'sans-serif']
     },
     extend: {
       spacing: {
@@ -48,7 +49,7 @@ export default {
         120: '30rem',
         172: '43rem',
         200: '50rem',
-        300: '75rem',
+        300: '75rem'
       },
       borderRadius: {
         15: '15px'
@@ -56,9 +57,15 @@ export default {
       height: {
         'header-offset': 'calc(100vh - 56px)'
       },
+      minHeight: {
+        'header-offset': 'calc(100vh - 56px)'
+      },
       maxWidth: {
         'form-max': '600px',
         'profile-max': '500px'
+      },
+      width: {
+        'auth-form': '360px'
       },
       padding: {
         'container-x': '120px'

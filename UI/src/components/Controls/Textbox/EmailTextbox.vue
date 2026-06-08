@@ -28,5 +28,3 @@ watch(() => props.errorMessage, updateError)
     @blur="updateError"
   />
 </template>
-
-<style scoped></style>

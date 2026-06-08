@@ -29,5 +29,3 @@ function clearInput() {
     @click-right="clearInput"
   />
 </template>
-
-<style scoped></style>

@@ -40,5 +40,3 @@ const loadSubmissions = async (
     <SubmissionsTable v-model="page" :load-submissions="loadSubmissions" />
   </div>
 </template>
-
-<style scoped></style>

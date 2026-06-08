@@ -4,7 +4,7 @@ const { disabled = false, small = false } = defineProps<{
   padding?: string
   small?: boolean
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits<{ (e: 'click'): void }>()
 
 function onClick() {
   emit('click')
@@ -22,5 +22,3 @@ function onClick() {
     <slot />
   </button>
 </template>
-
-<style scoped></style>
