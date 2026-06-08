@@ -1,0 +1,204 @@
+@startuml problem_database
+
+title traOJudge problem database schema
+
+hide circle
+skinparam linetype ortho
+
+entity users <<external>> {
+  * id : uuid <<PK>>
+}
+
+entity languages <<external>> {
+  * id : text <<PK>>
+}
+
+entity testcases <<external>> {
+  * id : uuid <<PK>>
+}
+
+entity problems {
+  * id : uuid <<PK>>
+  --
+  * author_user_id : uuid <<FK>>
+  * title : text
+  * statement : text
+  * difficulty : integer
+  * time_limit_ms : integer
+  * memory_limit_mib : integer
+  * is_public : boolean
+  * created_at : timestamptz
+  * updated_at : timestamptz
+  deleted_at : timestamptz?
+}
+
+entity editorials {
+  * id : uuid <<PK>>
+  --
+  * problem_id : uuid <<FK>>
+  * author_user_id : uuid <<FK>>
+  * title : text
+  * statement : text
+  * is_public : boolean
+  * created_at : timestamptz
+  * updated_at : timestamptz
+  deleted_at : timestamptz?
+}
+
+entity submissions {
+  * id : uuid <<PK>>
+  --
+  * problem_id : uuid <<FK>>
+  * user_id : uuid <<FK>>
+  * language_id : text <<FK>>
+  current_judge_id : uuid? <<FK>>
+  * code_length_bytes : integer
+  * overall_judge_status : judge_status
+  * judge_progress_step : integer
+  * total_score : integer
+  * max_time_ms : integer
+  * max_memory_mib : integer
+  * submitted_at : timestamptz
+  judged_at : timestamptz?
+}
+
+entity submission_sources {
+  * submission_id : uuid <<PK, FK>>
+  --
+  * source_bundle : bytea
+}
+
+entity submission_judge_runs {
+  * judge_id : uuid <<PK>>
+  --
+  * submission_id : uuid <<FK>>
+  * overall_judge_status : judge_status
+  * judge_progress_step : integer
+  * total_score : integer
+  * max_time_ms : integer
+  * max_memory_mib : integer
+  * requested_at : timestamptz
+  started_at : timestamptz?
+  finished_at : timestamptz?
+}
+
+entity submission_judge_results {
+  * judge_id : uuid <<PK, FK>>
+  * testcase_id : uuid <<PK, FK>>
+  --
+  * judge_status : judge_status
+  * score : integer
+  * time_ms : integer
+  * memory_mib : integer
+}
+
+entity problem_solved_users {
+  * problem_id : uuid <<PK, FK>>
+  * user_id : uuid <<PK, FK>>
+  --
+  * first_accepted_submission_id : uuid <<FK>>
+  * solved_at : timestamptz
+}
+
+enum judge_status {
+  AC
+  WA
+  CE
+  IE
+  MLE
+  RE
+  TLE
+  WJ
+  WE
+}
+
+users ||--o{ problems : author
+users ||--o{ editorials : author
+users ||--o{ submissions : submitter
+problems ||--o{ editorials
+problems ||--o{ submissions
+languages ||--o{ submissions
+submissions ||--|| submission_sources
+submissions ||--o{ submission_judge_runs
+submissions ||--o| submission_judge_runs : current
+submission_judge_runs ||--o{ submission_judge_results
+testcases ||--o{ submission_judge_results
+problems ||--o{ problem_solved_users
+users ||--o{ problem_solved_users
+submissions ||--o{ problem_solved_users : first_ac
+
+legend bottom
+  記法:
+  * は NOT NULL。
+  ? は nullable。
+  <<PK>> は primary key。
+  <<FK>> は foreign key。
+  <<external>> は別図で定義されるテーブル。
+  <<unique>> と unique(...) は unique 制約。
+end legend
+
+note bottom of problems
+  問題の安定したメタデータを保存する。
+  新規作成時は is_public = false。
+  is_public は通常の問題一覧・問題詳細での全体公開を表す。
+  solved_count は problem_solved_users から集計する。
+  削除は deleted_at による soft delete とし、提出・解説履歴を残す。
+end note
+
+note bottom of editorials
+  解説本文を保存する。
+  is_public = false の解説は、解説作者、問題作者、Admin が閲覧できる。
+  1ユーザーが同じ問題に複数解説を作成できる設計にする。
+  API の path problemId を正とし、body に problemId がある場合は一致必須。
+  削除は deleted_at による soft delete とする。
+end note
+
+note bottom of submissions
+  提出のメタデータと一覧用の集約値を保存する。
+  current_judge_id は現在表示対象の judge run を指す。
+  提出作成時は current_judge_id = NULL で submission を作り、
+  最初の judge run を作成してから同じ transaction で current_judge_id を更新する。
+  code_length_bytes は source_bundle のバイト長から設定する。
+  複数ファイル提出では zip のバイト長を code_length_bytes とする。
+  overall_judge_status / judge_progress_step / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
+  提出直後や rejudge 待ちの WJ 中は score/time/memory に 0 を入れる。
+  judge 完了時は current_judge_id と一致する run の集約値だけを反映する。
+end note
+
+note bottom of submission_sources
+  提出の source 本体を DB に保存する。
+  複数ファイル提出は frontend が zip 化し、source_bundle に保存する。
+  backend はアップロードサイズを検証する。
+  zip の展開、path 検証、zip bomb 対策は judge 側で行う。
+  展開後サイズやファイル数の制限は judge 側で判定する。
+end note
+
+note bottom of submission_judge_runs
+  judge / rejudge の実行履歴を保存する。
+  judge_id は judge run ごとの ID。
+  judge_progress_step は testcase 数とは別の judge 内部進捗段階。
+  rejudge 要求時は current run の状態に関係なく新しい judge run を作る。
+  rejudge 開始時に submissions.current_judge_id を新しい judge_id に更新する。
+  古い run は履歴として残す。
+  古い run が後から完了しても、current_judge_id と一致しなければ submissions の現在値へ反映しない。
+  WJ 中は score/time/memory に 0 を入れる。
+  完了時は current_judge_id と一致する run だけ submissions の現在値へ反映する。
+end note
+
+note bottom of submission_judge_results
+  judge_id ごとのテストケース結果を保存する。
+  Submission 詳細 API の judgeResults は current_judge_id が指す結果から返す。
+  run の集約値は、この結果を元に judge 完了時に更新する。
+end note
+
+note bottom of problem_solved_users
+  問題を解いたユーザーを保存する。
+  judge 完了時、初めて AC になった user/problem の組だけ insert する。
+  PK(problem_id, user_id) で重複 AC を防ぐ。
+  first_accepted_submission_id は最初の AC submission を指す。
+  first_accepted_submission_id は同じ problem_id / user_id の submission に限る。
+  rejudge で AC 状態が変わった場合は、このテーブルを再計算して更新する。
+  problems の solvedCount はこのテーブルの件数から返す。
+end note
+
+@enduml

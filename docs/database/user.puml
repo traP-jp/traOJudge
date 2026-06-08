@@ -1,0 +1,198 @@
+@startuml user_database
+
+title traOJudge user database schema
+
+hide circle
+skinparam linetype ortho
+
+entity users {
+  * id : uuid <<PK>>
+  --
+  * name : text
+  * role : user_role
+  icon_object_key : text?
+  profile_traq_id : text?
+  x_id : text?
+  profile_github_id : text?
+  self_introduction : text?
+  * created_at : timestamptz
+  * updated_at : timestamptz
+}
+
+entity user_auth_identities {
+  * id : uuid <<PK>>
+  --
+  * user_id : uuid <<FK>>
+  * provider : auth_provider
+  * provider_user_id : text
+  provider_email : text?
+  password_hash : text?
+  * verified_at : timestamptz
+  * created_at : timestamptz
+  * updated_at : timestamptz
+  last_used_at : timestamptz?
+  --
+  unique(provider, provider_user_id)
+  unique(user_id, provider)
+}
+
+entity user_sessions {
+  * id : uuid <<PK>>
+  --
+  * user_id : uuid <<FK>>
+  * session_token_hash : text <<unique>>
+  * created_at : timestamptz
+  last_seen_at : timestamptz?
+  * expires_at : timestamptz
+  revoked_at : timestamptz?
+}
+
+entity developer_tokens {
+  * id : uuid <<PK>>
+  --
+  * user_id : uuid <<FK>>
+  * name : text
+  * token_hash : text <<unique>>
+  * created_at : timestamptz
+  * expires_at : timestamptz
+  last_used_at : timestamptz?
+  revoked_at : timestamptz?
+}
+
+entity auth_verification_tokens {
+  * id : uuid <<PK>>
+  --
+  user_id : uuid? <<FK>>
+  * purpose : auth_verification_purpose
+  provider : oauth_provider?
+  email : text?
+  provider_user_id : text?
+  * token_hash : text <<unique>>
+  * created_at : timestamptz
+  * expires_at : timestamptz
+  consumed_at : timestamptz?
+}
+
+entity oauth_states {
+  * id : uuid <<PK>>
+  --
+  user_id : uuid? <<FK>>
+  * provider : oauth_provider
+  * action : oauth_action
+  * state_hash : text <<unique>>
+  code_verifier_ciphertext : text?
+  redirect_uri : text?
+  * created_at : timestamptz
+  * expires_at : timestamptz
+  consumed_at : timestamptz?
+}
+
+enum user_role {
+  Admin
+  traPUser
+  CommonUser
+}
+
+enum auth_provider {
+  email
+  google
+  github
+  traq
+}
+
+enum oauth_provider {
+  google
+  github
+  traq
+}
+
+enum oauth_action {
+  login
+  signup
+  bind
+}
+
+enum auth_verification_purpose {
+  register_email
+  change_email
+  reset_password
+  oauth_signup
+}
+
+users ||--o{ user_auth_identities
+users ||--o{ user_sessions
+users ||--o{ developer_tokens
+users |o--o{ auth_verification_tokens
+users |o--o{ oauth_states
+
+legend bottom
+  記法:
+  * は NOT NULL。
+  ? は nullable。
+  <<PK>> は primary key。
+  <<FK>> は foreign key。
+  <<unique>> と unique(...) は unique 制約。
+end legend
+
+note bottom of users
+  profile_traq_id / profile_github_id はプロフィール表示用。
+  OAuth 認証に使う ID は user_auth_identities に保存する。
+  bind/revoke でプロフィール値を暗黙に変更しない。
+end note
+
+note bottom of user_auth_identities
+  認証手段を保存する。
+  このテーブルには検証済みでログイン可能な identity だけを保存する。
+  検証待ちの email/OAuth signup は auth_verification_tokens に置く。
+  provider_user_id は provider 内で正規化済みの安定 ID。
+  email では正規化済み email、OAuth では provider の stable ID を入れる。
+  provider_email は OAuth provider から得た連絡先 email。
+  provider = email の場合は provider_email を NULL にする。
+  unique 判定には provider_email を使わない。
+  password_hash は provider = email のときだけ入る。
+end note
+
+note bottom of developer_tokens
+  開発者トークンは複数発行できる。
+  認証には token_hash を使う。
+  認証時は revoked_at IS NULL かつ expires_at > now() のみ有効。
+  DELETE /users/me/devTokens/{devTokenId} は revoked_at を入れる。
+  生のトークンは発行時の
+  POST /users/me/devTokens で一度だけ返す。
+  expires_at は発行から約3ヶ月後。
+end note
+
+note bottom of user_sessions
+  セッション認証には session_token_hash を使う。
+  認証時は revoked_at IS NULL かつ expires_at > now() のみ有効。
+  logout は revoked_at を入れる。
+end note
+
+note bottom of auth_verification_tokens
+  サインアップ、メール変更、パスワードリセット、
+  OAuth サインアップ待ちに使う one-time token を保存する。
+  DB には token_hash だけを保存し、JWT は使わない。
+  検証時は consumed_at IS NULL かつ expires_at > now() のみ有効。
+  provider は oauth_signup の OAuth provider のみを表す。
+  purpose ごとの入力:
+  register_email: email のみ。
+  change_email: user_id と email。
+  reset_password: user_id のみ。
+  oauth_signup: provider と provider_user_id、email は任意。
+end note
+
+note bottom of oauth_states
+  OAuth の state 検証と login/signup/bind の一時状態を保存する。
+  state は hash のみ保存する。
+  authorize API の body は code のみを受け取る。
+  state は params 発行時に cookie/session へ紐づけ、state_hash で検証する。
+  action = bind のとき user_id は NOT NULL。
+  PKCE の code_verifier は token exchange で復元が必要なので、
+  hash ではなく短命の暗号化値として保存する。
+  code_verifier_ciphertext は PKCE を使う provider では NOT NULL。
+  PKCE を使わない provider のみ NULL にできる。
+  authorize 時は consumed_at IS NULL かつ expires_at > now() のみ有効。
+  authorize 後は consumed_at を入れて再利用を防ぐ。
+end note
+
+@enduml

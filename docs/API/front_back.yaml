@@ -344,6 +344,7 @@ paths:
       tags:
         - submissions
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -556,39 +557,54 @@ paths:
             schema:
               $ref: '#/components/schemas/PutPasswordRequest'
       description: ログイン後にパスワードを変更する
-  /users/me/devToken:
+  /users/me/devTokens:
     get:
-      summary: getMeDevToken
-      operationId: getMeDevToken
+      summary: getMeDevTokens
+      operationId: getMeDevTokens
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DevTokenResponse'
+                $ref: '#/components/schemas/DevTokens'
         '401':
           description: Unauthorized
-        '404':
-          description: 開発者トークンが存在しません
       tags:
         - me
-      description: 開発者トークンを取得します
+      description: |-
+        開発者トークンの一覧を取得します。
+        セキュリティ上、発行済みトークンの値は返しません。
     post:
       summary: postMeDevToken
       operationId: postMeDevToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostDevTokenRequest'
       responses:
         '201':
-          description: 正常に新しい開発者トークンを発行しました
+          description: |-
+            正常に新しい開発者トークンを発行しました。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DevTokenResponse'
+                $ref: '#/components/schemas/DevTokenIssueResponse'
+        '400':
+          description: Bad Request
         '401':
           description: Unauthorized
       tags:
         - me
-      description: 開発者トークンを再発行します
+      description: |-
+        開発者トークンを発行します。
+        トークンの値はこのレスポンスで一度だけ返されます。
+        有効期限は発行から約3ヶ月です。
+  /users/me/devTokens/{devTokenId}:
+    parameters:
+      - $ref: '#/components/parameters/devTokenIdInPath'
     delete:
       summary: deleteMeDevToken
       operationId: deleteMeDevToken
@@ -601,7 +617,7 @@ paths:
           description: 開発者トークンが存在しません
       tags:
         - me
-      description: 開発者トークンを削除します
+      description: 指定した開発者トークンを削除します
   /signup/request:
     post:
       summary: postSignupRequest
@@ -641,7 +657,7 @@ paths:
         - authentication
       description: |-
         ユーザー登録
-        tokenでメールまたはOAuth情報を管理する
+        tokenでメール認証またはOAuth登録の一時状態を参照する
         OAuthの場合、パスワードは不要
   /login:
     post:
@@ -685,7 +701,7 @@ paths:
       operationId: postRequestResetPassword
       description: |-
         パスワード変更のリクエスト
-        リクエストを受け取ったら`/reset-password?token=JWT`のような形式のエンドポイントを含むメールをバックエンドからユーザーに送る。
+        リクエストを受け取ったら`/reset-password?token=<one-time-token>`のような形式のエンドポイントを含むメールをバックエンドからユーザーに送る。
         ユーザーがそれをクリックするとリセット用画面に遷移する。
       requestBody:
         content:
@@ -709,14 +725,11 @@ paths:
               $ref: '#/components/schemas/ResetPasswordRequest'
       tags:
         - authentication
-      parameters:
-        - $ref: '#/components/parameters/JWTWithUserId'
   /activate:
     get:
       summary: getActivateEmailAddress
       parameters:
-        - $ref: '#/components/parameters/JWTWithUserId'
-        - $ref: '#/components/parameters/JWTWithoutUserId'
+        - $ref: '#/components/parameters/verificationTokenInQuery'
       responses:
         '200':
           description: メールアドレスが正常に有効化されました
@@ -798,13 +811,13 @@ paths:
       operationId: postTraqOAuthAuthorize
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
         '204':
           description: No content
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: traQOAuthのためのエンドポイント
@@ -823,7 +836,7 @@ paths:
               $ref: '#/components/schemas/OAuthAuthorizationCode'
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
           content:
             application/json:
               schema:
@@ -838,7 +851,7 @@ paths:
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: GoogleOAuthのためのエンドポイント
@@ -857,7 +870,7 @@ paths:
               $ref: '#/components/schemas/OAuthAuthorizationCode'
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
           content:
             application/json:
               schema:
@@ -872,7 +885,7 @@ paths:
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: GithubOAuthのためのエンドポイント
@@ -1448,16 +1461,75 @@ components:
       required:
         - oldPassword
         - newPassword
-    DevTokenResponse:
-      title: DevTokenResponse
+    DevToken:
+      title: DevToken
       type: object
-      description: 開発者トークンレスポンス
+      description: 開発者トークンの状態
+      properties:
+        id:
+          type: string
+          description: 開発者トークンID
+        name:
+          type: string
+          description: 開発者トークンの表示名
+        createdAt:
+          type: string
+          format: date-time
+          description: 開発者トークンの発行日時
+        expiresAt:
+          type: string
+          format: date-time
+          description: 開発者トークンの有効期限。発行から約3ヶ月後。
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 開発者トークンの最終使用日時
+      required:
+        - id
+        - name
+        - createdAt
+        - expiresAt
+    DevTokens:
+      title: DevTokens
+      type: object
+      description: 開発者トークン一覧
+      properties:
+        total:
+          type: integer
+        devTokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/DevToken'
+      required:
+        - total
+        - devTokens
+    PostDevTokenRequest:
+      title: PostDevTokenRequest
+      type: object
+      description: 開発者トークン発行リクエスト
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: 開発者トークンの表示名
+      required:
+        - name
+    DevTokenIssueResponse:
+      title: DevTokenIssueResponse
+      type: object
+      description: |-
+        開発者トークン発行レスポンス。
+        devToken はこのレスポンスでのみ返されます。
       properties:
         devToken:
           type: string
-          description: 開発者トークン
+          description: 開発者トークン。この値はサーバー側に平文保存されません。
+        token:
+          $ref: '#/components/schemas/DevToken'
       required:
         - devToken
+        - token
     SubmissionSummary:
       title: SubmissionSummary
       type: object
@@ -1495,9 +1567,13 @@ components:
           type: number
           description: メモリ使用量の最大値 (MiB)
         codeLength:
-          type: number
+          type: integer
+          description: 提出 source bundle のバイト長
         judgeStatus:
           $ref: '#/components/schemas/JudgeStatus'
+        judgeProgressStep:
+          type: integer
+          description: 現在の judge run における進捗段階
       required:
         - id
         - title
@@ -1511,6 +1587,7 @@ components:
         - maxMemory
         - codeLength
         - judgeStatus
+        - judgeProgressStep
     SubmissionSummaries:
       title: SubmissionSummaries
       description: 提出一覧
@@ -1522,6 +1599,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SubmissionSummary'
+      required:
+        - total
+        - submissions
     Submission:
       title: Submission
       type: object
@@ -1542,7 +1622,8 @@ components:
           description: 問題ID
         sourceCode:
           type: string
-          description: 提出コード
+          format: byte
+          description: 提出コード（base64 encoded string）
         submittedAt:
           type: string
           format: date-time
@@ -1560,11 +1641,16 @@ components:
           type: number
           description: メモリ使用量の最大値 (MiB)
         codeLength:
-          type: number
+          type: integer
+          description: base64 decode 後の提出 source bundle のバイト長。複数ファイル提出では zip のバイト長。
         overallJudgeStatus:
           $ref: '#/components/schemas/JudgeStatus'
+        judgeProgressStep:
+          type: integer
+          description: 現在の judge run における進捗段階
         judgeResults:
           type: array
+          description: WJ 中は空配列
           items:
             $ref: '#/components/schemas/JudgeResult'
       required:
@@ -1579,8 +1665,12 @@ components:
         - languageId
         - maxTime
         - maxMemory
+        - codeLength
+        - overallJudgeStatus
+        - judgeProgressStep
+        - judgeResults
     PostSubmissionRequest:
-      title: PostProblemRequest
+      title: PostSubmissionRequest
       type: object
       description: 回答の提出リクエスト
       properties:
@@ -1589,9 +1679,11 @@ components:
           description: 提出コードの言語ID
         source:
           type: string
-          description: ソースコード
+          format: byte
+          description: ソースコード（base64 encoded string）
       required:
         - languageId
+        - source
     EditorialSummary:
       title: EditorialSummary
       description: 解説
@@ -1626,6 +1718,7 @@ components:
         - id
         - problemId
         - createdAt
+        - updatedAt
         - authorId
         - isPublic
         - title
@@ -1672,6 +1765,7 @@ components:
         - id
         - problemId
         - createdAt
+        - updatedAt
         - authorId
         - statement
         - isPublic
@@ -1726,6 +1820,7 @@ components:
           type: string
         token:
           type: string
+          description: メール認証またはOAuth登録のone-time token
       required:
         - userName
         - token
@@ -1769,6 +1864,7 @@ components:
           type: string
         token:
           type: string
+          description: パスワードリセット用のone-time token
       required:
         - password
         - token
@@ -2059,6 +2155,13 @@ components:
       required: true
       schema:
         type: string
+    devTokenIdInPath:
+      name: devTokenId
+      in: path
+      description: 開発者トークンID
+      required: true
+      schema:
+        type: string
     editorialIdInPath:
       name: editorialId
       in: path
@@ -2066,35 +2169,13 @@ components:
       required: true
       schema:
         type: string
-    JWTWithUserId:
-      name: token-with-userid
+    verificationTokenInQuery:
+      name: token
       in: query
-      required: false
+      required: true
       schema:
         type: string
-      description: |-
-        パスワードリセットまたはメールアドレス変更の際に使われるJWT。
-        次のフィールドを持つ:
-        - `exp` (int): トークンの有効期限（UNIXタイムスタンプ）。
-        - `iat` (int): トークンが発行された時刻（UNIXタイムスタンプ）。
-        - `nbf` (int): トークンが有効となる最早時刻（UNIXタイムスタンプ）。
-        - `userId` (string): ユーザーのID。
-        - `email` (string): ユーザーのメールアドレス。
-        - `action` (string): トークンのアクションタイプ。`reset_password`または`change_email`。
-    JWTWithoutUserId:
-      name: token-without-userid
-      in: query
-      required: false
-      schema:
-        type: string
-      description: |-
-        初回のユーザー登録(メールアドレスの登録)の際に使われるJWT。
-        次のフィールドを持つ:
-        - `exp` (int): トークンの有効期限（UNIXタイムスタンプ）。
-        - `iat` (int): トークンが発行された時刻（UNIXタイムスタンプ）。
-        - `nbf` (int): トークンが有効となる最早時刻（UNIXタイムスタンプ）。
-        - `email` (string): ユーザーのメールアドレス。
-        - `action` (string): トークンのアクションタイプ。`register_email`。
+      description: メール確認・メール変更に使うone-time token。サーバー側にはハッシュのみ保存されます。
     testcaseIdInPath:
       name: testcaseId
       in: path
