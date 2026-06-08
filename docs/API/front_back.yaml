@@ -562,13 +562,13 @@ paths:
       summary: getMeDevTokens
       operationId: getMeDevTokens
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DevTokens"
-        "401":
+                $ref: '#/components/schemas/DevTokens'
+        '401':
           description: Unauthorized
       tags:
         - me
@@ -583,18 +583,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostDevTokenRequest"
+              $ref: '#/components/schemas/PostDevTokenRequest'
       responses:
-        "201":
+        '201':
           description: |-
             正常に新しい開発者トークンを発行しました。
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DevTokenIssueResponse"
-        "400":
+                $ref: '#/components/schemas/DevTokenIssueResponse'
+        '400':
           description: Bad Request
-        "401":
+        '401':
           description: Unauthorized
       tags:
         - me
@@ -604,7 +604,7 @@ paths:
         有効期限は発行から約3ヶ月です。
   /users/me/devTokens/{devTokenId}:
     parameters:
-      - $ref: "#/components/parameters/devTokenIdInPath"
+      - $ref: '#/components/parameters/devTokenIdInPath'
     delete:
       summary: deleteMeDevToken
       operationId: deleteMeDevToken
@@ -729,7 +729,7 @@ paths:
     get:
       summary: getActivateEmailAddress
       parameters:
-        - $ref: "#/components/parameters/verificationTokenInQuery"
+        - $ref: '#/components/parameters/verificationTokenInQuery'
       responses:
         '200':
           description: メールアドレスが正常に有効化されました
@@ -811,13 +811,13 @@ paths:
       operationId: postTraqOAuthAuthorize
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
         '204':
           description: No content
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: traQOAuthのためのエンドポイント
@@ -836,7 +836,7 @@ paths:
               $ref: '#/components/schemas/OAuthAuthorizationCode'
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
           content:
             application/json:
               schema:
@@ -851,7 +851,7 @@ paths:
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: GoogleOAuthのためのエンドポイント
@@ -870,7 +870,7 @@ paths:
               $ref: '#/components/schemas/OAuthAuthorizationCode'
       responses:
         '200':
-          description: OK(only when oauthAction is "signup" or "login" and no account is binded to the oauth account)
+          description: OK(only when oauthAction is 'signup' or 'login' and no account is binded to the oauth account)
           content:
             application/json:
               schema:
@@ -885,7 +885,7 @@ paths:
         '400':
           description: Invalid authorization code
         '401':
-          description: Unauthorized(only when oauthAction is "bind")
+          description: Unauthorized(only when oauthAction is 'bind')
         '500':
           description: Internal server error
       description: GithubOAuthのためのエンドポイント
@@ -1500,7 +1500,7 @@ components:
         devTokens:
           type: array
           items:
-            $ref: "#/components/schemas/DevToken"
+            $ref: '#/components/schemas/DevToken'
       required:
         - total
         - devTokens
@@ -1526,7 +1526,7 @@ components:
           type: string
           description: 開発者トークン。この値はサーバー側に平文保存されません。
         token:
-          $ref: "#/components/schemas/DevToken"
+          $ref: '#/components/schemas/DevToken'
       required:
         - devToken
         - token
@@ -1570,7 +1570,7 @@ components:
           type: integer
           description: 提出 source bundle のバイト長
         judgeStatus:
-          $ref: "#/components/schemas/JudgeStatus"
+          $ref: '#/components/schemas/JudgeStatus'
         judgeProgressStep:
           type: integer
           description: 現在の judge run における進捗段階
@@ -1598,7 +1598,7 @@ components:
         submissions:
           type: array
           items:
-            $ref: "#/components/schemas/SubmissionSummary"
+            $ref: '#/components/schemas/SubmissionSummary'
       required:
         - total
         - submissions
@@ -1644,7 +1644,7 @@ components:
           type: integer
           description: base64 decode 後の提出 source bundle のバイト長。複数ファイル提出では zip のバイト長。
         overallJudgeStatus:
-          $ref: "#/components/schemas/JudgeStatus"
+          $ref: '#/components/schemas/JudgeStatus'
         judgeProgressStep:
           type: integer
           description: 現在の judge run における進捗段階
@@ -2200,4 +2200,4 @@ components:
           - login
           - signup
           - bind
-      description: "OAuthのアクション（login, signup, bind）"
+      description: 'OAuthのアクション（login, signup, bind）'
