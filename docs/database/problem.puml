@@ -51,7 +51,7 @@ entity submissions {
   * problem_id : uuid <<FK>>
   * user_id : uuid <<FK>>
   * language_id : text <<FK>>
-  * current_judge_id : uuid <<FK>>
+  current_judge_id : uuid? <<FK>>
   * code_length_bytes : integer
   * overall_judge_status : judge_status
   * judge_progress_step : integer
@@ -156,7 +156,8 @@ end note
 note bottom of submissions
   提出のメタデータと一覧用の集約値を保存する。
   current_judge_id は現在表示対象の judge run を指す。
-  提出作成時は最初の judge run と current_judge_id を同じ transaction で作る。
+  提出作成時は current_judge_id = NULL で submission を作り、
+  最初の judge run を作成してから同じ transaction で current_judge_id を更新する。
   code_length_bytes は source_bundle のバイト長から設定する。
   複数ファイル提出では zip のバイト長を code_length_bytes とする。
   overall_judge_status / judge_progress_step / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
