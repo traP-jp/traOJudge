@@ -109,6 +109,7 @@ enum judge_status {
   RE
   TLE
   WJ
+  WE
 }
 
 users ||--o{ problems : author
@@ -160,7 +161,7 @@ note bottom of submissions
   複数ファイル提出では zip のバイト長を code_length_bytes とする。
   overall_judge_status / judge_progress_step / total_score / max_time_ms / max_memory_mib は一覧用の現在値。
   提出直後や rejudge 待ちの WJ 中は score/time/memory に 0 を入れる。
-  judge 完了時に current run の集約値で更新する。
+  judge 完了時は current_judge_id と一致する run の集約値だけを反映する。
 end note
 
 note bottom of submission_sources
@@ -175,11 +176,12 @@ note bottom of submission_judge_runs
   judge / rejudge の実行履歴を保存する。
   judge_id は judge run ごとの ID。
   judge_progress_step は testcase 数とは別の judge 内部進捗段階。
-  current_judge_id が指す run が WJ でないときだけ rejudge run を新規作成する。
-  current judge が WJ の間の rejudge 要求では新しい run を作らない。
-  rejudge 開始時に新しい run を作り、submissions.current_judge_id を更新する。
+  rejudge 要求時は current run の状態に関係なく新しい judge run を作る。
+  rejudge 開始時に submissions.current_judge_id を新しい judge_id に更新する。
+  古い run は履歴として残す。
+  古い run が後から完了しても、current_judge_id と一致しなければ submissions の現在値へ反映しない。
   WJ 中は score/time/memory に 0 を入れる。
-  完了時に submissions の現在値へ反映する。
+  完了時は current_judge_id と一致する run だけ submissions の現在値へ反映する。
 end note
 
 note bottom of submission_judge_results
