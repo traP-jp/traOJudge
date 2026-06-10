@@ -8,6 +8,8 @@ edition = "2024"
 
 [workspace.dependencies]
 axum = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_with = { version = "3.8", default-features = false, features = ["base64", "std", "macros"] }
 tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -131,6 +131,9 @@ usecase 専用 crate は当面作りません。将来 `core::usecase` が大き
 ### API schema との対応
 
 - route、request、response、status code は `docs/API/front_back.yaml` を正にします
+- OpenAPI DTO は `server/traojudge-backend_app/scripts/gen-api.sh` で生成します
+- 生成済み DTO が最新かは `server/traojudge-backend_app/scripts/gen-api.sh --check` で確認します
+- `server/traojudge-backend_app/src/models/` は OpenAPI からの生成物なので手で編集しません
 - OpenAPI と実装が食い違う場合、先にどちらが正しいかを決めてから片方を直します
 - response DTO の field 名は OpenAPI の camelCase に合わせます
 - Rust 内部の domain / DB 型は snake_case の Rust 命名を使い、境界で変換します
