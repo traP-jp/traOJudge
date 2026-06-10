@@ -3,7 +3,10 @@
 Build the local MariaDB image:
 
 ```sh
-docker build -t traojudge-mariadb:local -f deploy/database/Dockerfile deploy/database
+docker build \
+  -t traojudge-mariadb:local \
+  -f deploy/database/Dockerfile \
+  deploy/database
 ```
 
 Run MariaDB for local repository development:
