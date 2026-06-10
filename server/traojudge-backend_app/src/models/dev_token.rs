@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct DevToken {
     /// 開発者トークンID
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     /// 開発者トークンの表示名
     #[serde(rename = "name")]
     pub name: String,
@@ -38,7 +38,7 @@ pub struct DevToken {
 
 impl DevToken {
     /// 開発者トークンの状態
-    pub fn new(id: String, name: String, created_at: String, expires_at: String) -> DevToken {
+    pub fn new(id: uuid::Uuid, name: String, created_at: String, expires_at: String) -> DevToken {
         DevToken {
             id,
             name,

@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct JudgeResult {
     #[serde(rename = "testcaseId")]
-    pub testcase_id: String,
+    pub testcase_id: uuid::Uuid,
     #[serde(rename = "testcaseName", skip_serializing_if = "Option::is_none")]
     pub testcase_name: Option<String>,
     #[serde(rename = "judgeStatus")]
@@ -31,7 +31,7 @@ pub struct JudgeResult {
 impl JudgeResult {
     /// ジャッジ結果
     pub fn new(
-        testcase_id: String,
+        testcase_id: uuid::Uuid,
         judge_status: models::JudgeStatus,
         score: i32,
         time: i32,

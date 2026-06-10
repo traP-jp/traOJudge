@@ -10,7 +10,7 @@ entity users <<external>> {
 }
 
 entity languages <<external>> {
-  * id : text <<PK>>
+  * id : i64 <<PK>>
 }
 
 entity testcases <<external>> {
@@ -18,7 +18,7 @@ entity testcases <<external>> {
 }
 
 entity problems {
-  * id : uuid <<PK>>
+  * id : i64 <<PK>>
   --
   * author_user_id : uuid <<FK>>
   * title : text
@@ -35,7 +35,7 @@ entity problems {
 entity editorials {
   * id : uuid <<PK>>
   --
-  * problem_id : uuid <<FK>>
+  * problem_id : i64 <<FK>>
   * author_user_id : uuid <<FK>>
   * title : text
   * statement : text
@@ -46,11 +46,11 @@ entity editorials {
 }
 
 entity submissions {
-  * id : uuid <<PK>>
+  * id : i64 <<PK>>
   --
-  * problem_id : uuid <<FK>>
+  * problem_id : i64 <<FK>>
   * user_id : uuid <<FK>>
-  * language_id : text <<FK>>
+  * language_id : i64 <<FK>>
   current_judge_id : uuid? <<FK>>
   * code_length_bytes : integer
   * overall_judge_status : judge_status
@@ -63,7 +63,7 @@ entity submissions {
 }
 
 entity submission_sources {
-  * submission_id : uuid <<PK, FK>>
+  * submission_id : i64 <<PK, FK>>
   --
   * source_bundle : bytea
 }
@@ -71,7 +71,7 @@ entity submission_sources {
 entity submission_judge_runs {
   * judge_id : uuid <<PK>>
   --
-  * submission_id : uuid <<FK>>
+  * submission_id : i64 <<FK>>
   * overall_judge_status : judge_status
   * judge_progress_step : integer
   * total_score : integer
@@ -93,10 +93,10 @@ entity submission_judge_results {
 }
 
 entity problem_solved_users {
-  * problem_id : uuid <<PK, FK>>
+  * problem_id : i64 <<PK, FK>>
   * user_id : uuid <<PK, FK>>
   --
-  * first_accepted_submission_id : uuid <<FK>>
+  * first_accepted_submission_id : i64 <<FK>>
   * solved_at : timestamptz
 }
 
@@ -138,6 +138,7 @@ legend bottom
 end legend
 
 note bottom of problems
+  id は UUID ではなく、API 境界で文字列から parse する i64。
   問題の安定したメタデータを保存する。
   新規作成時は is_public = false。
   is_public は通常の問題一覧・問題詳細での全体公開を表す。
@@ -154,6 +155,7 @@ note bottom of editorials
 end note
 
 note bottom of submissions
+  id は UUID ではなく、API 境界で文字列から parse する i64。
   提出のメタデータと一覧用の集約値を保存する。
   current_judge_id は現在表示対象の judge run を指す。
   提出作成時は current_judge_id = NULL で submission を作り、

@@ -17,7 +17,7 @@ pub struct Testcase {
     #[serde(rename = "name")]
     pub name: String,
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "testInput")]
     pub test_input: String,
     #[serde(rename = "testOutput")]
@@ -32,7 +32,7 @@ impl Testcase {
     /// テストケース
     pub fn new(
         name: String,
-        id: String,
+        id: uuid::Uuid,
         test_input: String,
         test_output: String,
         created_at: String,

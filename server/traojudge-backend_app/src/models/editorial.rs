@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct Editorial {
     /// 解説ID
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "problemId")]
     pub problem_id: String,
     /// 作成日時
@@ -27,7 +27,7 @@ pub struct Editorial {
     pub updated_at: String,
     /// 投稿者のユーザーID
     #[serde(rename = "authorId")]
-    pub author_id: String,
+    pub author_id: uuid::Uuid,
     /// 解説本文 (HTML)
     #[serde(rename = "statement")]
     pub statement: String,
@@ -41,11 +41,11 @@ pub struct Editorial {
 impl Editorial {
     /// 解説の詳細
     pub fn new(
-        id: String,
+        id: uuid::Uuid,
         problem_id: String,
         created_at: String,
         updated_at: String,
-        author_id: String,
+        author_id: uuid::Uuid,
         statement: String,
         is_public: bool,
         title: String,

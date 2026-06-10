@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct PostProblemUpdateResponse {
     /// 問題更新プロセスのID
     #[serde(rename = "updateId")]
-    pub update_id: String,
+    pub update_id: uuid::Uuid,
     /// 問題更新に必要なファイルのアップロード先URL一覧
     #[serde(rename = "presignedUrls")]
     pub presigned_urls: Vec<models::PostProblemUpdateResponsePresignedUrlsInner>,
@@ -25,7 +25,7 @@ pub struct PostProblemUpdateResponse {
 impl PostProblemUpdateResponse {
     /// 問題更新レスポンス
     pub fn new(
-        update_id: String,
+        update_id: uuid::Uuid,
         presigned_urls: Vec<models::PostProblemUpdateResponsePresignedUrlsInner>,
     ) -> PostProblemUpdateResponse {
         PostProblemUpdateResponse {

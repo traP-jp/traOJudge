@@ -135,6 +135,7 @@ legend bottom
 end legend
 
 note bottom of users
+  id は UUIDv7 で生成する。
   profile_traq_id / profile_github_id はプロフィール表示用。
   OAuth 認証に使う ID は user_auth_identities に保存する。
   bind/revoke でプロフィール値を暗黙に変更しない。
