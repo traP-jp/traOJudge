@@ -50,7 +50,7 @@ pub struct UpdateEditorial {
 pub struct EditorialSummary {
     pub id: EditorialId,
     pub problem_id: ProblemId,
-    pub author_id: UserName,
+    pub author_name: UserName,
     pub title: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
