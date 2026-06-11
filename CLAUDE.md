@@ -7,8 +7,6 @@
 
 - **UI (フロントエンド / `UI/`)**: [`docs/ui/conventions.md`](./docs/ui/conventions.md)
   - Vue 3 + TS + Tailwind のコーディング規約と設計意図。
-- **API server (バックエンド / `server/`)**: [`docs/apiserver/conventions.md`](./docs/apiserver/conventions.md)
-  - Rust + Axum のコーディング規約、crate 責務、DB/API 境界の設計意図。
 - **API スキーマ**: [`docs/API/front_back.yaml`](./docs/API/front_back.yaml)
 - **サービス構成**: [`docs/services/architecture-overview.puml`](./docs/services/architecture-overview.puml)
 
