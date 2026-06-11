@@ -1054,6 +1054,7 @@ components:
           description: 問題タイトル
         authorId:
           type: string
+          format: uuid
           description: 作問者のユーザーID
         isPublic:
           type: boolean
@@ -1110,6 +1111,7 @@ components:
           description: 問題タイトル
         authorId:
           type: string
+          format: uuid
           description: 作問者のユーザーID
         isPublic:
           type: boolean
@@ -1327,6 +1329,7 @@ components:
       properties:
         updateId:
           type: string
+          format: uuid
           description: 問題更新プロセスのID
         presignedUrls:
           type: array
@@ -1354,6 +1357,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           description: ユーザーID
         name:
           type: string
@@ -1468,6 +1472,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           description: 開発者トークンID
         name:
           type: string
@@ -1544,6 +1549,7 @@ components:
             id: hzviku4ukwyeq
         userId:
           type: string
+          format: uuid
           description: 提出ユーザーID
         userName:
           type: string
@@ -1614,6 +1620,7 @@ components:
           type: string
         userId:
           type: string
+          format: uuid
           description: 提出ユーザーID
         userName:
           type: string
@@ -1692,6 +1699,7 @@ components:
         id:
           description: 解説ID
           type: string
+          format: uuid
         problemId:
           type: string
         createdAt:
@@ -1705,6 +1713,7 @@ components:
         authorId:
           description: 投稿者のユーザーID
           type: string
+          format: uuid
         isPublic:
           description: |-
             解説が全体公開かどうか.
@@ -1736,6 +1745,7 @@ components:
         id:
           description: 解説ID
           type: string
+          format: uuid
         problemId:
           type: string
         createdAt:
@@ -1749,6 +1759,7 @@ components:
         authorId:
           description: 投稿者のユーザーID
           type: string
+          format: uuid
         statement:
           description: 解説本文 (HTML)
           type: string
@@ -1899,6 +1910,7 @@ components:
       properties:
         testcaseId:
           type: string
+          format: uuid
         testcaseName:
           type: string
         judgeStatus:
@@ -1937,6 +1949,7 @@ components:
           type: string
         id:
           type: string
+          format: uuid
         testInput:
           type: string
         testOutput:
@@ -1992,6 +2005,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
         createdAt:
@@ -2041,6 +2055,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
     problemsOrderByInQuery:
       name: orderBy
       in: query
@@ -2148,6 +2163,7 @@ components:
       description: ユーザーID
       schema:
         type: string
+        format: uuid
     userIdInPath:
       name: userId
       in: path
@@ -2155,6 +2171,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
     devTokenIdInPath:
       name: devTokenId
       in: path
@@ -2162,6 +2179,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
     editorialIdInPath:
       name: editorialId
       in: path
@@ -2169,6 +2187,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
     verificationTokenInQuery:
       name: token
       in: query
@@ -2182,6 +2201,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
       description: テストケースID
     problemIdInQuery:
       name: problemIdInQuery

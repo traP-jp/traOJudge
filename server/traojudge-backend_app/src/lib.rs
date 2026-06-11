@@ -2,6 +2,9 @@ use std::net::SocketAddr;
 
 use axum::{Router, routing::get};
 
+pub mod http;
+pub mod models;
+
 pub fn build_router() -> Router {
     Router::new().route("/ping", get(ping))
 }

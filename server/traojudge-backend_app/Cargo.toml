@@ -5,8 +5,11 @@ edition.workspace = true
 
 [dependencies]
 axum.workspace = true
+serde.workspace = true
+serde_with.workspace = true
 tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
+uuid.workspace = true
