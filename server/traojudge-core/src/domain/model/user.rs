@@ -38,34 +38,6 @@ impl Into<Uuid> for UserDisplayId {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum UserRole {
-    CommonUser,
-    TrapUser,
-    Admin,
-}
-
-impl From<UserRole> for i32 {
-    fn from(role: UserRole) -> Self {
-        match role {
-            UserRole::CommonUser => 0,
-            UserRole::TrapUser => 1,
-            UserRole::Admin => 2,
-        }
-    }
-}
-
-impl UserRole {
-    pub fn new(role: i32) -> anyhow::Result<Self> {
-        match role {
-            0 => Ok(UserRole::CommonUser),
-            1 => Ok(UserRole::TrapUser),
-            2 => Ok(UserRole::Admin),
-            _ => anyhow::bail!("invalid role number"),
-        }
-    }
-}
-
 #[derive(Debug, Clone)]
 pub struct User {
     pub id: UserId,
@@ -76,7 +48,7 @@ pub struct User {
     pub icon_id: Option<IconId>,
     pub x_id: Option<String>,
     pub self_introduction: String,
-    pub role: UserRole,
+    pub is_system_admin: bool,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -87,4 +59,11 @@ pub struct UpdateUser {
     pub github_id: Option<String>,
     pub x_id: Option<String>,
     pub self_introduction: String,
+}
+
+/// `can_create_contest`などの拡張を想定しています
+pub struct UserGlobalAuthorityAttribute {
+    pub is_system_admin: bool,
+    pub can_create_problem: bool,
+    pub is_trap_user: bool,
 }
