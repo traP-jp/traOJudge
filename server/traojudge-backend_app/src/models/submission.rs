@@ -24,7 +24,7 @@ pub struct Submission {
     pub title: String,
     /// 提出ユーザーID
     #[serde(rename = "userId")]
-    pub user_id: uuid::Uuid,
+    pub user_id: String,
     #[serde(rename = "userName")]
     pub user_name: String,
     /// 問題ID
@@ -67,7 +67,7 @@ impl Submission {
     pub fn new(
         id: String,
         title: String,
-        user_id: uuid::Uuid,
+        user_id: String,
         user_name: String,
         problem_id: String,
         source_code: Vec<u8>,

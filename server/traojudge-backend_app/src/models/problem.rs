@@ -22,7 +22,7 @@ pub struct Problem {
     pub title: String,
     /// 作問者のユーザーID
     #[serde(rename = "authorId")]
-    pub author_id: uuid::Uuid,
+    pub author_id: String,
     /// 問題が全体公開かどうか.  * `true` - 公開 * `false` - 非公開 (問題の作者のみ閲覧可)
     #[serde(rename = "isPublic")]
     pub is_public: bool,
@@ -53,7 +53,7 @@ impl Problem {
     pub fn new(
         id: String,
         title: String,
-        author_id: uuid::Uuid,
+        author_id: String,
         is_public: bool,
         difficulty: i32,
         statement: String,

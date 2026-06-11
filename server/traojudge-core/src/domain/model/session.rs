@@ -1,7 +1,6 @@
-use super::user::{UserDisplayId, UserId};
+use super::user::UserId;
 
 #[derive(Debug, Clone)]
 pub struct SessionUser {
     pub user_id: UserId,
-    pub display_id: UserDisplayId,
 }

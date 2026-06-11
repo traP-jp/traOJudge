@@ -1,4 +1,4 @@
-use super::user::UserDisplayId;
+use super::user::UserId;
 use aes_gcm::{
     Aes256Gcm, KeyInit,
     aead::{Aead, AeadCore, OsRng},
@@ -6,7 +6,6 @@ use aes_gcm::{
 use base64::{Engine as _, engine::general_purpose};
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -18,7 +17,7 @@ pub enum Action {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct AuthInfo {
-    user_id: Option<Uuid>,
+    user_id: Option<i64>,
     email: Option<String>,
     google_oauth: Option<String>,
     github_oauth: Option<String>,
@@ -89,11 +88,11 @@ impl AuthToken {
         Ok(auth_info.action)
     }
 
-    pub fn get_email_and_display_id(
+    pub fn get_email_and_user_id(
         jwt: &str,
         encode_key: &str,
         encrypt_key: &str,
-    ) -> anyhow::Result<(Option<String>, Option<UserDisplayId>)> {
+    ) -> anyhow::Result<(Option<String>, Option<UserId>)> {
         let token = jsonwebtoken::decode::<Self>(
             jwt,
             &jsonwebtoken::DecodingKey::from_secret(encode_key.as_ref()),
@@ -154,7 +153,7 @@ impl AuthToken {
     }
 
     pub fn encode_email_update_jwt(
-        user_id: UserDisplayId,
+        user_id: UserId,
         email: &str,
         encode_key: &str,
         encrypt_key: &str,

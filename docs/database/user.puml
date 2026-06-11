@@ -6,7 +6,7 @@ hide circle
 skinparam linetype ortho
 
 entity users {
-  * id : uuid <<PK>>
+  * id : i64 <<PK>>
   --
   * name : text
   * role : user_role
@@ -22,7 +22,7 @@ entity users {
 entity user_auth_identities {
   * id : uuid <<PK>>
   --
-  * user_id : uuid <<FK>>
+  * user_id : i64 <<FK>>
   * provider : auth_provider
   * provider_user_id : text
   provider_email : text?
@@ -39,7 +39,7 @@ entity user_auth_identities {
 entity user_sessions {
   * id : uuid <<PK>>
   --
-  * user_id : uuid <<FK>>
+  * user_id : i64 <<FK>>
   * session_token_hash : text <<unique>>
   * created_at : timestamptz
   last_seen_at : timestamptz?
@@ -50,7 +50,7 @@ entity user_sessions {
 entity developer_tokens {
   * id : uuid <<PK>>
   --
-  * user_id : uuid <<FK>>
+  * user_id : i64 <<FK>>
   * name : text
   * token_hash : text <<unique>>
   * created_at : timestamptz
@@ -62,7 +62,7 @@ entity developer_tokens {
 entity auth_verification_tokens {
   * id : uuid <<PK>>
   --
-  user_id : uuid? <<FK>>
+  user_id : i64? <<FK>>
   * purpose : auth_verification_purpose
   provider : oauth_provider?
   email : text?
@@ -76,7 +76,7 @@ entity auth_verification_tokens {
 entity oauth_states {
   * id : uuid <<PK>>
   --
-  user_id : uuid? <<FK>>
+  user_id : i64? <<FK>>
   * provider : oauth_provider
   * action : oauth_action
   * state_hash : text <<unique>>
@@ -135,7 +135,7 @@ legend bottom
 end legend
 
 note bottom of users
-  id は UUIDv7 で生成する。
+  id は i64 で採番する。
   profile_traq_id / profile_github_id はプロフィール表示用。
   OAuth 認証に使う ID は user_auth_identities に保存する。
   bind/revoke でプロフィール値を暗黙に変更しない。

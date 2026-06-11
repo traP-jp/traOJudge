@@ -27,7 +27,7 @@ pub struct EditorialSummary {
     pub updated_at: String,
     /// 投稿者のユーザーID
     #[serde(rename = "authorId")]
-    pub author_id: uuid::Uuid,
+    pub author_id: String,
     /// 解説が全体公開かどうか.  * `true` - 公開 * `false` - 非公開 (問題の作者のみ閲覧可)
     #[serde(rename = "isPublic")]
     pub is_public: bool,
@@ -42,7 +42,7 @@ impl EditorialSummary {
         problem_id: String,
         created_at: String,
         updated_at: String,
-        author_id: uuid::Uuid,
+        author_id: String,
         is_public: bool,
         title: String,
     ) -> EditorialSummary {

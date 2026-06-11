@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     /// ユーザーID
     #[serde(rename = "id")]
-    pub id: uuid::Uuid,
+    pub id: String,
     /// ユーザー名
     #[serde(rename = "name")]
     pub name: String,
@@ -47,7 +47,7 @@ pub struct User {
 impl User {
     /// ユーザー情報
     pub fn new(
-        id: uuid::Uuid,
+        id: String,
         name: String,
         role: models::Role,
         created_at: String,
