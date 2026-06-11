@@ -14,7 +14,6 @@ fi
 
 OPENAPI_SCHEMA="$ROOT_DIR/docs/API/front_back.yaml"
 OUTPUT_DIR="$APP_DIR/src/models"
-OPENAPI_GENERATOR_CLI_PACKAGE="@openapitools/openapi-generator-cli@2.25.0"
 TMP_DIR="$(mktemp -d)"
 TMP_GEN_DIR="$TMP_DIR/openapi"
 TMP_MODELS_DIR="$TMP_DIR/models"
@@ -68,7 +67,7 @@ mkdir -p "$TMP_MODELS_DIR"
 
 (
   cd "$APP_DIR"
-  npx "$OPENAPI_GENERATOR_CLI_PACKAGE" generate \
+  npx @openapitools/openapi-generator-cli generate \
     -i "$OPENAPI_SCHEMA" \
     -g rust \
     -o "$TMP_GEN_DIR" \
