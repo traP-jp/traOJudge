@@ -2,36 +2,29 @@ use super::user::UserDisplayId;
 use anyhow::Context;
 use chrono::{DateTime, Utc};
 use std::str::FromStr;
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct ProblemId(i64);
+pub struct ProblemId(Uuid);
 
 impl FromStr for ProblemId {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let id = s
-            .parse::<i64>()
-            .context("failed to parse ProblemId from str")?;
+        let id = Uuid::parse_str(s).context("failed to parse ProblemId from str")?;
         Ok(ProblemId(id))
     }
 }
 
-impl std::fmt::Display for ProblemId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<ProblemId> for i64 {
-    fn from(id: ProblemId) -> Self {
-        id.0
-    }
-}
-
-impl From<i64> for ProblemId {
-    fn from(id: i64) -> Self {
+impl From<Uuid> for ProblemId {
+    fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for ProblemId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 

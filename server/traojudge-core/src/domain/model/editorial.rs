@@ -5,21 +5,15 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct EditorialId(Uuid);
 
-impl std::fmt::Display for EditorialId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<EditorialId> for Uuid {
-    fn from(id: EditorialId) -> Self {
-        id.0
-    }
-}
-
 impl From<Uuid> for EditorialId {
     fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for EditorialId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 

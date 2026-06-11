@@ -5,21 +5,15 @@ use uuid::Uuid;
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 pub struct TestcaseId(Uuid);
 
-impl std::fmt::Display for TestcaseId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<TestcaseId> for Uuid {
-    fn from(id: TestcaseId) -> Self {
-        id.0
-    }
-}
-
 impl From<Uuid> for TestcaseId {
     fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for TestcaseId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 

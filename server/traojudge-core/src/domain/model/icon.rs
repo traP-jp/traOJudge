@@ -10,21 +10,15 @@ pub struct Icon {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct IconId(Uuid);
 
-impl std::fmt::Display for IconId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<IconId> for Uuid {
-    fn from(id: IconId) -> Self {
-        id.0
-    }
-}
-
 impl From<Uuid> for IconId {
     fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for IconId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 

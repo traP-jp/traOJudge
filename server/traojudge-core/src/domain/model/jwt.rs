@@ -6,6 +6,7 @@ use aes_gcm::{
 use base64::{Engine as _, engine::general_purpose};
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -17,7 +18,7 @@ pub enum Action {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct AuthInfo {
-    user_id: Option<i64>,
+    user_id: Option<Uuid>,
     email: Option<String>,
     google_oauth: Option<String>,
     github_oauth: Option<String>,

@@ -17,36 +17,24 @@ impl From<Uuid> for UserId {
     }
 }
 
-impl From<UserId> for Uuid {
-    fn from(id: UserId) -> Self {
-        id.0
-    }
-}
-
-impl std::fmt::Display for UserId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
+impl Into<Uuid> for UserId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct UserDisplayId(i64);
+pub struct UserDisplayId(Uuid);
 
-impl std::fmt::Display for UserDisplayId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<UserDisplayId> for i64 {
-    fn from(id: UserDisplayId) -> Self {
-        id.0
-    }
-}
-
-impl From<i64> for UserDisplayId {
-    fn from(id: i64) -> Self {
+impl From<Uuid> for UserDisplayId {
+    fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for UserDisplayId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 

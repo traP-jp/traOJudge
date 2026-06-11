@@ -7,21 +7,15 @@ use uuid::Uuid;
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 pub struct SubmissionId(pub(crate) Uuid);
 
-impl std::fmt::Display for SubmissionId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<SubmissionId> for Uuid {
-    fn from(id: SubmissionId) -> Self {
-        id.0
-    }
-}
-
 impl From<Uuid> for SubmissionId {
     fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl Into<Uuid> for SubmissionId {
+    fn into(self) -> Uuid {
+        self.0
     }
 }
 
