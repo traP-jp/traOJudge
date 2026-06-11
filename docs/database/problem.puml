@@ -6,7 +6,7 @@ hide circle
 skinparam linetype ortho
 
 entity users <<external>> {
-  * id : uuid <<PK>>
+  * id : i64 <<PK>>
 }
 
 entity languages <<external>> {
@@ -20,7 +20,7 @@ entity testcases <<external>> {
 entity problems {
   * id : i64 <<PK>>
   --
-  * author_user_id : uuid <<FK>>
+  * author_user_id : i64 <<FK>>
   * title : text
   * statement : text
   * difficulty : integer
@@ -36,7 +36,7 @@ entity editorials {
   * id : uuid <<PK>>
   --
   * problem_id : i64 <<FK>>
-  * author_user_id : uuid <<FK>>
+  * author_user_id : i64 <<FK>>
   * title : text
   * statement : text
   * is_public : boolean
@@ -49,7 +49,7 @@ entity submissions {
   * id : i64 <<PK>>
   --
   * problem_id : i64 <<FK>>
-  * user_id : uuid <<FK>>
+  * user_id : i64 <<FK>>
   * language_id : i64 <<FK>>
   current_judge_id : uuid? <<FK>>
   * code_length_bytes : integer
@@ -94,7 +94,7 @@ entity submission_judge_results {
 
 entity problem_solved_users {
   * problem_id : i64 <<PK, FK>>
-  * user_id : uuid <<PK, FK>>
+  * user_id : i64 <<PK, FK>>
   --
   * first_accepted_submission_id : i64 <<FK>>
   * solved_at : timestamptz

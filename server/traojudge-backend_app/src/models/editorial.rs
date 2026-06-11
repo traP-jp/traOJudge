@@ -27,7 +27,7 @@ pub struct Editorial {
     pub updated_at: String,
     /// 投稿者のユーザーID
     #[serde(rename = "authorId")]
-    pub author_id: uuid::Uuid,
+    pub author_id: String,
     /// 解説本文 (HTML)
     #[serde(rename = "statement")]
     pub statement: String,
@@ -45,7 +45,7 @@ impl Editorial {
         problem_id: String,
         created_at: String,
         updated_at: String,
-        author_id: uuid::Uuid,
+        author_id: String,
         statement: String,
         is_public: bool,
         title: String,

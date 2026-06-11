@@ -1,6 +1,6 @@
 use super::problem::ProblemId;
 use super::testcase::TestcaseId;
-use super::user::UserDisplayId;
+use super::user::UserId;
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
@@ -21,7 +21,7 @@ impl Into<Uuid> for SubmissionId {
 
 pub struct Submission {
     pub id: SubmissionId,
-    pub user_id: UserDisplayId,
+    pub user_id: UserId,
     pub user_name: String,
     pub problem_id: ProblemId,
     pub problem_title: String,
@@ -45,7 +45,7 @@ pub struct JudgeResult {
 
 pub struct CreateSubmission {
     pub problem_id: ProblemId,
-    pub user_id: UserDisplayId,
+    pub user_id: UserId,
     pub language_id: String,
     pub source: String,
     pub judge_status: String,
@@ -87,13 +87,13 @@ pub enum SubmissionOrderBy {
 
 #[derive(Clone)]
 pub struct SubmissionGetQuery {
-    pub user_id: Option<UserDisplayId>,
+    pub user_id: Option<UserId>,
     pub limit: i64,
     pub offset: i64,
     pub judge_status: Option<String>,
     pub language_id: Option<String>,
     pub user_name: Option<String>,
-    pub user_query: Option<UserDisplayId>,
+    pub user_query: Option<UserId>,
     pub order_by: SubmissionOrderBy,
     pub problem_id: Option<ProblemId>,
 }

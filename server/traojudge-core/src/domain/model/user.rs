@@ -1,47 +1,30 @@
 use super::icon::IconId;
 use chrono::{DateTime, Utc};
-use uuid::Uuid;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct UserId(Uuid);
+pub struct UserId(i64);
 
 impl UserId {
-    pub fn new(id: Uuid) -> Self {
+    pub fn new(id: i64) -> Self {
         Self(id)
     }
 }
 
-impl From<Uuid> for UserId {
-    fn from(id: Uuid) -> Self {
+impl From<i64> for UserId {
+    fn from(id: i64) -> Self {
         Self(id)
     }
 }
 
-impl Into<Uuid> for UserId {
-    fn into(self) -> Uuid {
-        self.0
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct UserDisplayId(Uuid);
-
-impl From<Uuid> for UserDisplayId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
-}
-
-impl Into<Uuid> for UserDisplayId {
-    fn into(self) -> Uuid {
-        self.0
+impl From<UserId> for i64 {
+    fn from(id: UserId) -> Self {
+        id.0
     }
 }
 
 #[derive(Debug, Clone)]
 pub struct User {
     pub id: UserId,
-    pub display_id: UserDisplayId,
     pub name: String,
     pub traq_id: Option<String>,
     pub github_id: Option<String>,
