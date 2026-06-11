@@ -1,4 +1,4 @@
-use super::user::UserDisplayId;
+use super::user::UserName;
 use aes_gcm::{
     Aes256Gcm, KeyInit,
     aead::{Aead, AeadCore, OsRng},
@@ -6,7 +6,6 @@ use aes_gcm::{
 use base64::{Engine as _, engine::general_purpose};
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -18,7 +17,7 @@ pub enum Action {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct AuthInfo {
-    user_id: Option<Uuid>,
+    user_name: Option<String>,
     email: Option<String>,
     google_oauth: Option<String>,
     github_oauth: Option<String>,
@@ -93,7 +92,7 @@ impl AuthToken {
         jwt: &str,
         encode_key: &str,
         encrypt_key: &str,
-    ) -> anyhow::Result<(Option<String>, Option<UserDisplayId>)> {
+    ) -> anyhow::Result<(Option<String>, Option<UserName>)> {
         let token = jsonwebtoken::decode::<Self>(
             jwt,
             &jsonwebtoken::DecodingKey::from_secret(encode_key.as_ref()),
@@ -102,7 +101,10 @@ impl AuthToken {
 
         let auth_info = AuthInfo::decrypt(&token.claims.payload, encrypt_key)?;
 
-        Ok((auth_info.email, auth_info.user_id.map(Into::into)))
+        Ok((
+            auth_info.email,
+            auth_info.user_name.map(TryInto::try_into).transpose()?,
+        ))
     }
 
     pub fn get_email(
@@ -154,7 +156,7 @@ impl AuthToken {
     }
 
     pub fn encode_email_update_jwt(
-        user_id: UserDisplayId,
+        user_name: UserName,
         email: &str,
         encode_key: &str,
         encrypt_key: &str,
@@ -164,7 +166,7 @@ impl AuthToken {
         let nbf = Utc::now().timestamp();
 
         let auth_info = AuthInfo {
-            user_id: Some(user_id.into()),
+            user_name: Some(user_name.into()),
             email: Some(email.to_string()),
             google_oauth: None,
             github_oauth: None,
@@ -202,7 +204,7 @@ impl AuthToken {
         }
 
         let auth_info = AuthInfo {
-            user_id: None,
+            user_name: None,
             email: email.map(ToString::to_string),
             google_oauth: google_oauth.map(ToString::to_string),
             github_oauth: github_oauth.map(ToString::to_string),
@@ -231,7 +233,7 @@ impl AuthToken {
         let nbf = Utc::now().timestamp();
 
         let auth_info = AuthInfo {
-            user_id: None,
+            user_name: None,
             email: Some(email.to_string()),
             google_oauth: None,
             github_oauth: None,

@@ -23,17 +23,26 @@ impl Into<Uuid> for UserId {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct UserDisplayId(Uuid);
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct UserName(String);
 
-impl From<Uuid> for UserDisplayId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
+impl TryFrom<String> for UserName {
+    type Error = anyhow::Error;
+
+    fn try_from(user_name: String) -> Result<Self, Self::Error> {
+        if super::rules::RuleType::UserName
+            .validate(user_name.as_str())
+            .is_ok()
+        {
+            Ok(Self(user_name))
+        } else {
+            anyhow::bail!("invalid user name")
+        }
     }
 }
 
-impl Into<Uuid> for UserDisplayId {
-    fn into(self) -> Uuid {
+impl Into<String> for UserName {
+    fn into(self) -> String {
         self.0
     }
 }
@@ -69,8 +78,7 @@ impl UserRole {
 #[derive(Debug, Clone)]
 pub struct User {
     pub id: UserId,
-    pub display_id: UserDisplayId,
-    pub name: String,
+    pub user_name: UserName,
     pub traq_id: Option<String>,
     pub github_id: Option<String>,
     pub icon_id: Option<IconId>,

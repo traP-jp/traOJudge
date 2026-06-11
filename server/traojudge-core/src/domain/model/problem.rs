@@ -1,4 +1,4 @@
-use super::user::UserDisplayId;
+use super::user::UserName;
 use anyhow::Context;
 use chrono::{DateTime, Utc};
 use std::str::FromStr;
@@ -31,7 +31,7 @@ impl Into<Uuid> for ProblemId {
 #[derive(Debug, Clone)]
 pub struct NormalProblem {
     pub id: ProblemId,
-    pub author_id: UserDisplayId,
+    pub author_name: UserName,
     pub title: String,
     pub statement: String,
     pub time_limit_ms: i32,
@@ -53,7 +53,7 @@ pub struct UpdateNormalProblem {
 }
 
 pub struct CreateNormalProblem {
-    pub author_id: UserDisplayId,
+    pub author_name: UserName,
     pub title: String,
     pub statement: String,
     pub time_limit_ms: i32,
@@ -73,10 +73,9 @@ pub enum ProblemOrderBy {
 
 #[derive(Clone)]
 pub struct ProblemGetQuery {
-    pub user_id: Option<UserDisplayId>,
+    pub user_name: Option<UserName>,
     pub limit: i64,
     pub offset: i64,
     pub order_by: ProblemOrderBy,
-    pub user_name: Option<String>,
-    pub user_query: Option<UserDisplayId>,
+    pub user_query: Option<UserName>,
 }

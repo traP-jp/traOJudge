@@ -1,4 +1,4 @@
-use super::{problem::ProblemId, user::UserDisplayId};
+use super::{problem::ProblemId, user::UserName};
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
@@ -21,7 +21,7 @@ impl Into<Uuid> for EditorialId {
 pub struct Editorial {
     pub id: EditorialId,
     pub problem_id: ProblemId,
-    pub author_id: UserDisplayId,
+    pub author_id: UserName,
     pub title: String,
     pub statement: String,
     pub created_at: DateTime<Utc>,
@@ -32,7 +32,7 @@ pub struct Editorial {
 #[derive(Debug, Clone)]
 pub struct CreateEditorial {
     pub problem_id: ProblemId,
-    pub author_id: UserDisplayId,
+    pub author_id: UserName,
     pub title: String,
     pub statement: String,
     pub is_public: bool,
@@ -50,7 +50,7 @@ pub struct UpdateEditorial {
 pub struct EditorialSummary {
     pub id: EditorialId,
     pub problem_id: ProblemId,
-    pub author_id: UserDisplayId,
+    pub author_id: UserName,
     pub title: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
@@ -59,7 +59,7 @@ pub struct EditorialSummary {
 
 #[derive(Debug, Clone)]
 pub struct EditorialGetQuery {
-    pub user_id: Option<UserDisplayId>,
+    pub user_name: Option<UserName>,
     pub problem_id: ProblemId,
     pub limit: i64,
     pub offset: i64,
