@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::domain::model::file::FileId;
+use crate::domain::model::file::StoreFileId;
 
 #[derive(Debug, Clone)]
 pub struct GenericDag {
@@ -36,7 +36,7 @@ pub enum Node {
 /// Testcases, checker, etc.
 #[derive(Debug, Clone)]
 pub struct FixedFileNode {
-    pub file_id: FileId,
+    pub file_id: StoreFileId,
 }
 
 /// Submission-specific file.
