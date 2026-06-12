@@ -8,7 +8,7 @@ pub const TRAOJUDGE_SP_OUTPUT_LIMIT: &str = "TRAOJUDGE_SP_OUTPUT_LIMIT";
 pub const TRAOJUDGE_SP_LANGUAGE: &str = "TRAOJUDGE_SP_LANGUAGE";
 
 #[derive(Debug, Clone)]
-pub struct SinglePlayerDag {
+pub struct TwoPlayerDag {
     pub nodes: HashMap<NodeId, Node>,
     pub edges: Vec<Edge>,
 }
@@ -31,7 +31,7 @@ impl Into<i32> for NodeId {
 #[derive(Debug, Clone)]
 pub enum Node {
     FixedFile(FixedFileNode),
-    SubmissionSourceFile,
+    SubmissionSourceFile(SubmissionSourceFileNode),
     Execution(ExecutionNode),
 }
 
@@ -39,6 +39,12 @@ pub enum Node {
 #[derive(Debug, Clone)]
 pub struct FixedFileNode {
     pub file_id: StoreFileId,
+}
+
+#[derive(Debug, Clone)]
+pub enum SubmissionSourceFileNode {
+    Alice,
+    Bob,
 }
 
 #[derive(Debug, Clone)]
