@@ -1,7 +1,7 @@
 pub mod auth;
+pub mod dag;
 pub mod editorial;
 pub mod file;
-pub mod generic_dag;
 pub mod icon;
 pub mod judge;
 pub mod jwt;
