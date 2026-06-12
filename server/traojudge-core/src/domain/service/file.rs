@@ -3,7 +3,10 @@ use async_trait::async_trait;
 use tokio::io::{AsyncRead, AsyncWrite};
 
 use crate::domain::{
-    model::file::{StoreFileId, StoreFileMeta, StoreFileReferenceId, StoreFileStatus},
+    model::{
+        file::{StoreFileId, StoreFileMeta, StoreFileReferenceId, StoreFileStatus},
+        user::UserId,
+    },
     service::unit_of_work_provider::UnitOfWorkProvider,
 };
 
@@ -49,6 +52,7 @@ pub trait FileMetaRepository<UoWP: UnitOfWorkProvider> {
     async fn create_file_metas(
         &self,
         uow: &UoWP::UnitOfWork,
+        owner: UserId,
         count: usize,
     ) -> Result<Vec<StoreFileMeta>>;
     async fn read_file_metas(
