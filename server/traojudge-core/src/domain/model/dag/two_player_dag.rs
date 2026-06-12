@@ -2,10 +2,10 @@ use std::collections::HashMap;
 
 use crate::domain::model::file::StoreFileId;
 
-pub const TRAOJUDGE_SP_TIME_LIMIT: &str = "TRAOJUDGE_SP_TIME_LIMIT";
-pub const TRAOJUDGE_SP_MEMORY_LIMIT: &str = "TRAOJUDGE_SP_MEMORY_LIMIT";
-pub const TRAOJUDGE_SP_OUTPUT_LIMIT: &str = "TRAOJUDGE_SP_OUTPUT_LIMIT";
-pub const TRAOJUDGE_SP_LANGUAGE: &str = "TRAOJUDGE_SP_LANGUAGE";
+pub const TRAOJUDGE_TP_TIME_LIMIT: &str = "TRAOJUDGE_TP_TIME_LIMIT";
+pub const TRAOJUDGE_TP_MEMORY_LIMIT: &str = "TRAOJUDGE_TP_MEMORY_LIMIT";
+pub const TRAOJUDGE_TP_OUTPUT_LIMIT: &str = "TRAOJUDGE_TP_OUTPUT_LIMIT";
+pub const TRAOJUDGE_TP_LANGUAGE: &str = "TRAOJUDGE_TP_LANGUAGE";
 
 #[derive(Debug, Clone)]
 pub struct TwoPlayerDag {
