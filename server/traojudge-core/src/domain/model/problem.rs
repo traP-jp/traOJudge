@@ -42,6 +42,20 @@ pub struct Problem {
     pub updated_at: DateTime<Utc>,
 }
 
+#[derive(Debug, Clone)]
+pub struct ProblemSummary {
+    pub id: ProblemId,
+    pub author_user_id: UserId,
+    pub title: String,
+    pub time_limit_ms: i32,
+    pub memory_limit_mib: i32,
+    pub difficulty: i32,
+    pub is_public: bool,
+    pub solved_count: i32,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
 pub struct UpdateProblem {
     pub title: String,
     pub is_public: bool,
