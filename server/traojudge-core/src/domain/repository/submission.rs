@@ -2,28 +2,51 @@ use anyhow::Result;
 use async_trait::async_trait;
 
 use crate::domain::model::submission::{
-    CreateJudgeResult, CreateSubmission, JudgeResult, Submission, SubmissionGetQuery, SubmissionId,
-    UpdateSubmission,
+    CreateJudgeResult, CreateJudgeRun, CreateSubmission, CreateSubmissionSource, JudgeResult,
+    JudgeRunId, Submission, SubmissionGetQuery, SubmissionId, SubmissionJudgeRun, SubmissionSource,
+    SubmissionSummary, UpdateJudgeRun, UpdateSubmissionJudgeSummary,
 };
 
 #[async_trait]
 pub trait SubmissionRepository: Send {
     async fn get_submission(&mut self, id: SubmissionId) -> Result<Option<Submission>>;
-    async fn get_submission_results(&mut self, id: SubmissionId) -> Result<Vec<JudgeResult>>;
+    async fn get_source(&mut self, id: SubmissionId) -> Result<Option<SubmissionSource>>;
+    async fn get_submission_current_judge_results(
+        &mut self,
+        id: SubmissionId,
+    ) -> Result<Vec<JudgeResult>>;
     async fn get_submissions_by_query(
         &mut self,
         query: SubmissionGetQuery,
-    ) -> Result<Vec<Submission>>;
+    ) -> Result<Vec<SubmissionSummary>>;
     async fn get_submissions_count_by_query(&mut self, query: SubmissionGetQuery) -> Result<i64>;
     async fn create_submission(&mut self, submission: CreateSubmission) -> Result<SubmissionId>;
-    async fn update_submission(
+    async fn create_source(&mut self, source: CreateSubmissionSource) -> Result<()>;
+    async fn create_judge_run(&mut self, judge_run: CreateJudgeRun) -> Result<JudgeRunId>;
+    async fn get_judge_run(&mut self, judge_id: JudgeRunId) -> Result<Option<SubmissionJudgeRun>>;
+    async fn get_judge_runs_by_submission_id(
         &mut self,
         submission_id: SubmissionId,
-        submission: UpdateSubmission,
+    ) -> Result<Vec<SubmissionJudgeRun>>;
+    async fn update_judge_run(
+        &mut self,
+        judge_id: JudgeRunId,
+        judge_run: UpdateJudgeRun,
     ) -> Result<()>;
+    async fn update_current_judge_run(
+        &mut self,
+        submission_id: SubmissionId,
+        judge_id: JudgeRunId,
+    ) -> Result<()>;
+    async fn update_submission_judge_summary_if_current(
+        &mut self,
+        submission_id: SubmissionId,
+        judge_id: JudgeRunId,
+        summary: UpdateSubmissionJudgeSummary,
+    ) -> Result<bool>;
     async fn create_judge_results(&mut self, results: Vec<CreateJudgeResult>) -> Result<()>;
-    async fn delete_judge_results_by_submission_id(
+    async fn get_judge_results_by_judge_id(
         &mut self,
-        submission_id: SubmissionId,
-    ) -> Result<()>;
+        judge_id: JudgeRunId,
+    ) -> Result<Vec<JudgeResult>>;
 }
