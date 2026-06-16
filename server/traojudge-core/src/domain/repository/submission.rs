@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use crate::domain::model::submission::{
     CreateJudgeResult, CreateJudgeRun, CreateSubmission, CreateSubmissionSource, JudgeResult,
     JudgeRunId, Submission, SubmissionGetQuery, SubmissionId, SubmissionJudgeRun, SubmissionSource,
-    SubmissionSummary, UpdateJudgeRun, UpdateSubmissionJudgeSummary,
+    SubmissionSummary, UpdateJudgeRun,
 };
 
 #[async_trait]
@@ -28,15 +28,16 @@ pub trait SubmissionRepository: Send {
         &mut self,
         submission_id: SubmissionId,
     ) -> Result<Vec<SubmissionJudgeRun>>;
+
+    /// Updates a judge run.
+    ///
+    /// If the updated judge run is the submission's current run, implementations
+    /// must also synchronize the denormalized judge summary columns on
+    /// `submissions` in the same transaction.
     async fn update_judge_run(
         &mut self,
         judge_id: JudgeRunId,
         judge_run: UpdateJudgeRun,
-    ) -> Result<()>;
-    async fn update_current_judge_run(
-        &mut self,
-        submission_id: SubmissionId,
-        judge_id: JudgeRunId,
     ) -> Result<()>;
     async fn create_judge_results(&mut self, results: Vec<CreateJudgeResult>) -> Result<()>;
     async fn get_judge_results_by_judge_id(

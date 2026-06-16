@@ -130,15 +130,6 @@ pub struct UpdateJudgeRun {
     pub finished_at: Option<DateTime<Utc>>,
 }
 
-pub struct UpdateSubmissionJudgeSummary {
-    pub overall_judge_status: JudgeStatus,
-    pub judge_progress_step: i32,
-    pub total_score: i32,
-    pub max_time_ms: i32,
-    pub max_memory_mib: i32,
-    pub judged_at: DateTime<Utc>,
-}
-
 pub struct CreateJudgeResult {
     pub judge_id: JudgeRunId,
     pub testcase_id: TestcaseId,
