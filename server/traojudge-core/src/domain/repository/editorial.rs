@@ -8,7 +8,7 @@ use crate::domain::model::editorial::{
 #[async_trait]
 pub trait EditorialRepository: Send {
     async fn get_editorial(&mut self, id: EditorialId) -> Result<Option<Editorial>>;
-    async fn get_editorials_by_problem_id(
+    async fn get_editorials_by_query(
         &mut self,
         query: EditorialGetQuery,
     ) -> Result<Vec<EditorialSummary>>;

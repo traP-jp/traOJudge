@@ -24,7 +24,7 @@ pub trait EmailPasswordRepository: Send {
     async fn verify_user_password(&mut self, user_id: UserId, password: &str) -> Result<bool>;
     async fn update_user_email(&mut self, user_id: UserId, email: &str) -> Result<()>;
     async fn get_user_id_by_email(&mut self, email: &str) -> Result<Option<UserId>>;
-    async fn is_exist_email(&mut self, email: &str) -> Result<bool>;
+    async fn email_exists(&mut self, email: &str) -> Result<bool>;
 }
 
 #[async_trait]
@@ -36,8 +36,7 @@ pub trait GoogleOAuthRepository: Send {
         oauth_action: &str,
     ) -> Result<String>;
     async fn save_user_google_oauth(&mut self, user_id: UserId, google_oauth: &str) -> Result<()>;
-    async fn update_user_google_oauth(&mut self, user_id: UserId, google_oauth: &str)
-    -> Result<()>;
+    async fn update_google_oauth(&mut self, user_id: UserId, google_oauth: &str) -> Result<()>;
     async fn verify_user_google_oauth(&mut self, user_id: UserId) -> Result<bool>;
     async fn delete_user_google_oauth(&mut self, user_id: UserId) -> Result<bool>;
     async fn get_user_id_by_google_oauth(&mut self, google_oauth: &str) -> Result<Option<UserId>>;
@@ -52,8 +51,7 @@ pub trait GitHubOAuthRepository: Send {
         oauth_action: &str,
     ) -> Result<String>;
     async fn save_user_github_oauth(&mut self, user_id: UserId, github_oauth: &str) -> Result<()>;
-    async fn update_user_github_oauth(&mut self, user_id: UserId, github_oauth: &str)
-    -> Result<()>;
+    async fn update_github_oauth(&mut self, user_id: UserId, github_oauth: &str) -> Result<()>;
     async fn verify_user_github_oauth(&mut self, user_id: UserId) -> Result<bool>;
     async fn delete_user_github_oauth(&mut self, user_id: UserId) -> Result<bool>;
     async fn get_user_id_by_github_oauth(&mut self, github_oauth: &str) -> Result<Option<UserId>>;
