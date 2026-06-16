@@ -87,8 +87,6 @@ pub mod revoke_traq_auth_400_response;
 pub use self::revoke_traq_auth_400_response::RevokeTraqAuth400Response;
 pub mod revoke_traq_auth_request;
 pub use self::revoke_traq_auth_request::RevokeTraqAuthRequest;
-pub mod role;
-pub use self::role::Role;
 pub mod signup;
 pub use self::signup::Signup;
 pub mod signup_request;
@@ -109,6 +107,8 @@ pub mod user_authentication;
 pub use self::user_authentication::UserAuthentication;
 pub mod user_email_and_password;
 pub use self::user_email_and_password::UserEmailAndPassword;
+pub mod user_global_authority_attribute;
+pub use self::user_global_authority_attribute::UserGlobalAuthorityAttribute;
 
 // OpenAPI Generator skips array aliases when generateAliasAsModel=false.
 pub type EditorialSummaries = Vec<EditorialSummary>;
