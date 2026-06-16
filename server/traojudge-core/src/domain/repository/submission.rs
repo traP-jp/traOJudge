@@ -39,6 +39,12 @@ pub trait SubmissionRepository: Send {
         judge_id: JudgeRunId,
         judge_run: UpdateJudgeRun,
     ) -> Result<()>;
+
+    async fn update_current_judge_run(
+        &mut self,
+        submission_id: SubmissionId,
+        judge_id: JudgeRunId,
+    ) -> Result<()>;
     async fn create_judge_results(&mut self, results: Vec<CreateJudgeResult>) -> Result<()>;
     async fn get_judge_results_by_judge_id(
         &mut self,
