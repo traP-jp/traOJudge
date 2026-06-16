@@ -36,8 +36,8 @@ pub struct Me {
     pub x_id: Option<String>,
     #[serde(rename = "selfIntroduction", skip_serializing_if = "Option::is_none")]
     pub self_introduction: Option<String>,
-    #[serde(rename = "role")]
-    pub role: models::Role,
+    #[serde(rename = "globalAuthorityAttribute")]
+    pub global_authority_attribute: models::UserGlobalAuthorityAttribute,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
@@ -51,7 +51,7 @@ impl Me {
     pub fn new(
         id: String,
         name: String,
-        role: models::Role,
+        global_authority_attribute: models::UserGlobalAuthorityAttribute,
         created_at: String,
         updated_at: String,
         authentication: models::UserAuthentication,
@@ -66,7 +66,7 @@ impl Me {
             submit_problems: None,
             x_id: None,
             self_introduction: None,
-            role,
+            global_authority_attribute,
             created_at,
             updated_at,
             authentication,
