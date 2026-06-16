@@ -44,7 +44,7 @@ pub trait RepositoryProvider: Send + Sync {
 /// should keep one repository value alive at a time:
 ///
 /// ```ignore
-/// let mut uow = provider.provide().await?;
+/// let mut uow = provider.begin().await?;
 ///
 /// let problem_id = uow
 ///     .provide_problem_repository()
@@ -58,7 +58,6 @@ pub trait RepositoryProvider: Send + Sync {
 /// uow.commit().await?;
 /// # anyhow::Ok(())
 /// ```
-
 pub trait RepositoryUnitOfWork: UnitOfWork {
     type AuthRepository<'a>: auth::AuthRepository + 'a
     where
