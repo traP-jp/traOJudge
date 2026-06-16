@@ -1,0 +1,13 @@
+@startuml problem_update_protocol
+
+Client -> Server: Problem update request (with problem kind specific DAG + file hashes)
+Server -> Storage: Current file metadata request
+Storage --> Server: List of current file hashes
+Server --> Client: Problem update response (with presigned URLs)
+Client -> Storage: Upload files
+Client -> Server: Problem update completed request
+Server -> Storage: Uploaded file metadata request
+Storage --> Server: List of uploaded file hashes
+Server --> Client: Uploaded file metadata response
+
+@enduml
