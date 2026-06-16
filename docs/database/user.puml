@@ -9,9 +9,7 @@ entity users {
   * id : i64 <<PK>>
   --
   * name : text
-  * is_system_admin : bool
-  * can_create_problem : bool
-  * is_trap_user : bool
+  * role : user_role
   icon_object_key : text?
   profile_traq_id : text?
   x_id : text?
@@ -89,6 +87,12 @@ entity oauth_states {
   consumed_at : timestamptz?
 }
 
+enum user_role {
+  Admin
+  traPUser
+  CommonUser
+}
+
 enum auth_provider {
   email
   google
@@ -132,7 +136,6 @@ end legend
 
 note bottom of users
   id は i64 で採番する。
-  is_system_admin / can_create_problem / is_trap_user は UserGlobalAuthorityAttribute に対応する。
   profile_traq_id / profile_github_id はプロフィール表示用。
   OAuth 認証に使う ID は user_auth_identities に保存する。
   bind/revoke でプロフィール値を暗黙に変更しない。

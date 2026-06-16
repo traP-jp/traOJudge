@@ -148,7 +148,7 @@ end note
 
 note bottom of editorials
   解説本文を保存する。
-  is_public = false の解説は、解説作者、問題作者、system admin が閲覧できる。
+  is_public = false の解説は、解説作者、問題作者、Admin が閲覧できる。
   1ユーザーが同じ問題に複数解説を作成できる設計にする。
   API の path problemId を正とし、body に problemId がある場合は一致必須。
   削除は deleted_at による soft delete とする。
