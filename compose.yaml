@@ -1,0 +1,129 @@
+name: traojudge
+
+services:
+  web-ui:
+    image: node:20-bookworm
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_BASE_URL: http://localhost:3000
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./UI:/app
+      - web-ui-node-modules:/app/node_modules
+    depends_on:
+      - api-server
+
+  api-server:
+    image: rust:1.95.0-bookworm
+    working_dir: /workspace
+    command: cargo run -p traojudge-backend_app --bin backend_app
+    environment:
+      TRAOJUDGE_ADDR: 0.0.0.0:3000
+      TRAOJUDGE_DATABASE_URL: mysql://traojudge:traojudge@database:3306/traojudge
+      TRAOJUDGE_JOB_REQUEST_QUEUE_URL: redis://job-request-queue:6379/0
+      TRAOJUDGE_JOB_RESPONSE_QUEUE_URL: redis://job-response-queue:6379/0
+      TRAOJUDGE_STORAGE_URL: redis://storage:6379/0
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - .:/workspace
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+      - cargo-target:/workspace/target
+    depends_on:
+      database:
+        condition: service_healthy
+      job-request-queue:
+        condition: service_healthy
+      job-response-queue:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+
+  database:
+    build:
+      context: ./deploy/database
+      dockerfile: Dockerfile
+    environment:
+      MARIADB_DATABASE: traojudge
+      MARIADB_USER: traojudge
+      MARIADB_PASSWORD: traojudge
+      MARIADB_ROOT_PASSWORD: traojudge_root
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - database-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h 127.0.0.1 -u$${MARIADB_USER} -p$${MARIADB_PASSWORD}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  job-request-queue:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - job-request-queue-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  job-response-queue:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - job-response-queue-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  job-runner:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - job-runner-placeholder-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    depends_on:
+      job-request-queue:
+        condition: service_healthy
+      job-response-queue:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+
+  storage:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - storage-placeholder-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  cargo-git:
+  cargo-registry:
+  cargo-target:
+  database-data:
+  job-request-queue-data:
+  job-response-queue-data:
+  job-runner-placeholder-data:
+  storage-placeholder-data:
+  web-ui-node-modules:
