@@ -1375,8 +1375,8 @@ components:
           type: string
         selfIntroduction:
           type: string
-        role:
-          $ref: '#/components/schemas/Role'
+        globalAuthorityAttribute:
+          $ref: '#/components/schemas/UserGlobalAuthorityAttribute'
         createdAt:
           type: string
           format: date-time
@@ -1386,7 +1386,7 @@ components:
       required:
         - id
         - name
-        - role
+        - globalAuthorityAttribute
         - createdAt
         - updatedAt
     UserAuthentication:
@@ -1920,19 +1920,24 @@ components:
         - score
         - time
         - memory
-    Role:
-      title: Role
-      description: |-
-        ユーザの役割
-
-        * `Admin` - Admin
-        * `traPUser` - AdminでないtraP部員
-        * `CommonUser` - Adminでない一般ユーザー(traP部員以外のユーザー)
-      type: string
-      enum:
-        - Admin
-        - traPUser
-        - CommonUser
+    UserGlobalAuthorityAttribute:
+      title: UserGlobalAuthorityAttribute
+      type: object
+      description: ユーザーのグローバル権限属性
+      properties:
+        isSystemAdmin:
+          type: boolean
+          description: システム管理者として扱うか
+        canCreateProblem:
+          type: boolean
+          description: 問題を作成できるか
+        isTrapUser:
+          type: boolean
+          description: traP部員として扱うか
+      required:
+        - isSystemAdmin
+        - canCreateProblem
+        - isTrapUser
     Testcase:
       title: Testcase
       type: object
