@@ -1,7 +1,7 @@
 use anyhow::Context;
 use sqlx::{
     MySql, MySqlPool,
-    mysql::{MySqlConnection, MySqlPoolOptions},
+    mysql::{MySqlConnectOptions, MySqlConnection, MySqlPoolOptions},
     pool::PoolConnection,
 };
 
@@ -31,9 +31,14 @@ pub struct DatabaseConnection {
 
 impl DatabaseConnection {
     pub async fn connect(database_url: &str) -> anyhow::Result<Self> {
+        let options = database_url
+            .parse::<MySqlConnectOptions>()
+            .context("failed to parse database url")?
+            .timezone("+00:00".to_owned());
+
         let pool = MySqlPoolOptions::new()
             .max_connections(10)
-            .connect(database_url)
+            .connect_with(options)
             .await
             .context("failed to connect to database")?;
 
