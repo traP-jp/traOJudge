@@ -5,3 +5,7 @@ edition.workspace = true
 
 [dependencies]
 traojudge-core.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+tokio = { workspace = true, features = ["fs", "io-util"] }
+uuid.workspace = true

@@ -11,27 +11,27 @@ use crate::domain::{
 };
 
 #[async_trait]
-pub trait FileUploader {
+pub trait FileUploader: Send + Sync {
     type UploadKey;
-    async fn upload_file<Readable: AsyncRead>(
+    async fn upload_file<Readable: AsyncRead + Unpin + Send>(
         &self,
-        from: &Readable,
+        from: &mut Readable,
         upload_key: Self::UploadKey,
     ) -> Result<()>;
 }
 
 #[async_trait]
-pub trait FileDownloader {
+pub trait FileDownloader: Send + Sync {
     type DownloadKey;
-    async fn download_file<Writable: AsyncWrite>(
+    async fn download_file<Writable: AsyncWrite + Unpin + Send>(
         &self,
-        to: &Writable,
+        to: &mut Writable,
         download_key: Self::DownloadKey,
     ) -> Result<()>;
 }
 
 #[async_trait]
-pub trait FileStorage {
+pub trait FileStorage: Send + Sync {
     type UploadKey;
     type DownloadKey;
 
