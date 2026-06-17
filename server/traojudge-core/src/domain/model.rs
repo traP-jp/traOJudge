@@ -3,7 +3,7 @@ pub mod dag;
 pub mod editorial;
 pub mod file;
 pub mod icon;
-pub mod judge;
+pub mod judge_state;
 pub mod jwt;
 pub mod language;
 pub mod problem;
