@@ -4,4 +4,7 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+anyhow.workspace = true
+async-trait.workspace = true
+sqlx.workspace = true
 traojudge-core.workspace = true

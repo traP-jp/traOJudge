@@ -11,12 +11,18 @@ use tower_http::{
 };
 use tracing::Level;
 
+pub mod app_state;
 pub mod config;
 pub mod http;
 pub mod models;
 
-pub fn build_router() -> Router {
-    Router::new().route("/ping", get(ping))
+pub use app_state::AppState;
+
+pub fn build_router<P>(state: AppState<P>) -> Router
+where
+    P: Clone + Send + Sync + 'static,
+{
+    Router::new().route("/ping", get(ping)).with_state(state)
 }
 
 pub async fn run() -> anyhow::Result<()> {
@@ -28,7 +34,8 @@ pub async fn serve() -> anyhow::Result<()> {
 }
 
 pub async fn serve_with_config(config: config::Config) -> anyhow::Result<()> {
-    let app = build_router()
+    let state = AppState::from_config(&config).await?;
+    let app = build_router(state)
         .layer(trace_layer())
         .layer(cors_layer(&config)?);
 
@@ -97,5 +104,18 @@ async fn shutdown_signal() {
         _ = terminate => {
             tracing::info!("SIGTERM received, starting graceful shutdown");
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[derive(Clone)]
+    struct FakeProvider;
+
+    #[test]
+    fn build_router_accepts_non_database_state() {
+        let _ = build_router(AppState::new(FakeProvider));
     }
 }
