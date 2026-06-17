@@ -13,9 +13,9 @@ entity users {
   profile_traq_id : text?
   x_id : text?
   profile_github_id : text?
-  self_introduction : text?
-  * created_at : timestamptz
-  * updated_at : timestamptz
+  * self_introduction : text
+  * created_at : datetime
+  * updated_at : datetime
 }
 
 entity user_global_authority_attributes {
@@ -24,8 +24,8 @@ entity user_global_authority_attributes {
   * is_system_admin : bool
   * can_create_problem : bool
   * is_trap_user : bool
-  * created_at : timestamptz
-  * updated_at : timestamptz
+  * created_at : datetime
+  * updated_at : datetime
 }
 
 entity user_auth_identities {
@@ -36,10 +36,10 @@ entity user_auth_identities {
   * provider_user_id : text
   provider_email : text?
   password_hash : text?
-  * verified_at : timestamptz
-  * created_at : timestamptz
-  * updated_at : timestamptz
-  last_used_at : timestamptz?
+  * verified_at : datetime
+  * created_at : datetime
+  * updated_at : datetime
+  last_used_at : datetime?
   --
   unique(provider, provider_user_id)
   unique(user_id, provider)
@@ -50,10 +50,10 @@ entity user_sessions {
   --
   * user_id : i64 <<FK>>
   * session_token_hash : text <<unique>>
-  * created_at : timestamptz
-  last_seen_at : timestamptz?
-  * expires_at : timestamptz
-  revoked_at : timestamptz?
+  * created_at : datetime
+  last_seen_at : datetime?
+  * expires_at : datetime
+  revoked_at : datetime?
 }
 
 entity developer_tokens {
@@ -62,10 +62,10 @@ entity developer_tokens {
   * user_id : i64 <<FK>>
   * name : text
   * token_hash : text <<unique>>
-  * created_at : timestamptz
-  * expires_at : timestamptz
-  last_used_at : timestamptz?
-  revoked_at : timestamptz?
+  * created_at : datetime
+  * expires_at : datetime
+  last_used_at : datetime?
+  revoked_at : datetime?
 }
 
 entity auth_verification_tokens {
@@ -77,9 +77,9 @@ entity auth_verification_tokens {
   email : text?
   provider_user_id : text?
   * token_hash : text <<unique>>
-  * created_at : timestamptz
-  * expires_at : timestamptz
-  consumed_at : timestamptz?
+  * created_at : datetime
+  * expires_at : datetime
+  consumed_at : datetime?
 }
 
 entity oauth_states {
@@ -91,9 +91,9 @@ entity oauth_states {
   * state_hash : text <<unique>>
   code_verifier_ciphertext : text?
   redirect_uri : text?
-  * created_at : timestamptz
-  * expires_at : timestamptz
-  consumed_at : timestamptz?
+  * created_at : datetime
+  * expires_at : datetime
+  consumed_at : datetime?
 }
 
 enum auth_provider {

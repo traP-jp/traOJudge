@@ -13,6 +13,7 @@ pub struct AppState<P = MariaDbUnitOfWorkProvider> {
 impl AppState<MariaDbUnitOfWorkProvider> {
     pub async fn from_config(config: &Config) -> anyhow::Result<Self> {
         let database = DatabaseConnection::connect(&config.database_url).await?;
+        database.migrate().await?;
         let provider = MariaDbUnitOfWorkProvider::new(database);
 
         Ok(Self::new(provider))

@@ -1,5 +1,4 @@
-use super::icon::IconId;
-use chrono::{DateTime, Utc};
+use chrono::DateTime;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct UserId(i64);
@@ -28,17 +27,17 @@ pub struct User {
     pub name: String,
     pub traq_id: Option<String>,
     pub github_id: Option<String>,
-    pub icon_id: Option<IconId>,
+    pub icon_object_key: Option<String>,
     pub x_id: Option<String>,
     pub self_introduction: String,
     pub is_system_admin: bool,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
+    pub created_at: DateTime<chrono::Utc>,
+    pub updated_at: DateTime<chrono::Utc>,
 }
 
 pub struct UpdateUser {
     pub user_name: String,
-    pub icon_id: Option<IconId>,
+    pub icon_object_key: Option<String>,
     pub github_id: Option<String>,
     pub x_id: Option<String>,
     pub self_introduction: String,

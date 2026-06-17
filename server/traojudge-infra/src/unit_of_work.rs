@@ -3,6 +3,7 @@ use sqlx::{MySql, Transaction};
 use traojudge_core::domain::service::unit_of_work_provider::{UnitOfWork, UnitOfWorkProvider};
 
 use crate::database::{DatabaseConnection, MariaDbRepositoryProvider};
+use crate::repository::user::MariaDbUserRepository;
 
 pub type MariaDbTransaction = Transaction<'static, MySql>;
 
@@ -33,6 +34,10 @@ pub struct MariaDbUnitOfWork {
 impl MariaDbUnitOfWork {
     pub fn transaction(&mut self) -> &mut MariaDbTransaction {
         &mut self.transaction
+    }
+
+    pub fn provide_user_repository(&mut self) -> MariaDbUserRepository<'_> {
+        MariaDbUserRepository::new(self.transaction.as_mut())
     }
 }
 
