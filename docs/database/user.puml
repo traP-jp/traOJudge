@@ -9,14 +9,21 @@ entity users {
   * id : i64 <<PK>>
   --
   * name : text
-  * is_system_admin : bool
-  * can_create_problem : bool
-  * is_trap_user : bool
   icon_object_key : text?
   profile_traq_id : text?
   x_id : text?
   profile_github_id : text?
   self_introduction : text?
+  * created_at : timestamptz
+  * updated_at : timestamptz
+}
+
+entity user_global_authority_attributes {
+  * user_id : i64 <<PK, FK>>
+  --
+  * is_system_admin : bool
+  * can_create_problem : bool
+  * is_trap_user : bool
   * created_at : timestamptz
   * updated_at : timestamptz
 }
@@ -115,6 +122,7 @@ enum auth_verification_purpose {
   oauth_signup
 }
 
+users ||--|| user_global_authority_attributes
 users ||--o{ user_auth_identities
 users ||--o{ user_sessions
 users ||--o{ developer_tokens
@@ -132,10 +140,15 @@ end legend
 
 note bottom of users
   id は i64 で採番する。
-  is_system_admin / can_create_problem / is_trap_user は UserGlobalAuthorityAttribute に対応する。
   profile_traq_id / profile_github_id はプロフィール表示用。
   OAuth 認証に使う ID は user_auth_identities に保存する。
   bind/revoke でプロフィール値を暗黙に変更しない。
+end note
+
+note bottom of user_global_authority_attributes
+  UserGlobalAuthorityAttribute に対応する。
+  users と 1:1 で、user_id を primary key にする。
+  ユーザー作成時に default 権限のレコードも同じ transaction で作成する。
 end note
 
 note bottom of user_auth_identities
