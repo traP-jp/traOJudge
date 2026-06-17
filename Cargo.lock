@@ -1934,7 +1934,9 @@ dependencies = [
  "anyhow",
  "async-trait",
  "sqlx",
+ "tokio",
  "traojudge-core",
+ "uuid",
 ]
 
 [[package]]
