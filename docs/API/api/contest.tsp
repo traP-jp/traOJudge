@@ -4,10 +4,10 @@ namespace traOJudge;
 
 @route("/contests")
 @tag("Contests")
-interface Contests {
+namespace Contests {
   /** List public contests */
-  @get list(): ContestSummary[] | Error;
+  @get op list(): ContestSummary[] | Error;
 
   /** Participate to a contest */
-  @post participate(@path id: string): Contest | Error;
+  @post op participate(@path id: string): Contest | Error;
 }
