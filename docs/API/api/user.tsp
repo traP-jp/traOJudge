@@ -1,7 +1,14 @@
+import "@typespec/http";
+import "../models/user.tsp";
+
+using Http;
+namespace traOJudge;
+
 @route("/users")
 @tag("Users")
-interface Users {
-  @route("{id}") @get getUser(@path id: string): User | Error;
+namespace Users {
+  @route("{id}") 
+  @get op getUser(@path id: string): User | Error;
 
   @route("me")
   namespace Me {
@@ -9,18 +16,18 @@ interface Users {
     op getMe(): User | Error;
 
     @put
-    op updateMe(@body input: UpdateUser): User | Error;
+    op updateMe(@body input: User): User | Error;
 
     @route("email")
     namespace Email {
       @put
-      op updateEmail(@body input: UpdateEmail): User | Error;
+      op updateEmail(@body input: User): User | Error;
     }
 
     @route("password")
     namespace Password {
       @put
-      op updatePassword(@body input: UpdatePassword): User | Error;
+      op updatePassword(@body input: User): User | Error;
     }
 
     @route("devTokens")

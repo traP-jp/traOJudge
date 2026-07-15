@@ -1,23 +1,26 @@
+import "@typespec/http";
+using Http;
+namespace traOJudge;
+
 model ContestPatchRequest {
     added_contest_admins: string[];
     removed_contest_admin: string[];
 }
 
-@route("/service-admin")
 @tag("Service Admin")
-interface ServiceAdmin {
+namespace ServiceAdmin {
   /** Create a contest */
   @route("contests")
-  @post create(): OkResponse | Error;
+  @post op create(): OkResponse | Error;
 
   @route("contests/{id}")
-  @patch("")
+  @patch op hoge(@path id: string): OkResponse | Error;
 
   /** Revoke problem create role */
   @route("users/{id}/problem-create/revoke")
-  @post revokeProblemCreate(@path id: string) OkResponse | Error;
+  @post op revokeProblemCreate(@path id: string): OkResponse | Error;
 
   /** Grant problem create role */
   @route("users/{id}/problem-create/grant")
-  @post grantProblemCreate(@path id: string) OkResponse | Error;
+  @post op grantProblemCreate(@path id: string): OkResponse | Error;
 }
