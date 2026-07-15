@@ -1,3 +1,7 @@
+import "@typespec/http";
+using Http;
+namespace traOJudge;
+
 @route("/contests")
 @tag("Contests")
 interface Contests {
