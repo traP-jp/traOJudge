@@ -1,0 +1,14 @@
+{
+  "name": "API",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/http": "latest",
+    "@typespec/rest": "latest",
+    "@typespec/openapi": "latest",
+    "@typespec/openapi3": "latest"
+  },
+  "packageManager": "npm@12.0.0+sha512.ab3bcf41f35263b968ba233aaefedd2f4862e5eb0118b9f594bc316ddc8be57388b2c5b3a183309fcc6abd68587192faa274e47a7612c6bb4ac6c16b15b505cb"
+}
