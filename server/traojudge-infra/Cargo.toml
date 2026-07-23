@@ -4,8 +4,10 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-traojudge-core.workspace = true
 anyhow.workspace = true
 async-trait.workspace = true
+chrono.workspace = true
+sqlx.workspace = true
+traojudge-core.workspace = true
 tokio = { workspace = true, features = ["fs", "io-util"] }
 uuid.workspace = true
