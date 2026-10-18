@@ -22,7 +22,9 @@ const router = useRouter()
 const userStore = useUserStore()
 
 const canCreateProblem = computed(
-  () => userStore.user?.role === 'Admin' || !!userStore.user?.authentication?.traqAuth
+  () =>
+    userStore.user?.globalAuthorityAttribute.isSystemAdmin === true ||
+    !!userStore.user?.authentication?.traqAuth
 )
 
 const modalHandler = (e: MouseEvent) => {

@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted } from 'vue'
 import PlainTextArea from '@/components/PlainTextArea.vue'
+import MarkdownView from '@/components/MarkdownView.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import { ProblemsApi, type Problem } from '@/api/generated'
 import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
@@ -73,11 +74,27 @@ onMounted(() => {
 <template>
   <div class="flex font-primary">
     <div class="flex w-full flex-col">
-      <div class="flex max-w-profile-max flex-col items-start justify-start gap-4">
+      <div class="flex w-full flex-col items-start justify-start gap-4">
         <h2 class="text-xl font-medium">問題文</h2>
 
-        <div class="w-full">
-          <PlainTextArea id="problem-statement" v-model="body" class="h-64 w-full" required />
+        <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+          <div class="flex min-w-0 flex-col gap-1">
+            <label for="problem-statement" class="fontstyle-ui-body-2 text-text-secondary">
+              入力 (Markdown)
+            </label>
+            <PlainTextArea id="problem-statement" v-model="body" class="h-96 w-full" required />
+          </div>
+          <div class="flex min-w-0 flex-col gap-1">
+            <span class="fontstyle-ui-body-2 text-text-secondary">プレビュー</span>
+            <div
+              class="h-96 w-full overflow-auto rounded border border-border-primary bg-background-primary p-4"
+            >
+              <MarkdownView v-if="body" :source="body" />
+              <p v-else class="fontstyle-ui-body text-text-tertiary">
+                入力するとプレビューが表示されます
+              </p>
+            </div>
+          </div>
         </div>
 
         <PrimaryButton class="h-10 w-18 px-3 py-2" :disabled="isLoading" @click="saveStatement">
