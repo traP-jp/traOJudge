@@ -19,7 +19,7 @@ problemsByProblemIdFileUploads:
     x-scenarios:
       - 'P3'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -78,7 +78,7 @@ problemsByProblemIdFileUploadsByUploadIdComplete:
     x-scenarios:
       - 'P3'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'

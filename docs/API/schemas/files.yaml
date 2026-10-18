@@ -33,6 +33,7 @@ UploadTarget:
     url:
       type: 'string'
       format: 'uri'
+      description: '署名付きの直接アップロードURL。発行元のAPI認証トークンを失効しても取り消されず、expiresAtまで利用できる。'
     headers:
       type: 'object'
       additionalProperties:
@@ -41,6 +42,7 @@ UploadTarget:
     expiresAt:
       type: 'string'
       format: 'date-time'
+      description: 'このアップロードURL自体の有効期限。関連するAPI認証トークンとは独立している。'
   required:
     - 'fileId'
     - 'path'

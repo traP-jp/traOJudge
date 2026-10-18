@@ -13,7 +13,7 @@ editorials:
     x-scenarios:
       - 'O1-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -133,7 +133,7 @@ editorialsByEditorialId:
     x-scenarios:
       - 'O1-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -188,7 +188,7 @@ editorialsByEditorialId:
       - 'O1-03'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -224,7 +224,7 @@ editorialsByEditorialIdPublication:
       - 'R2-03'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     responses:
       '200':
@@ -271,7 +271,7 @@ editorialsByEditorialIdPublication:
       - 'R2-04'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'

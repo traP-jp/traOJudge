@@ -4,6 +4,8 @@
 
 WebUI は neoShowcase、API・DB・ジャッジ基盤などのクラウド側要素は AWS に配置する方針とする。API のインスタンスや実行サービスは未決であり、特定の製品を要求しない。
 
+WebUIとAPIはHTTPSの同一オリジンで公開する。WebUI側のリバースプロキシが `/api/*` をAWSのAPIへ転送し、ブラウザからのAPI呼び出しは同一オリジンの `/api/v1/...` を使う。認証情報の中継とOrigin検証は[外部インターフェース](../14-specified-requirements/01-external-interfaces/external-interfaces.md)に従う。
+
 AWS側はAPIとインフラをまとめて[構成ブロック](../../services/aws-building-blocks.md)へ分解して議論する。以下の図は論理的な経路を示し、具体的なAWS構成候補・データの所有・接続ごとの判断事項は同資料にまとめる。
 
 ```mermaid
@@ -12,6 +14,7 @@ flowchart LR
     Writer[Writer] --> Tool[CLI]
     subgraph Neo[neoShowcase]
         UI[WebUI]
+        Proxy[APIリバースプロキシ]
     end
     subgraph AWS[AWS]
         API[APIサーバー / DAG解決・ジャッジ制御]
@@ -38,7 +41,8 @@ flowchart LR
         API -->|送信要求| MailQueue
         MailQueue --> Mailer
     end
-    UI --> API
+    UI -->|同一オリジン /api/*| Proxy
+    Proxy --> API
     API -->|提出用の署名付きURL| UI
     UI -->|提出ソースを直接アップロード| Storage
     Tool -->|トークン認証・登録開始／完了通知| CLIAPI
@@ -71,18 +75,18 @@ Backが要求ごとに一意の実行IDを発行し、Judgeは結果に同じ実
 
 | 接続 | 分かっている責務 | 未決事項 |
 | --- | --- | --- |
-| WebUI・クライアント → API | 操作の受付と結果の取得 | 公開URL、認証情報の受け渡し、対応操作 |
+| WebUI・クライアント → API | WebUIと同一オリジンの/api/*をAWSへリバースプロキシし、操作の受付と結果を中継 | 具体的な公開URL・転送先、Cookie属性、対応操作 |
 | CLI ↔ CLI専用API・ファイル保管 | 開発者トークンでAPIを利用し、署名付きURLでS3へ直接アップロードしてAPIへ完了通知 | 対応操作の全体と、更新確定などの詳細契約は未決 |
 | API ↔ DB | 構造化データの永続化 | DBサービス、スキーマ、接続方式 |
 | WebUI・API ↔ ファイル保管 | APIが署名付きURLを発行し、ブラウザが提出ソースをS3へ直接転送。Backが提出確定・ジャッジ依頼を担当 | 確定の通知方法、検証・アクセス権の詳細 |
 | APIのジャッジ制御 → 要求キュー → Runner | APIサーバーがDAGを解決し、実行可能な実行ノードを1つずつ依頼 | メッセージ形式、各参照と入力、実行・ノード・試行の識別 |
 | Runner → 結果キュー → Backの結果反映処理 | Judgeが同じ実行IDを付けてノード単位の結果を返し、Backが作問者の登録情報に基づき解釈してDBへ反映 | Backの反映処理の配置と更新契約 |
 | API → メールキュー → メール送信処理 | マジックリンクの送信 | 配送サービスとメッセージ契約 |
-| 認証機能 ↔ 外部認証先 | Google・GitHub・traQの連携が既存APIに存在 | 採用範囲と、API・neoShowcase間の責任分担 |
+| API（Back） ↔ traQ・Google・GitHub | APIが外部アカウントを確認し、traOJudge利用者へ結び付けてセッションを発行する。外部認証を完了できない場合は認証失敗として扱い、neoShowcaseはログインできなかったことを案内する | — |
 
 ## 未決事項
 
-- TODO ARCH-01: 認証機能・メール送信処理の責任境界と配置、およびBack内の結果反映処理の配置を決める。
+- TODO ARCH-01: メール送信処理の配置とBack内の結果反映処理の配置を決める。
 - TODO ARCH-02: DB・S3・各キュー間のデータ参照と受け渡し契約を決める。
 - TODO ARCH-03: 外部公開する入口と内部通信の経路を決める。
 - TODO ARCH-04: 既存のサービス構成図へ配置変更と周辺要素を反映する。

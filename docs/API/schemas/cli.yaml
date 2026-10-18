@@ -76,9 +76,14 @@ RegistrationStarted:
       $ref: './cli.yaml#/Registration'
     targets:
       $ref: './files.yaml#/UploadTargets'
+    continuationToken:
+      type: 'string'
+      minLength: 1
+      description: 'この登録の状態確認と完了に使う。登録のexpiresAtに失効し、ほかのAPIには使えない。開発者トークンが失効した後も、この登録の完了まで利用できる。'
   required:
     - 'registration'
     - 'targets'
+    - 'continuationToken'
 RegistrationCompleted:
   type: 'object'
   additionalProperties: false

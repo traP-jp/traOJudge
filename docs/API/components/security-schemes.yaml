@@ -2,9 +2,14 @@ SessionCookie:
   type: 'apiKey'
   in: 'cookie'
   name: 'traojudge_session'
-  description: 'Web用。ログイン成立時に発行するHttpOnly・Secure Cookie。変更操作ではX-CSRF-Tokenも検証する。'
+  description: 'Web用。ログイン成立時に発行するHttpOnly・Secure・SameSite=Lax Cookie。有効なセッションCookieを持つWeb API要求は、共通middlewareが認証後にセッションとSet-Cookieをその時点から90日（3か月相当）後まで延長する。継続利用中の固定の最長期間は設けず、ログアウト・失効済みのセッションは延長しない。WebUIとAPIはHTTPSの同一オリジンで公開し、/api/*をAWSのAPIへリバースプロキシする。CookieとSet-Cookieを中継し、要求元のOriginは書き換えない。変更操作ではWebUIの公開Originとscheme・host・portが完全一致することを検証し、未指定・null・不一致は403。'
 DeveloperToken:
   type: 'http'
   scheme: 'bearer'
   bearerFormat: 'opaque'
   description: 'CLI専用。本人が発行した不透明な開発者トークン。認証時と操作時に失効・現在の役割を検査する。'
+RegistrationContinuationToken:
+  type: 'http'
+  scheme: 'bearer'
+  bearerFormat: 'opaque'
+  description: 'CLI登録専用。登録開始時に発行する不透明なトークン。1件の登録状態確認と完了にだけ使え、登録のexpiresAtに失効する。開発者トークンを失効した後も、すでに受け付けた登録の完了まで使用できる。'
