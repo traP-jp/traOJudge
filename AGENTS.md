@@ -5,6 +5,8 @@
 
 ## 領域別エントリ
 
+- **バックエンド (`server/`)**: [`docs/services/backend-layout.md`](./docs/services/backend-layout.md)
+  - クレート・モジュールの責務、依存方向、状態更新の境界。
 - **UI (フロントエンド / `UI/`)**: [`docs/ui/conventions.md`](./docs/ui/conventions.md)
   - Vue 3 + TS + Tailwind のコーディング規約と設計意図。
 - **API スキーマ**: [`docs/API/front_back.yaml`](./docs/API/front_back.yaml)
