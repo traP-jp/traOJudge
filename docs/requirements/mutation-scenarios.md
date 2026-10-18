@@ -1,6 +1,8 @@
 # 利用者の行動から読むシナリオ
 
-2026-10-18。利用者が「何をしたいか」「何をすると、どうなるか」を、22本の話に分けて記す。各ファイルに、始める前の条件、操作の流れ、うまくいかなかった場合、できたと言えること、まだ決めることをまとめる。
+2026-10-18。利用者が「何をしたいか」「何をすると、どうなるか」を、操作ごとの話に分けて記す。各ファイルに、始める前の条件、操作の流れ、うまくいかなかった場合、できたと言えること、まだ決めることをまとめる。
+
+[すべての操作の許可条件](permission-operations.md)に、「誰が・誰に／何に・何をしてよいか」と、成功したときに成立する事実を列挙する。各シナリオにも対応する条件を書く。
 
 分類は「問題投稿・提出・コンテスト・認証・権限付与／剥奪・それ以外」の6つ。話のつながりは分類をまたいでよい。以下の流れや各シナリオは、実装する範囲を相談するための初版である。
 
@@ -17,14 +19,14 @@ flowchart TD
     D --> E["問題のファイルを送る"]
     T --> E
     E --> F(["今回の内容で問題を登録できた"])
-    F --> G["問題を公開する"]
+    F --> G["許可する人の条件を決めてから、問題を公開する"]
     G --> H(["問題を見せられるようになった"])
     H --> I["問題を解いた人が解答を提出する"]
     B --> I
     I --> J(["解答が受け付けられた"])
     J --> K(["判定と得点が決まった"])
     K --> L["必要なら、もう一度採点を頼む"]
-    B --> M["作成できる人が大会を用意する"]
+    B --> M["サービス管理者が通常の大会を用意する"]
     M --> N["大会で出す問題を選ぶ"]
     H --> N
     N --> O["参加したい人が大会に申し込む"]
@@ -48,6 +50,9 @@ flowchart TD
 | S1 | [解答を提出して採点してもらう](scenarios/submissions/submit-answer.md) | 提出が受け付けられ、どの提出の判定か分かる形で結果が決まった |
 | S2 | [前の提出をもう一度採点してもらう](scenarios/submissions/judge-again.md) | 前の採点と区別できる形で、今回の採点を終えた |
 | S3 | [まとめて採点し直してもらう](scenarios/submissions/judge-many-again.md) | まとめた依頼を受け付け、終えたものと終えられなかったものが分かった |
+| S4 | [進み具合を見ながら結果を待つ](scenarios/submissions/watch-judging.md) | 完了したテストケース数を途中でも確認でき、不正解や時間切れでも全ケースを実行して結果が決まった |
+
+S4では、読み取りAPIの一覧より先に、途中で何をいつ見せるかを具体化する。[表示からAPI・実行基盤へ渡す条件](submission-progress-constraints.md)を対応付ける。
 
 ## コンテスト
 
@@ -74,11 +79,40 @@ flowchart TD
 
 ## 権限付与／剥奪
 
+R1・R2は個別シナリオへの案内である。作業を切り出すときは、以下の一覧と各リンク先で、追加・取り消し、対象の役割、通常・バーチャル大会を分ける。HTTPの入口を共通化するかは別に決める。
+
 | 番号 | したいこと | 何ができたら終わりか |
 | --- | --- | --- |
-| R1 | [できることを増やす・減らす](scenarios/permissions/change-permissions.md) | 対象の人に任せる仕事の範囲が変わった |
-| R2 | [問題や解説を見せる相手を変える](scenarios/permissions/share-content.md) | 問題や解説を見せる範囲が変わった |
-| R3 | [大会に参加する](scenarios/permissions/join-contest.md) | 参加が受け付けられ、その大会で解答や質問ができる |
+| R1 | [仕事を任せる・外す（20の個別シナリオ）](scenarios/permissions/change-permissions.md) | 指定した人の、指定した範囲の役割だけが付いた・外れた |
+| R2 | [公開範囲を変える（4つの個別シナリオ）](scenarios/permissions/share-content.md) | 指定した問題・解説が公開・非公開になった。許可する人が未決の操作は先に合意する |
+| R3 | [公開された通常の大会に参加する](scenarios/permissions/join-contest.md) | 基本的な利用資格を持つ本人が、その大会の参加者になった |
+| R4 | [好きな時間に挑戦する大会に参加する](scenarios/permissions/join-virtual-contest.md) | 許可する条件を合意した後、本人がその大会の参加者になった |
+
+### R1：任せる仕事ごとに選ぶ
+
+すべて登録済みの人が対象。問題・大会・解説の役割は、選んだ対象1つに限る。サービス管理者を任命・解任する方法は未決。
+
+| 番号 | 任せる仕事 | 追加する話 | 外す話 |
+| --- | --- | --- | --- |
+| R1-01 | 作問する資格 | [誰が任せてよいか](scenarios/permissions/grant-writer.md) | [誰が外してよいか](scenarios/permissions/revoke-writer.md) |
+| R1-02 | 問題の管理担当 | [誰が任せてよいか](scenarios/permissions/grant-problem-owner.md) | [誰が外してよいか](scenarios/permissions/revoke-problem-owner.md) |
+| R1-03 | 問題のテスト担当 | [誰が任せてよいか](scenarios/permissions/grant-tester.md) | [誰が外してよいか](scenarios/permissions/revoke-tester.md) |
+| R1-04 | 通常の大会の責任者 | [誰が任せてよいか](scenarios/permissions/grant-contest-admin.md) | [誰が外してよいか](scenarios/permissions/revoke-contest-admin.md) |
+| R1-05 | 通常の大会の運営担当 | [誰が任せてよいか](scenarios/permissions/grant-contest-setter.md) | [誰が外してよいか](scenarios/permissions/revoke-contest-setter.md) |
+| R1-06 | 好きな時間に挑戦する大会の運営担当 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contest-setter.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contest-setter.md) |
+| R1-07 | 基本的な利用資格 | [誰が任せてよいか](scenarios/permissions/grant-standard-user.md) | [誰が外してよいか](scenarios/permissions/revoke-standard-user.md) |
+| R1-08 | 解説の編集担当 | [誰が任せてよいか](scenarios/permissions/grant-editorial-author.md) | [誰が外してよいか](scenarios/permissions/revoke-editorial-author.md) |
+| R1-09 | 通常の大会の参加資格 | [誰が任せてよいか](scenarios/permissions/grant-contestant.md) | [誰が外してよいか](scenarios/permissions/revoke-contestant.md) |
+| R1-10 | 好きな時間に挑戦する大会の参加資格 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contestant.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contestant.md) |
+
+### R2：対象と、変える向きごとに選ぶ
+
+| 番号 | 操作ごとの話 | 誰がしてよいか |
+| --- | --- | --- |
+| R2-01 | [問題を公開する](scenarios/permissions/publish-problem.md) | 未決 |
+| R2-02 | [問題を非公開にする](scenarios/permissions/hide-problem.md) | サービス管理者はすべての問題が対象。他の役割は未決 |
+| R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 未決 |
+| R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 未決 |
 
 ## それ以外
 
@@ -96,6 +130,8 @@ flowchart TD
 ## 実装に対応付ける資料
 
 - [入力・識別子・単独確認・未決事項のメモ](scenario-implementation-notes.md)
+- [提出の途中表示と、基盤に必要な条件](submission-progress-constraints.md)
 - [作業全体の棚卸し](poc-work-breakdown.md)
 - [AWS側の構成](../services/aws-building-blocks.md)
-- [誰にどの操作が許されるか](../domain/role.md)
+- [操作ごとの許可条件・成立する事実](permission-operations.md)
+- [役割の定義と根拠](../domain/role.md)
