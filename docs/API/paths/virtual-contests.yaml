@@ -41,7 +41,7 @@ virtualContests:
     x-scenarios:
       - 'C1-04'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -128,7 +128,7 @@ virtualContestsByVirtualContestId:
     x-scenarios:
       - 'C1-05'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -183,7 +183,7 @@ virtualContestsByVirtualContestId:
       - 'C1-06'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -256,7 +256,7 @@ virtualContestsByVirtualContestIdProblemsByProblemId:
     x-scenarios:
       - 'C2-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
@@ -301,7 +301,7 @@ virtualContestsByVirtualContestIdProblemsByProblemId:
       - 'C2-04'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -337,7 +337,7 @@ virtualContestsByVirtualContestIdParticipation:
       - 'R4-01'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     responses:
       '201':

@@ -65,16 +65,17 @@
 
 | 操作 | 何をするか | 誰がしてよいか | 誰に／何に・範囲 | 成立する事実 |
 | --- | --- | --- | --- | --- |
-| A1-01 | [メールで利用登録を申し込む](scenarios/authentication/register.md) | 未登録で、そのメールを受け取れる本人 | 新規の自分の利用登録 | 確認のメールを送る依頼を受け付けた |
-| A1-02 | [メールのリンクで登録を完了する](scenarios/authentication/register.md) | 有効な登録用リンクでメールを確認した本人 | 自分の利用登録 | 登録され、standard-user になった |
-| A2-01 | [メールのログイン用リンクを頼む](scenarios/authentication/sign-in-and-out.md) | 登録済みメールを使う本人 | 自分のログイン | 確認のメールを送る依頼を受け付けた |
-| A2-02 | [メールのリンクでログインする](scenarios/authentication/sign-in-and-out.md) | 有効なログイン用リンクでメールを確認した本人 | 自分の利用者 | 本人としてログインできた |
-| A2-03 | [ログアウトする](scenarios/authentication/sign-in-and-out.md) | ログインしている本人 | 自分の現在のログイン状態 | ログアウトできた |
+| A1-01 | [メールで利用登録を申し込む](scenarios/authentication/register.md) | そのメールを受け取れる本人 | 自分のメールの本人確認 | 登録の有無によらず同じ202で共通の本人確認メールの送信を受け付け、API応答とメールでは登録の有無を開示しない |
+| A1-02 | [メールを確認する](scenarios/authentication/register.md) | 有効な本人確認トークンを持つ本人 | 自分のメールに紐付く登録・ログインへの分岐 | メール確認後にだけ、登録済みならログインし、未登録なら登録用トークンを得た |
+| A1-03 | [登録を完了する](scenarios/authentication/register.md) | メール確認後に発行された有効な登録用トークンを持つ本人 | 自分の利用登録 | 登録され、standard-user になり、本人としてログインできた |
+| A2-01 | [メールの本人確認リンクを頼む](scenarios/authentication/sign-in-and-out.md) | そのメールを受け取れる本人 | 自分の登録・ログインに向けた本人確認 | 登録の有無によらず同じ202で共通の本人確認メールの送信を受け付け、API応答とメールでは登録の有無を開示しない |
+| A2-02 | [メールを確認し登録・ログインへ進む](scenarios/authentication/sign-in-and-out.md) | 有効な本人確認トークンを持つ本人 | 自分のメールに紐付く登録・ログインへの分岐 | メール確認後にだけ、登録済みならログインし、未登録なら新規登録へ進めるようになった |
+| A2-03 | [ログアウトする](scenarios/authentication/sign-in-and-out.md) | ログインしている本人 | 要求のCookieで特定される自分の現在のセッションだけ | 現在のセッションが失効し、Cookieが削除された。ほかの端末や別のブラウザのセッションは維持される |
 | A3-01 | [新しいメールアドレスの確認を頼む](scenarios/authentication/change-email.md) | ログインしている本人 | 自分の登録先メール | 新しいアドレスの確認が始まった |
 | A3-02 | [新しいメールを確認し、変更を完了する](scenarios/authentication/change-email.md) | 新しいメールを確認した本人。開始した利用者との一致が必要 | 自分の登録先メール | 登録先が切り替わった |
 | A4-01 | [作問ツール用の認証手段を発行する](scenarios/authentication/use-authoring-tool.md) | ログインしている本人 | 自分の作問ツール用の認証手段 | 自分の名前でツールを使えるようになった |
 | A4-02 | [作問ツール用の認証手段を無効にする](scenarios/authentication/use-authoring-tool.md) | ログインしている本人 | 自分が持つ指定した認証手段 | その認証手段を使えなくした |
-| A5-01 | [外部アカウントで利用登録する](scenarios/authentication/register-with-another-service.md) | 未登録で、外部サービスで本人確認ができた本人 | 新規の自分の利用登録 | 登録され、standard-user になった |
+| A5-01 | [外部アカウントで利用登録する](scenarios/authentication/register-with-another-service.md) | 未登録で、外部サービスで本人確認ができた本人 | 新規の自分の利用登録 | 登録され、standard-user になり、本人としてログインできた |
 | A6-01 | [外部アカウントでログインする](scenarios/authentication/sign-in-with-another-service.md) | 登録済みの外部アカウントで本人確認ができた本人 | その外部アカウントに対応する自分の利用者 | 本人としてログインできた |
 | A7-01 | [ログイン方法を追加する](scenarios/authentication/add-sign-in-method.md) | ログイン中で、追加する外部アカウントでも本人確認できた本人 | 自分のログイン方法。ほかの利用者に結び付いた方法は使わない | 同じ利用者にログイン方法が増えた |
 | A8-01 | [ログイン方法を外す](scenarios/authentication/remove-sign-in-method.md) | ログインしている本人 | 自分のログイン方法。最後のWebログイン方法は外さない | 指定した方法が外れた |

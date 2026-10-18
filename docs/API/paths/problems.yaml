@@ -41,7 +41,7 @@ problems:
     x-scenarios:
       - 'P1-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -167,7 +167,7 @@ problemsByProblemId:
     x-scenarios:
       - 'P1-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -221,7 +221,7 @@ problemsByProblemId:
     x-scenarios:
       - 'P1-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -257,7 +257,7 @@ problemsByProblemIdPublication:
       - 'R2-01'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     responses:
       '200':
@@ -303,7 +303,7 @@ problemsByProblemIdPublication:
     x-scenarios:
       - 'R2-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -371,7 +371,7 @@ problemsByProblemIdJudgeDefinitions:
     x-scenarios:
       - 'P3-04'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -467,7 +467,7 @@ problemsByProblemIdJudgeDefinitionsByJudgeDefinitionId:
     x-scenarios:
       - 'P3-05'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -523,7 +523,7 @@ problemsByProblemIdJudgeDefinitionsByJudgeDefinitionId:
     x-scenarios:
       - 'P3-06'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -592,7 +592,7 @@ problemsByProblemIdTestcases:
       - 'P3-01'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -685,7 +685,7 @@ problemsByProblemIdTestcasesByTestcaseId:
       - 'P3-02'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -740,7 +740,7 @@ problemsByProblemIdTestcasesByTestcaseId:
       - 'P3-03'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'

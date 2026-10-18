@@ -4,6 +4,8 @@
 
 確定事項は、WebUI を neoShowcase、バックエンドを AWS に置くこと、ファイルを S3、ジャッジ要求・結果を SQS に置くこと、PostgreSQL 互換を優先すること。DAG の解決・実行制御は API 側、実行環境周りはインフラ側という既存の担当意図は維持する。
 
+WebUIとAPIはHTTPSの同一オリジンで公開し、WebUI側のリバースプロキシが `/api/*` をAWSの入口へ転送する。プロキシは要求元のOriginを保持し、CookieとSet-Cookieを中継する。API側のOrigin検証にはWebUIの公開Originを用いる。詳細は[外部インターフェース](../requirements/14-specified-requirements/01-external-interfaces/external-interfaces.md)に従う。
+
 B2 から B5 を介して B6 へ渡す処理の単位は、DAG の実行ノード1つずつとする。この単位は確定事項であり、以下の AWS サービス候補の選定とは分けて扱う。
 
 ALB・ECS・RDS・EC2・ECR・SES は、分離して議論するための具体的な候補であり、採用決定ではない。構成ブロックと AWS リソースは、必要な入出力を保ちながら選定する。
@@ -12,7 +14,8 @@ ALB・ECS・RDS・EC2・ECR・SES は、分離して議論するための具体�
 
 ```mermaid
 flowchart LR
-    UI[WebUI / neoShowcase] --> Entry
+    UI[WebUI / neoShowcase] -->|同一オリジン /api/*| Proxy[リバースプロキシ / neoShowcase]
+    Proxy --> Entry
     CLI[作問者CLI] --> Entry
     subgraph AWS[AWS側のシステム]
         Entry[B1 入口 / ALB・ACM候補] --> App[B2 API・ジャッジ制御 / ECS候補]
@@ -39,7 +42,7 @@ B0 は各ブロックが使うネットワーク・実行主体・設定の接�
 | ID・ブロック | AWS の候補／採用方針 | このブロックで決めること | 外へ渡すもの |
 | --- | --- | --- | --- |
 | B0 接続の土台 | VPC・Security Group・IAM・Secrets Manager等が候補 | リージョン、通信経路、実行主体、設定の注入方法。各ブロックが要求する通信・権限を組み立てる | 接続可能な配置先、role参照、secret参照、ログ出力の共通項目 |
-| B1 HTTP の入口 | ALB＋ACM候補 | 公開URL・TLS・転送先・health check。ブラウザ認証のCookie/CORS条件はB2とこの接続で一度決める | WebUI/CLIが使うbase URL、B2への転送条件 |
+| B1 HTTP の入口 | ALB＋ACM候補 | WebUI側プロキシからの接続先・TLS・転送先・health check。Originの保持とCookieの中継、B2で検証する公開Originをこの接続で具体化する | プロキシ/CLIの接続先URL、B2への転送条件 |
 | B2 API・ジャッジ制御 | 常駐コンテナ、ECS Service候補 | Web/CLIの操作、認証・権限、登録/提出確定、DAG解決、次の処理の選択、結果解釈。実行中の状態はB3に保存 | OpenAPI、S3操作要求、実行要求、確定した結果、メール送信要求 |
 | B3 業務状態の保存 | PostgreSQL互換、RDS PostgreSQL候補 | 問題版・登録状態・提出・実行・ノード状態・結果・送信待ちの保存、Repository・transaction・migration・DB接続 | 接続設定、schema/migration、DBを使った状態遷移の確認手順 |
 | B4 ファイル | S3採用方針 | 署名付き転送、ファイル条件の確認、不変な参照、成果物、保持・削除、アクセス権。利用者の権限判断はB2に集約 | アップロード先・必須ヘッダー、検証結果、固定した版を指すObjectRef |

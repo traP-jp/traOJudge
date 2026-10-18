@@ -20,9 +20,21 @@
 
 ジャッジ定義・ジャッジ実行要求の形式と参照先、APIサーバーによる実行手順の組み立て・DAGの制御、インフラ担当が提供する実行環境との分担は[問題登録・ジャッジ実行の受け渡し仕様](problem-registration-contract.md)にまとめる。本書のJudgeからの通信は実行基盤側の通信を指し、DAGの解決を別担当へ割り当てる意味ではない。
 
+## WebUIとAPIの認証
+
+- WebUIとAPIはHTTPSの同一オリジンで公開する。ブラウザはWebUIと同じホストの `/api/v1/...` を呼び、WebUI側のリバースプロキシが `/api/*` をAWSのAPIへ転送する。
+- プロキシはHTTPメソッド・パス・クエリ・本文と要求元の `Origin` を保持して転送し、`Cookie` と `Set-Cookie` を中継する。ブラウザをAWSの別URLへリダイレクトさせない。
+- セッションCookieには `HttpOnly`、`Secure`、明示的な `SameSite=Lax` を指定する。
+- 認証middlewareは、有効なセッションCookieを持つWeb API要求のたびにセッションをその時点から90日（3か月相当）後へ延長し、Cookieも `Set-Cookie` の `Max-Age=7776000` で更新する。継続利用中の固定の最長期間は設けず、ログアウト・失効済みのセッションは延長しない。WebUI起動時のログイン確認には `GET /me` を使う。
+- CookieのDomain・PathはWebUIの公開ホストからのAPI要求に適用できるものにし、AWS内部のホスト名をDomainとして返さない。
+- Web向けの変更操作（POST・PUT・PATCH・DELETE）は、未認証の登録・ログイン操作も含め、`Origin` のscheme・host・portが配置設定で許可したWebUIと完全一致する場合だけ受け付ける。未指定・`null`・不一致は403で拒否する。
+- GETでは業務状態を変更しない。外部認証のリンクを開いた後の確定操作も、WebUIからAPIへ変更要求を送る。認可開始時の `state` などの検証は引き続き行う。
+- WebUIからAPIへの通信は同一オリジンのため、APIへのクロスオリジン通信を許可するCORS設定は不要とする。署名付きURLによるS3への直接アップロードに必要なCORS設定は別途定める。
+- 開発者トークンで認証するCLI専用経路には、WebUI向けのOrigin検証を要求しない。
+
 ## 未決事項
 
-- TODO IF-01: APIの公開URL、WebUIの認証情報・Cookie・CORS・CSRFの扱いと、CLIの開発者トークンの受け渡し形式を定義する。
+- TODO IF-01: 上記の方針に従い、WebUIの具体的な公開URLと許可するOrigin、プロキシからAWSへの接続先、CookieのDomain・Path、CLIの接続先と開発者トークンの受け渡し形式を定義する。
 - TODO IF-02: 実行IDの共有・再配信時の同一ID・Backによる重複結果の一回分の反映を前提に、メッセージ形式・ID表現・互換性を定義する。同じ実行IDで異なる内容の結果が届く場合の扱いは未決とする。
 - TODO IF-03: WebUIからS3への直接アップロードとBackによる提出確定を前提に、確定の通知方法・検証と、固定した版の参照をRunnerへ渡す方法を定義する。
 - TODO IF-04: CLIの直接アップロード方式を前提に、専用APIの操作契約、作問更新プロトコルとの対応、署名URLの期限・許可範囲・更新確定の扱いを定義する。

@@ -15,7 +15,7 @@ usersByUserIdRolesWriter:
     x-scenarios:
       - 'R1-01-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -51,7 +51,7 @@ usersByUserIdRolesWriter:
     x-scenarios:
       - 'R1-01-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -87,7 +87,7 @@ problemsByProblemIdOwnersByUserId:
     x-scenarios:
       - 'R1-02-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -123,7 +123,7 @@ problemsByProblemIdOwnersByUserId:
     x-scenarios:
       - 'R1-02-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -161,7 +161,7 @@ problemsByProblemIdTestersByUserId:
     x-scenarios:
       - 'R1-03-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -197,7 +197,7 @@ problemsByProblemIdTestersByUserId:
     x-scenarios:
       - 'R1-03-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -233,7 +233,7 @@ contestsByContestIdAdminsByUserId:
     x-scenarios:
       - 'R1-04-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -269,7 +269,7 @@ contestsByContestIdAdminsByUserId:
     x-scenarios:
       - 'R1-04-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -307,7 +307,7 @@ contestsByContestIdSettersByUserId:
     x-scenarios:
       - 'R1-05-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -343,7 +343,7 @@ contestsByContestIdSettersByUserId:
     x-scenarios:
       - 'R1-05-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -379,7 +379,7 @@ virtualContestsByVirtualContestIdSettersByUserId:
     x-scenarios:
       - 'R1-06-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -415,7 +415,7 @@ virtualContestsByVirtualContestIdSettersByUserId:
     x-scenarios:
       - 'R1-06-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -450,7 +450,7 @@ usersByUserIdRolesStandardUser:
     x-scenarios:
       - 'R1-07-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -486,7 +486,7 @@ usersByUserIdRolesStandardUser:
     x-scenarios:
       - 'R1-07-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -522,7 +522,7 @@ editorialsByEditorialIdAuthorsByUserId:
     x-scenarios:
       - 'R1-08-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -558,7 +558,7 @@ editorialsByEditorialIdAuthorsByUserId:
     x-scenarios:
       - 'R1-08-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -594,7 +594,7 @@ contestsByContestIdParticipantsByUserId:
     x-scenarios:
       - 'R1-09-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -630,7 +630,7 @@ contestsByContestIdParticipantsByUserId:
     x-scenarios:
       - 'R1-09-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -666,7 +666,7 @@ virtualContestsByVirtualContestIdParticipantsByUserId:
     x-scenarios:
       - 'R1-10-G'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '200':
         description: '操作結果。'
@@ -702,7 +702,7 @@ virtualContestsByVirtualContestIdParticipantsByUserId:
     x-scenarios:
       - 'R1-10-D'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'

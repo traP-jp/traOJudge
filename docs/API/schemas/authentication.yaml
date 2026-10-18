@@ -1,51 +1,68 @@
 ProviderId:
   type: 'string'
-  description: '候補の識別子。利用できるproviderはGET /auth/providersの応答で判定する。'
+  description: '固定の外部認証先識別子。'
   enum:
+    - 'traq'
     - 'google'
     - 'github'
-    - 'traq'
-Provider:
-  type: 'object'
-  additionalProperties: false
-  properties:
-    id:
-      $ref: './authentication.yaml#/ProviderId'
-    displayName:
-      type: 'string'
-    registrationEnabled:
-      type: 'boolean'
-    loginEnabled:
-      type: 'boolean'
-    linkEnabled:
-      type: 'boolean'
-  required:
-    - 'id'
-    - 'displayName'
-    - 'registrationEnabled'
-    - 'loginEnabled'
-    - 'linkEnabled'
-Providers:
-  type: 'object'
-  additionalProperties: false
-  properties:
-    items:
-      type: 'array'
-      items:
-        $ref: './authentication.yaml#/Provider'
-  required:
-    - 'items'
 EmailRegistrationRequest:
   type: 'object'
+  description: '登録・ログイン共通のメール本人確認リンクの送信先。登録の有無はメール確認後にだけ開示する。'
   additionalProperties: false
   properties:
     email:
       $ref: './common.yaml#/Email'
+  required:
+    - 'email'
+EmailRegistrationCompletion:
+  type: 'object'
+  description: 'メール確認APIから受け取った登録用トークンと、確認後に入力した表示名。'
+  additionalProperties: false
+  properties:
+    registrationToken:
+      $ref: './authentication.yaml#/EmailRegistrationToken'
     displayName:
       $ref: './common.yaml#/DisplayName'
   required:
-    - 'email'
+    - 'registrationToken'
     - 'displayName'
+EmailRegistrationToken:
+  type: 'string'
+  minLength: 1
+  description: 'メール本人確認後、未登録の場合だけ発行する不透明な登録用トークン。確認済みメールと登録目的に紐付け、登録完了時に一度だけ消費する。元のメール本人確認トークンの有効期限を引き継ぎ、30分の期限を延長しない。メール内のトークンやログインセッションの代わりには使えない。'
+EmailVerificationResult:
+  oneOf:
+    - $ref: './authentication.yaml#/EmailSignedIn'
+    - $ref: './authentication.yaml#/EmailRegistrationRequired'
+EmailSignedIn:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    status:
+      type: 'string'
+      const: 'signed-in'
+    session:
+      $ref: './authentication.yaml#/Session'
+  required:
+    - 'status'
+    - 'session'
+EmailRegistrationRequired:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    status:
+      type: 'string'
+      const: 'registration-required'
+    registrationToken:
+      $ref: './authentication.yaml#/EmailRegistrationToken'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+      description: '登録用トークンの有効期限。元のメール本人確認トークン発行時刻から30分後を引き継ぐ。'
+  required:
+    - 'status'
+    - 'registrationToken'
+    - 'expiresAt'
 EmailRequest:
   type: 'object'
   additionalProperties: false
@@ -67,6 +84,7 @@ TokenConfirmation:
     - 'token'
 RegistrationResult:
   type: 'object'
+  description: '利用登録と本人のログインが完了した結果。セッションCookieを発行し、有効期限を返す。'
   additionalProperties: false
   properties:
     userId:
@@ -74,16 +92,17 @@ RegistrationResult:
     registeredAt:
       type: 'string'
       format: 'date-time'
-    loginRequired:
-      const: true
-      type: 'boolean'
-      description: 'この契約案では登録とログインを分け、登録だけではセッションを発行しない。'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+      description: '登録完了時に作成したセッションの有効期限。発行時刻から90日（3か月相当）後とし、その後も有効なセッションでWebAPIへアクセスするたびに延長する。'
   required:
     - 'userId'
     - 'registeredAt'
-    - 'loginRequired'
+    - 'expiresAt'
 Session:
   type: 'object'
+  description: '本人の現在のセッション。アクセスによる期限延長後の状態を返す。'
   additionalProperties: false
   properties:
     userId:
@@ -91,14 +110,10 @@ Session:
     expiresAt:
       type: 'string'
       format: 'date-time'
-    csrfToken:
-      type: 'string'
-      description: 'Cookieで認証する変更操作のX-CSRF-Tokenへ設定する。'
-      minLength: 1
+      description: '今回のアクセスから90日（3か月相当）後の有効期限。有効なセッションでのWebAPIアクセスごとに延長し、継続利用中の固定の最長期間は設けない。'
   required:
     - 'userId'
     - 'expiresAt'
-    - 'csrfToken'
 ExternalAuthorizationRequest:
   type: 'object'
   additionalProperties: false
@@ -113,10 +128,29 @@ ExternalRegistrationRequest:
   properties:
     provider:
       $ref: './authentication.yaml#/ProviderId'
+  required:
+    - 'provider'
+ExternalRegistrationCompletion:
+  type: 'object'
+  description: '外部アカウントの本人確認結果と、登録後に使う表示名。'
+  additionalProperties: false
+  properties:
+    code:
+      type: 'string'
+      description: 'providerが発行した認可コード。identityやユーザーIDの自己申告は受け付けない。'
+      minLength: 1
+      writeOnly: true
+    state:
+      type: 'string'
+      description: '認可開始時の操作・本人・providerと対応付けて検証する。'
+      minLength: 1
+      writeOnly: true
     displayName:
       $ref: './common.yaml#/DisplayName'
   required:
-    - 'provider'
+    - 'code'
+    - 'state'
+    - 'displayName'
 Authorization:
   type: 'object'
   additionalProperties: false
@@ -204,6 +238,7 @@ DeveloperTokenRequest:
     expiresAt:
       type: 'string'
       format: 'date-time'
+      description: '省略時は有効期限なし。指定時はその日時に失効する。'
   required:
     - 'name'
 DeveloperToken:
