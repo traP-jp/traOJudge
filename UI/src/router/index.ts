@@ -177,7 +177,7 @@ router.beforeEach(async (to, _, next) => {
   }
 
   const requiresTraqAuth = to.matched.some((record) => record.meta.requiresTraqAuth)
-  const isAdmin = userStore.user?.role === 'Admin'
+  const isAdmin = userStore.user?.globalAuthorityAttribute.isSystemAdmin === true
   const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
   if (requiresTraqAuth && !isAdmin && !isTraqAuthenticated) {
     next('/')

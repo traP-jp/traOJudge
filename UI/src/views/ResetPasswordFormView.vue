@@ -20,7 +20,6 @@ const submit = async () => {
   const authApi = new AuthenticationApi()
   try {
     await authApi.postResetPassword({
-      tokenWithUserid: token ?? undefined,
       resetPasswordRequest: {
         password: password.value,
         token: token ?? ''

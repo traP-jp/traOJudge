@@ -21,7 +21,7 @@ watch(
     <nav class="sticky top-14 h-header-offset">
       <SideMenuProbleEdit :problem-id="problemId" />
     </nav>
-    <main class="flex-auto py-6">
+    <main class="min-w-0 flex-auto py-6">
       <RouterView />
     </main>
   </div>
