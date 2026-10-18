@@ -4,7 +4,7 @@ authEmailRegistrations:
     tags:
       - 'authentication'
     summary: 'メールで利用登録を申し込む'
-    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションはまだ作らない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。'
+    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションは作らず、すでに発行済みのログインセッションも変更しない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。新しい本人確認要求を受け付けると、同じメールアドレス向けに以前発行した未使用の本人確認リンクを失効させる。再送はすでに発行済みのログインセッションや登録用トークンを失効させない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -24,7 +24,7 @@ authEmailRegistrations:
             email: 'alice@example.com'
     responses:
       '202':
-        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。'
+        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。新しい要求の受付時に、以前発行した未使用の本人確認リンクは失効する。'
         content:
           'application/json':
             schema:
@@ -48,7 +48,7 @@ authEmailRegistrationsComplete:
     tags:
       - 'authentication'
     summary: 'メールを確認し利用登録を完了する'
-    description: 'メール確認APIでstatus=registration-requiredを受け取った本人が、registrationTokenと表示名を送る。確認済みメールへの紐付け、登録目的、有効期限、未使用であることと表示名を検証し、登録用トークンを一度だけ消費して利用者とstandard-userを作る。同時に本人のセッションとCookieを発行してログイン済みにする。有効期限は元のメール本人確認トークン発行から30分を引き継ぐ。登録用トークンの発行後に登録済みとなった場合は409とし、既存の利用者の情報を上書きしたり新しい利用者を重複作成したりしない。'
+    description: 'メール確認APIでstatus=registration-requiredを受け取った本人が、registrationTokenと表示名を送る。確認済みメールへの紐付け、登録目的、有効期限、未使用であることと表示名を検証し、登録用トークンを一度だけ消費して利用者とstandard-userを作る。同時に本人のセッションとCookieを発行してログイン済みにする。有効期限は元のメール本人確認トークン発行から30分を引き継ぐ。後から本人確認メールを再送しても、この登録用トークンは元の有効期限まで使用できる。登録用トークンの発行後に登録済みとなった場合は409とし、既存の利用者の情報を上書きしたり新しい利用者を重複作成したりしない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -91,7 +91,11 @@ authEmailRegistrationsComplete:
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
+        description: '登録用トークンが不正・期限切れ・使用済み。登録やログインを行わない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
@@ -102,7 +106,7 @@ authEmailSessions:
     tags:
       - 'authentication'
     summary: 'メールのログイン用リンクを要求する'
-    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションはまだ作らない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。'
+    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションは作らず、すでに発行済みのログインセッションも変更しない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。新しい本人確認要求を受け付けると、同じメールアドレス向けに以前発行した未使用の本人確認リンクを失効させる。再送はすでに発行済みのログインセッションや登録用トークンを失効させない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -122,7 +126,7 @@ authEmailSessions:
             email: 'alice@example.com'
     responses:
       '202':
-        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。'
+        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。新しい要求の受付時に、以前発行した未使用の本人確認リンクは失効する。'
         content:
           'application/json':
             schema:
@@ -143,7 +147,7 @@ authEmailVerifications:
     tags:
       - 'authentication'
     summary: 'メールを確認しログインまたは新規登録へ進む'
-    description: '登録・ログイン共通のメール本人確認トークンを検証する。発行から30分間有効で一度だけ使用でき、リンクのGETだけでは消費しない。有効期限と未使用であることを確認してトークンを消費した後にだけ登録の有無を開示する。登録済みならstatus=signed-inと本人のセッションを返しCookieを発行する。未登録ならstatus=registration-requiredと確認済みメールに紐付くregistrationTokenを返し、表示名の入力へ進める。この分岐では利用者やログインセッション、セッションCookieは作らない。登録用トークンは元の有効期限を引き継ぐ。期限切れ・不正・使用済みのトークンでは登録の有無を開示せず、セッションも登録用トークンも発行しない。'
+    description: '登録・ログイン共通のメール本人確認トークンを検証する。発行から30分間有効で一度だけ使用でき、リンクのGETだけでは消費しない。新しい本人確認要求を受け付けた後は、再送前の本人確認リンクを使用できない。有効期限と未使用であることを確認してトークンを消費した後にだけ登録の有無を開示する。登録済みならstatus=signed-inと本人のセッションを返しCookieを発行する。未登録ならstatus=registration-requiredと確認済みメールに紐付くregistrationTokenを返し、表示名の入力へ進める。この分岐では利用者やログインセッション、セッションCookieは作らない。登録用トークンは元の有効期限を引き継ぎ、後続のメール再送では失効しない。期限切れ・不正・使用済み・再送後に失効したトークンでは登録の有無を開示せず、セッションも登録用トークンも発行しない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -198,7 +202,11 @@ authEmailVerifications:
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
+        description: '本人確認トークンが不正・期限切れ・使用済み、または再送受付後／同じメールアドレス向けの別リンク確認成功後に失効済み。登録の有無を開示せず、セッションや登録用トークンを発行しない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
@@ -410,7 +418,7 @@ authExternalSessionsByAuthorizationIdComplete:
     tags:
       - 'authentication'
     summary: '外部アカウントでログインを完了する'
-    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。providerとprovider内の安定したアカウントIDで既存のログイン方法を検索する。対応する利用者がいる場合だけその利用者のセッションを作成する。メールアドレスの一致だけで利用者を特定したり、ログイン方法を追加したりしない。対応するログイン方法がなければcode=external_identity_not_registeredの404を返し、新規利用者やセッションは作らずA5の外部アカウント登録へ案内する。'
+    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。providerとprovider内の安定したアカウントIDで既存のログイン方法を検索する。対応する利用者がいる場合だけその利用者のセッションを作成する。メールアドレスの一致だけで利用者を特定したり、ログイン方法を追加したりしない。対応するログイン方法がなければcode=external_identity_not_registeredの404を返し、新規利用者やセッションは作らずA5の外部アカウント登録へ案内する。providerから本人確認結果を得られない場合はエラーを返してログインを失敗させ、利用者やセッションを作らない。'
     security: []
     x-authorization:
       status: 'defined'

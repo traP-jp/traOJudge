@@ -29,7 +29,7 @@ EmailRegistrationCompletion:
 EmailRegistrationToken:
   type: 'string'
   minLength: 1
-  description: 'メール本人確認後、未登録の場合だけ発行する不透明な登録用トークン。確認済みメールと登録目的に紐付け、登録完了時に一度だけ消費する。元のメール本人確認トークンの有効期限を引き継ぎ、30分の期限を延長しない。メール内のトークンやログインセッションの代わりには使えない。'
+  description: 'メール本人確認後、未登録の場合だけ発行する不透明な登録用トークン。確認済みメールと登録目的に紐付け、登録完了時に一度だけ消費する。後から本人確認メールを再送しても失効しない。元のメール本人確認トークンの有効期限を引き継ぎ、30分の期限を延長しない。メール内のトークンやログインセッションの代わりには使えない。'
 EmailVerificationResult:
   oneOf:
     - $ref: './authentication.yaml#/EmailSignedIn'
