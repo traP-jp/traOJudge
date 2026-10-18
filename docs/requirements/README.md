@@ -92,3 +92,5 @@ CLI・Back・Judgeで共有する問題登録データと必要な契約情報�
 未決事項は各章の `TODO` を参照する。
 
 実装着手に向けた現状調査と作業票は[PoC 実装に向けた棚卸し](poc-work-breakdown.md)、AWS側の分解案は[構成ブロック](../services/aws-building-blocks.md)に記す。構成候補・PoCの提案と、上記の合意済みリリース要求は区別する。
+
+ユーザーからのmutationを時系列につなぎ、独立した作業へ切り出す案は[実装シナリオ](mutation-scenarios.md)に記す。読み取りAPIとクラスタ内部の通信は別に具体化する。
