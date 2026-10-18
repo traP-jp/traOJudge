@@ -1,0 +1,163 @@
+cliProblemsByProblemIdRegistrations:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  post:
+    operationId: 'startProblemRegistration'
+    tags:
+      - 'cli'
+    summary: 'CLIから問題一式の登録を開始する'
+    description: '本人の開発者トークンと、今回含む変更ごとの権限を検査する。テスト担当が一式送信を使って採点方法を追加・削除することはできない。登録とファイル転送条件を作るだけで、採用版はまだ確定しない。'
+    security:
+      - developerToken: []
+    x-authorization:
+      status: 'defined'
+      subject: 'developer-token-owner'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+      condition: '登録に含まれる追加・更新・削除をそれぞれ許可されていること'
+    x-scenarios:
+      - 'P2-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/cli.yaml#/RegistrationRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/cli.yaml#/RegistrationStarted'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+cliProblemsByProblemIdRegistrationsByRegistrationId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/RegistrationId'
+  get:
+    operationId: 'getProblemRegistration'
+    tags:
+      - 'cli'
+    summary: 'CLI登録の現在の状態と検証エラーを取得する'
+    description: '登録を開始した本人の状態だけを返す。現在の権限も確認し、別の利用者の登録へファイルを混ぜない。'
+    security:
+      - developerToken: []
+    x-authorization:
+      status: 'defined'
+      subject: 'developer-token-owner'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+      condition: '登録に含まれる追加・更新・削除をそれぞれ許可されていること'
+    x-scenarios:
+      - 'P2'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/cli.yaml#/Registration'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+cliProblemsByProblemIdRegistrationsByRegistrationIdComplete:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/RegistrationId'
+  post:
+    operationId: 'completeProblemRegistration'
+    tags:
+      - 'cli'
+    summary: '必要ファイルとメタデータを検証して問題版を確定する'
+    description: '開始した本人と対象の一致、現在の変更権限、baseRevision、必要ファイル・メタデータ・参照を検証する。検証が通った時点で問題版を確定し200を返す。試行ジャッジの成功は要求しない。不備は422、競合は409で、新しい採用版を作らない。同じ登録の完了再送は同じ確定版を返す。'
+    security:
+      - developerToken: []
+    x-authorization:
+      status: 'defined'
+      subject: 'developer-token-owner'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+      condition: '登録に含まれる追加・更新・削除をそれぞれ許可されていること'
+    x-scenarios:
+      - 'P2-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/cli.yaml#/RegistrationCompleted'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

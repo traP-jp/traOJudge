@@ -1,0 +1,350 @@
+ContestRules:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    tieBreak:
+      type: 'string'
+      enum:
+        - 'icpc'
+        - 'atcoder'
+    penaltyMinutes:
+      type: 'integer'
+      minimum: 0
+      description: '開始前まで変更可能。0は誤答ペナルティなし。'
+  required:
+    - 'tieBreak'
+    - 'penaltyMinutes'
+ContestCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+      default: 'private'
+      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+  required:
+    - 'title'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+ContestUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+  required: []
+  minProperties: 1
+Contest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'title'
+    - 'visibility'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+    - 'revision'
+Contests:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Contest'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+ContestProblem:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    label:
+      type: 'string'
+    order:
+      type: 'integer'
+      minimum: 0
+  required:
+    - 'problemId'
+    - 'label'
+    - 'order'
+ContestProblems:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestProblem'
+  required:
+    - 'items'
+ContestProblemInput:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    label:
+      type: 'string'
+      minLength: 1
+      maxLength: 32
+    order:
+      type: 'integer'
+      minimum: 0
+  required: []
+Participation:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    joinedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'userId'
+    - 'joinedAt'
+VirtualContestCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+      default: 'private'
+      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+  required:
+    - 'title'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+VirtualContestUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+  required: []
+  minProperties: 1
+VirtualContest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'title'
+    - 'visibility'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+    - 'revision'
+VirtualContests:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/VirtualContest'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+ClarificationCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 10000
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+  required:
+    - 'body'
+ClarificationAnswer:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 10000
+  required:
+    - 'body'
+Clarification:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    authorId:
+      $ref: './common.yaml#/ResourceId'
+    body:
+      type: 'string'
+    problemId:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    answer:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+    answeredBy:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    revision:
+      $ref: './common.yaml#/Version'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'id'
+    - 'authorId'
+    - 'body'
+    - 'problemId'
+    - 'answer'
+    - 'answeredBy'
+    - 'revision'
+    - 'createdAt'
+Clarifications:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Clarification'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+Standing:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    rank:
+      type: 'integer'
+      minimum: 1
+    score:
+      type: 'number'
+    tieBreakValue:
+      type: 'number'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'userId'
+    - 'rank'
+    - 'score'
+    - 'tieBreakValue'
+    - 'updatedAt'
+Standings:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Standing'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'items'
+    - 'updatedAt'

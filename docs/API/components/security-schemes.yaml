@@ -1,0 +1,10 @@
+SessionCookie:
+  type: 'apiKey'
+  in: 'cookie'
+  name: 'traojudge_session'
+  description: 'Web用。ログイン成立時に発行するHttpOnly・Secure Cookie。変更操作ではX-CSRF-Tokenも検証する。'
+DeveloperToken:
+  type: 'http'
+  scheme: 'bearer'
+  bearerFormat: 'opaque'
+  description: 'CLI専用。本人が発行した不透明な開発者トークン。認証時と操作時に失効・現在の役割を検査する。'

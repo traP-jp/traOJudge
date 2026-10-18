@@ -1,0 +1,487 @@
+contests:
+  get:
+    operationId: 'listContests'
+    tags:
+      - 'contests'
+    summary: '公開された通常の大会を取得する'
+    description: '公開された通常の大会を取得する'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: 'anyone'
+      target: 'public-resources'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Contests'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'createContest'
+    tags:
+      - 'contests'
+    summary: '通常の大会を作る'
+    description: '作成者へのcontest-setterやcontest-adminの自動付与は未決。作成と役割の付与を同一と見なさない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'C1-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/ContestCreate'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Contest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  get:
+    operationId: 'getContest'
+    tags:
+      - 'contests'
+    summary: '通常の大会の設定を取得する'
+    description: '通常の大会の設定を取得する'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている'
+        - role: 'contest-setter'
+          scope: 'contestId'
+        - role: 'contest-admin'
+          scope: 'contestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Contest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateContest'
+    tags:
+      - 'contests'
+    summary: '通常の大会の時間・ルールを変更する'
+    description: '対象大会の運営担当だけが変更できる。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティは開始後に変更できない。開催中・終了後のその他の変更条件はMUT-06で具体化する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contest-setter'
+          scope: 'contestId'
+    x-scenarios:
+      - 'C1-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/ContestUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Contest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteContest'
+    tags:
+      - 'contests'
+    summary: '通常の大会を取り下げる'
+    description: '大会を論理削除し、過去の出題・参加・提出・得点の記録を残す。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'C1-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdProblems:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  get:
+    operationId: 'listContestProblems'
+    tags:
+      - 'contests'
+    summary: '通常の大会の出題一覧を取得する'
+    description: '対象大会の閲覧・公開範囲に従う。非公開問題の本文・テスト内容をこの操作から開示しない。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開された大会・公開してよい出題情報'
+        - role: 'contest-setter'
+          scope: 'contestId'
+        - role: 'contestant'
+          scope: 'contestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestProblems'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdProblemsByProblemId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  put:
+    operationId: 'addContestProblem'
+    tags:
+      - 'contests'
+    summary: '通常の大会に問題を追加する'
+    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contest-setter'
+          scope: 'contestId'
+          condition: '自身の問題である。「自身」の判定はMUT-09で具体化する'
+    x-scenarios:
+      - 'C2-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/ContestProblemInput'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestProblem'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'removeContestProblem'
+    tags:
+      - 'contests'
+    summary: '通常の大会から問題を外す'
+    description: '大会と問題の結び付きだけを外す。通常の大会では他の作問者の問題も外せる。元の問題そのものを削除する操作ではない。既に外れていれば204。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contest-setter'
+          scope: 'contestId'
+    x-scenarios:
+      - 'C2-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdParticipation:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  post:
+    operationId: 'joinContest'
+    tags:
+      - 'contests'
+    summary: '通常の大会へ本人が参加する'
+    description: 'ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。管理者が他の人へ参加資格を付ける操作とは分ける。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '対象の通常大会が公開され、本人が参加条件を満たす'
+    x-scenarios:
+      - 'R3-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Participation'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdSubmissions:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  get:
+    operationId: 'listContestSubmissions'
+    tags:
+      - 'contests'
+    summary: '通常の大会の提出を運営担当が取得する'
+    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contest-setter'
+          scope: 'contestId'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/Submissions'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdStandings:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  get:
+    operationId: 'getContestStandings'
+    tags:
+      - 'contests'
+    summary: '通常の大会の順位を取得する'
+    description: '公開範囲と開催ルールに従う。各問題の提出の最高得点の合計で集計し、同得点時は設定されたタイブレークを使う。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。公開時点・非公開大会の閲覧条件はMUT-06で具体化する。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている順位表'
+        - role: 'contest-setter'
+          scope: 'contestId'
+        - role: 'contestant'
+          scope: 'contestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Standings'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdRejudgeBatches:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  post:
+    operationId: 'createContestRejudgeBatch'
+    tags:
+      - 'contests'
+    summary: '通常の大会の提出を問題ごとに一括再採点する'
+    description: '対象大会に対する提出を、選んだ出題ごとに再採点する。problemIdsを省略した場合は全出題。受付時の対象集合を固定し、後の新しい提出を自動追加しない契約案。各提出では新しい実行IDを発行し、不正解・時間切れでも全ケースを継続する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contest-admin'
+          scope: 'contestId'
+    x-scenarios:
+      - 'S3-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/submissions.yaml#/RejudgeBatchRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/RejudgeBatch'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

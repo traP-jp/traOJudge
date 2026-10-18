@@ -1,0 +1,102 @@
+problemsByProblemIdFileUploads:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  post:
+    operationId: 'createProblemFileUpload'
+    tags:
+      - 'problem-files'
+    summary: '作問ファイルの転送先を発行する'
+    description: '問題更新が可能な本人に、指定したファイル集合の転送先を発行する。この段階ではテストや採点定義を変更しない。転送先を受け取れたことを、それらの追加・変更の許可とは扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'P3'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/ProblemFileUploadRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/ProblemFileUpload'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdFileUploadsByUploadIdComplete:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/UploadId'
+  post:
+    operationId: 'completeProblemFileUpload'
+    tags:
+      - 'problem-files'
+    summary: '転送済み作問ファイルを確認する'
+    description: '開始した本人と問題の一致、ファイルのサイズ・チェックサム・固定版を確認する。検証済みfileIdを返す。問題版の採用や公開は行わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'P3'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/ProblemFileUploadResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

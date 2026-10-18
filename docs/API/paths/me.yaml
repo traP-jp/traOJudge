@@ -1,0 +1,496 @@
+me:
+  get:
+    operationId: 'getMe'
+    tags:
+      - 'me'
+    summary: '本人の情報と役割を取得する'
+    description: '本人の情報と役割を取得する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'O2'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/users.yaml#/CurrentUser'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateMe'
+    tags:
+      - 'me'
+    summary: '本人のプロフィールを変更する'
+    description: '本人のプロフィールを変更する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'O2-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/users.yaml#/ProfileUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/users.yaml#/CurrentUser'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meEmailChanges:
+  post:
+    operationId: 'requestEmailChange'
+    tags:
+      - 'me'
+    summary: '新しいメールアドレスの確認を依頼する'
+    description: '新しいメールアドレスの確認を依頼する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A3-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/EmailChangeRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Accepted'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meEmailChangesComplete:
+  post:
+    operationId: 'completeEmailChange'
+    tags:
+      - 'me'
+    summary: '確認済みのメールアドレスへ変更する'
+    description: '開始した本人のログイン状態と確認用トークンを検証して登録先を切り替える。ほかの利用者の認証手段を移動しない。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A3-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/TokenConfirmation'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Accepted'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meSignInMethods:
+  get:
+    operationId: 'listSignInMethods'
+    tags:
+      - 'me'
+    summary: '本人のログイン方法を取得する'
+    description: '本人のログイン方法を取得する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A7'
+      - 'A8'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/SignInMethods'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meSignInMethodsExternalAuthorizations:
+  post:
+    operationId: 'startSignInMethodAuthorization'
+    tags:
+      - 'me'
+    summary: 'ログイン方法の追加を開始する'
+    description: 'ログイン方法の追加を開始する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A7-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/ExternalAuthorizationRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Authorization'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
+  parameters:
+    - $ref: '../components/parameters.yaml#/AuthorizationId'
+  post:
+    operationId: 'completeSignInMethodAuthorization'
+    tags:
+      - 'me'
+    summary: '確認した外部アカウントを本人へ追加する'
+    description: '開始したログイン済み本人・認可目的・provider・stateを検証する。他の利用者に結び付いた外部identityは409で拒否する。認証方法の追加では役割を増やさない。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A7-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/AuthorizationCompletion'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/SignInMethod'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meSignInMethodsBySignInMethodId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SignInMethodId'
+  delete:
+    operationId: 'removeSignInMethod'
+    tags:
+      - 'me'
+    summary: '本人のログイン方法を外す'
+    description: '本人に属する方法だけを外す。最後のWebログイン方法になる場合は409を返す。CLIの開発者トークンはWebログイン方法として数えない。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A8-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meDeveloperTokens:
+  get:
+    operationId: 'listDeveloperTokens'
+    tags:
+      - 'me'
+    summary: '本人の作問ツール用トークンを取得する'
+    description: '本人の作問ツール用トークンを取得する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A4'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/DeveloperTokens'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'issueDeveloperToken'
+    tags:
+      - 'me'
+    summary: '本人の作問ツール用トークンを発行する'
+    description: '秘密の文字列はこの応答で一度だけ返す。発行してもwriter等の役割は付かない。CLI操作時も本人の現在の権限を検査する。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A4-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/DeveloperTokenRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/IssuedDeveloperToken'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meDeveloperTokensByDeveloperTokenId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/DeveloperTokenId'
+  delete:
+    operationId: 'revokeDeveloperToken'
+    tags:
+      - 'me'
+    summary: '本人の作問ツール用トークンを失効する'
+    description: '本人の作問ツール用トークンを失効する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A4-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meRoles:
+  get:
+    operationId: 'listMyRoles'
+    tags:
+      - 'me'
+    summary: '本人の役割と対象範囲を取得する'
+    description: '本人の役割と対象範囲を取得する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'R1'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleAssignments'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

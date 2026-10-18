@@ -1,0 +1,69 @@
+ResourceId:
+  type: 'string'
+  description: '外部向けの不透明な識別子。内部DBの型を仮定しない。'
+  minLength: 1
+  maxLength: 128
+  pattern: '^[A-Za-z0-9_-]+$'
+Version:
+  type: 'string'
+  description: '対象の版を識別する不透明な文字列。'
+  minLength: 1
+  maxLength: 256
+Timestamp:
+  type: 'string'
+  format: 'date-time'
+Error:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    code:
+      type: 'string'
+      description: 'プログラムで分岐するためのエラーコード。例 forbidden / policy_not_decided / validation_failed。'
+    message:
+      type: 'string'
+      description: '利用者に説明可能なエラー。秘密や非公開リソースの詳細を含めない。'
+    requestId:
+      $ref: './common.yaml#/ResourceId'
+    details:
+      type: 'array'
+      items:
+        type: 'object'
+        additionalProperties: false
+        properties:
+          field:
+            type: 'string'
+          reason:
+            type: 'string'
+        required:
+          - 'field'
+          - 'reason'
+  required:
+    - 'code'
+    - 'message'
+    - 'requestId'
+Accepted:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    requestId:
+      $ref: './common.yaml#/ResourceId'
+    acceptedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'requestId'
+    - 'acceptedAt'
+Email:
+  type: 'string'
+  description: '本人が受信できるメールアドレス。'
+  format: 'email'
+  maxLength: 254
+DisplayName:
+  type: 'string'
+  minLength: 1
+  maxLength: 80
+PageCursor:
+  type: 'string'
+  description: '前の応答のnextCursorをそのまま渡す。'
+  minLength: 1
+  maxLength: 2048

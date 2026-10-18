@@ -1,0 +1,66 @@
+BadRequest:
+  description: '入力の形式が不正。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+Unauthenticated:
+  description: '本人確認が必要、または認証情報が失効。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+Forbidden:
+  description: 'この主体・対象・操作を許可しない。未決の認可はcode=policy_not_decided。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+NotFound:
+  description: '対象が存在しない、または存在を開示できない。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+Conflict:
+  description: '同じキーで異なる要求、役割・関連付けの競合、最後のログイン方法の解除など。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+ValidationFailed:
+  description: '必要なファイル・メタデータ・参照・業務上の入力を検証できなかった。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+PreconditionFailed:
+  description: '指定した版から対象が更新されている。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+PreconditionRequired:
+  description: 'If-Matchが必要。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+RateLimited:
+  description: '要求が集中している。Retry-Afterを確認する。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'
+  headers:
+    Retry-After:
+      description: '再試行できるまでの秒数。'
+      schema:
+        type: 'integer'
+        minimum: 1
+UnexpectedError:
+  description: '処理を完了できなかった。requestIdで問い合わせを識別する。'
+  content:
+    'application/json':
+      schema:
+        $ref: '../schemas/common.yaml#/Error'

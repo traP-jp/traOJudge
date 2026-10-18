@@ -111,9 +111,9 @@ B5/B6からは実行で起きた事実を受け取り、B2が登録済みの解�
 
 - [単独提出の採点状態](../../server/traojudge-core/src/domain/model/judge_state/single_player.rs)には `progress_now` / `progress_full` があるが、ケース完了数なのか、どの事実で更新するかの定義はない。
 - [提出・採点のモデル](../../server/traojudge-core/src/domain/model/submission.rs)では、採点状態や進捗の項目にTODO・コメントアウトが残っている。型があるだけで、このシナリオが実装済みとは扱わない。
-- [既存OpenAPI](../API/front_back.yaml)には `judgeProgressStep` があるが、完了ケース数を表すのかや今回の実行との対応を含む表示契約は不足している。`judgeResults` はWJ中は空配列という定義なので、途中のケース判定も表示する場合は整合する契約が必要。
+- [OpenAPI 3.1.1の契約案](../API/front_back.yaml)では、実行ごとの取得応答に `completedCaseCount`、任意に公開する総数、状態の版、確定結果を分けて定義した。ケース名・入出力・個別判定はこの進捗応答に含めない。旧OpenAPIは置き換え、`judgeProgressStep` を新しい契約へ引き継がない。
 
-今回は表示と基盤の制約を記録する。OpenAPIのフィールド変更・UI実装・内部メッセージ形式の確定は、この記録だけでは行わない。
+表示と基盤の制約を基にOpenAPIの契約案を追加した。UI・ハンドラーの実装と、内部メッセージ形式の確定は別に行う。
 
 ## 担当ごとに先に実装できる終点
 

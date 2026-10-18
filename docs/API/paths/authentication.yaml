@@ -1,0 +1,466 @@
+authProviders:
+  get:
+    operationId: 'listAuthenticationProviders'
+    tags:
+      - 'authentication'
+    summary: '利用可能な外部認証先を取得する'
+    description: '利用可能な外部認証先を取得する'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A5'
+      - 'A6'
+      - 'A7'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Providers'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authEmailRegistrations:
+  post:
+    operationId: 'requestEmailRegistration'
+    tags:
+      - 'authentication'
+    summary: 'メールで利用登録を申し込む'
+    description: 'メール配送の依頼を受け付ける。送信要求の再送もこの操作を使う。配送完了や登録完了を意味しない。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A1-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/EmailRegistrationRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Accepted'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authEmailRegistrationsComplete:
+  post:
+    operationId: 'completeEmailRegistration'
+    tags:
+      - 'authentication'
+    summary: 'メールを確認し利用登録を完了する'
+    description: '有効な登録用トークンを一度だけ消費し、利用者とstandard-userを作る。登録だけではログインしない契約案。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A1-02'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/TokenConfirmation'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/RegistrationResult'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authEmailSessions:
+  post:
+    operationId: 'requestEmailSession'
+    tags:
+      - 'authentication'
+    summary: 'メールのログイン用リンクを要求する'
+    description: '登録済みメールへのログインリンクの配送を依頼する。登録の有無によらず同じ受付形式で返し、本人確認はリンクの消費時に行う。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A2-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/EmailRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Accepted'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authEmailSessionsComplete:
+  post:
+    operationId: 'completeEmailSession'
+    tags:
+      - 'authentication'
+    summary: 'メールを確認しログインする'
+    description: '有効なログイン用トークンを一度だけ消費し、登録済みの本人のセッションを作る。登録や別の役割の付与はしない。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A2-02'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/TokenConfirmation'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Session'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Set-Cookie:
+            schema:
+              type: 'string'
+            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authSession:
+  get:
+    operationId: 'getSession'
+    tags:
+      - 'authentication'
+    summary: '現在のログイン状態を取得する'
+    description: 'ログイン済みの本人のセッションとCSRFトークンを返す。未ログイン・失効時は401。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A2'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Session'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteSession'
+    tags:
+      - 'authentication'
+    summary: '現在のセッションを終了する'
+    description: '本人の現在のセッションを失効する。ほかの端末のセッションや役割は変更しない。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'A2-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Set-Cookie:
+            schema:
+              type: 'string'
+            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authExternalRegistrations:
+  post:
+    operationId: 'startExternalRegistration'
+    tags:
+      - 'authentication'
+    summary: '外部アカウントで利用登録を開始する'
+    description: '利用可能なproviderで本人確認を開始する。provider・目的・要求したブラウザ・有効期限をサーバーで対応付ける。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A5-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/ExternalRegistrationRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Authorization'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authExternalRegistrationsByAuthorizationIdComplete:
+  parameters:
+    - $ref: '../components/parameters.yaml#/AuthorizationId'
+  post:
+    operationId: 'completeExternalRegistration'
+    tags:
+      - 'authentication'
+    summary: '外部アカウントで利用登録を完了する'
+    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。メールアドレスの一致だけで別の利用者を統合しない。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A5-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/AuthorizationCompletion'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/RegistrationResult'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authExternalSessions:
+  post:
+    operationId: 'startExternalSession'
+    tags:
+      - 'authentication'
+    summary: '外部アカウントでログインを開始する'
+    description: '利用可能なproviderで本人確認を開始する。provider・目的・要求したブラウザ・有効期限をサーバーで対応付ける。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A6-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/ExternalAuthorizationRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Authorization'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+authExternalSessionsByAuthorizationIdComplete:
+  parameters:
+    - $ref: '../components/parameters.yaml#/AuthorizationId'
+  post:
+    operationId: 'completeExternalSession'
+    tags:
+      - 'authentication'
+    summary: '外部アカウントでログインを完了する'
+    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。メールアドレスの一致だけで別の利用者を統合しない。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: '本人確認可能な未認証の利用者'
+      target: 'self'
+    x-scenarios:
+      - 'A6-01'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/authentication.yaml#/AuthorizationCompletion'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/authentication.yaml#/Session'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Set-Cookie:
+            schema:
+              type: 'string'
+            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

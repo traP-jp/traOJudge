@@ -1,0 +1,154 @@
+AuthorizationId:
+  name: 'authorizationId'
+  in: 'path'
+  required: true
+  description: '対象のauthorizationId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+SignInMethodId:
+  name: 'signInMethodId'
+  in: 'path'
+  required: true
+  description: '対象のsignInMethodId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+DeveloperTokenId:
+  name: 'developerTokenId'
+  in: 'path'
+  required: true
+  description: '対象のdeveloperTokenId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+UserId:
+  name: 'userId'
+  in: 'path'
+  required: true
+  description: '対象のuserId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+ProblemId:
+  name: 'problemId'
+  in: 'path'
+  required: true
+  description: '対象のproblemId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+ContestId:
+  name: 'contestId'
+  in: 'path'
+  required: true
+  description: '対象のcontestId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+VirtualContestId:
+  name: 'virtualContestId'
+  in: 'path'
+  required: true
+  description: '対象のvirtualContestId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+EditorialId:
+  name: 'editorialId'
+  in: 'path'
+  required: true
+  description: '対象のeditorialId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+JudgeDefinitionId:
+  name: 'judgeDefinitionId'
+  in: 'path'
+  required: true
+  description: '対象のjudgeDefinitionId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+TestcaseId:
+  name: 'testcaseId'
+  in: 'path'
+  required: true
+  description: '対象のtestcaseId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+UploadId:
+  name: 'uploadId'
+  in: 'path'
+  required: true
+  description: '対象のuploadId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+SubmissionId:
+  name: 'submissionId'
+  in: 'path'
+  required: true
+  description: '対象のsubmissionId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+JudgeRunId:
+  name: 'judgeRunId'
+  in: 'path'
+  required: true
+  description: '対象のjudgeRunId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+BatchId:
+  name: 'batchId'
+  in: 'path'
+  required: true
+  description: '対象のbatchId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+RegistrationId:
+  name: 'registrationId'
+  in: 'path'
+  required: true
+  description: '対象のregistrationId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+ClarificationId:
+  name: 'clarificationId'
+  in: 'path'
+  required: true
+  description: '対象のclarificationId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
+Limit:
+  name: 'limit'
+  in: 'query'
+  description: '1ページの取得件数。'
+  schema:
+    type: 'integer'
+    minimum: 1
+    maximum: 100
+    default: 30
+Cursor:
+  name: 'cursor'
+  in: 'query'
+  description: '前ページのnextCursor。任意の内部IDへ読み替えない。'
+  schema:
+    $ref: '../schemas/common.yaml#/PageCursor'
+CsrfToken:
+  name: 'X-CSRF-Token'
+  in: 'header'
+  required: true
+  description: '現在のセッションに結び付いたCSRFトークン。Cookieだけで変更操作を許可しない。'
+  schema:
+    type: 'string'
+    minLength: 1
+IdempotencyKey:
+  name: 'Idempotency-Key'
+  in: 'header'
+  required: true
+  description: '本人・HTTPメソッド・パスごとに同じ操作の再送を識別する不透明なキー。同じキー・同じ入力は同じ結果、異なる入力は409。保存期間は配置設定で定める。'
+  schema:
+    type: 'string'
+    minLength: 1
+    maxLength: 128
+    pattern: '^[A-Za-z0-9._:-]+$'
+IfMatch:
+  name: 'If-Match'
+  in: 'header'
+  required: true
+  description: '取得時のETagを引用符ごと渡す。古い版は412、未指定は428。*による無条件更新は受け付けない。'
+  schema:
+    type: 'string'
+    minLength: 3
+    pattern: '^"[^"]+"$'

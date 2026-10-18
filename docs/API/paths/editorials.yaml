@@ -1,0 +1,291 @@
+editorials:
+  post:
+    operationId: 'createEditorial'
+    tags:
+      - 'editorials'
+    summary: '問題に解説を投稿する'
+    description: '解説を投稿する。解答の提出やwriterは必須にしない。投稿者へのeditiorial-authorの自動付与と初期公開範囲は未決。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+    x-scenarios:
+      - 'O1-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/editorials.yaml#/EditorialCreate'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/editorials.yaml#/Editorial'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdEditorials:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  get:
+    operationId: 'listProblemEditorials'
+    tags:
+      - 'editorials'
+    summary: '問題の公開解説を取得する'
+    description: '一般公開された解説のみを返す。非公開解説を編集できることとは別の閲覧経路。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: 'anyone'
+      target: 'public-resources'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/editorials.yaml#/Editorials'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+editorialsByEditorialId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/EditorialId'
+  get:
+    operationId: 'getEditorial'
+    tags:
+      - 'editorials'
+    summary: '公開または本人が編集を担当する解説を取得する'
+    description: '公開または本人が編集を担当する解説を取得する'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている'
+        - role: 'editiorial-author'
+          scope: 'editorialId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/editorials.yaml#/Editorial'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateEditorial'
+    tags:
+      - 'editorials'
+    summary: '担当する解説を編集する'
+    description: '担当する解説を編集する'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'editiorial-author'
+          scope: 'editorialId'
+    x-scenarios:
+      - 'O1-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/editorials.yaml#/EditorialUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/editorials.yaml#/Editorial'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteEditorial'
+    tags:
+      - 'editorials'
+    summary: '解説を取り下げる'
+    description: |-
+      解説を取り下げる
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'O1-03：解説の削除権限が未決。'
+    x-scenarios:
+      - 'O1-03'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+editorialsByEditorialIdPublication:
+  parameters:
+    - $ref: '../components/parameters.yaml#/EditorialId'
+  put:
+    operationId: 'publishEditorial'
+    tags:
+      - 'editorials'
+    summary: '解説を公開する'
+    description: |-
+      解説を公開する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'R2-03：解説の公開権限が未決。'
+    x-scenarios:
+      - 'R2-03'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/Visibility'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'unpublishEditorial'
+    tags:
+      - 'editorials'
+    summary: '解説を非公開にする'
+    description: |-
+      解説を非公開にする
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'R2-04：解説の非公開化の権限が未決。'
+    x-scenarios:
+      - 'R2-04'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

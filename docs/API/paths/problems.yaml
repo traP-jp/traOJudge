@@ -1,0 +1,786 @@
+problems:
+  get:
+    operationId: 'listProblems'
+    tags:
+      - 'problems'
+    summary: '公開問題の一覧を取得する'
+    description: '一般公開された問題だけを返す。非公開の作業対象はGET /me/problemsで取得する。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: 'anyone'
+      target: 'public-resources'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Problems'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'createProblem'
+    tags:
+      - 'problems'
+    summary: '非公開の問題を作成する'
+    description: 'writerが新しい非公開問題を作る。作成者へのproblem-ownerの自動付与は未決であり、この応答だけで付与済みと扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'writer'
+          scope: 'service'
+    x-scenarios:
+      - 'P1-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/ProblemCreate'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Problem'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meProblems:
+  get:
+    operationId: 'listMyProblems'
+    tags:
+      - 'problems'
+    summary: '本人が作業できる問題を取得する'
+    description: '本人のproblem-owner / tester、または通常大会のcontest-setterから編集を許された問題だけを返す。'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Problems'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  get:
+    operationId: 'getProblem'
+    tags:
+      - 'problems'
+    summary: '問題を取得する'
+    description: '公開問題は未ログインでも取得できる。非公開問題の閲覧はその問題のproblem-owner / tester、またはその問題を含む通常大会のcontest-setterに限る。大会参加者への非公開問題の開示条件は別途未決。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている'
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'P1'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Problem'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateProblem'
+    tags:
+      - 'problems'
+    summary: '問題の題名・本文を変更する'
+    description: '問題の題名・本文を変更する'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'P1-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/ProblemUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Problem'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteProblem'
+    tags:
+      - 'problems'
+    summary: '問題を取り下げる'
+    description: '対象問題の管理担当だけが削除できる。関連する過去の提出・解説・大会との記録を破壊せず、削除した事実を残す。service-adminだけでは許可しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+    x-scenarios:
+      - 'P1-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdPublication:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  put:
+    operationId: 'publishProblem'
+    tags:
+      - 'problems'
+    summary: '問題を公開する'
+    description: |-
+      問題を公開する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'R2-01：公開操作を許可する役割・公開可能な条件が未決。'
+    x-scenarios:
+      - 'R2-01'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/Visibility'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'unpublishProblem'
+    tags:
+      - 'problems'
+    summary: '問題を非公開にする'
+    description: 'service-adminは担当でない問題も非公開にできる。対象問題1つだけを非公開にし、内容や役割を変更しない。他の役割に許可するかは未決。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R2-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdJudgeDefinitions:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  get:
+    operationId: 'listJudgeDefinitions'
+    tags:
+      - 'problems'
+    summary: '作業対象の採点方法を取得する'
+    description: '問題を編集できる人だけへ返す。採点スクリプトや非公開ケース情報を公開問題の閲覧者へ自動で開示しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/JudgeDefinitions'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'createJudgeDefinition'
+    tags:
+      - 'problems'
+    summary: '問題に採点方法を追加する'
+    description: 'problem-ownerだけが追加できる。testerとcontest-setterには追加を許可しない。定義の形式と結果解釈の詳細はCONTRACT-01/07/08で具体化する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+    x-scenarios:
+      - 'P3-04'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/JudgeDefinitionCreate'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/JudgeDefinition'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdJudgeDefinitionsByJudgeDefinitionId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/JudgeDefinitionId'
+  get:
+    operationId: 'getJudgeDefinition'
+    tags:
+      - 'problems'
+    summary: '作業対象の採点方法を取得する'
+    description: '作業対象の採点方法を取得する'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/JudgeDefinition'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateJudgeDefinition'
+    tags:
+      - 'problems'
+    summary: '既存の採点方法を変更する'
+    description: '既存の採点方法を変更する'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'P3-05'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/JudgeDefinitionUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/JudgeDefinition'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteJudgeDefinition'
+    tags:
+      - 'problems'
+    summary: '採点方法を取り下げる'
+    description: '問題の管理担当、またはservice-adminが対象を削除する。service-adminによる削除は論理削除で記録を残す。testerとcontest-setterには削除を許可しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'P3-06'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdTestcases:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  get:
+    operationId: 'listTestcases'
+    tags:
+      - 'problems'
+    summary: '作業対象のテストケースを取得する'
+    description: '問題を編集できる人の作業用。一般の閲覧者や提出者への非公開ケースの名前・入出力の開示を意味しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Testcases'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'createTestcase'
+    tags:
+      - 'problems'
+    summary: 'テストケースを追加する'
+    description: |-
+      テストケースを追加する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'P3-01：問題更新の許可にテストの追加を含むか未決。'
+    x-scenarios:
+      - 'P3-01'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/TestcaseInput'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Testcase'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdTestcasesByTestcaseId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/TestcaseId'
+  get:
+    operationId: 'getTestcase'
+    tags:
+      - 'problems'
+    summary: '作業対象のテストケースを取得する'
+    description: 'この問題を編集できる人だけに、指定したケースと更新用ETagを返す。テストの変更権限は別途未決。一般の提出者への非公開ケースの開示には使わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Testcase'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  put:
+    operationId: 'replaceTestcase'
+    tags:
+      - 'problems'
+    summary: 'テストケースの内容を変更する'
+    description: |-
+      テストケースの内容を変更する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'P3-02：テストの編集を許可する役割が未決。'
+    x-scenarios:
+      - 'P3-02'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/problems.yaml#/TestcaseInput'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Testcase'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteTestcase'
+    tags:
+      - 'problems'
+    summary: 'テストケースを削除する'
+    description: |-
+      テストケースを削除する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'P3-03：テストの削除を許可する役割が未決。'
+    x-scenarios:
+      - 'P3-03'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+languages:
+  get:
+    operationId: 'listLanguages'
+    tags:
+      - 'problems'
+    summary: '利用可能な言語を取得する'
+    description: 'サービス共通の言語IDを返す。問題ごとの禁止言語の判定と、採用する環境版は受付時にも確認する。'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: 'anyone'
+      target: 'public-resources'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/problems.yaml#/Languages'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

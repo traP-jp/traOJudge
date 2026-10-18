@@ -1,0 +1,145 @@
+RoleName:
+  type: 'string'
+  description: 'role.mdの表記に合わせる。service-adminを任命・解任するAPIは定義しない。'
+  enum:
+    - 'writer'
+    - 'standard-user'
+    - 'problem-owner'
+    - 'tester'
+    - 'contest-admin'
+    - 'contest-setter'
+    - 'virtual-contest-setter'
+    - 'contestant'
+    - 'virtual-contestant'
+    - 'editiorial-author'
+Scope:
+  oneOf:
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          const: 'service'
+          type: 'string'
+      required:
+        - 'kind'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          const: 'problem'
+          type: 'string'
+        problemId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'problemId'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          const: 'contest'
+          type: 'string'
+        contestId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'contestId'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          const: 'virtual-contest'
+          type: 'string'
+        virtualContestId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'virtualContestId'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          const: 'editorial'
+          type: 'string'
+        editorialId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'editorialId'
+RoleAssignment:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    role:
+      type: 'string'
+      enum:
+        - 'service-admin'
+        - 'writer'
+        - 'standard-user'
+        - 'problem-owner'
+        - 'tester'
+        - 'contest-admin'
+        - 'contest-setter'
+        - 'virtual-contest-setter'
+        - 'contestant'
+        - 'virtual-contestant'
+        - 'editiorial-author'
+    scope:
+      $ref: './permissions.yaml#/Scope'
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    grantedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'role'
+    - 'scope'
+    - 'userId'
+    - 'grantedAt'
+RoleAssignments:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './permissions.yaml#/RoleAssignment'
+  required:
+    - 'items'
+RoleChangeResult:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    assignment:
+      $ref: './permissions.yaml#/RoleAssignment'
+    changed:
+      type: 'boolean'
+      description: '同じ役割が既にある場合はfalse。既存の割り当てを返す。'
+  required:
+    - 'assignment'
+    - 'changed'
+VisibilityChange:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+  required:
+    - 'visibility'
+Visibility:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'visibility'
+    - 'revision'

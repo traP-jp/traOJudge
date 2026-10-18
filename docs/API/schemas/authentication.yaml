@@ -1,0 +1,258 @@
+ProviderId:
+  type: 'string'
+  description: '候補の識別子。利用できるproviderはGET /auth/providersの応答で判定する。'
+  enum:
+    - 'google'
+    - 'github'
+    - 'traq'
+Provider:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './authentication.yaml#/ProviderId'
+    displayName:
+      type: 'string'
+    registrationEnabled:
+      type: 'boolean'
+    loginEnabled:
+      type: 'boolean'
+    linkEnabled:
+      type: 'boolean'
+  required:
+    - 'id'
+    - 'displayName'
+    - 'registrationEnabled'
+    - 'loginEnabled'
+    - 'linkEnabled'
+Providers:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './authentication.yaml#/Provider'
+  required:
+    - 'items'
+EmailRegistrationRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    email:
+      $ref: './common.yaml#/Email'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+  required:
+    - 'email'
+    - 'displayName'
+EmailRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    email:
+      $ref: './common.yaml#/Email'
+  required:
+    - 'email'
+TokenConfirmation:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    token:
+      type: 'string'
+      description: 'メールで受け取る、一度だけ使える確認用トークン。ログやURLアクセスだけでは消費しない。'
+      minLength: 1
+      writeOnly: true
+  required:
+    - 'token'
+RegistrationResult:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    registeredAt:
+      type: 'string'
+      format: 'date-time'
+    loginRequired:
+      const: true
+      type: 'boolean'
+      description: 'この契約案では登録とログインを分け、登録だけではセッションを発行しない。'
+  required:
+    - 'userId'
+    - 'registeredAt'
+    - 'loginRequired'
+Session:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+    csrfToken:
+      type: 'string'
+      description: 'Cookieで認証する変更操作のX-CSRF-Tokenへ設定する。'
+      minLength: 1
+  required:
+    - 'userId'
+    - 'expiresAt'
+    - 'csrfToken'
+ExternalAuthorizationRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    provider:
+      $ref: './authentication.yaml#/ProviderId'
+  required:
+    - 'provider'
+ExternalRegistrationRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    provider:
+      $ref: './authentication.yaml#/ProviderId'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+  required:
+    - 'provider'
+Authorization:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    authorizationId:
+      $ref: './common.yaml#/ResourceId'
+    authorizationUrl:
+      type: 'string'
+      description: 'ブラウザで開く、サービスが作成した認証先URL。'
+      format: 'uri'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'authorizationId'
+    - 'authorizationUrl'
+    - 'expiresAt'
+AuthorizationCompletion:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    code:
+      type: 'string'
+      description: 'providerが発行した認可コード。identityやユーザーIDの自己申告は受け付けない。'
+      minLength: 1
+      writeOnly: true
+    state:
+      type: 'string'
+      description: '認可開始時の操作・本人・providerと対応付けて検証する。'
+      minLength: 1
+      writeOnly: true
+  required:
+    - 'code'
+    - 'state'
+EmailChangeRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    email:
+      $ref: './common.yaml#/Email'
+  required:
+    - 'email'
+SignInMethod:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    kind:
+      type: 'string'
+      enum:
+        - 'email'
+        - 'google'
+        - 'github'
+        - 'traq'
+    label:
+      type: 'string'
+      description: '本人にだけ返す表示用情報。'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'id'
+    - 'kind'
+    - 'label'
+    - 'createdAt'
+SignInMethods:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './authentication.yaml#/SignInMethod'
+  required:
+    - 'items'
+DeveloperTokenRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      type: 'string'
+      minLength: 1
+      maxLength: 100
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'name'
+DeveloperToken:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+    expiresAt:
+      anyOf:
+        - type: 'string'
+          format: 'date-time'
+        - type: 'null'
+    revokedAt:
+      anyOf:
+        - type: 'string'
+          format: 'date-time'
+        - type: 'null'
+  required:
+    - 'id'
+    - 'name'
+    - 'createdAt'
+    - 'expiresAt'
+    - 'revokedAt'
+DeveloperTokens:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './authentication.yaml#/DeveloperToken'
+  required:
+    - 'items'
+IssuedDeveloperToken:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    token:
+      $ref: './authentication.yaml#/DeveloperToken'
+    secret:
+      type: 'string'
+      description: '発行時に一度だけ返す。取得一覧や失効応答には返さない。'
+      minLength: 1
+  required:
+    - 'token'
+    - 'secret'

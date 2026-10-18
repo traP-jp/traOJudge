@@ -1,0 +1,722 @@
+usersByUserIdRolesWriter:
+  parameters:
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantWriter'
+    tags:
+      - 'permissions'
+    summary: 'writerを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者、サービス全体。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-01-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeWriter'
+    tags:
+      - 'permissions'
+    summary: 'writerを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-01-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdOwnersByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantProblemOwner'
+    tags:
+      - 'permissions'
+    summary: 'problem-ownerを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とproblemIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-02-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeProblemOwner'
+    tags:
+      - 'permissions'
+    summary: 'problem-ownerを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-02-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdTestersByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantTester'
+    tags:
+      - 'permissions'
+    summary: 'testerを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とproblemIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+        - role: 'problem-owner'
+          scope: 'problemId'
+    x-scenarios:
+      - 'R1-03-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeTester'
+    tags:
+      - 'permissions'
+    summary: 'testerを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。problem-ownerは追加できるが剥奪できない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-03-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdAdminsByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantContestAdmin'
+    tags:
+      - 'permissions'
+    summary: 'contest-adminを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とcontestIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-04-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeContestAdmin'
+    tags:
+      - 'permissions'
+    summary: 'contest-adminを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-04-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdSettersByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantContestSetter'
+    tags:
+      - 'permissions'
+    summary: 'contest-setterを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とcontestIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+        - role: 'contest-admin'
+          scope: 'contestId'
+    x-scenarios:
+      - 'R1-05-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeContestSetter'
+    tags:
+      - 'permissions'
+    summary: 'contest-setterを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。contest-adminは追加できるが剥奪できない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-05-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdSettersByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantVirtualContestSetter'
+    tags:
+      - 'permissions'
+    summary: 'virtual-contest-setterを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とvirtualContestIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-06-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeVirtualContestSetter'
+    tags:
+      - 'permissions'
+    summary: 'virtual-contest-setterを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-06-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+usersByUserIdRolesStandardUser:
+  parameters:
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantStandardUser'
+    tags:
+      - 'permissions'
+    summary: 'standard-userを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者、サービス全体。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-07-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeStandardUser'
+    tags:
+      - 'permissions'
+    summary: 'standard-userを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-07-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+editorialsByEditorialIdAuthorsByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/EditorialId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantEditorialAuthor'
+    tags:
+      - 'permissions'
+    summary: 'editiorial-authorを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とeditorialIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-08-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeEditorialAuthor'
+    tags:
+      - 'permissions'
+    summary: 'editiorial-authorを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-08-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdParticipantsByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantContestant'
+    tags:
+      - 'permissions'
+    summary: 'contestantを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とcontestIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-09-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeContestant'
+    tags:
+      - 'permissions'
+    summary: 'contestantを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-09-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdParticipantsByUserId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+    - $ref: '../components/parameters.yaml#/UserId'
+  put:
+    operationId: 'grantVirtualContestant'
+    tags:
+      - 'permissions'
+    summary: 'virtual-contestantを指定した人へ付与する'
+    description: '対象はuserIdで指定した登録済み利用者とvirtualContestIdで指定した対象1つ。他の対象へ許可を広げない。既に割り当て済みならchanged=falseで同じ割り当てを返す。service-adminという役割自体の付与は扱わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-10-G'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/permissions.yaml#/RoleChangeResult'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'revokeVirtualContestant'
+    tags:
+      - 'permissions'
+    summary: 'virtual-contestantを指定した人から剥奪する'
+    description: '指定した利用者・役割・対象範囲だけを外す。既に外れていれば204。他の役割による許可まで削除しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'service-admin'
+          scope: 'service'
+    x-scenarios:
+      - 'R1-10-D'
+    parameters:
+      - $ref: '../components/parameters.yaml#/CsrfToken'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
