@@ -37,5 +37,7 @@ flowchart TD
 
 ## つながる話
 
+- [外部サービスのアカウントで利用登録する](register-with-another-service.md)
 - [ログインして、使い終わったらログアウトする](sign-in-and-out.md)
+- [今の利用者に、別のログイン方法を追加する](add-sign-in-method.md)
 - [できることを増やす・減らす](../permissions/change-permissions.md)
