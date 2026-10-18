@@ -6,6 +6,8 @@
 | AWS | Amazon Web Services |
 | DB | Database |
 | UI | User Interface |
+| CLI | Command Line Interface。問題登録などをコマンドラインから行うクライアント |
+| DAG | Directed Acyclic Graph。ジャッジ処理の依存関係を表す有向非巡回グラフ |
 | S3 | Amazon Simple Storage Service。ファイル保管の採用方針 |
 | SQS | Amazon Simple Queue Service。ジャッジ要求・結果キューの採用方針 |
 | CCS | Contest Control System |

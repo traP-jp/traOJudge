@@ -7,22 +7,25 @@ WebUI は neoShowcase、API・DB・ジャッジ基盤などのクラウド側要
 ```mermaid
 flowchart LR
     User[利用者] --> UI
-    Writer[Writer] --> Tool[作問クライアント / TraoPy]
+    Writer[Writer] --> Tool[CLI]
     subgraph Neo[neoShowcase]
         UI[WebUI]
     end
     subgraph AWS[AWS]
-        API[API]
+        API[WebUI等のAPI]
+        CLIAPI[CLI専用API]
         DB[(DB / PostgreSQL互換を優先)]
         Storage[(ファイル保管 / S3)]
         Request[ジャッジ要求キュー / SQS]
         Runner[JobRunner]
         Response[ジャッジ結果キュー / SQS]
-        Receiver[結果反映処理 / 配置TODO]
+        Receiver[Backの結果反映処理 / 配置TODO]
         MailQueue[メール送信キュー]
         Mailer[メール送信処理]
         API --> DB
-        API -->|ジャッジ要求| Request
+        CLIAPI --> DB
+        CLIAPI -->|ファイル管理| Storage
+        API -->|使用版を固定した定義と実行時入力| Request
         Request -->|要求の受け渡し| Runner
         Runner -->|結果| Response
         Response -->|結果の受け渡し| Receiver
@@ -33,27 +36,50 @@ flowchart LR
         MailQueue --> Mailer
     end
     UI --> API
-    Tool -->|既存図のファイル送信経路| Storage
+    API -->|提出用の署名付きURL| UI
+    UI -->|提出ソースを直接アップロード| Storage
+    Tool -->|トークン認証・登録開始／完了通知| CLIAPI
+    CLIAPI -->|署名付きURL| Tool
+    Tool -->|署名付きURLで直接アップロード| Storage
     Mailer --> Mail[利用者のメールボックス]
 ```
 
 矢印は論理的な処理・データの経路であり、キューのプッシュ通知やポーリングなどの通信実装を確定するものではない。結果反映処理とメール送信処理は責務を示すノードであり、別サービス・別インスタンスへの配置を要求しない。
+
+CLIは問題登録を担う独立した担当分野とし、CLI専用APIを提供する。WebUI等のAPIとCLI専用APIのノードは操作インターフェースの区別を示し、別プロセスへの配置を要求しない。CLI専用APIが権限確認と署名付きURL発行を担い、CLIがS3へ直接アップロードしてAPIへ完了通知する。既存構成図のTraoPyをCLIの実装として採用するかは未決である。
+
+CLIからの登録データは、DAG・実行環境を含むメタデータと、全テストケース・テストコード・問題得点計算ロジックを含むファイル集合の組とする。詳細参照先と未決の接続契約は[問題登録・ジャッジ実行の受け渡し仕様](../14-specified-requirements/01-external-interfaces/problem-registration-contract.md)に記す。
+
+WebUIの提出ソースも、APIが発行する署名付きURLでブラウザからS3へ直接アップロードする。提出の確定とジャッジ依頼はBackが担う。
+
+JudgeはサービスのDBを直接読み書きしない。要求・結果はSQSを介して受け渡し、必要ファイルはS3から取得する。結果のDB反映はBackの責務とする。
+
+Backがジャッジ要求を作る時点で、使用する問題・ジャッジ定義・ファイルの版を固定する。待機中・実行中の問題更新で、その要求の実行内容を変えない。更新版を使う場合は別の実行要求とする。
+
+Backが要求ごとに一意の実行IDを発行し、Judgeは結果に同じ実行IDを付けて返す。再ジャッジは別の実行ID、同じ要求の再配信は同じ実行IDとする。
+
+ジャッジ定義と、提出コードのS3参照・提出言語などを追加するジャッジ実行要求を区別する。Backが固定した定義と提出固有入力の組を渡し、Judgeが入力を適用して実行手順を具体化する。
+
+提出コードのS3参照には、保管先・オブジェクトキー・必要な版情報を持たせる。Judgeの実行基盤の権限でS3から取得する。
+
+同じ実行IDの同じ結果が複数回届いても、Backが一回分として反映し、得点や結果を二重計上しない。
 
 ## 接続関係
 
 | 接続 | 分かっている責務 | 未決事項 |
 | --- | --- | --- |
 | WebUI・クライアント → API | 操作の受付と結果の取得 | 公開URL、認証情報の受け渡し、対応操作 |
+| CLI ↔ CLI専用API・ファイル保管 | 開発者トークンでAPIを利用し、署名付きURLでS3へ直接アップロードしてAPIへ完了通知 | 対応操作の全体と、更新確定などの詳細契約は未決 |
 | API ↔ DB | 構造化データの永続化 | DBサービス、スキーマ、接続方式 |
-| API・クライアント ↔ ファイル保管 | 提出ソース・作問ファイルの保管 | アップロード経路、確定手順、アクセス権 |
-| API → 要求キュー → Runner | ジャッジ実行の依頼 | メッセージ契約、ファイル参照の渡し方 |
-| Runner → 結果キュー → 結果反映処理 | 判定・得点を記録へ反映 | 反映処理をAPI内に置くか独立させるか |
+| WebUI・API ↔ ファイル保管 | APIが署名付きURLを発行し、ブラウザが提出ソースをS3へ直接転送。Backが提出確定・ジャッジ依頼を担当 | 確定の通知方法、検証・アクセス権の詳細 |
+| API → 要求キュー → Runner | Backが実行ID・固定した問題定義・提出固有入力を渡し、Judgeが実行手順を具体化 | メッセージ形式、各参照と入力の表現 |
+| Runner → 結果キュー → Backの結果反映処理 | Judgeが同じ実行IDを付けてノード単位の結果を返し、Backが作問者の登録情報に基づき解釈してDBへ反映 | Backの反映処理の配置と更新契約 |
 | API → メールキュー → メール送信処理 | マジックリンクの送信 | 配送サービスとメッセージ契約 |
 | 認証機能 ↔ 外部認証先 | Google・GitHub・traQの連携が既存APIに存在 | 採用範囲と、API・neoShowcase間の責任分担 |
 
 ## 未決事項
 
-- TODO ARCH-01: 認証機能・結果反映処理・メール送信処理の配置と、APIとの責任境界を決める。
+- TODO ARCH-01: 認証機能・メール送信処理の責任境界と配置、およびBack内の結果反映処理の配置を決める。
 - TODO ARCH-02: DB・S3・各キュー間のデータ参照と受け渡し契約を決める。
 - TODO ARCH-03: 外部公開する入口と内部通信の経路を決める。
 - TODO ARCH-04: 既存のサービス構成図へ配置変更と周辺要素を反映する。
