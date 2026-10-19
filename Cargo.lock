@@ -1316,6 +1316,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "traojudge-cli"
+version = "0.1.0"
+
+[[package]]
 name = "traojudge-core"
 version = "0.1.0"
 dependencies = [
