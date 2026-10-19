@@ -1,39 +1,10 @@
-authProviders:
-  get:
-    operationId: 'listAuthenticationProviders'
-    tags:
-      - 'authentication'
-    summary: '利用可能な外部認証先を取得する'
-    description: '利用可能な外部認証先を取得する'
-    security: []
-    x-authorization:
-      status: 'defined'
-      subject: '本人確認可能な未認証の利用者'
-      target: 'self'
-    x-scenarios:
-      - 'A5'
-      - 'A6'
-      - 'A7'
-    responses:
-      '200':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/authentication.yaml#/Providers'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
 authEmailRegistrations:
   post:
     operationId: 'requestEmailRegistration'
     tags:
       - 'authentication'
     summary: 'メールで利用登録を申し込む'
-    description: 'メール配送の依頼を受け付ける。送信要求の再送もこの操作を使う。配送完了や登録完了を意味しない。'
+    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションは作らず、すでに発行済みのログインセッションも変更しない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。新しい本人確認要求を受け付けると、同じメールアドレス向けに以前発行した未使用の本人確認リンクを失効させる。再送はすでに発行済みのログインセッションや登録用トークンを失効させない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -41,25 +12,30 @@ authEmailRegistrations:
       target: 'self'
     x-scenarios:
       - 'A1-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
             $ref: '../schemas/authentication.yaml#/EmailRegistrationRequest'
+          example:
+            email: 'alice@example.com'
     responses:
       '202':
-        description: '依頼を受け付けた。処理の完了とは別。'
+        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。新しい要求の受付時に、以前発行した未使用の本人確認リンクは失効する。'
         content:
           'application/json':
             schema:
               $ref: '../schemas/common.yaml#/Accepted'
+            example:
+              requestId: 'req_example_1'
+              acceptedAt: '2026-10-18T13:00:00Z'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
-      '409':
-        $ref: '../components/responses.yaml#/Conflict'
       '422':
         $ref: '../components/responses.yaml#/ValidationFailed'
       '429':
@@ -72,20 +48,25 @@ authEmailRegistrationsComplete:
     tags:
       - 'authentication'
     summary: 'メールを確認し利用登録を完了する'
-    description: '有効な登録用トークンを一度だけ消費し、利用者とstandard-userを作る。登録だけではログインしない契約案。'
+    description: 'メール確認APIでstatus=registration-requiredを受け取った本人が、registrationTokenと表示名を送る。確認済みメールへの紐付け、登録目的、有効期限、未使用であることと表示名を検証し、登録用トークンを一度だけ消費して利用者とstandard-userを作る。同時に本人のセッションとCookieを発行してログイン済みにする。有効期限は元のメール本人確認トークン発行から30分を引き継ぐ。後から本人確認メールを再送しても、この登録用トークンは元の有効期限まで使用できる。登録用トークンの発行後に登録済みとなった場合は409とし、既存の利用者の情報を上書きしたり新しい利用者を重複作成したりしない。'
     security: []
     x-authorization:
       status: 'defined'
       subject: '本人確認可能な未認証の利用者'
       target: 'self'
     x-scenarios:
-      - 'A1-02'
+      - 'A1-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
-            $ref: '../schemas/authentication.yaml#/TokenConfirmation'
+            $ref: '../schemas/authentication.yaml#/EmailRegistrationCompletion'
+          example:
+            registrationToken: 'registration_token_example'
+            displayName: 'Alice'
     responses:
       '201':
         description: '操作結果。'
@@ -99,6 +80,10 @@ authEmailRegistrationsComplete:
               type: 'string'
               const: 'no-store'
             description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Set-Cookie:
+            schema:
+              type: 'string'
+            description: '登録した本人のセッションCookieをHttpOnly・Secure・SameSite=Laxで発行する。Cookieはプロキシ経由でWebUIの公開ホストへ返す。発行時のCookieのMax-Ageは7776000（90日）とし、以降のアクセスで期限を延長する。Domain・Pathは配置時に具体化する。'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
@@ -106,7 +91,11 @@ authEmailRegistrationsComplete:
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
+        description: '登録用トークンが不正・期限切れ・使用済み。登録やログインを行わない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
@@ -117,7 +106,7 @@ authEmailSessions:
     tags:
       - 'authentication'
     summary: 'メールのログイン用リンクを要求する'
-    description: '登録済みメールへのログインリンクの配送を依頼する。登録の有無によらず同じ受付形式で返し、本人確認はリンクの消費時に行う。'
+    description: 'メールアドレスだけを受け取り、登録・ログイン共通の本人確認メールの配送を依頼する。登録の有無によらず同じ202とrequestId・acceptedAtを返し、応答本文・ヘッダー・メール本文・リンク形式で登録の有無を示さない。利用者やログインセッションは作らず、すでに発行済みのログインセッションも変更しない。メール本人確認トークンは発行から30分間有効で、一度だけ使用できる。リンクを開いた後にPOST /auth/email/verificationsで確認し、初めてログインまたは新規登録へ分岐する。再送要求もこの操作を使う。新しい本人確認要求を受け付けると、同じメールアドレス向けに以前発行した未使用の本人確認リンクを失効させる。再送はすでに発行済みのログインセッションや登録用トークンを失効させない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -125,15 +114,19 @@ authEmailSessions:
       target: 'self'
     x-scenarios:
       - 'A2-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
             $ref: '../schemas/authentication.yaml#/EmailRequest'
+          example:
+            email: 'alice@example.com'
     responses:
       '202':
-        description: '依頼を受け付けた。処理の完了とは別。'
+        description: '登録の有無によらず同じ本人確認メールの送信依頼を受け付けた。配送完了・登録完了・ログイン完了を意味しない。新しい要求の受付時に、以前発行した未使用の本人確認リンクは失効する。'
         content:
           'application/json':
             schema:
@@ -142,41 +135,56 @@ authEmailSessions:
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
-      '409':
-        $ref: '../components/responses.yaml#/Conflict'
       '422':
         $ref: '../components/responses.yaml#/ValidationFailed'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
         $ref: '../components/responses.yaml#/UnexpectedError'
-authEmailSessionsComplete:
+authEmailVerifications:
   post:
-    operationId: 'completeEmailSession'
+    operationId: 'verifyEmailAuthentication'
     tags:
       - 'authentication'
-    summary: 'メールを確認しログインする'
-    description: '有効なログイン用トークンを一度だけ消費し、登録済みの本人のセッションを作る。登録や別の役割の付与はしない。'
+    summary: 'メールを確認しログインまたは新規登録へ進む'
+    description: '登録・ログイン共通のメール本人確認トークンを検証する。発行から30分間有効で一度だけ使用でき、リンクのGETだけでは消費しない。新しい本人確認要求を受け付けた後は、再送前の本人確認リンクを使用できない。有効期限と未使用であることを確認してトークンを消費した後にだけ登録の有無を開示する。登録済みならstatus=signed-inと本人のセッションを返しCookieを発行する。未登録ならstatus=registration-requiredと確認済みメールに紐付くregistrationTokenを返し、表示名の入力へ進める。この分岐では利用者やログインセッション、セッションCookieは作らない。登録用トークンは元の有効期限を引き継ぎ、後続のメール再送では失効しない。期限切れ・不正・使用済み・再送後に失効したトークンでは登録の有無を開示せず、セッションも登録用トークンも発行しない。'
     security: []
     x-authorization:
       status: 'defined'
       subject: '本人確認可能な未認証の利用者'
       target: 'self'
     x-scenarios:
+      - 'A1-02'
       - 'A2-02'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
             $ref: '../schemas/authentication.yaml#/TokenConfirmation'
+          example:
+            token: 'email_token_example'
     responses:
       '200':
-        description: '操作結果。'
+        description: 'メール確認済み。statusによりログイン完了または新規登録へ分岐する。'
         content:
           'application/json':
             schema:
-              $ref: '../schemas/authentication.yaml#/Session'
+              $ref: '../schemas/authentication.yaml#/EmailVerificationResult'
+            examples:
+              signedIn:
+                value:
+                  status: 'signed-in'
+                  session:
+                    userId: 'user_example_1'
+                    expiresAt: '2027-01-16T13:05:00Z'
+              registrationRequired:
+                value:
+                  status: 'registration-required'
+                  registrationToken: 'registration_token_example'
+                  expiresAt: '2026-10-18T13:30:00Z'
         headers:
           Cache-Control:
             schema:
@@ -186,7 +194,7 @@ authEmailSessionsComplete:
           Set-Cookie:
             schema:
               type: 'string'
-            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+            description: 'status=signed-inの場合だけHttpOnly・Secure・SameSite=LaxのセッションCookieを発行する。status=registration-requiredの場合はセッションCookieを発行しない。Cookieはプロキシ経由でWebUIの公開ホストへ返す。発行時のCookieのMax-Ageは7776000（90日）とし、以降のアクセスで期限を延長する。Domain・Pathは配置時に具体化する。'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
@@ -194,51 +202,22 @@ authEmailSessionsComplete:
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
+        description: '本人確認トークンが不正・期限切れ・使用済み、または再送受付後／同じメールアドレス向けの別リンク確認成功後に失効済み。登録の有無を開示せず、セッションや登録用トークンを発行しない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
         $ref: '../components/responses.yaml#/UnexpectedError'
 authSession:
-  get:
-    operationId: 'getSession'
-    tags:
-      - 'authentication'
-    summary: '現在のログイン状態を取得する'
-    description: 'ログイン済みの本人のセッションとCSRFトークンを返す。未ログイン・失効時は401。'
-    x-authorization:
-      status: 'defined'
-      subject: 'authenticated-user'
-      target: 'self'
-    x-scenarios:
-      - 'A2'
-    responses:
-      '200':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/authentication.yaml#/Session'
-        headers:
-          Cache-Control:
-            schema:
-              type: 'string'
-              const: 'no-store'
-            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
-      '401':
-        $ref: '../components/responses.yaml#/Unauthenticated'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
   delete:
     operationId: 'deleteSession'
     tags:
       - 'authentication'
     summary: '現在のセッションを終了する'
-    description: '本人の現在のセッションを失効する。ほかの端末のセッションや役割は変更しない。'
+    description: '要求のセッションCookieで特定される本人の現在のセッションだけを失効し、同じDomain・PathのCookieを削除する。同じセッションCookieを共有するタブもログアウト済みになる。ほかの端末や別のブラウザのセッションは維持し、開発者トークンや役割は変更しない。'
     x-authorization:
       status: 'defined'
       subject: 'authenticated-user'
@@ -246,7 +225,7 @@ authSession:
     x-scenarios:
       - 'A2-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -259,7 +238,7 @@ authSession:
           Set-Cookie:
             schema:
               type: 'string'
-            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+            description: '現在のセッションを失効し、同じDomain・PathでMax-Age=0のセッションCookieを返して削除する。Cookieはプロキシ経由でWebUIの公開ホストへ返す。'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '401':
@@ -286,6 +265,8 @@ authExternalRegistrations:
       target: 'self'
     x-scenarios:
       - 'A5-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
@@ -325,7 +306,7 @@ authExternalRegistrationsByAuthorizationIdComplete:
     tags:
       - 'authentication'
     summary: '外部アカウントで利用登録を完了する'
-    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。メールアドレスの一致だけで別の利用者を統合しない。'
+    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。providerとprovider内の安定したアカウントIDを本人の識別子とし、入力された表示名で利用者とstandard-userを作る。同時に本人のセッションを作成し、セッションCookieを発行してログイン済みにする。メールアドレスは登録要件にせず、一致だけで別の利用者を統合しない。同じ外部identityが登録済みなら利用者を作らず409を返し、外部アカウントでログインする流れへ案内する。'
     security: []
     x-authorization:
       status: 'defined'
@@ -333,12 +314,18 @@ authExternalRegistrationsByAuthorizationIdComplete:
       target: 'self'
     x-scenarios:
       - 'A5-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
-            $ref: '../schemas/authentication.yaml#/AuthorizationCompletion'
+            $ref: '../schemas/authentication.yaml#/ExternalRegistrationCompletion'
+          example:
+            code: 'provider_code_example'
+            state: 'state_example'
+            displayName: 'Alice'
     responses:
       '201':
         description: '操作結果。'
@@ -352,6 +339,10 @@ authExternalRegistrationsByAuthorizationIdComplete:
               type: 'string'
               const: 'no-store'
             description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Set-Cookie:
+            schema:
+              type: 'string'
+            description: '登録した本人のセッションCookieをHttpOnly・Secure・SameSite=Laxで発行する。Cookieはプロキシ経由でWebUIの公開ホストへ返す。発行時のCookieのMax-Ageは7776000（90日）とし、以降のアクセスで期限を延長する。Domain・Pathは配置時に具体化する。'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
@@ -372,7 +363,7 @@ authExternalSessions:
     tags:
       - 'authentication'
     summary: '外部アカウントでログインを開始する'
-    description: '利用可能なproviderで本人確認を開始する。provider・目的・要求したブラウザ・有効期限をサーバーで対応付ける。'
+    description: '利用可能なproviderで本人確認を開始する。provider・ログイン目的・要求したブラウザ・有効期限をサーバーで対応付ける。認証完了までは利用者を特定せず、セッションも作らない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -380,19 +371,27 @@ authExternalSessions:
       target: 'self'
     x-scenarios:
       - 'A6-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
             $ref: '../schemas/authentication.yaml#/ExternalAuthorizationRequest'
+          example:
+            provider: 'google'
     responses:
       '201':
-        description: '操作結果。'
+        description: '外部サービスで本人確認を続けるためのURLと、有効期限付きの認証操作IDを返す。'
         content:
           'application/json':
             schema:
               $ref: '../schemas/authentication.yaml#/Authorization'
+            example:
+              authorizationId: 'authorization_example_2'
+              authorizationUrl: 'https://provider.example/authorize?client_id=app_example&state=state_example_2'
+              expiresAt: '2026-10-19T13:30:00Z'
         headers:
           Cache-Control:
             schema:
@@ -419,7 +418,7 @@ authExternalSessionsByAuthorizationIdComplete:
     tags:
       - 'authentication'
     summary: '外部アカウントでログインを完了する'
-    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。メールアドレスの一致だけで別の利用者を統合しない。'
+    description: '認可コードをproviderで検証し、開始時のstate・目的・ブラウザとの対応を確認して一度だけ消費する。providerとprovider内の安定したアカウントIDで既存のログイン方法を検索する。対応する利用者がいる場合だけその利用者のセッションを作成する。メールアドレスの一致だけで利用者を特定したり、ログイン方法を追加したりしない。対応するログイン方法がなければcode=external_identity_not_registeredの404を返し、新規利用者やセッションは作らずA5の外部アカウント登録へ案内する。providerから本人確認結果を得られない場合はエラーを返してログインを失敗させ、利用者やセッションを作らない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -427,19 +426,27 @@ authExternalSessionsByAuthorizationIdComplete:
       target: 'self'
     x-scenarios:
       - 'A6-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
         'application/json':
           schema:
             $ref: '../schemas/authentication.yaml#/AuthorizationCompletion'
+          example:
+            code: 'provider_code_example_2'
+            state: 'state_example_2'
     responses:
       '200':
-        description: '操作結果。'
+        description: '外部アカウントに対応する既存利用者としてログインした。'
         content:
           'application/json':
             schema:
               $ref: '../schemas/authentication.yaml#/Session'
+            example:
+              userId: 'user_example_1'
+              expiresAt: '2027-01-17T13:05:00Z'
         headers:
           Cache-Control:
             schema:
@@ -449,13 +456,17 @@ authExternalSessionsByAuthorizationIdComplete:
           Set-Cookie:
             schema:
               type: 'string'
-            description: 'HttpOnly・SecureのセッションCookieを発行または失効する。Cookieのドメイン・SameSite・CORSは配置時に具体化する。'
+            description: 'HttpOnly・Secure・SameSite=LaxのセッションCookieを発行する。Cookieはプロキシ経由でWebUIの公開ホストへ返す。発行時のCookieのMax-Ageは7776000（90日）とし、以降のアクセスで期限を延長する。Domain・Pathは配置時に具体化する。'
       '400':
         $ref: '../components/responses.yaml#/BadRequest'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
       '404':
-        $ref: '../components/responses.yaml#/NotFound'
+        description: '外部identityに対応するログイン方法が未登録。code=external_identity_not_registeredを返し、クライアントはA5の外部アカウント登録へ案内する。新規利用者やセッションは作らない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':

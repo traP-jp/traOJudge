@@ -22,7 +22,7 @@ submissionUploads:
       - 'S1-02'
       - 'S1-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -81,7 +81,7 @@ submissions:
       - 'S1-02'
       - 'S1-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -310,7 +310,7 @@ submissionsBySubmissionIdRejudges:
     x-scenarios:
       - 'S2-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -365,7 +365,7 @@ problemsByProblemIdRejudgeBatches:
       - 'S3-02'
     x-decision-status: 'pending-authorization'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true

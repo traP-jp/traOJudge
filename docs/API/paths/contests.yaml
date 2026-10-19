@@ -41,7 +41,7 @@ contests:
     x-scenarios:
       - 'C1-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -120,8 +120,8 @@ contestsByContestId:
     operationId: 'updateContest'
     tags:
       - 'contests'
-    summary: '通常の大会の時間・ルールを変更する'
-    description: '対象大会の運営担当だけが変更できる。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティは開始後に変更できない。開催中・終了後のその他の変更条件はMUT-06で具体化する。'
+    summary: '通常の大会の概要・時間・ルールを変更する'
+    description: '対象大会の運営担当だけが概要・時間・ルールを変更できる．概要はMarkdown形式で，HTMLは許可しない．開始終了時刻の前後関係を検証し，タイブレーク方式・ペナルティは開始後に変更できない．開催中・終了後のその他の変更条件はMUT-06で具体化する．'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -130,7 +130,7 @@ contestsByContestId:
     x-scenarios:
       - 'C1-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -184,7 +184,7 @@ contestsByContestId:
     x-scenarios:
       - 'C1-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -257,7 +257,7 @@ contestsByContestIdProblemsByProblemId:
     x-scenarios:
       - 'C2-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     requestBody:
       required: true
       content:
@@ -301,7 +301,7 @@ contestsByContestIdProblemsByProblemId:
     x-scenarios:
       - 'C2-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
       '204':
         description: '操作が完了した。'
@@ -337,7 +337,7 @@ contestsByContestIdParticipation:
     x-scenarios:
       - 'R3-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     responses:
       '201':
@@ -454,7 +454,7 @@ contestsByContestIdRejudgeBatches:
     x-scenarios:
       - 'S3-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true

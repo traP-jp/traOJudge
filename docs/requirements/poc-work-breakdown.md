@@ -35,7 +35,7 @@ DAG の解決などのジャッジ制御を API 側、実行環境周りをイ�
 | Core | モデル・Repository/UoW traitがある。提出の状態・得点関連にコメントアウトがある | B2/B3 の状態遷移と保存 |
 | 提出ソース | UI は API に本文を送り、Core・旧 DB 図も本文保存を想定 | B4 の転送・版固定と、B2/B3 での参照保存 |
 | Infra | ローカルファイルストアがある。DB・S3・SQS の実アダプターはこのツリーで確認できない | B3/B4/B5 の実装と単独確認 |
-| DB | 開発用 Docker は MariaDB。要求は PostgreSQL 互換を優先 | B3 のDB選定・migration・Repository |
+| DB | 開発用 Docker は PostgreSQL 17。要求は PostgreSQL 互換を優先 | B3 のDB選定・migration・Repository |
 | CLI | このツリーには作問者 CLI の実装がない | CLIの配置先、B2の登録APIとの接続 |
 | 実行環境 | [judge-command](../../judge-command/README.md) に Nix の言語環境・C++ の例がある | B6/B7 の環境構築・起動条件 |
 | ジャッジ制御 | [受け渡し資料](14-specified-requirements/01-external-interfaces/problem-registration-contract.md)が別リポジトリを参照。実行・適合性は未検証 | B2 の制御処理の実装・再利用、B5/B6 との契約 |

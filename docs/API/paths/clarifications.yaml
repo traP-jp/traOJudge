@@ -55,7 +55,7 @@ contestsByContestIdClarifications:
     x-scenarios:
       - 'C3-01'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -109,7 +109,7 @@ contestsByContestIdClarificationsByClarificationIdAnswer:
     x-scenarios:
       - 'C3-02'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true
@@ -206,7 +206,7 @@ virtualContestsByVirtualContestIdClarifications:
     x-scenarios:
       - 'C3-03'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'
     requestBody:
       required: true
@@ -260,7 +260,7 @@ virtualContestsByVirtualContestIdClarificationsByClarificationIdAnswer:
     x-scenarios:
       - 'C3-04'
     parameters:
-      - $ref: '../components/parameters.yaml#/CsrfToken'
+      - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
     requestBody:
       required: true

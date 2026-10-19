@@ -125,14 +125,14 @@ Cursor:
   description: '前ページのnextCursor。任意の内部IDへ読み替えない。'
   schema:
     $ref: '../schemas/common.yaml#/PageCursor'
-CsrfToken:
-  name: 'X-CSRF-Token'
+WebOrigin:
+  name: 'Origin'
   in: 'header'
   required: true
-  description: '現在のセッションに結び付いたCSRFトークン。Cookieだけで変更操作を許可しない。'
+  description: 'ブラウザが自動で付ける要求元のOrigin。配置設定で許可したWebUIのscheme・host・portと完全一致する場合だけ変更操作を受け付ける。未指定・null・不一致は403。'
   schema:
     type: 'string'
-    minLength: 1
+    format: 'uri'
 IdempotencyKey:
   name: 'Idempotency-Key'
   in: 'header'

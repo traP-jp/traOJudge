@@ -1305,6 +1305,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "serde",
+ "serde_json",
  "serde_with",
  "tokio",
  "tracing",
@@ -1312,6 +1313,14 @@ dependencies = [
  "traojudge-core",
  "traojudge-infra",
  "uuid",
+ "workspace-hack",
+]
+
+[[package]]
+name = "traojudge-cli"
+version = "0.1.0"
+dependencies = [
+ "workspace-hack",
 ]
 
 [[package]]
@@ -1329,6 +1338,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "uuid",
+ "workspace-hack",
 ]
 
 [[package]]
@@ -1340,6 +1350,7 @@ dependencies = [
  "tokio",
  "traojudge-core",
  "uuid",
+ "workspace-hack",
 ]
 
 [[package]]
@@ -1348,6 +1359,7 @@ version = "0.1.0"
 dependencies = [
  "traojudge-core",
  "traojudge-infra",
+ "workspace-hack",
 ]
 
 [[package]]
@@ -1744,6 +1756,19 @@ dependencies = [
  "serde_json",
  "unicode-xid",
  "wasmparser",
+]
+
+[[package]]
+name = "workspace-hack"
+version = "0.1.0"
+dependencies = [
+ "memchr",
+ "proc-macro2",
+ "quote",
+ "serde_core",
+ "serde_json",
+ "syn",
+ "tokio",
 ]
 
 [[package]]

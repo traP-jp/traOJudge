@@ -68,3 +68,5 @@ echo ""
 echo "Note: If automatic credential configuration failed, you can use:"
 echo "  import { apiConfig } from '@/api/config'"
 echo "  const api = new SomeApi(apiConfig)"
+
+bash "$SCRIPT_DIR/gen-contest-api.sh"
