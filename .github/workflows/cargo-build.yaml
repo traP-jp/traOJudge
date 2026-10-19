@@ -1,0 +1,74 @@
+name: CI (Cargo build)
+
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.cargo/**'
+      - '.config/hakari.toml'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/cargo-build.yaml'
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'server/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.cargo/**'
+      - '.config/hakari.toml'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/cargo-build.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cargo-build-${{ github.event.pull_request.number || github.ref }}
+  # PR の古い実行を止める。push はキャッシュの保存まで完了させる。
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  # CI は依存クレートの成果物を再利用するため、incremental データを生成しない。
+  CARGO_INCREMENTAL: '0'
+  # ビルドの成否確認に不要なデバッグ情報を省き、ビルドとキャッシュ転送を軽くする。
+  CARGO_PROFILE_DEV_DEBUG: '0'
+  CARGO_PROFILE_TEST_DEBUG: '0'
+
+jobs:
+  build:
+    name: Build Rust workspace
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Read pinned Rust version
+        id: rust-version
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import tomllib
+          with open('rust-toolchain.toml', 'rb') as file:
+              print(f"toolchain={tomllib.load(file)['toolchain']['channel']}")
+          PY
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        with:
+          toolchain: ${{ steps.rust-version.outputs.toolchain }}
+      # Rust 専用の不要ファイル除去・依存変更時の部分復元を利用する。
+      # https://github.com/Swatinem/rust-cache#cache-details
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          # OS の世代も区別する。rustc・profile 用環境変数・manifest・lockfile は自動でキーに入る。
+          key: ubuntu-24.04
+          workspaces: '. -> target'
+          cache-bin: 'false'
+          cache-workspace-crates: 'false'
+          # PR ごとのキャッシュ増殖を避け、共有ブランチの成功時だけ保存する。
+          save-if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' }}
+      - name: Build all workspace targets
+        run: cargo build --workspace --all-targets --locked
