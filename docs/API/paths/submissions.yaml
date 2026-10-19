@@ -1,0 +1,437 @@
+submissionUploads:
+  post:
+    operationId: 'createSubmissionUpload'
+    tags:
+      - 'submissions'
+    summary: '提出ソースの転送先を発行する'
+    description: '問題・言語・提出先の文脈・本人に結び付けた転送先を発行する。ソース本体はS3へ直接転送する。この操作では提出はまだ確定しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '公開問題へのpractice提出'
+        - role: 'contestant'
+          scope: 'context.contestId'
+          condition: '対象大会の問題かつ開催時間中'
+        - role: 'virtual-contestant'
+          scope: 'context.virtualContestId'
+          condition: '対象大会の問題かつ開催時間中'
+    x-scenarios:
+      - 'S1-01'
+      - 'S1-02'
+      - 'S1-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/submissions.yaml#/SourceUploadRequest'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/SourceUpload'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+submissions:
+  post:
+    operationId: 'createSubmission'
+    tags:
+      - 'submissions'
+    summary: '転送済みソースから提出を確定する'
+    description: 'uploadIdに保存した本人・問題・言語・文脈・ファイルを検証し、現在の認可・提出期間も再検査する。採用版と今回の実行IDを固定して提出を受理する。同じuploadIdで異なる提出を重複作成しない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '公開問題へのpractice提出'
+        - role: 'contestant'
+          scope: 'context.contestId'
+          condition: '対象大会の問題かつ開催時間中'
+        - role: 'virtual-contestant'
+          scope: 'context.virtualContestId'
+          condition: '対象大会の問題かつ開催時間中'
+    x-scenarios:
+      - 'S1-01'
+      - 'S1-02'
+      - 'S1-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/submissions.yaml#/SubmissionCreate'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/SubmissionAccepted'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+          Location:
+            schema:
+              type: 'string'
+              format: 'uri-reference'
+            description: '作成した提出の相対URL。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+meSubmissions:
+  get:
+    operationId: 'listMySubmissions'
+    tags:
+      - 'submissions'
+    summary: '本人の提出を取得する'
+    description: '本人の提出を取得する'
+    x-authorization:
+      status: 'defined'
+      subject: 'authenticated-user'
+      target: 'self'
+    x-scenarios:
+      - 'S4'
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/Submissions'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+submissionsBySubmissionId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SubmissionId'
+  get:
+    operationId: 'getSubmission'
+    tags:
+      - 'submissions'
+    summary: '提出の受付内容と現在の採点の識別子を取得する'
+    description: '提出者本人、またはその提出先の大会の運営担当に返す。運営担当の閲覧は対象大会の提出に限る。提出ソースや非公開テストはこの応答に含めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - subject: 'submission-owner'
+          scope: 'submissionId'
+        - role: 'contest-setter'
+          scope: 'submission.contestId'
+        - role: 'virtual-contest-setter'
+          scope: 'submission.virtualContestId'
+    x-scenarios:
+      - 'S4'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/Submission'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+submissionsBySubmissionIdJudgeRuns:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SubmissionId'
+  get:
+    operationId: 'listJudgeRuns'
+    tags:
+      - 'submissions'
+    summary: '提出の採点履歴を取得する'
+    description: '初回採点と再採点を別の実行として返す。どの実行を代表表示するかはcurrentJudgeRunIdで判断する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - subject: 'submission-owner'
+          scope: 'submissionId'
+        - role: 'contest-setter'
+          scope: 'submission.contestId'
+        - role: 'virtual-contest-setter'
+          scope: 'submission.virtualContestId'
+    x-scenarios:
+      - 'S2'
+      - 'S4'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/JudgeRuns'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+submissionsBySubmissionIdJudgeRunsByJudgeRunId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SubmissionId'
+    - $ref: '../components/parameters.yaml#/JudgeRunId'
+  get:
+    operationId: 'getJudgeRun'
+    tags:
+      - 'submissions'
+    summary: '今回の採点の進捗と確定結果を取得する'
+    description: '完了したテストケース数を、最終結果を待たずに取得できる。ケースの不正解・時間切れも完了に数え、残りをすべて実行する。同じrun内のrevisionで新旧を判断し、再接続時もこの最新状態から復帰できる。ケースの名前・入出力・各判定は含めない。HTTPでの最新状態取得を先に定義し、更新の通知手段や間隔はMUT-10で決める。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - subject: 'submission-owner'
+          scope: 'submissionId'
+        - role: 'contest-setter'
+          scope: 'submission.contestId'
+        - role: 'virtual-contest-setter'
+          scope: 'submission.virtualContestId'
+    x-scenarios:
+      - 'S4'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/JudgeRun'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+submissionsBySubmissionIdRejudges:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SubmissionId'
+  post:
+    operationId: 'createRejudge'
+    tags:
+      - 'submissions'
+    summary: '指定した提出を別の実行として採点し直す'
+    description: '使用する問題版の選び方を明示し、今回の実行に固定する。新しい実行IDを返す。提出者本人であることだけでは依頼を許可しない。代表結果の切り替え時点はMUT-05で決める。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'problem-owner'
+          scope: 'submission.problemId'
+        - role: 'tester'
+          scope: 'submission.problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-submission-problem'
+    x-scenarios:
+      - 'S2-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/submissions.yaml#/RejudgeRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/RejudgeAccepted'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+problemsByProblemIdRejudgeBatches:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  post:
+    operationId: 'createProblemRejudgeBatch'
+    tags:
+      - 'submissions'
+    summary: '問題の全提出の一括再採点を依頼する'
+    description: |-
+      問題の全提出の一括再採点を依頼する
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'S3-02：問題単位の一括操作を許可する役割が未決。'
+    x-scenarios:
+      - 'S3-02'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/submissions.yaml#/RejudgeRequest'
+    responses:
+      '202':
+        description: '依頼を受け付けた。処理の完了とは別。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/RejudgeBatch'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+rejudgeBatchesByBatchId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/BatchId'
+  get:
+    operationId: 'getRejudgeBatch'
+    tags:
+      - 'submissions'
+    summary: '一括再採点の進み具合を取得する'
+    description: 'これは完了した提出数の集計であり、各提出の完了ケース数とは別。終了・失敗の件数と全体を区別する。'
+    x-authorization:
+      status: 'defined'
+      subject: 'requesting-user'
+      target: 'batchId'
+      condition: '対象範囲の再採点の権限を現在も持つ'
+    x-scenarios:
+      - 'S3'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/RejudgeBatch'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

@@ -1,0 +1,76 @@
+FileManifestEntry:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    path:
+      type: 'string'
+      description: 'バンドル内の相対パス。絶対パス・空要素・..による上位参照を認めない。'
+      minLength: 1
+      maxLength: 1024
+    byteLength:
+      type: 'integer'
+      minimum: 0
+      description: '期待するファイルサイズ（バイト）。'
+    sha256:
+      type: 'string'
+      description: '内容のSHA-256。小文字16進64文字。'
+      pattern: '^[a-f0-9]{64}$'
+  required:
+    - 'path'
+    - 'byteLength'
+    - 'sha256'
+UploadTarget:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    fileId:
+      $ref: './common.yaml#/ResourceId'
+    path:
+      type: 'string'
+    method:
+      type: 'string'
+      const: 'PUT'
+    url:
+      type: 'string'
+      format: 'uri'
+      description: '署名付きの直接アップロードURL。発行元のAPI認証トークンを失効しても取り消されず、expiresAtまで利用できる。'
+    headers:
+      type: 'object'
+      additionalProperties:
+        type: 'string'
+      description: 'Content-Typeやチェックサム等、転送時に必ず付けるヘッダー。'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+      description: 'このアップロードURL自体の有効期限。関連するAPI認証トークンとは独立している。'
+  required:
+    - 'fileId'
+    - 'path'
+    - 'method'
+    - 'url'
+    - 'headers'
+    - 'expiresAt'
+UploadTargets:
+  type: 'array'
+  items:
+    $ref: './files.yaml#/UploadTarget'
+  minItems: 1
+StoredFile:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    fileId:
+      $ref: './common.yaml#/ResourceId'
+    path:
+      type: 'string'
+    byteLength:
+      type: 'integer'
+      minimum: 0
+    sha256:
+      type: 'string'
+      pattern: '^[a-f0-9]{64}$'
+  required:
+    - 'fileId'
+    - 'path'
+    - 'byteLength'
+    - 'sha256'

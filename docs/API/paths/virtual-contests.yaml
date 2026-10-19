@@ -1,0 +1,439 @@
+virtualContests:
+  get:
+    operationId: 'listVirtualContests'
+    tags:
+      - 'virtual-contests'
+    summary: '公開されたバーチャル大会を取得する'
+    description: '公開されたバーチャル大会を取得する'
+    security: []
+    x-authorization:
+      status: 'defined'
+      subject: 'anyone'
+      target: 'public-resources'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/VirtualContests'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  post:
+    operationId: 'createVirtualContest'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会を作る'
+    description: '作成者へのvirtual-contest-setterの自動付与は未決。作成と役割の付与を同一と見なさない。バーチャル大会での個人ごとの開始と大会の開始終了時刻との関係はMUT-06で具体化する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+    x-scenarios:
+      - 'C1-04'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/VirtualContestCreate'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/VirtualContest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+  get:
+    operationId: 'getVirtualContest'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会の設定を取得する'
+    description: 'バーチャル大会の設定を取得する'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている'
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/VirtualContest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  patch:
+    operationId: 'updateVirtualContest'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会の時間・ルールを変更する'
+    description: '対象大会の運営担当だけが変更できる。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティは開始後に変更できない。開催中・終了後のその他の変更条件はMUT-06で具体化する。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+    x-scenarios:
+      - 'C1-05'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IfMatch'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/VirtualContestUpdate'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/VirtualContest'
+        headers:
+          ETag:
+            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
+            schema:
+              type: 'string'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '412':
+        $ref: '../components/responses.yaml#/PreconditionFailed'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '428':
+        $ref: '../components/responses.yaml#/PreconditionRequired'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'deleteVirtualContest'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会を取り下げる'
+    description: |-
+      大会を論理削除し、過去の出題・参加・提出・得点の記録を残す。
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'C1-06：バーチャル大会の削除権限が未決。'
+    x-scenarios:
+      - 'C1-06'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdProblems:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+  get:
+    operationId: 'listVirtualContestProblems'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会の出題一覧を取得する'
+    description: '対象大会の閲覧・公開範囲に従う。非公開問題の本文・テスト内容をこの操作から開示しない。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開された大会・公開してよい出題情報'
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+        - role: 'virtual-contestant'
+          scope: 'virtualContestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestProblems'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdProblemsByProblemId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+    - $ref: '../components/parameters.yaml#/ProblemId'
+  put:
+    operationId: 'addVirtualContestProblem'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会に問題を追加する'
+    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+          condition: '問題が公開されている'
+    x-scenarios:
+      - 'C2-03'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/ContestProblemInput'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestProblem'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'removeVirtualContestProblem'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会から問題を外す'
+    description: |-
+      大会と問題の結び付きだけを外す。通常の大会では他の作問者の問題も外せる。元の問題そのものを削除する操作ではない。既に外れていれば204。
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'C2-04：バーチャル大会からの問題取り外しの権限が未決。'
+    x-scenarios:
+      - 'C2-04'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+    responses:
+      '204':
+        description: '操作が完了した。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdParticipation:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+  post:
+    operationId: 'joinVirtualContest'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会へ本人が参加する'
+    description: |-
+      ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。管理者が他の人へ参加資格を付ける操作とは分ける。
+      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    x-authorization:
+      status: 'pending'
+      reason: 'R4-01：バーチャル大会へ自己参加できる条件が未決。'
+    x-scenarios:
+      - 'R4-01'
+    x-decision-status: 'pending-authorization'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    responses:
+      '201':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Participation'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        $ref: '../components/responses.yaml#/Conflict'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdSubmissions:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+  get:
+    operationId: 'listVirtualContestSubmissions'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会の提出を運営担当が取得する'
+    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+    x-scenarios: []
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/Submissions'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+virtualContestsByVirtualContestIdStandings:
+  parameters:
+    - $ref: '../components/parameters.yaml#/VirtualContestId'
+  get:
+    operationId: 'getVirtualContestStandings'
+    tags:
+      - 'virtual-contests'
+    summary: 'バーチャル大会の順位を取得する'
+    description: '公開範囲と開催ルールに従う。各問題の提出の最高得点の合計で集計し、同得点時は設定されたタイブレークを使う。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。公開時点・非公開大会の閲覧条件はMUT-06で具体化する。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - condition: '公開されている順位表'
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
+        - role: 'virtual-contestant'
+          scope: 'virtualContestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/Standings'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'

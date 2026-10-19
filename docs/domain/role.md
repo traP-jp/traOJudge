@@ -1,5 +1,7 @@
 # コンテスト周りのあれこれの議論
 
+この定義を操作ごとに展開した[許可条件の一覧](../requirements/permission-operations.md)と、[役割の付与・剥奪の個別シナリオ](../requirements/scenarios/permissions/change-permissions.md)を参照できる。定義にない許可は未決として区別する。
+
 ## service-admin
 
 ### 権限

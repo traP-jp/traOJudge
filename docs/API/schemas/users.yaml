@@ -1,0 +1,50 @@
+Profile:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+    bio:
+      type: 'string'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'displayName'
+    - 'bio'
+    - 'revision'
+ProfileUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+    bio:
+      type: 'string'
+      maxLength: 4000
+  required: []
+  minProperties: 1
+CurrentUser:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+    bio:
+      type: 'string'
+    revision:
+      $ref: './common.yaml#/Version'
+    roles:
+      type: 'array'
+      items:
+        $ref: './permissions.yaml#/RoleAssignment'
+  required:
+    - 'id'
+    - 'displayName'
+    - 'bio'
+    - 'revision'
+    - 'roles'

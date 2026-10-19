@@ -1,0 +1,41 @@
+name: CI (cargo-hakari)
+
+on:
+  pull_request:
+    paths:
+      - '**/Cargo.toml'
+      - 'Cargo.lock'
+      - '.config/hakari.toml'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/cargo-hakari.yaml'
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - '**/Cargo.toml'
+      - 'Cargo.lock'
+      - '.config/hakari.toml'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/cargo-hakari.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check workspace-hack
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.95.0'
+      # cargo-hakari の公式導入手順に従う。Action 自体もコミット SHA で固定する。
+      # https://docs.rs/cargo-hakari/latest/cargo_hakari/#release-binaries
+      - uses: taiki-e/install-action@650c5ca14212efbbf3e580844b04bdccf68dac31 # v2.67.18
+        with:
+          tool: cargo-hakari@0.9.36
+      - run: cargo hakari generate --diff
+      - run: cargo hakari manage-deps --dry-run
+      - run: cargo hakari verify

@@ -1,0 +1,84 @@
+EditorialCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 200000
+  required:
+    - 'problemId'
+    - 'title'
+    - 'body'
+EditorialUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 200000
+  required: []
+  minProperties: 1
+Editorial:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    authorId:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    body:
+      type: 'string'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+    revision:
+      $ref: './common.yaml#/Version'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'id'
+    - 'problemId'
+    - 'authorId'
+    - 'title'
+    - 'body'
+    - 'visibility'
+    - 'revision'
+    - 'createdAt'
+    - 'updatedAt'
+Editorials:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './editorials.yaml#/Editorial'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'

@@ -1,0 +1,267 @@
+Problem:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    statement:
+      type: 'string'
+    visibility:
+      type: 'string'
+      enum:
+        - 'public'
+        - 'private'
+    revision:
+      $ref: './common.yaml#/Version'
+    currentVersionId:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'id'
+    - 'title'
+    - 'statement'
+    - 'visibility'
+    - 'revision'
+    - 'currentVersionId'
+    - 'createdAt'
+    - 'updatedAt'
+ProblemCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    statement:
+      type: 'string'
+      maxLength: 200000
+  required:
+    - 'title'
+ProblemUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    statement:
+      type: 'string'
+      maxLength: 200000
+  required: []
+  minProperties: 1
+Problems:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './problems.yaml#/Problem'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+JudgeDefinitionDocument:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    schemaVersion:
+      type: 'string'
+      description: 'APIが対応する形式の版。未知の版は422で拒否する。'
+      minLength: 1
+    document:
+      type: 'object'
+      additionalProperties: true
+      description: 'DAG・実行環境・ノード結果の解釈・ケース完了との対応を含む、指定版の定義。具体的なDSLはCONTRACT-01/03/07/08で決定する。任意JSONを検証なしで採用することはない。'
+  required:
+    - 'schemaVersion'
+    - 'document'
+  x-decision-status: 'pending-definition-format'
+JudgeDefinitionCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      type: 'string'
+      minLength: 1
+      maxLength: 100
+    definition:
+      $ref: './problems.yaml#/JudgeDefinitionDocument'
+  required:
+    - 'name'
+    - 'definition'
+JudgeDefinitionUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      type: 'string'
+      minLength: 1
+      maxLength: 100
+    definition:
+      $ref: './problems.yaml#/JudgeDefinitionDocument'
+  required: []
+  minProperties: 1
+JudgeDefinition:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    definition:
+      $ref: './problems.yaml#/JudgeDefinitionDocument'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'problemId'
+    - 'name'
+    - 'definition'
+    - 'revision'
+JudgeDefinitions:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './problems.yaml#/JudgeDefinition'
+  required:
+    - 'items'
+TestcaseInput:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    inputFileId:
+      $ref: './common.yaml#/ResourceId'
+    expectedOutputFileId:
+      $ref: './common.yaml#/ResourceId'
+  required:
+    - 'name'
+    - 'inputFileId'
+Testcase:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    inputFileId:
+      $ref: './common.yaml#/ResourceId'
+    expectedOutputFileId:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'problemId'
+    - 'name'
+    - 'inputFileId'
+    - 'expectedOutputFileId'
+    - 'revision'
+Testcases:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './problems.yaml#/Testcase'
+  required:
+    - 'items'
+Language:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    versionLabel:
+      type: 'string'
+    tags:
+      type: 'array'
+      items:
+        type: 'string'
+  required:
+    - 'id'
+    - 'name'
+    - 'versionLabel'
+    - 'tags'
+Languages:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './problems.yaml#/Language'
+  required:
+    - 'items'
+ProblemFileUploadRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    files:
+      type: 'array'
+      items:
+        $ref: './files.yaml#/FileManifestEntry'
+      minItems: 1
+  required:
+    - 'files'
+ProblemFileUpload:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    uploadId:
+      $ref: './common.yaml#/ResourceId'
+    targets:
+      $ref: './files.yaml#/UploadTargets'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'uploadId'
+    - 'targets'
+    - 'expiresAt'
+ProblemFileUploadResult:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    uploadId:
+      $ref: './common.yaml#/ResourceId'
+    files:
+      type: 'array'
+      items:
+        $ref: './files.yaml#/StoredFile'
+      minItems: 1
+  required:
+    - 'uploadId'
+    - 'files'

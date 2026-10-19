@@ -1,0 +1,380 @@
+SubmissionContext:
+  oneOf:
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          type: 'string'
+          const: 'practice'
+      required:
+        - 'kind'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          type: 'string'
+          const: 'contest'
+        contestId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'contestId'
+    - type: 'object'
+      additionalProperties: false
+      properties:
+        kind:
+          type: 'string'
+          const: 'virtual-contest'
+        virtualContestId:
+          $ref: './common.yaml#/ResourceId'
+      required:
+        - 'kind'
+        - 'virtualContestId'
+SourceUploadRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    languageId:
+      $ref: './common.yaml#/ResourceId'
+    context:
+      $ref: './submissions.yaml#/SubmissionContext'
+    files:
+      type: 'array'
+      items:
+        $ref: './files.yaml#/FileManifestEntry'
+      minItems: 1
+  required:
+    - 'problemId'
+    - 'languageId'
+    - 'context'
+    - 'files'
+SourceUpload:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    uploadId:
+      $ref: './common.yaml#/ResourceId'
+    targets:
+      $ref: './files.yaml#/UploadTargets'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'uploadId'
+    - 'targets'
+    - 'expiresAt'
+SubmissionCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    uploadId:
+      $ref: './common.yaml#/ResourceId'
+  required:
+    - 'uploadId'
+SubmissionAccepted:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    submissionId:
+      $ref: './common.yaml#/ResourceId'
+    judgeRunId:
+      $ref: './common.yaml#/ResourceId'
+    problemVersionId:
+      $ref: './common.yaml#/ResourceId'
+    acceptedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'submissionId'
+    - 'judgeRunId'
+    - 'problemVersionId'
+    - 'acceptedAt'
+Verdict:
+  type: 'string'
+  enum:
+    - 'AC'
+    - 'WA'
+    - 'CE'
+    - 'MLE'
+    - 'RE'
+    - 'TLE'
+    - 'IE'
+    - 'WE'
+JudgeResult:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    verdict:
+      $ref: './submissions.yaml#/Verdict'
+    score:
+      type: 'number'
+    maxTimeMs:
+      type: 'number'
+      minimum: 0
+    maxMemoryBytes:
+      type: 'integer'
+      minimum: 0
+  required:
+    - 'verdict'
+    - 'score'
+    - 'maxTimeMs'
+    - 'maxMemoryBytes'
+JudgeRun:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    submissionId:
+      $ref: './common.yaml#/ResourceId'
+    problemVersionId:
+      $ref: './common.yaml#/ResourceId'
+    state:
+      type: 'string'
+      enum:
+        - 'queued'
+        - 'preparing'
+        - 'running'
+        - 'aggregating'
+        - 'completed'
+        - 'failed'
+    completedCaseCount:
+      type: 'integer'
+      minimum: 0
+      description: '判定が確定した、重複しないケース数。不正解・時間切れも数え、残りのケースを継続する。ノード数や正解数ではない。'
+    totalCaseCount:
+      anyOf:
+        - type: 'integer'
+          minimum: 0
+          description: '公開でき、かつ今回の対象数が確定している場合だけ返す。'
+        - type: 'null'
+    revision:
+      type: 'integer'
+      minimum: 0
+      description: '同じ実行内で単調増加する表示状態の版。古い応答で表示を巻き戻さない。'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+    requestedAt:
+      type: 'string'
+      format: 'date-time'
+    startedAt:
+      anyOf:
+        - type: 'string'
+          format: 'date-time'
+        - type: 'null'
+    finishedAt:
+      anyOf:
+        - type: 'string'
+          format: 'date-time'
+        - type: 'null'
+    result:
+      anyOf:
+        - $ref: './submissions.yaml#/JudgeResult'
+        - type: 'null'
+    failure:
+      anyOf:
+        - $ref: './common.yaml#/Error'
+        - type: 'null'
+  required:
+    - 'id'
+    - 'submissionId'
+    - 'problemVersionId'
+    - 'state'
+    - 'completedCaseCount'
+    - 'totalCaseCount'
+    - 'revision'
+    - 'updatedAt'
+    - 'requestedAt'
+    - 'startedAt'
+    - 'finishedAt'
+    - 'result'
+    - 'failure'
+  allOf:
+    - if:
+        properties:
+          state:
+            const: 'completed'
+        required:
+          - 'state'
+      then:
+        properties:
+          result:
+            $ref: './submissions.yaml#/JudgeResult'
+          finishedAt:
+            type: 'string'
+            format: 'date-time'
+          failure:
+            type: 'null'
+    - if:
+        properties:
+          state:
+            const: 'failed'
+        required:
+          - 'state'
+      then:
+        properties:
+          failure:
+            $ref: './common.yaml#/Error'
+          finishedAt:
+            type: 'string'
+            format: 'date-time'
+          result:
+            type: 'null'
+    - if:
+        properties:
+          state:
+            enum:
+              - 'queued'
+              - 'preparing'
+              - 'running'
+              - 'aggregating'
+        required:
+          - 'state'
+      then:
+        properties:
+          result:
+            type: 'null'
+          failure:
+            type: 'null'
+          finishedAt:
+            type: 'null'
+JudgeRuns:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './submissions.yaml#/JudgeRun'
+  required:
+    - 'items'
+Submission:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    languageId:
+      $ref: './common.yaml#/ResourceId'
+    context:
+      $ref: './submissions.yaml#/SubmissionContext'
+    submittedAt:
+      type: 'string'
+      format: 'date-time'
+    currentJudgeRunId:
+      $ref: './common.yaml#/ResourceId'
+  required:
+    - 'id'
+    - 'userId'
+    - 'problemId'
+    - 'languageId'
+    - 'context'
+    - 'submittedAt'
+    - 'currentJudgeRunId'
+Submissions:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './submissions.yaml#/Submission'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+RejudgeRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    versionPolicy:
+      type: 'string'
+      description: '初回採点の固定版か、依頼時点の採用版かを明示し、今回の実行に固定する。'
+      enum:
+        - 'original'
+        - 'current'
+  required:
+    - 'versionPolicy'
+RejudgeAccepted:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    submissionId:
+      $ref: './common.yaml#/ResourceId'
+    judgeRunId:
+      $ref: './common.yaml#/ResourceId'
+    problemVersionId:
+      $ref: './common.yaml#/ResourceId'
+    acceptedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'submissionId'
+    - 'judgeRunId'
+    - 'problemVersionId'
+    - 'acceptedAt'
+RejudgeBatchRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    versionPolicy:
+      type: 'string'
+      enum:
+        - 'original'
+        - 'current'
+    problemIds:
+      type: 'array'
+      items:
+        $ref: './common.yaml#/ResourceId'
+      minItems: 1
+      uniqueItems: true
+  required:
+    - 'versionPolicy'
+RejudgeBatch:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    state:
+      type: 'string'
+      enum:
+        - 'accepted'
+        - 'running'
+        - 'completed'
+        - 'failed'
+    totalSubmissionCount:
+      type: 'integer'
+      minimum: 0
+    completedSubmissionCount:
+      type: 'integer'
+      minimum: 0
+    failedSubmissionCount:
+      type: 'integer'
+      minimum: 0
+    requestedAt:
+      type: 'string'
+      format: 'date-time'
+    finishedAt:
+      anyOf:
+        - type: 'string'
+          format: 'date-time'
+        - type: 'null'
+  required:
+    - 'id'
+    - 'state'
+    - 'totalSubmissionCount'
+    - 'completedSubmissionCount'
+    - 'failedSubmissionCount'
+    - 'requestedAt'
+    - 'finishedAt'

@@ -93,6 +93,8 @@
 - スキーマ変更時は **ルートディレクトリ** で `./scripts/gen-api.sh development` を実行して再生成
 - 開発環境では `./scripts/run-mock-api.sh` でモックサーバーを `localhost:4010` に立てる
 
+コンテストtopの新契約クライアントとモックの確認方法は，[コンテストtopの開発](./contest-top.md)を参照する．
+
 ### 型の書き方バランス
 
 - 型は **推論を優先**。冗長な明示は避ける (`const x: number = 1` のような明示は不要)

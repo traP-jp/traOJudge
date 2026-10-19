@@ -1,0 +1,107 @@
+RegistrationRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    baseRevision:
+      $ref: './common.yaml#/Version'
+    metadata:
+      $ref: './problems.yaml#/JudgeDefinitionDocument'
+    files:
+      type: 'array'
+      items:
+        $ref: './files.yaml#/FileManifestEntry'
+      minItems: 1
+  required:
+    - 'baseRevision'
+    - 'metadata'
+    - 'files'
+Registration:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    state:
+      type: 'string'
+      enum:
+        - 'uploading'
+        - 'validating'
+        - 'completed'
+        - 'rejected'
+        - 'expired'
+    baseRevision:
+      $ref: './common.yaml#/Version'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+    problemVersionId:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    validationErrors:
+      type: 'array'
+      items:
+        type: 'object'
+        additionalProperties: false
+        properties:
+          path:
+            type: 'string'
+          code:
+            type: 'string'
+          message:
+            type: 'string'
+        required:
+          - 'path'
+          - 'code'
+          - 'message'
+  required:
+    - 'id'
+    - 'problemId'
+    - 'state'
+    - 'baseRevision'
+    - 'createdAt'
+    - 'expiresAt'
+    - 'problemVersionId'
+    - 'validationErrors'
+RegistrationStarted:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    registration:
+      $ref: './cli.yaml#/Registration'
+    targets:
+      $ref: './files.yaml#/UploadTargets'
+    continuationToken:
+      type: 'string'
+      minLength: 1
+      description: 'この登録の状態確認と完了に使う。登録のexpiresAtに失効し、ほかのAPIには使えない。開発者トークンが失効した後も、この登録の完了まで利用できる。'
+  required:
+    - 'registration'
+    - 'targets'
+    - 'continuationToken'
+RegistrationCompleted:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    registrationId:
+      $ref: './common.yaml#/ResourceId'
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    problemVersionId:
+      $ref: './common.yaml#/ResourceId'
+    revision:
+      $ref: './common.yaml#/Version'
+    completedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'registrationId'
+    - 'problemId'
+    - 'problemVersionId'
+    - 'revision'
+    - 'completedAt'
