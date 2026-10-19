@@ -14,3 +14,4 @@ tracing-subscriber.workspace = true
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
 uuid.workspace = true
+workspace-hack.workspace = true

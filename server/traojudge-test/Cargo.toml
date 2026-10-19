@@ -6,3 +6,4 @@ edition.workspace = true
 [dependencies]
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
+workspace-hack.workspace = true

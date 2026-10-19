@@ -21,10 +21,13 @@ server/
 │   ├── http/             HTTPの受付・入力と応答の変換
 │   ├── consumers/        結果メッセージの受付
 │   └── models/           OpenAPIから生成するHTTP入出力型
-└── traojudge-test/        クレートをまたぐ結合確認
+├── traojudge-test/        クレートをまたぐ結合確認
+└── workspace-hack/        cargo-hakari が管理するビルド用の依存関係
 ```
 
 ## 依存と処理の置き場所
+
+依存関係の feature 統一には cargo-hakari を使う。再生成と検証の手順は [Rust の依存関係管理](rust-development.md) を参照する。
 
 - `core`は`infra`・`backend_app`に依存しない。`infra`は`core`、`backend_app`は`core`と`infra`に依存する。
 - `domain`は外部I/Oに依存しない業務ルールを扱う。`application`はdomainとportsを使ってユースケースを組み立て、操作権限の確認とトランザクション境界を担う。
