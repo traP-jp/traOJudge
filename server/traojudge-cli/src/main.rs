@@ -1,14 +1,20 @@
 use clap::{Parser, Subcommand};
 
+mod commands;
+mod config;
+
 #[derive(Parser)]
 #[command(version, about, arg_required_else_help = true)]
 struct Cli {
     #[command(subcommand)]
-    command: Option<Command>,
+    command: Command,
 }
 
 #[derive(Subcommand)]
-enum Command {}
+enum Command {
+    Apply,
+    Validate,
+}
 
 fn main() {
     let cli = Cli::parse();
@@ -23,7 +29,10 @@ fn main() {
 
     tracing::debug!("CLI initialized");
 
-    if let Some(command) = cli.command {
-        match command {}
+    let global_config = config::GlobalConfig {};
+
+    match cli.command {
+        Command::Apply => commands::apply::run(&global_config),
+        Command::Validate => commands::validate::run(&global_config),
     }
 }
