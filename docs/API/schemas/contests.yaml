@@ -22,6 +22,11 @@ ContestCreate:
       type: 'string'
       minLength: 1
       maxLength: 200
+    description:
+      type: 'string'
+      maxLength: 200000
+      default: ''
+      description: 'コンテストtopに表示するMarkdown形式の概要．HTMLは許可しない．'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -46,6 +51,10 @@ ContestUpdate:
   type: 'object'
   additionalProperties: false
   properties:
+    description:
+      type: 'string'
+      maxLength: 200000
+      description: 'コンテストtopの概要．Markdown形式で記述し，空文字列で消去する．'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -64,6 +73,10 @@ Contest:
       $ref: './common.yaml#/ResourceId'
     title:
       type: 'string'
+    description:
+      type: 'string'
+      maxLength: 200000
+      description: 'コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．'
     visibility:
       type: 'string'
       enum:

@@ -29,6 +29,11 @@ const router = createRouter({
     },
     { path: '/login', component: () => import('@/views/LoginView.vue') },
     {
+      path: '/contest/:contestId',
+      name: 'contest-top',
+      component: () => import('@/views/ContestView.vue')
+    },
+    {
       path: '/reset-password',
       children: [
         {
