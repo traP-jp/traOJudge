@@ -11,7 +11,7 @@ import { useUserStore } from '@/stores/user'
 export const useTraqAuthGuard = () => {
   const userStore = useUserStore()
 
-  const isAdmin = () => userStore.user?.role === 'Admin'
+  const isAdmin = () => userStore.user?.globalAuthorityAttribute.isSystemAdmin === true
   const isTraqAuthenticated = () => !!userStore.user?.authentication?.traqAuth
   const canEditProblem = () => isAdmin() || isTraqAuthenticated()
 

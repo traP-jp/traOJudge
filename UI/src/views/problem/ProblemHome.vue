@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SubmitForm from '@/components/SubmitForm.vue'
+import MarkdownView from '@/components/MarkdownView.vue'
 import { ProblemsApi } from '@/api/generated'
 import type { Problem } from '@/api/generated'
-import MarkdownIt from 'markdown-it'
 
 const route = useRoute()
 
@@ -15,18 +15,6 @@ const problem = ref<Problem | null>(null)
 const isLoading = ref(true)
 
 const error = ref<string>('')
-
-// TODO: markdwonの中での数式やコードハイライト，サニタイズの対応
-const md = new MarkdownIt({
-  html: false,
-  linkify: true,
-  typographer: true
-})
-
-const renderedStatement = computed(() => {
-  if (!problem.value?.statement) return '問題文が取得できませんでした'
-  return md.render(problem.value.statement)
-})
 
 onMounted(async () => {
   try {
@@ -43,7 +31,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-6 py-6">
+  <div class="flex w-full min-w-0 flex-col gap-6 py-6">
     <div v-if="error" class="rounded border border-status-error bg-background-tertiary p-4">
       <p class="fontstyle-ui-body text-status-error">{{ error }}</p>
     </div>
@@ -53,12 +41,8 @@ onMounted(async () => {
     <template v-else>
       <div class="flex flex-col gap-4">
         <h2 class="fontstyle-ui-subtitle text-text-primary">問題文</h2>
-        <!-- eslint-disable vue/no-v-html -- markdown-itの出力をレンダリング。raw HTML は escape され URL も markdown-it 側で検証されるため XSS は限定的。完全サニタイズはこのファイル冒頭の TODO を参照。 -->
-        <div
-          class="prose prose-sm max-w-none text-text-primary [&>h1]:text-2xl [&>h1]:font-bold [&>h2]:text-xl [&>h2]:font-semibold"
-          v-html="renderedStatement"
-        ></div>
-        <!-- eslint-enable vue/no-v-html -->
+        <MarkdownView v-if="problem?.statement" :source="problem.statement" class="max-w-none" />
+        <p v-else class="fontstyle-ui-body text-text-secondary">問題文が取得できませんでした</p>
       </div>
       <hr class="border-t border-border-secondary" />
       <SubmitForm :problem-id="problemId" />
