@@ -26,3 +26,4 @@ traojudge-core = { path = "server/traojudge-core" }
 traojudge-infra = { path = "server/traojudge-infra" }
 traojudge-test = { path = "server/traojudge-test" }
 uuid = { version = "1", features = ["serde", "v4"] }
+workspace-hack = { path = "server/workspace-hack" }
