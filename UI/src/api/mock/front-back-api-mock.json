@@ -1444,6 +1444,42 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "e08a55fb-d08b-435a-b04a-75d1e54370aa",
+      "type": "http",
+      "documentation": "コンテストtopの開発用サンプル．/contest/1で確認する．",
+      "method": "get",
+      "endpoint": "api/v1/contests/1",
+      "responses": [
+        {
+          "uuid": "3948a2f7-916b-4a32-8c63-1424d370e297",
+          "body": "{\n  \"id\": \"1\",\n  \"title\": \"traOJudge 練習コンテスト（サンプル）\",\n  \"description\": \"## はじめてのコンテスト\\n\\n基本的なアルゴリズムを使う問題に挑戦する練習コンテストです．初めての方も，自分のペースで取り組んでください．\\n\\n### 参加にあたって\\n\\n- 開始日時と終了日時を確認してください．\\n- 使用できる言語で解答を提出してください．\\n- 困ったことがあれば運営に質問してください．\\n\\n### 注意事項\\n\\nコンテスト中の問題や解答を，参加者同士で共有しないでください．\\n\\n> このページは開発用のサンプルです．\\n\\n### コンテスト終了後\\n\\n解けなかった問題は，解説を読みながら復習してみてください．\",\n  \"visibility\": \"public\",\n  \"startsAt\": \"2026-11-01T04:00:00Z\",\n  \"endsAt\": \"2026-11-01T06:00:00Z\",\n  \"rules\": {\n    \"tieBreak\": \"atcoder\",\n    \"penaltyMinutes\": 5\n  },\n  \"revision\": \"1\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -1566,6 +1602,10 @@
     {
       "type": "route",
       "uuid": "45a2e1c0-b083-4707-b8b8-f226d3747201"
+    },
+    {
+      "type": "route",
+      "uuid": "e08a55fb-d08b-435a-b04a-75d1e54370aa"
     }
   ],
   "proxyMode": false,

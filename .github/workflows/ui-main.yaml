@@ -6,6 +6,7 @@ on:
       - 'develop'
     paths:
       - 'UI/**'
+      - 'docs/API/**'
       - '.github/workflows/ui-main.yaml'
 
 defaults:

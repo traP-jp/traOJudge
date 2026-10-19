@@ -120,8 +120,8 @@ contestsByContestId:
     operationId: 'updateContest'
     tags:
       - 'contests'
-    summary: '通常の大会の時間・ルールを変更する'
-    description: '対象大会の運営担当だけが変更できる。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティは開始後に変更できない。開催中・終了後のその他の変更条件はMUT-06で具体化する。'
+    summary: '通常の大会の概要・時間・ルールを変更する'
+    description: '対象大会の運営担当だけが概要・時間・ルールを変更できる．概要はMarkdown形式で，HTMLは許可しない．開始終了時刻の前後関係を検証し，タイブレーク方式・ペナルティは開始後に変更できない．開催中・終了後のその他の変更条件はMUT-06で具体化する．'
     x-authorization:
       status: 'defined'
       anyOf:
