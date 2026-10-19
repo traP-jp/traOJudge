@@ -13,6 +13,7 @@ async-trait = "0.1"
 axum = "0.8"
 base64 = "0.22.1"
 chrono = "0.4.39"
+clap = { version = "4", features = ["derive"] }
 fancy-regex = "0.14.0"
 jsonwebtoken = "9.3.0"
 serde = { version = "1", features = ["derive"] }
