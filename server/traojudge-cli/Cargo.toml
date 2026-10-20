@@ -11,3 +11,4 @@ tracing-subscriber.workspace = true
 workspace-hack.workspace = true
 async-trait.workspace = true
 anyhow.workspace = true
+futures.workspace = true
