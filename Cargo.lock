@@ -2945,20 +2945,33 @@ dependencies = [
 name = "workspace-hack"
 version = "0.1.0"
 dependencies = [
+ "form_urlencoded",
+ "futures-channel",
+ "futures-core",
+ "futures-sink",
+ "futures-task",
+ "futures-util",
+ "hyper",
+ "hyper-util",
  "log",
  "memchr",
+ "percent-encoding",
  "proc-macro2",
  "quote",
  "regex-automata",
  "regex-syntax",
  "serde_core",
  "serde_json",
+ "slab",
  "smallvec",
  "syn 2.0.117",
  "syn 3.0.4",
+ "sync_wrapper",
  "tokio",
+ "tower",
  "tracing",
  "tracing-core",
+ "zeroize",
 ]
 
 [[package]]
