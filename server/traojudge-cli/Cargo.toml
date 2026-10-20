@@ -9,3 +9,5 @@ reqwest.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 workspace-hack.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true

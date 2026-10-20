@@ -2344,6 +2344,8 @@ dependencies = [
 name = "traojudge-cli"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "async-trait",
  "clap",
  "reqwest",
  "tracing",
