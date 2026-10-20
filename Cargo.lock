@@ -2398,6 +2398,7 @@ dependencies = [
  "clap",
  "futures",
  "reqwest",
+ "tokio",
  "tracing",
  "tracing-subscriber",
  "workspace-hack",
