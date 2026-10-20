@@ -5,6 +5,11 @@ edition.workspace = true
 
 [dependencies]
 clap.workspace = true
+reqwest.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 workspace-hack.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true
+futures.workspace = true
+tokio.workspace = true

@@ -2,6 +2,9 @@ use clap::{Parser, Subcommand};
 
 mod commands;
 mod config;
+mod domain;
+mod ports;
+mod ports_impl;
 
 #[derive(Parser)]
 #[command(version, about, arg_required_else_help = true)]
