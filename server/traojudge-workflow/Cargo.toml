@@ -5,4 +5,8 @@ edition.workspace = true
 
 [dependencies]
 async-trait.workspace = true
+sqlx.workspace = true
 workspace-hack.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["time"] }
