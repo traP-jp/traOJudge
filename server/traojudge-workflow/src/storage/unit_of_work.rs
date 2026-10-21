@@ -1,5 +1,7 @@
 use async_trait::async_trait;
 
+use super::JobRepository;
+
 /// Storage backendで一連の変更を確定・破棄する単位。
 ///
 /// 未確定のまま破棄された場合、実装は変更が確定されないことを保証する。
@@ -16,6 +18,11 @@ use async_trait::async_trait;
 #[async_trait]
 pub trait UnitOfWork: Send + Sized {
     type Error: std::error::Error + Send + Sync + 'static;
+    type JobRepository<'work>: JobRepository<Error = Self::Error>
+    where
+        Self: 'work;
+
+    fn jobs(&mut self) -> Self::JobRepository<'_>;
 
     async fn commit(self) -> Result<(), Self::Error>;
 

@@ -10,6 +10,18 @@ use crate::payload::{Payload, PayloadRevision};
 #[serde(transparent)]
 pub struct JobId(Uuid);
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JobState {
+    Waiting,
+    Ready,
+    Starting,
+    Running,
+    Completed,
+    Failed,
+    Cancelled,
+}
+
 impl JobId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())

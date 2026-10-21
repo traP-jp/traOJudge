@@ -4,6 +4,9 @@ use sqlx::{Sqlite, SqlitePool, Transaction};
 
 use crate::storage::{UnitOfWork, UnitOfWorkProvider};
 
+use super::InMemoryJobRepository;
+use super::job_repository::CREATE_JOBS_TABLE;
+
 /// SQLiteをメモリ上で動かすUnit of Work provider。
 ///
 /// `new`ごとに独立したDBを作成し、cloneは同じDBを共有する。
@@ -22,6 +25,8 @@ impl InMemoryUnitOfWorkProvider {
             .test_before_acquire(false)
             .connect("sqlite::memory:")
             .await?;
+
+        sqlx::query(CREATE_JOBS_TABLE).execute(&pool).await?;
 
         Ok(Self { pool })
     }
@@ -46,6 +51,11 @@ pub struct InMemoryUnitOfWork {
 #[async_trait]
 impl UnitOfWork for InMemoryUnitOfWork {
     type Error = sqlx::Error;
+    type JobRepository<'work> = InMemoryJobRepository<'work>;
+
+    fn jobs(&mut self) -> Self::JobRepository<'_> {
+        InMemoryJobRepository::new(self.transaction.as_mut())
+    }
 
     async fn commit(self) -> Result<(), Self::Error> {
         self.transaction.commit().await

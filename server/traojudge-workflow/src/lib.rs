@@ -4,4 +4,4 @@ pub mod payload;
 pub mod storage;
 
 pub use engine::Engine;
-pub use job::{JobId, JobStartCallback};
+pub use job::{JobId, JobStartCallback, JobState};
