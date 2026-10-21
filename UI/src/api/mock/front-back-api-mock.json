@@ -1454,7 +1454,7 @@
       "responses": [
         {
           "uuid": "3948a2f7-916b-4a32-8c63-1424d370e297",
-          "body": "{\n  \"id\": \"1\",\n  \"title\": \"traOJudge 練習コンテスト（サンプル）\",\n  \"description\": \"## はじめてのコンテスト\\n\\n基本的なアルゴリズムを使う問題に挑戦する練習コンテストです．初めての方も，自分のペースで取り組んでください．\\n\\n### 参加にあたって\\n\\n- 開始日時と終了日時を確認してください．\\n- 使用できる言語で解答を提出してください．\\n- 困ったことがあれば運営に質問してください．\\n\\n### 注意事項\\n\\nコンテスト中の問題や解答を，参加者同士で共有しないでください．\\n\\n> このページは開発用のサンプルです．\\n\\n### コンテスト終了後\\n\\n解けなかった問題は，解説を読みながら復習してみてください．\",\n  \"visibility\": \"public\",\n  \"startsAt\": \"2026-11-01T04:00:00Z\",\n  \"endsAt\": \"2026-11-01T06:00:00Z\",\n  \"rules\": {\n    \"tieBreak\": \"atcoder\",\n    \"penaltyMinutes\": 5\n  },\n  \"revision\": \"1\"\n}",
+          "body": "{\n  \"id\": \"1\",\n  \"title\": \"traOJudge 練習コンテスト（サンプル）\",\n  \"description\": \"## はじめてのコンテスト\\n\\n基本的なアルゴリズムを使う問題に挑戦する練習コンテストです．初めての方も，自分のペースで取り組んでください．\\n\\n### 参加にあたって\\n\\n- 開始日時と終了日時を確認してください．\\n- 使用できる言語で解答を提出してください．\\n- 困ったことがあれば運営に質問してください．\\n\\n### 注意事項\\n\\nコンテスト中の問題や解答を，参加者同士で共有しないでください．\\n\\n> このページは開発用のサンプルです．\\n\\n### コンテスト終了後\\n\\n解けなかった問題は，解説を読みながら復習してみてください．\",\n  \"visibility\": \"public\",\n  \"startsAt\": \"2026-10-01T04:00:00Z\",\n  \"endsAt\": \"2026-10-01T06:00:00Z\",\n  \"rules\": {\n    \"tieBreak\": \"atcoder\",\n    \"penaltyMinutes\": 5\n  },\n  \"revision\": \"1\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1526,7 +1526,7 @@
       "responses": [
         {
           "uuid": "7eb1f2ed-c73d-5fda-b62d-60743a1a7a28",
-          "body": "{\n  \"id\": \"sample-a\",\n  \"title\": \"二数の和\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"sample-a\",\n  \"title\": \"二数の和\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1562,7 +1562,7 @@
       "responses": [
         {
           "uuid": "0c516d58-4018-5b97-908d-0aeb82077d48",
-          "body": "{\n  \"id\": \"sample-b\",\n  \"title\": \"数列の探索\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"sample-b\",\n  \"title\": \"数列の探索\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1598,7 +1598,7 @@
       "responses": [
         {
           "uuid": "80b0ce93-96bb-5fa9-8e67-1fc2f673df55",
-          "body": "{\n  \"id\": \"sample-c\",\n  \"title\": \"最短経路\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"sample-c\",\n  \"title\": \"最短経路\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1634,7 +1634,7 @@
       "responses": [
         {
           "uuid": "c50e1887-f937-521f-96d6-07d7c920ce31",
-          "body": "{\n  \"id\": \"editorial-a-1\",\n  \"problemId\": \"sample-a\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"公式解説\",\n  \"body\": \"## 考え方\\n\\n二つの数を足します．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"editorial-a-1\",\n  \"problemId\": \"sample-a\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"公式解説\",\n  \"body\": \"## 考え方\\n\\n二つの数を足します．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1670,7 +1670,7 @@
       "responses": [
         {
           "uuid": "6e6f10cf-eb36-551a-8a37-cb85f96eb526",
-          "body": "{\n  \"id\": \"editorial-a-2\",\n  \"problemId\": \"sample-a\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"別解\",\n  \"body\": \"## 別解\\n\\n入力を確認してから計算します．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"editorial-a-2\",\n  \"problemId\": \"sample-a\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"別解\",\n  \"body\": \"## 別解\\n\\n入力を確認してから計算します．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1706,7 +1706,7 @@
       "responses": [
         {
           "uuid": "4fa984d1-e6d9-5650-a424-01a81255e45f",
-          "body": "{\n  \"items\": [\n    {\n      \"id\": \"editorial-a-1\",\n      \"problemId\": \"sample-a\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"公式解説\",\n      \"body\": \"## 考え方\\n\\n二つの数を足します．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-11-01T07:00:00Z\",\n      \"updatedAt\": \"2026-11-01T07:00:00Z\"\n    },\n    {\n      \"id\": \"editorial-a-2\",\n      \"problemId\": \"sample-a\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"別解\",\n      \"body\": \"## 別解\\n\\n入力を確認してから計算します．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-11-01T07:00:00Z\",\n      \"updatedAt\": \"2026-11-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"editorial-a-1\",\n      \"problemId\": \"sample-a\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"公式解説\",\n      \"body\": \"## 考え方\\n\\n二つの数を足します．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-10-01T07:00:00Z\",\n      \"updatedAt\": \"2026-10-01T07:00:00Z\"\n    },\n    {\n      \"id\": \"editorial-a-2\",\n      \"problemId\": \"sample-a\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"別解\",\n      \"body\": \"## 別解\\n\\n入力を確認してから計算します．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-10-01T07:00:00Z\",\n      \"updatedAt\": \"2026-10-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1778,7 +1778,7 @@
       "responses": [
         {
           "uuid": "aa9a32d0-890e-5bc2-91c2-5001b2af64ee",
-          "body": "{\n  \"id\": \"editorial-c-1\",\n  \"problemId\": \"sample-c\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"最短経路の解説\",\n  \"body\": \"## 考え方\\n\\n幅優先探索を使います．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-11-01T07:00:00Z\",\n  \"updatedAt\": \"2026-11-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"editorial-c-1\",\n  \"problemId\": \"sample-c\",\n  \"authorId\": \"sample-author\",\n  \"title\": \"最短経路の解説\",\n  \"body\": \"## 考え方\\n\\n幅優先探索を使います．\",\n  \"visibility\": \"public\",\n  \"revision\": \"1\",\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1814,7 +1814,115 @@
       "responses": [
         {
           "uuid": "80a271a2-df40-543a-89b2-186ca2b2fd89",
-          "body": "{\n  \"items\": [\n    {\n      \"id\": \"editorial-c-1\",\n      \"problemId\": \"sample-c\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"最短経路の解説\",\n      \"body\": \"## 考え方\\n\\n幅優先探索を使います．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-11-01T07:00:00Z\",\n      \"updatedAt\": \"2026-11-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"editorial-c-1\",\n      \"problemId\": \"sample-c\",\n      \"authorId\": \"sample-author\",\n      \"title\": \"最短経路の解説\",\n      \"body\": \"## 考え方\\n\\n幅優先探索を使います．\",\n      \"visibility\": \"public\",\n      \"revision\": \"1\",\n      \"createdAt\": \"2026-10-01T07:00:00Z\",\n      \"updatedAt\": \"2026-10-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "cb066fdd-ebcc-5470-8a59-3564b54a2eb8",
+      "type": "http",
+      "documentation": "終了前の解説表示を確認する開発用サンプル．",
+      "method": "get",
+      "endpoint": "api/v1/contests/2",
+      "responses": [
+        {
+          "uuid": "0dbc43f6-34c0-5d28-b450-e46cb62e72ce",
+          "body": "{\n  \"id\": \"2\",\n  \"title\": \"開催前の表示確認用コンテスト\",\n  \"description\": \"解説の公開前表示を確認するためのサンプルです．\",\n  \"visibility\": \"public\",\n  \"startsAt\": \"2099-11-01T04:00:00Z\",\n  \"endsAt\": \"2099-11-01T06:00:00Z\",\n  \"rules\": {\n    \"tieBreak\": \"atcoder\",\n    \"penaltyMinutes\": 5\n  },\n  \"revision\": \"1\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "7d540109-eca1-527e-be62-957f8c25ce2f",
+      "type": "http",
+      "documentation": "終了前の解説表示を確認する開発用サンプル．",
+      "method": "get",
+      "endpoint": "api/v1/contests/2/problems",
+      "responses": [
+        {
+          "uuid": "a2801a26-172a-513f-8812-3225ceaa223f",
+          "body": "{\n  \"items\": []\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "cb2803db-8e90-55db-884f-7dc68ccf4768",
+      "type": "http",
+      "documentation": "権限を持たない利用者の開発用サンプル．",
+      "method": "get",
+      "endpoint": "api/v1/me/roles",
+      "responses": [
+        {
+          "uuid": "409a7c59-c982-54ec-b88f-47ac80cc2b99",
+          "body": "{\n  \"items\": []\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",

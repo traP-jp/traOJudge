@@ -3,6 +3,7 @@ import { onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
 import { EditorialsApi } from '@/api/generated/contest/apis/EditorialsApi'
+import { MeApi } from '@/api/generated/contest/apis/MeApi'
 import { ProblemsApi } from '@/api/generated/contest/apis/ProblemsApi'
 import type { GetContest200Response } from '@/api/generated/contest/models/GetContest200Response'
 import type { ListContestProblems200ResponseItemsInner } from '@/api/generated/contest/models/ListContestProblems200ResponseItemsInner'
@@ -10,6 +11,12 @@ import type { ListProblemEditorials200ResponseItemsInner } from '@/api/generated
 import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
 import BorderedButton from '@/components/Controls/BorderedButton.vue'
 import ContestHeader from '@/components/Navigations/ContestHeader.vue'
+import { useUserStore } from '@/stores/user'
+import {
+  canViewEditorial,
+  getEarlyEditorialAccess,
+  loadMyEditorialRoles
+} from '@/utils/editorialAccess'
 
 type Editorial = ListProblemEditorials200ResponseItemsInner
 type ContestProblem = ListContestProblems200ResponseItemsInner
@@ -20,9 +27,11 @@ type ProblemEditorials = ContestProblem & {
 }
 
 const route = useRoute()
+const userStore = useUserStore()
 const contest = ref<GetContest200Response | null>(null)
 const problems = ref<ProblemEditorials[]>([])
 const isLoading = ref(true)
+const isAwaitingRelease = ref(false)
 const error = ref('')
 const config = new Configuration({
   basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
@@ -30,10 +39,28 @@ const config = new Configuration({
 })
 const contestsApi = new ContestsApi(config)
 const editorialsApi = new EditorialsApi(config)
+const meApi = new MeApi(config)
 const problemsApi = new ProblemsApi(config)
 let requestController: AbortController | undefined
+let releaseTimer: ReturnType<typeof setTimeout> | undefined
 
-async function listAllEditorials(problemId: string, signal: AbortSignal): Promise<Editorial[]> {
+function scheduleRelease(endsAt: Date): void {
+  const remaining = endsAt.getTime() - Date.now()
+  if (remaining <= 0) return
+  releaseTimer = setTimeout(
+    () => {
+      if (Date.now() >= endsAt.getTime()) void loadPage()
+      else scheduleRelease(endsAt)
+    },
+    Math.min(remaining + 100, 2_147_483_647)
+  )
+}
+
+async function listAllEditorials(
+  problemId: string,
+  signal: AbortSignal,
+  canView: (editorial: Editorial) => boolean
+): Promise<Editorial[]> {
   const items: Editorial[] = []
   const seenCursors = new Set<string>()
   let cursor: string | undefined
@@ -44,9 +71,7 @@ async function listAllEditorials(problemId: string, signal: AbortSignal): Promis
       { signal }
     )
     items.push(
-      ...page.items.filter(
-        (editorial) => editorial.visibility === 'public' && editorial.problemId === problemId
-      )
+      ...page.items.filter((editorial) => editorial.problemId === problemId && canView(editorial))
     )
     // OpenAPI Generatorはnullableなcursorを空のモデルにするため，実際の値を確認する．
     const nextCursor: unknown = page.nextCursor
@@ -63,11 +88,12 @@ async function listAllEditorials(problemId: string, signal: AbortSignal): Promis
 
 async function loadProblem(
   problem: ContestProblem,
-  signal: AbortSignal
+  signal: AbortSignal,
+  canView: (editorial: Editorial) => boolean
 ): Promise<ProblemEditorials> {
   const [problemResult, editorialsResult] = await Promise.allSettled([
     problemsApi.getProblem({ problemId: problem.problemId }, { signal }),
-    listAllEditorials(problem.problemId, signal)
+    listAllEditorials(problem.problemId, signal, canView)
   ])
 
   return {
@@ -78,12 +104,27 @@ async function loadProblem(
   }
 }
 
+async function getViewerRoles(
+  hasFinished: boolean,
+  signal: AbortSignal
+): Promise<Awaited<ReturnType<typeof loadMyEditorialRoles>>> {
+  if (!userStore.isAuthenticated) return []
+  try {
+    return await loadMyEditorialRoles(meApi, signal)
+  } catch (cause: unknown) {
+    if (hasFinished) return []
+    throw cause
+  }
+}
+
 async function loadPage(): Promise<void> {
   requestController?.abort()
+  clearTimeout(releaseTimer)
   const controller = new AbortController()
   requestController = controller
   contest.value = null
   problems.value = []
+  isAwaitingRelease.value = false
   error.value = ''
   isLoading.value = true
   const contestId = route.params.contestId
@@ -95,20 +136,42 @@ async function loadPage(): Promise<void> {
   }
 
   try {
-    const [contestResponse, problemResponse] = await Promise.all([
-      contestsApi.getContest({ contestId }, { signal: controller.signal }),
-      contestsApi.listContestProblems({ contestId }, { signal: controller.signal })
-    ])
+    const contestResponse = await contestsApi.getContest(
+      { contestId },
+      { signal: controller.signal }
+    )
+    if (controller.signal.aborted) return
+    contest.value = contestResponse
+    const hasFinished = Date.now() >= contestResponse.endsAt.getTime()
+    if (!hasFinished) scheduleRelease(contestResponse.endsAt)
+
+    const roles = await getViewerRoles(hasFinished, controller.signal)
+    if (controller.signal.aborted) return
+    const access = getEarlyEditorialAccess(roles, contestId, userStore.userId)
+    if (!hasFinished && !userStore.isAuthenticated) {
+      isAwaitingRelease.value = true
+      return
+    }
+
+    const problemResponse = await contestsApi.listContestProblems(
+      { contestId },
+      { signal: controller.signal }
+    )
     if (controller.signal.aborted) return
     const orderedProblems = [...problemResponse.items].sort(
       (a, b) => a.order - b.order || a.label.localeCompare(b.label)
     )
+    const canView = (editorial: Editorial): boolean =>
+      canViewEditorial(editorial, hasFinished, access)
     const loadedProblems = await Promise.all(
-      orderedProblems.map((problem) => loadProblem(problem, controller.signal))
+      orderedProblems.map((problem) => loadProblem(problem, controller.signal, canView))
     )
     if (controller.signal.aborted) return
-    contest.value = contestResponse
     problems.value = loadedProblems
+    isAwaitingRelease.value =
+      !hasFinished &&
+      !access.isOrganizer &&
+      loadedProblems.every((problem) => !problem.error && problem.editorials.length === 0)
   } catch (cause: unknown) {
     if (controller.signal.aborted) return
     const status = cause instanceof ResponseError ? cause.response.status : undefined
@@ -125,7 +188,10 @@ async function loadPage(): Promise<void> {
 }
 
 watch(() => route.params.contestId, loadPage, { immediate: true })
-onUnmounted(() => requestController?.abort())
+onUnmounted(() => {
+  requestController?.abort()
+  clearTimeout(releaseTimer)
+})
 </script>
 
 <template>
@@ -142,7 +208,10 @@ onUnmounted(() => requestController?.abort())
       <ContestHeader :contest="contest" />
       <section aria-labelledby="contest-editorials-heading" class="max-w-5xl py-8">
         <h2 id="contest-editorials-heading" class="fontstyle-ui-subtitle mb-2">解説一覧</h2>
-        <p v-if="problems.length === 0" class="py-10 leading-7 text-text-secondary">
+        <p v-if="isAwaitingRelease" class="py-10 leading-7 text-text-secondary">
+          解説はコンテスト終了後に公開されます．
+        </p>
+        <p v-else-if="problems.length === 0" class="py-10 leading-7 text-text-secondary">
           このコンテストには問題が登録されていません．
         </p>
         <ol v-else class="divide-y divide-border-primary">
@@ -165,7 +234,10 @@ onUnmounted(() => requestController?.abort())
             <ul v-else class="space-y-3">
               <li v-for="editorial in problem.editorials" :key="editorial.id">
                 <RouterLink
-                  :to="`/problems/${encodeURIComponent(problem.problemId)}/editorials/${encodeURIComponent(editorial.id)}`"
+                  :to="{
+                    path: `/problems/${encodeURIComponent(problem.problemId)}/editorials/${encodeURIComponent(editorial.id)}`,
+                    query: { contestId: contest.id }
+                  }"
                   class="break-words text-brand-primary underline underline-offset-2 hover:text-brand-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
                   >{{ editorial.title }}</RouterLink
                 >

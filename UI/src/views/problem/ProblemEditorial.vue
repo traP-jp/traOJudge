@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
 import { EditorialsApi } from '@/api/generated/contest/apis/EditorialsApi'
+import { MeApi } from '@/api/generated/contest/apis/MeApi'
 import type { GetEditorial200Response } from '@/api/generated/contest/models/GetEditorial200Response'
 import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
 import BorderedButton from '@/components/Controls/BorderedButton.vue'
 import MarkdownContent from '@/components/MarkdownContent.vue'
+import { useUserStore } from '@/stores/user'
+import { getEarlyEditorialAccess, loadMyEditorialRoles } from '@/utils/editorialAccess'
 
 const route = useRoute()
+const userStore = useUserStore()
 const editorial = ref<GetEditorial200Response | null>(null)
 const isLoading = ref(true)
 const error = ref('')
-const editorialsApi = new EditorialsApi(
-  new Configuration({
-    basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
-    credentials: 'include'
-  })
-)
+const config = new Configuration({
+  basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
+  credentials: 'include'
+})
+const contestsApi = new ContestsApi(config)
+const editorialsApi = new EditorialsApi(config)
+const meApi = new MeApi(config)
 let requestController: AbortController | undefined
 
 const updatedAt = computed(() => {
@@ -29,6 +35,34 @@ const updatedAt = computed(() => {
   }).format(date)
 })
 
+type ContestAccessCheck = { error: string; verifyAuthor: boolean }
+
+async function checkContestAccess(
+  contestId: unknown,
+  problemId: string,
+  editorialId: string,
+  signal: AbortSignal
+): Promise<ContestAccessCheck> {
+  if (contestId === undefined) return { error: '', verifyAuthor: false }
+  if (typeof contestId !== 'string' || !contestId) {
+    return { error: '解説が見つかりません．URLを確認してください．', verifyAuthor: false }
+  }
+  const [contest, problems] = await Promise.all([
+    contestsApi.getContest({ contestId }, { signal }),
+    contestsApi.listContestProblems({ contestId }, { signal })
+  ])
+  if (!problems.items.some((problem) => problem.problemId === problemId)) {
+    return { error: '解説が見つかりません．URLを確認してください．', verifyAuthor: false }
+  }
+  if (Date.now() >= contest.endsAt.getTime()) return { error: '', verifyAuthor: false }
+  const roles = await loadMyEditorialRoles(meApi, signal)
+  const { isOrganizer, authoredEditorialIds } = getEarlyEditorialAccess(roles, contestId)
+  if (isOrganizer || authoredEditorialIds.has(editorialId)) {
+    return { error: '', verifyAuthor: false }
+  }
+  return { error: '', verifyAuthor: true }
+}
+
 async function loadEditorial(): Promise<void> {
   requestController?.abort()
   const controller = new AbortController()
@@ -38,6 +72,7 @@ async function loadEditorial(): Promise<void> {
   isLoading.value = true
   const editorialId = route.params.editorialId
   const problemId = route.params.id
+  const contestId = route.query.contestId
 
   if (typeof editorialId !== 'string' || !editorialId || typeof problemId !== 'string') {
     error.value = '解説が見つかりません．URLを確認してください．'
@@ -46,6 +81,12 @@ async function loadEditorial(): Promise<void> {
   }
 
   try {
+    const access = await checkContestAccess(contestId, problemId, editorialId, controller.signal)
+    if (controller.signal.aborted) return
+    if (access.error) {
+      error.value = access.error
+      return
+    }
     const response = await editorialsApi.getEditorial(
       { editorialId },
       { signal: controller.signal }
@@ -53,6 +94,10 @@ async function loadEditorial(): Promise<void> {
     if (controller.signal.aborted) return
     if (response.problemId !== problemId) {
       error.value = '解説が見つかりません．URLを確認してください．'
+      return
+    }
+    if (access.verifyAuthor && response.authorId !== userStore.userId) {
+      error.value = '解説はコンテスト終了後に公開されます．'
       return
     }
     editorial.value = response
@@ -71,7 +116,9 @@ async function loadEditorial(): Promise<void> {
   }
 }
 
-watch(() => [route.params.id, route.params.editorialId], loadEditorial, { immediate: true })
+watch(() => [route.params.id, route.params.editorialId, route.query.contestId], loadEditorial, {
+  immediate: true
+})
 onUnmounted(() => requestController?.abort())
 </script>
 
