@@ -2813,6 +2813,7 @@ dependencies = [
  "sqlx",
  "thiserror",
  "tokio",
+ "uuid",
  "workspace-hack",
 ]
 
@@ -3339,6 +3340,7 @@ dependencies = [
  "futures-sink",
  "futures-task",
  "futures-util",
+ "getrandom 0.4.2",
  "hyper",
  "hyper-util",
  "log",
