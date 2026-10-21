@@ -35,7 +35,6 @@ serde_json = { version = "1", features = ["raw_value"] }
 slab = { version = "0.4", default-features = false, features = ["std"] }
 smallvec = { version = "1", default-features = false, features = ["const_new"] }
 sync_wrapper = { version = "1", default-features = false, features = ["futures"] }
-thiserror = { version = "2" }
 tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-core = { version = "0.1" }

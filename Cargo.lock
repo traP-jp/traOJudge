@@ -2808,7 +2808,10 @@ name = "traojudge-workflow"
 version = "0.1.0"
 dependencies = [
  "async-trait",
+ "serde",
+ "serde_json",
  "sqlx",
+ "thiserror",
  "tokio",
  "workspace-hack",
 ]
@@ -3353,7 +3356,6 @@ dependencies = [
  "syn 2.0.117",
  "syn 3.0.4",
  "sync_wrapper",
- "thiserror",
  "tokio",
  "tower",
  "tracing",
