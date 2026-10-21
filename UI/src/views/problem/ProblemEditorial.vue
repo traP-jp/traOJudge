@@ -1,65 +1,104 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue'
-import { EditorialsApi } from '@/api/generated/apis/EditorialsApi.ts'
-import { ResponseError } from '@/api/generated/runtime'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { EditorialsApi } from '@/api/generated/contest/apis/EditorialsApi'
+import type { GetEditorial200Response } from '@/api/generated/contest/models/GetEditorial200Response'
+import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
+import BorderedButton from '@/components/Controls/BorderedButton.vue'
+import MarkdownContent from '@/components/MarkdownContent.vue'
 
-const editorialId = ref<string>('')
-const editorialTitle = ref<string>('')
-const editorialAuthroId = ref<string>('')
-const editorialUpdatedAt = ref<string>('')
-const editorialStatement = ref<string>('')
+const route = useRoute()
+const editorial = ref<GetEditorial200Response | null>(null)
+const isLoading = ref(true)
+const error = ref('')
+const editorialsApi = new EditorialsApi(
+  new Configuration({
+    basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
+    credentials: 'include'
+  })
+)
+let requestController: AbortController | undefined
 
-onMounted(async () => {
+const updatedAt = computed(() => {
+  const date = editorial.value?.updatedAt
+  if (!date || !Number.isFinite(date.getTime())) return ''
+  return new Intl.DateTimeFormat('ja-JP', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Tokyo'
+  }).format(date)
+})
+
+async function loadEditorial(): Promise<void> {
+  requestController?.abort()
+  const controller = new AbortController()
+  requestController = controller
+  editorial.value = null
+  error.value = ''
+  isLoading.value = true
+  const editorialId = route.params.editorialId
+  const problemId = route.params.id
+
+  if (typeof editorialId !== 'string' || !editorialId || typeof problemId !== 'string') {
+    error.value = '解説が見つかりません．URLを確認してください．'
+    isLoading.value = false
+    return
+  }
+
   try {
-    const editorialsApi = new EditorialsApi()
-    const response = await editorialsApi.getEditorial({
-      editorialId: useRoute().params.editorialId as string
-    })
-    editorialId.value = response.id
-    editorialAuthroId.value = response.authorId
-    editorialTitle.value = response.title
-    editorialUpdatedAt.value =
-      response.updatedAt?.toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }) || ''
-    editorialStatement.value = response.statement
-  } catch (error: unknown) {
-    if (!(error instanceof ResponseError)) {
-      console.error('Get Editorial Error', error)
+    const response = await editorialsApi.getEditorial(
+      { editorialId },
+      { signal: controller.signal }
+    )
+    if (controller.signal.aborted) return
+    if (response.problemId !== problemId) {
+      error.value = '解説が見つかりません．URLを確認してください．'
       return
     }
-    if (error.response.status === 404) {
-      console.error('解説が存在しません(または解説の閲覧権限がありません)')
+    editorial.value = response
+  } catch (cause: unknown) {
+    if (controller.signal.aborted) return
+    const status = cause instanceof ResponseError ? cause.response.status : undefined
+    if (status === 404) {
+      error.value = '解説が見つかりません．URLを確認してください．'
+    } else if (status === 401 || status === 403) {
+      error.value = 'この解説を閲覧する権限がありません．'
     } else {
-      console.error('Unknown error: ' + error.response.status)
+      error.value = '解説を読み込めませんでした．時間をおいて再試行してください．'
     }
+  } finally {
+    if (!controller.signal.aborted) isLoading.value = false
   }
-})
+}
+
+watch(() => [route.params.id, route.params.editorialId], loadEditorial, { immediate: true })
+onUnmounted(() => requestController?.abort())
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col items-start gap-6 py-6">
-    <div class="flex flex-col items-start gap-1 self-stretch">
-      <div class="fontstyle-ui-subtitle text-text-primary">{{ editorialTitle }}</div>
-      <div class="flex flex-col items-start">
-        <div class="flex items-center justify-center gap-3">
-          <div class="fontstyle-ui-body-2 text-text-secondary">著者</div>
-          <TextLink :href="'/users/' + editorialAuthroId" new-tab>
-            {{ editorialAuthroId }}
-          </TextLink>
+  <article class="flex min-h-header-offset min-w-0 flex-1 flex-col items-start gap-6 py-6">
+    <div v-if="isLoading" role="status" class="text-text-secondary">解説を読み込み中…</div>
+    <section v-else-if="error" aria-labelledby="editorial-error" class="py-8">
+      <h1 id="editorial-error" class="fontstyle-ui-subtitle mb-4">解説を表示できません</h1>
+      <p role="alert" class="mb-6 text-text-secondary">{{ error }}</p>
+      <BorderedButton @click="loadEditorial">再試行</BorderedButton>
+    </section>
+    <template v-else-if="editorial">
+      <header class="flex flex-col items-start gap-2 self-stretch">
+        <h1 class="fontstyle-ui-subtitle break-words text-text-primary">{{ editorial.title }}</h1>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-text-secondary">
+          <div>
+            著者
+            <RouterLink
+              :to="`/users/${encodeURIComponent(editorial.authorId)}`"
+              class="ml-1 underline underline-offset-2 hover:text-brand-primary"
+              >{{ editorial.authorId }}</RouterLink
+            >
+          </div>
+          <div v-if="updatedAt">最終更新 {{ updatedAt }}</div>
         </div>
-        <div class="fontstyle-ui-body-2 flex items-center justify-center gap-3 text-text-secondary">
-          <div>最終更新</div>
-          <div>{{ editorialUpdatedAt }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-text-primary">
-      {{ editorialStatement }}
-    </div>
-  </div>
+      </header>
+      <MarkdownContent class="w-full" :source="editorial.body" />
+    </template>
+  </article>
 </template>

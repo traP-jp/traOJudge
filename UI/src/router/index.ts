@@ -34,6 +34,11 @@ const router = createRouter({
       component: () => import('@/views/ContestView.vue')
     },
     {
+      path: '/contest/:contestId/editorials',
+      name: 'contest-editorials',
+      component: () => import('@/views/ContestEditorialsView.vue')
+    },
+    {
       path: '/reset-password',
       children: [
         {

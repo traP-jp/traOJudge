@@ -123,6 +123,11 @@ onUnmounted(() => {
           {{ contest.title }}
         </h1>
         <p class="mt-4 text-sm tabular-nums text-text-secondary">{{ remainingTime }}</p>
+        <RouterLink
+          :to="`/contest/${encodeURIComponent(contest.id)}/editorials`"
+          class="mt-5 inline-block text-brand-primary underline underline-offset-2 hover:text-brand-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+          >解説一覧を見る</RouterLink
+        >
       </header>
 
       <div class="flex min-w-0 flex-col gap-10 py-8 lg:flex-row lg:gap-12">
