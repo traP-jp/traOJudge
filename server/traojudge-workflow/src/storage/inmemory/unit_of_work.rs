@@ -4,8 +4,9 @@ use sqlx::{Sqlite, SqlitePool, Transaction};
 
 use crate::storage::{UnitOfWork, UnitOfWorkProvider};
 
-use super::InMemoryJobRepository;
+use super::edge_repository::CREATE_EDGES_TABLE;
 use super::job_repository::CREATE_JOBS_TABLE;
+use super::{InMemoryEdgeRepository, InMemoryJobRepository};
 
 /// SQLiteをメモリ上で動かすUnit of Work provider。
 ///
@@ -27,6 +28,7 @@ impl InMemoryUnitOfWorkProvider {
             .await?;
 
         sqlx::query(CREATE_JOBS_TABLE).execute(&pool).await?;
+        sqlx::query(CREATE_EDGES_TABLE).execute(&pool).await?;
 
         Ok(Self { pool })
     }
@@ -52,9 +54,14 @@ pub struct InMemoryUnitOfWork {
 impl UnitOfWork for InMemoryUnitOfWork {
     type Error = sqlx::Error;
     type JobRepository<'work> = InMemoryJobRepository<'work>;
+    type EdgeRepository<'work> = InMemoryEdgeRepository<'work>;
 
     fn jobs(&mut self) -> Self::JobRepository<'_> {
         InMemoryJobRepository::new(self.transaction.as_mut())
+    }
+
+    fn edges(&mut self) -> Self::EdgeRepository<'_> {
+        InMemoryEdgeRepository::new(self.transaction.as_mut())
     }
 
     async fn commit(self) -> Result<(), Self::Error> {

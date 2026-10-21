@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 
-use super::JobRepository;
+use super::{EdgeRepository, JobRepository};
 
 /// Storage backendで一連の変更を確定・破棄する単位。
 ///
@@ -21,8 +21,13 @@ pub trait UnitOfWork: Send + Sized {
     type JobRepository<'work>: JobRepository<Error = Self::Error>
     where
         Self: 'work;
+    type EdgeRepository<'work>: EdgeRepository<Error = Self::Error>
+    where
+        Self: 'work;
 
     fn jobs(&mut self) -> Self::JobRepository<'_>;
+
+    fn edges(&mut self) -> Self::EdgeRepository<'_>;
 
     async fn commit(self) -> Result<(), Self::Error>;
 
