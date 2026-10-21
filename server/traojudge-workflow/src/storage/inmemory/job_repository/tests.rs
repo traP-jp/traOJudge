@@ -3,6 +3,38 @@ use sqlx::Connection;
 use super::*;
 
 #[tokio::test]
+async fn payload_column_rejects_sql_null_and_omitted_values() {
+    let mut connection = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+    sqlx::query(super::super::pipeline_repository::CREATE_PIPELINES_TABLE)
+        .execute(&mut connection)
+        .await
+        .unwrap();
+    sqlx::query(CREATE_JOBS_TABLE)
+        .execute(&mut connection)
+        .await
+        .unwrap();
+    let pipeline_id = PipelineId::new();
+    sqlx::query("INSERT INTO workflow_pipelines (id, state) VALUES (?, 'running')")
+        .bind(pipeline_id.to_string())
+        .execute(&mut connection)
+        .await
+        .unwrap();
+
+    for query in [
+        "INSERT INTO workflow_jobs (id, pipeline_id, state) VALUES (?, ?, 'waiting')",
+        "INSERT INTO workflow_jobs (id, pipeline_id, payload, state) VALUES (?, ?, NULL, 'waiting')",
+    ] {
+        let error = sqlx::query(query)
+            .bind(JobId::new().to_string())
+            .bind(pipeline_id.to_string())
+            .execute(&mut connection)
+            .await
+            .unwrap_err();
+        assert!(error.as_database_error().is_some());
+    }
+}
+
+#[tokio::test]
 async fn batch_storage_failures_return_a_result_for_every_item_and_preserve_the_cause() {
     let mut connection = SqliteConnection::connect("sqlite::memory:").await.unwrap();
     let mut repository = InMemoryJobRepository::new(&mut connection);
@@ -11,7 +43,7 @@ async fn batch_storage_failures_return_a_result_for_every_item_and_preserve_the_
     let pipeline_id = PipelineId::new();
     let jobs: Vec<_> = job_ids
         .iter()
-        .map(|&job_id| (job_id, pipeline_id))
+        .map(|&job_id| (job_id, pipeline_id, serde_json::json!({})))
         .collect();
     let created = repository.create_many(&jobs).await;
     assert_eq!(created.len(), job_ids.len());

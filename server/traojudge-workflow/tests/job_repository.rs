@@ -1,8 +1,8 @@
 use serde_json::json;
 use traojudge_workflow::storage::inmemory::InMemoryUnitOfWorkProvider;
 use traojudge_workflow::storage::{
-    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPipelineIdError, JobRepository,
-    PipelineRepository, UnitOfWork, UnitOfWorkProvider,
+    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPayloadError,
+    GetJobPipelineIdError, JobRepository, PipelineRepository, UnitOfWork, UnitOfWorkProvider,
 };
 use traojudge_workflow::{JobId, JobState, PipelineId, PipelineState};
 
@@ -22,7 +22,10 @@ async fn job_in_state(state: JobState) -> (InMemoryUnitOfWorkProvider, JobId) {
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(job_id, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(job_id, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     if state != JobState::Waiting {
         work.jobs()
             .compare_and_set_state(job_id, JobState::Waiting, state)
@@ -71,6 +74,33 @@ async fn newly_created_jobs_persist_in_waiting_state() {
         read_state(&provider, job_id).await.unwrap(),
         JobState::Waiting
     );
+}
+
+#[tokio::test]
+async fn creation_persists_payload_and_duplicates_cannot_overwrite_it() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let pipeline_id = PipelineId::new();
+    let job_id = JobId::new();
+    let payload = json!({"revision": 2, "json": {"command": "compile"}});
+    let mut work = provider.begin().await.unwrap();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs()
+        .create(job_id, pipeline_id, payload.clone())
+        .await
+        .unwrap();
+    assert!(matches!(
+        work.jobs().create(job_id, pipeline_id, json!({"different": true})).await,
+        Err(CreateJobError::AlreadyExists(existing)) if existing == job_id
+    ));
+    work.commit().await.unwrap();
+
+    let mut work = provider.begin().await.unwrap();
+    assert_eq!(work.jobs().get_payload(job_id).await.unwrap(), payload);
+    assert!(matches!(
+        work.jobs().get_payload(JobId::new()).await,
+        Err(GetJobPayloadError::NotFound(_))
+    ));
+    work.rollback().await.unwrap();
 }
 
 #[tokio::test]
@@ -124,7 +154,7 @@ async fn jobs_cannot_be_created_without_an_existing_pipeline() {
     let pipeline_id = PipelineId::new();
 
     assert!(matches!(
-        work.jobs().create(job_id, pipeline_id).await,
+        work.jobs().create(job_id, pipeline_id, serde_json::json!({})).await,
         Err(CreateJobError::PipelineNotFound(missing)) if missing == pipeline_id
     ));
     work.commit().await.unwrap();
@@ -144,7 +174,7 @@ async fn duplicate_creation_cannot_move_a_job_to_another_pipeline() {
 
     for pipeline_id in [other, PipelineId::new()] {
         assert!(matches!(
-            work.jobs().create(job_id, pipeline_id).await,
+            work.jobs().create(job_id, pipeline_id, serde_json::json!({})).await,
             Err(CreateJobError::AlreadyExists(existing)) if existing == job_id
         ));
     }
@@ -183,7 +213,7 @@ async fn duplicate_creation_does_not_overwrite_existing_state() {
     let pipeline_id = work.jobs().get_pipeline_id(job_id).await.unwrap();
 
     assert!(matches!(
-        work.jobs().create(job_id, pipeline_id).await,
+        work.jobs().create(job_id, pipeline_id, serde_json::json!({})).await,
         Err(CreateJobError::AlreadyExists(existing)) if existing == job_id
     ));
     work.commit().await.unwrap();
@@ -244,7 +274,10 @@ async fn rollback_and_drop_discard_job_creation() {
         let mut work = provider.begin().await.unwrap();
         let pipeline_id = PipelineId::new();
         work.pipelines().create(pipeline_id).await.unwrap();
-        work.jobs().create(job_id, pipeline_id).await.unwrap();
+        work.jobs()
+            .create(job_id, pipeline_id, serde_json::json!({}))
+            .await
+            .unwrap();
         assert_eq!(work.jobs().get(job_id).await.unwrap(), JobState::Waiting);
         if explicit_rollback {
             work.rollback().await.unwrap();

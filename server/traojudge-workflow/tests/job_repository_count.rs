@@ -25,7 +25,10 @@ async fn counts_only_requested_states_in_the_requested_pipeline() {
         for state in STATES {
             for _ in 0..copies {
                 let job_id = JobId::new();
-                work.jobs().create(job_id, pipeline_id).await.unwrap();
+                work.jobs()
+                    .create(job_id, pipeline_id, serde_json::json!({}))
+                    .await
+                    .unwrap();
                 work.jobs()
                     .compare_and_set_state(job_id, JobState::Waiting, state)
                     .await
@@ -84,7 +87,10 @@ async fn empty_pipelines_and_non_matching_states_return_zero() {
     assert_eq!(work.jobs().count(pipeline_id, &STATES).await.unwrap(), 0);
     assert_eq!(work.jobs().count(pipeline_id, &[]).await.unwrap(), 0);
 
-    work.jobs().create(JobId::new(), pipeline_id).await.unwrap();
+    work.jobs()
+        .create(JobId::new(), pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     assert_eq!(
         work.jobs()
             .count(pipeline_id, &[JobState::Running])
@@ -117,12 +123,18 @@ async fn counts_reflect_transactional_writes_and_their_rollback() {
     let job_id = JobId::new();
     let mut work = provider.begin().await.unwrap();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(job_id, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(job_id, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     work.commit().await.unwrap();
 
     for explicit_rollback in [true, false] {
         let mut work = provider.begin().await.unwrap();
-        work.jobs().create(JobId::new(), pipeline_id).await.unwrap();
+        work.jobs()
+            .create(JobId::new(), pipeline_id, serde_json::json!({}))
+            .await
+            .unwrap();
         work.jobs()
             .compare_and_set_state(job_id, JobState::Waiting, JobState::Running)
             .await

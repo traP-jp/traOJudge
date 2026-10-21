@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 use traojudge_workflow::storage::inmemory::InMemoryUnitOfWorkProvider;
 use traojudge_workflow::storage::{
-    EdgeRepository, GetJobError, JobRepository, ListNextJobsError, PipelineRepository,
-    RegisterEdgesError, UnitOfWork, UnitOfWorkProvider,
+    CountIncomingEdgesError, EdgeRepository, GetJobError, JobRepository, ListNextJobsError,
+    PipelineRepository, RegisterEdgesError, RemoveEdgesError, UnitOfWork, UnitOfWorkProvider,
 };
 use traojudge_workflow::{JobId, PipelineId};
 
@@ -14,7 +14,10 @@ async fn provider_with_jobs<const COUNT: usize>() -> (InMemoryUnitOfWorkProvider
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
     for &job_id in &job_ids {
-        work.jobs().create(job_id, pipeline_id).await.unwrap();
+        work.jobs()
+            .create(job_id, pipeline_id, serde_json::json!({}))
+            .await
+            .unwrap();
     }
     work.commit().await.unwrap();
     (provider, job_ids)
@@ -28,6 +31,58 @@ async fn next_jobs(
     let next = work.edges().list_next(job_id).await;
     work.rollback().await.unwrap();
     next
+}
+
+#[tokio::test]
+async fn removing_outgoing_edges_releases_only_their_incoming_dependencies() {
+    let (provider, [first, second, target, other]) = provider_with_jobs().await;
+    let mut work = provider.begin().await.unwrap();
+    work.edges()
+        .register(&[(first, target), (second, target), (first, other)])
+        .await
+        .unwrap();
+    assert_eq!(work.edges().count_incoming(target).await.unwrap(), 2);
+    let removed = work.edges().remove_from(first).await.unwrap();
+    assert_eq!(
+        removed.into_iter().collect::<HashSet<_>>(),
+        HashSet::from([target, other])
+    );
+    assert_eq!(work.edges().count_incoming(target).await.unwrap(), 1);
+    assert_eq!(work.edges().count_incoming(other).await.unwrap(), 0);
+    assert_eq!(work.edges().list_next(second).await.unwrap(), vec![target]);
+    assert!(work.edges().remove_from(first).await.unwrap().is_empty());
+    assert_eq!(work.edges().count_incoming(first).await.unwrap(), 0);
+    let missing = JobId::new();
+    assert!(matches!(work.edges().count_incoming(missing).await,
+        Err(CountIncomingEdgesError::JobNotFound(job_id)) if job_id == missing));
+    assert!(matches!(work.edges().remove_from(missing).await,
+        Err(RemoveEdgesError::JobNotFound(job_id)) if job_id == missing));
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
+async fn rollback_and_drop_restore_removed_edges() {
+    let (provider, [source, target]) = provider_with_jobs().await;
+    let mut work = provider.begin().await.unwrap();
+    work.edges().register(&[(source, target)]).await.unwrap();
+    work.commit().await.unwrap();
+    for explicit_rollback in [true, false] {
+        let mut work = provider.begin().await.unwrap();
+        assert_eq!(
+            work.edges().remove_from(source).await.unwrap(),
+            vec![target]
+        );
+        assert_eq!(work.edges().count_incoming(target).await.unwrap(), 0);
+        if explicit_rollback {
+            work.rollback().await.unwrap();
+        } else {
+            drop(work);
+        }
+        let mut work = provider.begin().await.unwrap();
+        assert_eq!(work.edges().count_incoming(target).await.unwrap(), 1);
+        assert_eq!(work.edges().list_next(source).await.unwrap(), vec![target]);
+        work.rollback().await.unwrap();
+    }
 }
 
 #[tokio::test]
@@ -115,7 +170,10 @@ async fn missing_endpoints_do_not_leave_partially_registered_edges() {
         };
         let mut work = provider.begin().await.unwrap();
         let pipeline_id = work.jobs().get_pipeline_id(source).await.unwrap();
-        work.jobs().create(extra_job, pipeline_id).await.unwrap();
+        work.jobs()
+            .create(extra_job, pipeline_id, serde_json::json!({}))
+            .await
+            .unwrap();
 
         assert!(matches!(
             work.edges().register(&[(source, target), failing_edge]).await,
@@ -193,8 +251,14 @@ async fn jobs_and_edges_are_created_in_the_same_unit_of_work() {
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(source, pipeline_id).await.unwrap();
-    work.jobs().create(target, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(source, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
+    work.jobs()
+        .create(target, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     work.edges().register(&[(source, target)]).await.unwrap();
     assert_eq!(work.edges().list_next(source).await.unwrap(), vec![target]);
     work.commit().await.unwrap();
@@ -210,8 +274,14 @@ async fn edge_registration_does_not_commit_the_enclosing_unit_of_work() {
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(source, pipeline_id).await.unwrap();
-    work.jobs().create(target, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(source, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
+    work.jobs()
+        .create(target, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     work.edges().register(&[(source, target)]).await.unwrap();
     work.rollback().await.unwrap();
 

@@ -15,6 +15,16 @@ pub trait EdgeRepository: Send {
         &mut self,
         job_id: JobId,
     ) -> Result<Vec<JobId>, ListNextJobsError<Self::Error>>;
+
+    async fn remove_from(
+        &mut self,
+        job_id: JobId,
+    ) -> Result<Vec<JobId>, RemoveEdgesError<Self::Error>>;
+
+    async fn count_incoming(
+        &mut self,
+        job_id: JobId,
+    ) -> Result<u64, CountIncomingEdgesError<Self::Error>>;
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -29,6 +39,22 @@ pub enum RegisterEdgesError<StorageError: std::error::Error + 'static> {
 
 #[derive(Debug, thiserror::Error)]
 pub enum ListNextJobsError<StorageError: std::error::Error + 'static> {
+    #[error("job {0} not found")]
+    JobNotFound(JobId),
+    #[error(transparent)]
+    Storage(#[from] StorageError),
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum RemoveEdgesError<StorageError: std::error::Error + 'static> {
+    #[error("job {0} not found")]
+    JobNotFound(JobId),
+    #[error(transparent)]
+    Storage(#[from] StorageError),
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum CountIncomingEdgesError<StorageError: std::error::Error + 'static> {
     #[error("job {0} not found")]
     JobNotFound(JobId),
     #[error(transparent)]

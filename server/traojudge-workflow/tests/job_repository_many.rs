@@ -17,9 +17,9 @@ async fn create_many_reports_each_result_and_continues_after_duplicates() {
 
     let results = repository
         .create_many(&[
-            (first, pipeline_id),
-            (first, pipeline_id),
-            (second, pipeline_id),
+            (first, pipeline_id, serde_json::json!({})),
+            (first, pipeline_id, serde_json::json!({})),
+            (second, pipeline_id, serde_json::json!({})),
         ])
         .await;
 
@@ -34,6 +34,43 @@ async fn create_many_reports_each_result_and_continues_after_duplicates() {
     for result in work.jobs().get_many(&[first, second]).await {
         assert_eq!(result.unwrap(), JobState::Waiting);
     }
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
+async fn create_many_keeps_each_payload_and_does_not_overwrite_duplicates() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let pipeline_id = PipelineId::new();
+    let first = JobId::new();
+    let second = JobId::new();
+    let mut work = provider.begin().await.unwrap();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    let results = work
+        .jobs()
+        .create_many(&[
+            (first, pipeline_id, serde_json::json!({"input": "first"})),
+            (
+                first,
+                pipeline_id,
+                serde_json::json!({"input": "duplicate"}),
+            ),
+            (second, pipeline_id, serde_json::json!({"input": "second"})),
+        ])
+        .await;
+    assert!(results[0].is_ok());
+    assert!(matches!(results[1], Err(CreateJobError::AlreadyExists(job_id)) if job_id == first));
+    assert!(results[2].is_ok());
+    work.commit().await.unwrap();
+
+    let mut work = provider.begin().await.unwrap();
+    assert_eq!(
+        work.jobs().get_payload(first).await.unwrap(),
+        serde_json::json!({"input": "first"})
+    );
+    assert_eq!(
+        work.jobs().get_payload(second).await.unwrap(),
+        serde_json::json!({"input": "second"})
+    );
     work.rollback().await.unwrap();
 }
 
@@ -53,13 +90,13 @@ async fn create_many_preserves_pipeline_membership_and_continues_after_missing_p
     let results = work
         .jobs()
         .create_many(&[
-            (first, missing_pipeline),
-            (first, first_pipeline),
-            (first, second_pipeline),
-            (second, second_pipeline),
-            (third, missing_pipeline),
-            (second, missing_pipeline),
-            (third, second_pipeline),
+            (first, missing_pipeline, serde_json::json!({})),
+            (first, first_pipeline, serde_json::json!({})),
+            (first, second_pipeline, serde_json::json!({})),
+            (second, second_pipeline, serde_json::json!({})),
+            (third, missing_pipeline, serde_json::json!({})),
+            (second, missing_pipeline, serde_json::json!({})),
+            (third, second_pipeline, serde_json::json!({})),
         ])
         .await;
 
@@ -98,8 +135,14 @@ async fn get_many_preserves_order_duplicates_and_missing_job_errors() {
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(first, pipeline_id).await.unwrap();
-    work.jobs().create(second, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(first, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
+    work.jobs()
+        .create(second, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     work.jobs()
         .compare_and_set_state(second, JobState::Waiting, JobState::Ready)
         .await
@@ -131,9 +174,9 @@ async fn state_updates_preserve_order_and_continue_after_each_kind_of_failure() 
     for result in work
         .jobs()
         .create_many(&[
-            (first, pipeline_id),
-            (second, pipeline_id),
-            (third, pipeline_id),
+            (first, pipeline_id, serde_json::json!({})),
+            (second, pipeline_id, serde_json::json!({})),
+            (third, pipeline_id, serde_json::json!({})),
         ])
         .await
     {
@@ -189,7 +232,10 @@ async fn failed_update_can_be_followed_by_a_successful_update_of_the_same_job() 
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(job_id, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(job_id, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
 
     let results = work
         .jobs()
@@ -228,13 +274,20 @@ async fn rollback_and_drop_control_successful_many_writes() {
     let mut work = provider.begin().await.unwrap();
     let pipeline_id = PipelineId::new();
     work.pipelines().create(pipeline_id).await.unwrap();
-    work.jobs().create(existing, pipeline_id).await.unwrap();
+    work.jobs()
+        .create(existing, pipeline_id, serde_json::json!({}))
+        .await
+        .unwrap();
     work.commit().await.unwrap();
 
     for explicit_rollback in [true, false] {
         let created = JobId::new();
         let mut work = provider.begin().await.unwrap();
-        for result in work.jobs().create_many(&[(created, pipeline_id)]).await {
+        for result in work
+            .jobs()
+            .create_many(&[(created, pipeline_id, serde_json::json!({}))])
+            .await
+        {
             result.unwrap();
         }
         for result in work
@@ -273,7 +326,7 @@ async fn large_requests_cross_batch_boundaries_and_keep_per_item_results() {
 
     let jobs: Vec<_> = requested
         .iter()
-        .map(|&job_id| (job_id, pipeline_id))
+        .map(|&job_id| (job_id, pipeline_id, serde_json::json!({})))
         .collect();
     let results = work.jobs().create_many(&jobs).await;
     assert_eq!(results.len(), requested.len());

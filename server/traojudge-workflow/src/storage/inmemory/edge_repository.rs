@@ -3,7 +3,10 @@ use sqlx::{Connection, SqliteConnection};
 use uuid::Uuid;
 
 use crate::JobId;
-use crate::storage::{EdgeRepository, ListNextJobsError, RegisterEdgesError};
+use crate::storage::{
+    CountIncomingEdgesError, EdgeRepository, ListNextJobsError, RegisterEdgesError,
+    RemoveEdgesError,
+};
 
 pub(super) const CREATE_EDGES_TABLE: &str = "
     CREATE TABLE workflow_edges (
@@ -90,5 +93,52 @@ impl EdgeRepository for InMemoryEdgeRepository<'_> {
                 })
             })
             .collect()
+    }
+
+    async fn remove_from(
+        &mut self,
+        job_id: JobId,
+    ) -> Result<Vec<JobId>, RemoveEdgesError<Self::Error>> {
+        let exists: bool =
+            sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM workflow_jobs WHERE id = ?)")
+                .bind(job_id.to_string())
+                .fetch_one(&mut *self.connection)
+                .await?;
+        if !exists {
+            return Err(RemoveEdgesError::JobNotFound(job_id));
+        }
+        let stored: Vec<String> = sqlx::query_scalar(
+            "DELETE FROM workflow_edges WHERE source_id = ? RETURNING target_id",
+        )
+        .bind(job_id.to_string())
+        .fetch_all(&mut *self.connection)
+        .await?;
+        let mut job_ids = stored
+            .into_iter()
+            .map(|value| {
+                Uuid::parse_str(&value).map(JobId::from).map_err(|error| {
+                    RemoveEdgesError::Storage(sqlx::Error::Decode(Box::new(error)))
+                })
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        job_ids.sort_by_key(|job_id| *job_id.as_uuid());
+        Ok(job_ids)
+    }
+
+    async fn count_incoming(
+        &mut self,
+        job_id: JobId,
+    ) -> Result<u64, CountIncomingEdgesError<Self::Error>> {
+        let count: Option<i64> = sqlx::query_scalar(
+            "SELECT COUNT(edges.source_id) FROM workflow_jobs AS jobs
+             LEFT JOIN workflow_edges AS edges ON edges.target_id = jobs.id
+             WHERE jobs.id = ? GROUP BY jobs.id",
+        )
+        .bind(job_id.to_string())
+        .fetch_optional(&mut *self.connection)
+        .await?;
+        let count = count.ok_or(CountIncomingEdgesError::JobNotFound(job_id))?;
+        u64::try_from(count)
+            .map_err(|error| CountIncomingEdgesError::from(sqlx::Error::Decode(Box::new(error))))
     }
 }
