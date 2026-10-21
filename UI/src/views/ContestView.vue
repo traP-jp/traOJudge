@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
 import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
 import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
 import MarkdownContent from '@/components/MarkdownContent.vue'
 import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import { formatContestDate, formatContestDuration, getContestPhase } from '@/utils/contest'
+import ContestHeader from '@/components/Navigations/ContestHeader.vue'
+import { formatContestDate, formatContestDuration } from '@/utils/contest'
 
 const route = useRoute()
 const contest = ref<Contest | null>(null)
 const isLoading = ref(true)
 const error = ref('')
-const now = ref(Date.now())
 const api = new ContestsApi(
   new Configuration({
     basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
@@ -20,22 +20,6 @@ const api = new ContestsApi(
   })
 )
 let requestController: AbortController | undefined
-let clock: ReturnType<typeof setInterval> | undefined
-
-const phase = computed(() =>
-  contest.value ? getContestPhase(contest.value.startsAt, contest.value.endsAt, now.value) : null
-)
-const phaseLabel = computed(() => {
-  if (phase.value === 'upcoming') return '開催予定'
-  if (phase.value === 'running') return '開催中'
-  return '終了'
-})
-const remainingTime = computed(() => {
-  if (!contest.value || phase.value === 'finished') return 'コンテストは終了しました'
-  const target = phase.value === 'upcoming' ? contest.value.startsAt : contest.value.endsAt
-  const label = phase.value === 'upcoming' ? '開始まで' : '終了まで'
-  return `${label} ${formatContestDuration(target.getTime() - now.value)}`
-})
 
 async function loadContest(): Promise<void> {
   requestController?.abort()
@@ -63,7 +47,6 @@ async function loadContest(): Promise<void> {
       throw new Error('Invalid contest schedule')
     }
     contest.value = response
-    now.value = Date.now()
   } catch (cause: unknown) {
     if (controller.signal.aborted) return
     const status = cause instanceof ResponseError ? cause.response.status : undefined
@@ -80,15 +63,7 @@ async function loadContest(): Promise<void> {
 }
 
 watch(() => route.params.contestId, loadContest, { immediate: true })
-onMounted(() => {
-  clock = setInterval(() => {
-    now.value = Date.now()
-  }, 1000)
-})
-onUnmounted(() => {
-  requestController?.abort()
-  clearInterval(clock)
-})
+onUnmounted(() => requestController?.abort())
 </script>
 
 <template>
@@ -106,28 +81,16 @@ onUnmounted(() => {
       >
     </section>
     <template v-else-if="contest">
-      <header class="border-b border-border-primary pb-6">
-        <div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
-          <span
-            class="rounded px-3 py-1 font-medium"
-            :class="
-              phase === 'running'
-                ? 'bg-brand-primary text-white'
-                : 'bg-background-secondary text-text-secondary'
-            "
-            >{{ phaseLabel }}</span
-          >
-          <span v-if="contest.visibility === 'private'" class="text-text-secondary">非公開</span>
-        </div>
-        <h1 class="break-words text-2xl font-semibold leading-snug text-text-primary sm:text-3xl">
-          {{ contest.title }}
-        </h1>
-        <p class="mt-4 text-sm tabular-nums text-text-secondary">{{ remainingTime }}</p>
-      </header>
+      <ContestHeader :contest="contest" />
 
       <div class="flex min-w-0 flex-col gap-10 py-8 lg:flex-row lg:gap-12">
         <article aria-labelledby="contest-overview" class="min-w-0 flex-1">
-          <h2 id="contest-overview" class="fontstyle-ui-subtitle mb-6">コンテスト概要</h2>
+          <h2
+            id="contest-overview"
+            class="mb-6 border-b-2 border-brand-primary pb-3 text-2xl font-bold text-text-primary"
+          >
+            コンテスト概要
+          </h2>
           <MarkdownContent v-if="contest.description?.trim()" :source="contest.description" />
           <p v-else class="leading-7 text-text-secondary">
             コンテストの概要はまだ掲載されていません．
