@@ -1,10 +1,10 @@
 use serde_json::json;
 use traojudge_workflow::storage::inmemory::InMemoryUnitOfWorkProvider;
 use traojudge_workflow::storage::{
-    CompareAndSetJobStateError, CreateJobError, GetJobError, JobRepository, UnitOfWork,
-    UnitOfWorkProvider,
+    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPipelineIdError, JobRepository,
+    PipelineRepository, UnitOfWork, UnitOfWorkProvider,
 };
-use traojudge_workflow::{JobId, JobState};
+use traojudge_workflow::{JobId, JobState, PipelineId, PipelineState};
 
 const STATES: [JobState; 7] = [
     JobState::Waiting,
@@ -20,7 +20,9 @@ async fn job_in_state(state: JobState) -> (InMemoryUnitOfWorkProvider, JobId) {
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let job_id = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(job_id).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(job_id, pipeline_id).await.unwrap();
     if state != JobState::Waiting {
         work.jobs()
             .compare_and_set_state(job_id, JobState::Waiting, state)
@@ -72,6 +74,89 @@ async fn newly_created_jobs_persist_in_waiting_state() {
 }
 
 #[tokio::test]
+async fn job_pipeline_id_can_be_used_to_check_cancellation() {
+    let (provider, job_id) = job_in_state(JobState::Running).await;
+    let mut work = provider.begin().await.unwrap();
+    let pipeline_id = work.jobs().get_pipeline_id(job_id).await.unwrap();
+    assert_eq!(
+        work.pipelines().get(pipeline_id).await.unwrap(),
+        PipelineState::Running
+    );
+    work.pipelines()
+        .compare_and_set_state(
+            pipeline_id,
+            PipelineState::Running,
+            PipelineState::Cancelled,
+        )
+        .await
+        .unwrap();
+    work.commit().await.unwrap();
+
+    let mut work = provider.begin().await.unwrap();
+    let stored_pipeline_id = work.jobs().get_pipeline_id(job_id).await.unwrap();
+    assert_eq!(stored_pipeline_id, pipeline_id);
+    assert_eq!(
+        work.pipelines().get(stored_pipeline_id).await.unwrap(),
+        PipelineState::Cancelled
+    );
+    assert_eq!(work.jobs().get(job_id).await.unwrap(), JobState::Running);
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
+async fn missing_jobs_return_a_pipeline_lookup_error() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let mut work = provider.begin().await.unwrap();
+    let job_id = JobId::new();
+
+    assert!(matches!(
+        work.jobs().get_pipeline_id(job_id).await,
+        Err(GetJobPipelineIdError::NotFound(missing)) if missing == job_id
+    ));
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
+async fn jobs_cannot_be_created_without_an_existing_pipeline() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let mut work = provider.begin().await.unwrap();
+    let job_id = JobId::new();
+    let pipeline_id = PipelineId::new();
+
+    assert!(matches!(
+        work.jobs().create(job_id, pipeline_id).await,
+        Err(CreateJobError::PipelineNotFound(missing)) if missing == pipeline_id
+    ));
+    work.commit().await.unwrap();
+    assert!(matches!(
+        read_state(&provider, job_id).await,
+        Err(GetJobError::NotFound(missing)) if missing == job_id
+    ));
+}
+
+#[tokio::test]
+async fn duplicate_creation_cannot_move_a_job_to_another_pipeline() {
+    let (provider, job_id) = job_in_state(JobState::Ready).await;
+    let mut work = provider.begin().await.unwrap();
+    let original = work.jobs().get_pipeline_id(job_id).await.unwrap();
+    let other = PipelineId::new();
+    work.pipelines().create(other).await.unwrap();
+
+    for pipeline_id in [other, PipelineId::new()] {
+        assert!(matches!(
+            work.jobs().create(job_id, pipeline_id).await,
+            Err(CreateJobError::AlreadyExists(existing)) if existing == job_id
+        ));
+    }
+    work.commit().await.unwrap();
+
+    let mut work = provider.begin().await.unwrap();
+    assert_eq!(work.jobs().get_pipeline_id(job_id).await.unwrap(), original);
+    assert_eq!(work.jobs().get(job_id).await.unwrap(), JobState::Ready);
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
 async fn missing_jobs_are_absent_and_cannot_be_updated() {
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let mut work = provider.begin().await.unwrap();
@@ -95,9 +180,10 @@ async fn missing_jobs_are_absent_and_cannot_be_updated() {
 async fn duplicate_creation_does_not_overwrite_existing_state() {
     let (provider, job_id) = job_in_state(JobState::Ready).await;
     let mut work = provider.begin().await.unwrap();
+    let pipeline_id = work.jobs().get_pipeline_id(job_id).await.unwrap();
 
     assert!(matches!(
-        work.jobs().create(job_id).await,
+        work.jobs().create(job_id, pipeline_id).await,
         Err(CreateJobError::AlreadyExists(existing)) if existing == job_id
     ));
     work.commit().await.unwrap();
@@ -156,7 +242,9 @@ async fn rollback_and_drop_discard_job_creation() {
     for explicit_rollback in [true, false] {
         let job_id = JobId::new();
         let mut work = provider.begin().await.unwrap();
-        work.jobs().create(job_id).await.unwrap();
+        let pipeline_id = PipelineId::new();
+        work.pipelines().create(pipeline_id).await.unwrap();
+        work.jobs().create(job_id, pipeline_id).await.unwrap();
         assert_eq!(work.jobs().get(job_id).await.unwrap(), JobState::Waiting);
         if explicit_rollback {
             work.rollback().await.unwrap();
@@ -168,6 +256,12 @@ async fn rollback_and_drop_discard_job_creation() {
             read_state(&provider, job_id).await,
             Err(GetJobError::NotFound(missing)) if missing == job_id
         ));
+        let mut work = provider.begin().await.unwrap();
+        assert!(matches!(
+            work.jobs().get_pipeline_id(job_id).await,
+            Err(GetJobPipelineIdError::NotFound(missing)) if missing == job_id
+        ));
+        work.rollback().await.unwrap();
     }
 }
 

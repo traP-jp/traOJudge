@@ -5,5 +5,5 @@ mod pipeline;
 pub mod storage;
 
 pub use engine::Engine;
-pub use job::{JobId, JobStartCallback, JobState};
+pub use job::{JobId, JobOutcome, JobStartCallback, JobState};
 pub use pipeline::{PipelineId, PipelineState};

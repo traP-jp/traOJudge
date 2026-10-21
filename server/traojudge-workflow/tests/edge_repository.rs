@@ -1,18 +1,20 @@
 use std::collections::HashSet;
 
-use traojudge_workflow::JobId;
 use traojudge_workflow::storage::inmemory::InMemoryUnitOfWorkProvider;
 use traojudge_workflow::storage::{
-    EdgeRepository, GetJobError, JobRepository, ListNextJobsError, RegisterEdgesError, UnitOfWork,
-    UnitOfWorkProvider,
+    EdgeRepository, GetJobError, JobRepository, ListNextJobsError, PipelineRepository,
+    RegisterEdgesError, UnitOfWork, UnitOfWorkProvider,
 };
+use traojudge_workflow::{JobId, PipelineId};
 
 async fn provider_with_jobs<const COUNT: usize>() -> (InMemoryUnitOfWorkProvider, [JobId; COUNT]) {
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let job_ids = std::array::from_fn(|_| JobId::new());
     let mut work = provider.begin().await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
     for &job_id in &job_ids {
-        work.jobs().create(job_id).await.unwrap();
+        work.jobs().create(job_id, pipeline_id).await.unwrap();
     }
     work.commit().await.unwrap();
     (provider, job_ids)
@@ -112,7 +114,8 @@ async fn missing_endpoints_do_not_leave_partially_registered_edges() {
             (source, missing)
         };
         let mut work = provider.begin().await.unwrap();
-        work.jobs().create(extra_job).await.unwrap();
+        let pipeline_id = work.jobs().get_pipeline_id(source).await.unwrap();
+        work.jobs().create(extra_job, pipeline_id).await.unwrap();
 
         assert!(matches!(
             work.edges().register(&[(source, target), failing_edge]).await,
@@ -188,8 +191,10 @@ async fn jobs_and_edges_are_created_in_the_same_unit_of_work() {
     let source = JobId::new();
     let target = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(source).await.unwrap();
-    work.jobs().create(target).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(source, pipeline_id).await.unwrap();
+    work.jobs().create(target, pipeline_id).await.unwrap();
     work.edges().register(&[(source, target)]).await.unwrap();
     assert_eq!(work.edges().list_next(source).await.unwrap(), vec![target]);
     work.commit().await.unwrap();
@@ -203,8 +208,10 @@ async fn edge_registration_does_not_commit_the_enclosing_unit_of_work() {
     let source = JobId::new();
     let target = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(source).await.unwrap();
-    work.jobs().create(target).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(source, pipeline_id).await.unwrap();
+    work.jobs().create(target, pipeline_id).await.unwrap();
     work.edges().register(&[(source, target)]).await.unwrap();
     work.rollback().await.unwrap();
 

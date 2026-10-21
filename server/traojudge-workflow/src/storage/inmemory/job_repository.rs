@@ -5,14 +5,17 @@ use async_trait::async_trait;
 use sqlx::{QueryBuilder, Sqlite, SqliteConnection};
 use uuid::Uuid;
 
-use crate::storage::{CompareAndSetJobStateError, CreateJobError, GetJobError, JobRepository};
-use crate::{JobId, JobState};
+use crate::storage::{
+    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPipelineIdError, JobRepository,
+};
+use crate::{JobId, JobState, PipelineId};
 
 const JOB_BATCH_SIZE: usize = 256;
 
 pub(super) const CREATE_JOBS_TABLE: &str = "
     CREATE TABLE workflow_jobs (
         id TEXT PRIMARY KEY NOT NULL,
+        pipeline_id TEXT NOT NULL REFERENCES workflow_pipelines(id),
         state TEXT NOT NULL CHECK (
             state IN ('waiting', 'ready', 'starting', 'running', 'completed', 'failed', 'cancelled')
         )
@@ -33,46 +36,45 @@ impl<'work> InMemoryJobRepository<'work> {
 impl JobRepository for InMemoryJobRepository<'_> {
     type Error = sqlx::Error;
 
-    async fn create(&mut self, job_id: JobId) -> Result<(), CreateJobError<Self::Error>> {
+    async fn create(
+        &mut self,
+        job_id: JobId,
+        pipeline_id: PipelineId,
+    ) -> Result<(), CreateJobError<Self::Error>> {
         let result = sqlx::query(
-            "INSERT INTO workflow_jobs (id, state) VALUES (?, 'waiting') ON CONFLICT(id) DO NOTHING",
+            "INSERT INTO workflow_jobs (id, pipeline_id, state)
+             SELECT ?, ?, 'waiting' WHERE EXISTS (SELECT 1 FROM workflow_pipelines WHERE id = ?)
+             ON CONFLICT(id) DO NOTHING",
         )
         .bind(job_id.to_string())
+        .bind(pipeline_id.to_string())
+        .bind(pipeline_id.to_string())
         .execute(&mut *self.connection)
         .await?;
 
         if result.rows_affected() == 0 {
-            return Err(CreateJobError::AlreadyExists(job_id));
+            let exists: bool =
+                sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM workflow_jobs WHERE id = ?)")
+                    .bind(job_id.to_string())
+                    .fetch_one(&mut *self.connection)
+                    .await?;
+            return Err(if exists {
+                CreateJobError::AlreadyExists(job_id)
+            } else {
+                CreateJobError::PipelineNotFound(pipeline_id)
+            });
         }
         Ok(())
     }
 
     async fn create_many(
         &mut self,
-        job_ids: &[JobId],
+        jobs: &[(JobId, PipelineId)],
     ) -> Vec<Result<(), CreateJobError<Self::Error>>> {
-        let mut results = Vec::with_capacity(job_ids.len());
-        for batch in job_ids.chunks(JOB_BATCH_SIZE) {
-            let mut query = QueryBuilder::<Sqlite>::new("INSERT INTO workflow_jobs (id, state) ");
-            query.push_values(batch, |mut row, job_id| {
-                row.push_bind(job_id.to_string()).push_bind("waiting");
-            });
-            query.push(" ON CONFLICT(id) DO NOTHING RETURNING id");
-            match query
-                .build_query_as::<(String,)>()
-                .fetch_all(&mut *self.connection)
-                .await
-            {
-                Ok(rows) => {
-                    let mut inserted: HashSet<_> = rows.into_iter().map(|(id,)| id).collect();
-                    results.extend(batch.iter().map(|&job_id| {
-                        if inserted.remove(&job_id.to_string()) {
-                            Ok(())
-                        } else {
-                            Err(CreateJobError::AlreadyExists(job_id))
-                        }
-                    }));
-                }
+        let mut results = Vec::with_capacity(jobs.len());
+        for batch in jobs.chunks(JOB_BATCH_SIZE) {
+            match create_jobs(self.connection, batch).await {
+                Ok(created) => results.extend(created),
                 Err(error) => {
                     let error = Arc::new(error);
                     results.extend(
@@ -123,6 +125,21 @@ impl JobRepository for InMemoryJobRepository<'_> {
         results
     }
 
+    async fn get_pipeline_id(
+        &mut self,
+        job_id: JobId,
+    ) -> Result<PipelineId, GetJobPipelineIdError<Self::Error>> {
+        let stored: Option<String> =
+            sqlx::query_scalar("SELECT pipeline_id FROM workflow_jobs WHERE id = ?")
+                .bind(job_id.to_string())
+                .fetch_optional(&mut *self.connection)
+                .await?;
+        let pipeline_id = stored.ok_or(GetJobPipelineIdError::NotFound(job_id))?;
+        Uuid::parse_str(&pipeline_id)
+            .map(PipelineId::from)
+            .map_err(|error| GetJobPipelineIdError::from(sqlx::Error::Decode(Box::new(error))))
+    }
+
     async fn compare_and_set_state(
         &mut self,
         job_id: JobId,
@@ -169,6 +186,66 @@ impl JobRepository for InMemoryJobRepository<'_> {
         }
         results
     }
+}
+
+async fn create_jobs(
+    connection: &mut SqliteConnection,
+    jobs: &[(JobId, PipelineId)],
+) -> Result<Vec<Result<(), CreateJobError<sqlx::Error>>>, sqlx::Error> {
+    let job_ids: Vec<_> = jobs.iter().map(|&(job_id, _)| job_id).collect();
+    let mut existing_jobs: HashSet<_> = load_states(connection, &job_ids)
+        .await?
+        .into_keys()
+        .collect();
+    let mut query = QueryBuilder::<Sqlite>::new("SELECT id FROM workflow_pipelines WHERE id IN (");
+    let mut ids = query.separated(", ");
+    for &(_, pipeline_id) in jobs {
+        ids.push_bind(pipeline_id.to_string());
+    }
+    query.push(")");
+    let pipelines: HashSet<_> = query
+        .build_query_scalar::<String>()
+        .fetch_all(&mut *connection)
+        .await?
+        .into_iter()
+        .collect();
+    let valid_jobs: Vec<_> = jobs
+        .iter()
+        .filter(|(_, pipeline_id)| pipelines.contains(&pipeline_id.to_string()))
+        .copied()
+        .collect();
+    let mut inserted = HashSet::new();
+    if !valid_jobs.is_empty() {
+        let mut query =
+            QueryBuilder::<Sqlite>::new("INSERT INTO workflow_jobs (id, pipeline_id, state) ");
+        query.push_values(&valid_jobs, |mut row, &(job_id, pipeline_id)| {
+            row.push_bind(job_id.to_string())
+                .push_bind(pipeline_id.to_string())
+                .push_bind("waiting");
+        });
+        query.push(" ON CONFLICT(id) DO NOTHING RETURNING id");
+        inserted.extend(
+            query
+                .build_query_scalar::<String>()
+                .fetch_all(&mut *connection)
+                .await?,
+        );
+    }
+    Ok(jobs
+        .iter()
+        .map(|&(job_id, pipeline_id)| {
+            if existing_jobs.contains(&job_id) {
+                Err(CreateJobError::AlreadyExists(job_id))
+            } else if !pipelines.contains(&pipeline_id.to_string()) {
+                Err(CreateJobError::PipelineNotFound(pipeline_id))
+            } else if inserted.remove(&job_id.to_string()) {
+                existing_jobs.insert(job_id);
+                Ok(())
+            } else {
+                Err(CreateJobError::AlreadyExists(job_id))
+            }
+        })
+        .collect())
 }
 
 async fn load_states(

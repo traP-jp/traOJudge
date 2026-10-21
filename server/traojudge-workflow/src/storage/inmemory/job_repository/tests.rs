@@ -8,7 +8,12 @@ async fn batch_storage_failures_return_a_result_for_every_item_and_preserve_the_
     let mut repository = InMemoryJobRepository::new(&mut connection);
     let job_ids: Vec<_> = (0..JOB_BATCH_SIZE + 1).map(|_| JobId::new()).collect();
 
-    let created = repository.create_many(&job_ids).await;
+    let pipeline_id = PipelineId::new();
+    let jobs: Vec<_> = job_ids
+        .iter()
+        .map(|&job_id| (job_id, pipeline_id))
+        .collect();
+    let created = repository.create_many(&jobs).await;
     assert_eq!(created.len(), job_ids.len());
     for result in &created {
         assert!(
@@ -28,6 +33,11 @@ async fn batch_storage_failures_return_a_result_for_every_item_and_preserve_the_
             matches!(result, Err(GetJobError::Storage(error)) if error.as_database_error().is_some())
         );
     }
+
+    assert!(matches!(
+        repository.get_pipeline_id(job_ids[0]).await,
+        Err(GetJobPipelineIdError::Storage(error)) if error.as_database_error().is_some()
+    ));
 
     let updates: Vec<_> = job_ids
         .iter()

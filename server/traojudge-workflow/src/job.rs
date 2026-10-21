@@ -22,6 +22,13 @@ pub enum JobState {
     Cancelled,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JobOutcome {
+    Success,
+    Failure,
+}
+
 impl JobId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())

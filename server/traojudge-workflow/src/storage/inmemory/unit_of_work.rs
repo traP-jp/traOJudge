@@ -28,9 +28,9 @@ impl InMemoryUnitOfWorkProvider {
             .connect("sqlite::memory:")
             .await?;
 
+        sqlx::query(CREATE_PIPELINES_TABLE).execute(&pool).await?;
         sqlx::query(CREATE_JOBS_TABLE).execute(&pool).await?;
         sqlx::query(CREATE_EDGES_TABLE).execute(&pool).await?;
-        sqlx::query(CREATE_PIPELINES_TABLE).execute(&pool).await?;
 
         Ok(Self { pool })
     }

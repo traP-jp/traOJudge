@@ -194,7 +194,7 @@ async fn rollback_and_drop_discard_pipeline_and_job_creation_together() {
         let job_id = JobId::from(*pipeline_id.as_uuid());
         let mut work = provider.begin().await.unwrap();
         work.pipelines().create(pipeline_id).await.unwrap();
-        work.jobs().create(job_id).await.unwrap();
+        work.jobs().create(job_id, pipeline_id).await.unwrap();
         if explicit_rollback {
             work.rollback().await.unwrap();
         } else {

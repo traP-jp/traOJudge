@@ -1,9 +1,9 @@
 use traojudge_workflow::storage::inmemory::InMemoryUnitOfWorkProvider;
 use traojudge_workflow::storage::{
-    CompareAndSetJobStateError, CreateJobError, GetJobError, JobRepository, UnitOfWork,
-    UnitOfWorkProvider,
+    CompareAndSetJobStateError, CreateJobError, GetJobError, JobRepository, PipelineRepository,
+    UnitOfWork, UnitOfWorkProvider,
 };
-use traojudge_workflow::{JobId, JobState};
+use traojudge_workflow::{JobId, JobState, PipelineId};
 
 #[tokio::test]
 async fn create_many_reports_each_result_and_continues_after_duplicates() {
@@ -11,9 +11,17 @@ async fn create_many_reports_each_result_and_continues_after_duplicates() {
     let first = JobId::new();
     let second = JobId::new();
     let mut work = provider.begin().await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
     let mut repository: Box<dyn JobRepository<Error = sqlx::Error> + '_> = Box::new(work.jobs());
 
-    let results = repository.create_many(&[first, first, second]).await;
+    let results = repository
+        .create_many(&[
+            (first, pipeline_id),
+            (first, pipeline_id),
+            (second, pipeline_id),
+        ])
+        .await;
 
     assert_eq!(results.len(), 3);
     assert!(results[0].is_ok());
@@ -30,14 +38,68 @@ async fn create_many_reports_each_result_and_continues_after_duplicates() {
 }
 
 #[tokio::test]
+async fn create_many_preserves_pipeline_membership_and_continues_after_missing_pipelines() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let mut work = provider.begin().await.unwrap();
+    let first_pipeline = PipelineId::new();
+    let second_pipeline = PipelineId::new();
+    let missing_pipeline = PipelineId::new();
+    work.pipelines().create(first_pipeline).await.unwrap();
+    work.pipelines().create(second_pipeline).await.unwrap();
+    let first = JobId::new();
+    let second = JobId::new();
+    let third = JobId::new();
+
+    let results = work
+        .jobs()
+        .create_many(&[
+            (first, missing_pipeline),
+            (first, first_pipeline),
+            (first, second_pipeline),
+            (second, second_pipeline),
+            (third, missing_pipeline),
+            (second, missing_pipeline),
+            (third, second_pipeline),
+        ])
+        .await;
+
+    assert_eq!(results.len(), 7);
+    assert!(matches!(
+        results[0], Err(CreateJobError::PipelineNotFound(pipeline_id)) if pipeline_id == missing_pipeline
+    ));
+    assert!(results[1].is_ok());
+    assert!(matches!(results[2], Err(CreateJobError::AlreadyExists(job_id)) if job_id == first));
+    assert!(results[3].is_ok());
+    assert!(matches!(
+        results[4], Err(CreateJobError::PipelineNotFound(pipeline_id)) if pipeline_id == missing_pipeline
+    ));
+    assert!(matches!(results[5], Err(CreateJobError::AlreadyExists(job_id)) if job_id == second));
+    assert!(results[6].is_ok());
+    work.commit().await.unwrap();
+
+    let mut work = provider.begin().await.unwrap();
+    for (job_id, expected) in [
+        (first, first_pipeline),
+        (second, second_pipeline),
+        (third, second_pipeline),
+    ] {
+        assert_eq!(work.jobs().get_pipeline_id(job_id).await.unwrap(), expected);
+        assert_eq!(work.jobs().get(job_id).await.unwrap(), JobState::Waiting);
+    }
+    work.rollback().await.unwrap();
+}
+
+#[tokio::test]
 async fn get_many_preserves_order_duplicates_and_missing_job_errors() {
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let first = JobId::new();
     let second = JobId::new();
     let missing = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(first).await.unwrap();
-    work.jobs().create(second).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(first, pipeline_id).await.unwrap();
+    work.jobs().create(second, pipeline_id).await.unwrap();
     work.jobs()
         .compare_and_set_state(second, JobState::Waiting, JobState::Ready)
         .await
@@ -64,7 +126,17 @@ async fn state_updates_preserve_order_and_continue_after_each_kind_of_failure() 
     let third = JobId::new();
     let missing = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    for result in work.jobs().create_many(&[first, second, third]).await {
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    for result in work
+        .jobs()
+        .create_many(&[
+            (first, pipeline_id),
+            (second, pipeline_id),
+            (third, pipeline_id),
+        ])
+        .await
+    {
         result.unwrap();
     }
 
@@ -115,7 +187,9 @@ async fn failed_update_can_be_followed_by_a_successful_update_of_the_same_job() 
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let job_id = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(job_id).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(job_id, pipeline_id).await.unwrap();
 
     let results = work
         .jobs()
@@ -152,13 +226,15 @@ async fn rollback_and_drop_control_successful_many_writes() {
     let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
     let existing = JobId::new();
     let mut work = provider.begin().await.unwrap();
-    work.jobs().create(existing).await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
+    work.jobs().create(existing, pipeline_id).await.unwrap();
     work.commit().await.unwrap();
 
     for explicit_rollback in [true, false] {
         let created = JobId::new();
         let mut work = provider.begin().await.unwrap();
-        for result in work.jobs().create_many(&[created]).await {
+        for result in work.jobs().create_many(&[(created, pipeline_id)]).await {
             result.unwrap();
         }
         for result in work
@@ -192,8 +268,14 @@ async fn large_requests_cross_batch_boundaries_and_keep_per_item_results() {
     let mut requested = job_ids.clone();
     requested.insert(256, job_ids[0]);
     let mut work = provider.begin().await.unwrap();
+    let pipeline_id = PipelineId::new();
+    work.pipelines().create(pipeline_id).await.unwrap();
 
-    let results = work.jobs().create_many(&requested).await;
+    let jobs: Vec<_> = requested
+        .iter()
+        .map(|&job_id| (job_id, pipeline_id))
+        .collect();
+    let results = work.jobs().create_many(&jobs).await;
     assert_eq!(results.len(), requested.len());
     for (index, result) in results.into_iter().enumerate() {
         if index == 256 {
