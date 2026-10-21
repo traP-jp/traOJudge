@@ -85,7 +85,12 @@ onUnmounted(() => requestController?.abort())
 
       <div class="flex min-w-0 flex-col gap-10 py-8 lg:flex-row lg:gap-12">
         <article aria-labelledby="contest-overview" class="min-w-0 flex-1">
-          <h2 id="contest-overview" class="fontstyle-ui-subtitle mb-6">コンテスト概要</h2>
+          <h2
+            id="contest-overview"
+            class="mb-6 border-b-2 border-brand-primary pb-3 text-2xl font-bold text-text-primary"
+          >
+            コンテスト概要
+          </h2>
           <MarkdownContent v-if="contest.description?.trim()" :source="contest.description" />
           <p v-else class="leading-7 text-text-secondary">
             コンテストの概要はまだ掲載されていません．
