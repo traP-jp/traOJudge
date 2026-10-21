@@ -6,7 +6,8 @@ use sqlx::{QueryBuilder, Sqlite, SqliteConnection};
 use uuid::Uuid;
 
 use crate::storage::{
-    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPipelineIdError, JobRepository,
+    CompareAndSetJobStateError, CountJobsError, CreateJobError, GetJobError, GetJobPipelineIdError,
+    JobRepository,
 };
 use crate::{JobId, JobState, PipelineId};
 
@@ -138,6 +139,38 @@ impl JobRepository for InMemoryJobRepository<'_> {
         Uuid::parse_str(&pipeline_id)
             .map(PipelineId::from)
             .map_err(|error| GetJobPipelineIdError::from(sqlx::Error::Decode(Box::new(error))))
+    }
+
+    async fn count(
+        &mut self,
+        pipeline_id: PipelineId,
+        states: &[JobState],
+    ) -> Result<u64, CountJobsError<Self::Error>> {
+        let mut query = QueryBuilder::<Sqlite>::new(
+            "SELECT COUNT(jobs.id) FROM workflow_pipelines AS pipelines
+             LEFT JOIN workflow_jobs AS jobs ON jobs.pipeline_id = pipelines.id AND ",
+        );
+        if states.is_empty() {
+            query.push("1 = 0");
+        } else {
+            query.push("jobs.state IN (");
+            let mut values = query.separated(", ");
+            for &state in states {
+                values.push_bind(encode_state(state));
+            }
+            query.push(")");
+        }
+        query
+            .push(" WHERE pipelines.id = ")
+            .push_bind(pipeline_id.to_string())
+            .push(" GROUP BY pipelines.id");
+        let count = query
+            .build_query_scalar::<i64>()
+            .fetch_optional(&mut *self.connection)
+            .await?
+            .ok_or(CountJobsError::PipelineNotFound(pipeline_id))?;
+        u64::try_from(count)
+            .map_err(|error| CountJobsError::from(sqlx::Error::Decode(Box::new(error))))
     }
 
     async fn compare_and_set_state(

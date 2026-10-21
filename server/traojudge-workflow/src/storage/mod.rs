@@ -7,7 +7,8 @@ mod unit_of_work;
 
 pub use edge_repository::{EdgeRepository, ListNextJobsError, RegisterEdgesError};
 pub use job_repository::{
-    CompareAndSetJobStateError, CreateJobError, GetJobError, GetJobPipelineIdError, JobRepository,
+    CompareAndSetJobStateError, CountJobsError, CreateJobError, GetJobError, GetJobPipelineIdError,
+    JobRepository,
 };
 pub use pipeline_repository::{
     CompareAndSetPipelineStateError, CreatePipelineError, GetPipelineError, PipelineRepository,

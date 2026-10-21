@@ -31,6 +31,12 @@ pub trait JobRepository: Send {
         job_id: JobId,
     ) -> Result<PipelineId, GetJobPipelineIdError<Self::Error>>;
 
+    async fn count(
+        &mut self,
+        pipeline_id: PipelineId,
+        states: &[JobState],
+    ) -> Result<u64, CountJobsError<Self::Error>>;
+
     async fn compare_and_set_state(
         &mut self,
         job_id: JobId,
@@ -71,6 +77,14 @@ pub enum GetJobPipelineIdError<StorageError: std::error::Error + 'static> {
 }
 
 #[derive(Debug, thiserror::Error)]
+pub enum CountJobsError<StorageError: std::error::Error + 'static> {
+    #[error("pipeline {0} not found")]
+    PipelineNotFound(PipelineId),
+    #[error(transparent)]
+    Storage(Arc<StorageError>),
+}
+
+#[derive(Debug, thiserror::Error)]
 pub enum CompareAndSetJobStateError<StorageError: std::error::Error + 'static> {
     #[error("job {0} not found")]
     NotFound(JobId),
@@ -100,6 +114,14 @@ impl<StorageError: std::error::Error + 'static> From<StorageError> for GetJobErr
 
 impl<StorageError: std::error::Error + 'static> From<StorageError>
     for GetJobPipelineIdError<StorageError>
+{
+    fn from(error: StorageError) -> Self {
+        Self::Storage(Arc::new(error))
+    }
+}
+
+impl<StorageError: std::error::Error + 'static> From<StorageError>
+    for CountJobsError<StorageError>
 {
     fn from(error: StorageError) -> Self {
         Self::Storage(Arc::new(error))

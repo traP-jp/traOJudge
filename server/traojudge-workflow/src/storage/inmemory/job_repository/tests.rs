@@ -39,6 +39,13 @@ async fn batch_storage_failures_return_a_result_for_every_item_and_preserve_the_
         Err(GetJobPipelineIdError::Storage(error)) if error.as_database_error().is_some()
     ));
 
+    for states in [&[JobState::Running][..], &[]] {
+        assert!(matches!(
+            repository.count(pipeline_id, states).await,
+            Err(CountJobsError::Storage(error)) if error.as_database_error().is_some()
+        ));
+    }
+
     let updates: Vec<_> = job_ids
         .iter()
         .map(|&job_id| (job_id, JobState::Waiting, JobState::Ready))
