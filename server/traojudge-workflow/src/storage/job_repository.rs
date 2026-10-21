@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 
 use crate::{JobId, JobState};
@@ -8,7 +10,17 @@ pub trait JobRepository: Send {
 
     async fn create(&mut self, job_id: JobId) -> Result<(), CreateJobError<Self::Error>>;
 
+    async fn create_many(
+        &mut self,
+        job_ids: &[JobId],
+    ) -> Vec<Result<(), CreateJobError<Self::Error>>>;
+
     async fn get(&mut self, job_id: JobId) -> Result<JobState, GetJobError<Self::Error>>;
+
+    async fn get_many(
+        &mut self,
+        job_ids: &[JobId],
+    ) -> Vec<Result<JobState, GetJobError<Self::Error>>>;
 
     async fn compare_and_set_state(
         &mut self,
@@ -16,6 +28,11 @@ pub trait JobRepository: Send {
         expected: JobState,
         next: JobState,
     ) -> Result<(), CompareAndSetJobStateError<Self::Error>>;
+
+    async fn compare_and_set_state_many(
+        &mut self,
+        updates: &[(JobId, JobState, JobState)],
+    ) -> Vec<Result<(), CompareAndSetJobStateError<Self::Error>>>;
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -23,7 +40,7 @@ pub enum CreateJobError<StorageError: std::error::Error + 'static> {
     #[error("job {0} already exists")]
     AlreadyExists(JobId),
     #[error(transparent)]
-    Storage(#[from] StorageError),
+    Storage(Arc<StorageError>),
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -31,7 +48,7 @@ pub enum GetJobError<StorageError: std::error::Error + 'static> {
     #[error("job {0} not found")]
     NotFound(JobId),
     #[error(transparent)]
-    Storage(#[from] StorageError),
+    Storage(Arc<StorageError>),
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -45,5 +62,27 @@ pub enum CompareAndSetJobStateError<StorageError: std::error::Error + 'static> {
         actual: JobState,
     },
     #[error(transparent)]
-    Storage(#[from] StorageError),
+    Storage(Arc<StorageError>),
+}
+
+impl<StorageError: std::error::Error + 'static> From<StorageError>
+    for CreateJobError<StorageError>
+{
+    fn from(error: StorageError) -> Self {
+        Self::Storage(Arc::new(error))
+    }
+}
+
+impl<StorageError: std::error::Error + 'static> From<StorageError> for GetJobError<StorageError> {
+    fn from(error: StorageError) -> Self {
+        Self::Storage(Arc::new(error))
+    }
+}
+
+impl<StorageError: std::error::Error + 'static> From<StorageError>
+    for CompareAndSetJobStateError<StorageError>
+{
+    fn from(error: StorageError) -> Self {
+        Self::Storage(Arc::new(error))
+    }
 }

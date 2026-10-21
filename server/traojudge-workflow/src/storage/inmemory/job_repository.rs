@@ -1,8 +1,14 @@
+use std::collections::{HashMap, HashSet};
+use std::sync::Arc;
+
 use async_trait::async_trait;
-use sqlx::SqliteConnection;
+use sqlx::{QueryBuilder, Sqlite, SqliteConnection};
+use uuid::Uuid;
 
 use crate::storage::{CompareAndSetJobStateError, CreateJobError, GetJobError, JobRepository};
 use crate::{JobId, JobState};
+
+const JOB_BATCH_SIZE: usize = 256;
 
 pub(super) const CREATE_JOBS_TABLE: &str = "
     CREATE TABLE workflow_jobs (
@@ -41,6 +47,45 @@ impl JobRepository for InMemoryJobRepository<'_> {
         Ok(())
     }
 
+    async fn create_many(
+        &mut self,
+        job_ids: &[JobId],
+    ) -> Vec<Result<(), CreateJobError<Self::Error>>> {
+        let mut results = Vec::with_capacity(job_ids.len());
+        for batch in job_ids.chunks(JOB_BATCH_SIZE) {
+            let mut query = QueryBuilder::<Sqlite>::new("INSERT INTO workflow_jobs (id, state) ");
+            query.push_values(batch, |mut row, job_id| {
+                row.push_bind(job_id.to_string()).push_bind("waiting");
+            });
+            query.push(" ON CONFLICT(id) DO NOTHING RETURNING id");
+            match query
+                .build_query_as::<(String,)>()
+                .fetch_all(&mut *self.connection)
+                .await
+            {
+                Ok(rows) => {
+                    let mut inserted: HashSet<_> = rows.into_iter().map(|(id,)| id).collect();
+                    results.extend(batch.iter().map(|&job_id| {
+                        if inserted.remove(&job_id.to_string()) {
+                            Ok(())
+                        } else {
+                            Err(CreateJobError::AlreadyExists(job_id))
+                        }
+                    }));
+                }
+                Err(error) => {
+                    let error = Arc::new(error);
+                    results.extend(
+                        batch
+                            .iter()
+                            .map(|_| Err(CreateJobError::Storage(error.clone()))),
+                    );
+                }
+            }
+        }
+        results
+    }
+
     async fn get(&mut self, job_id: JobId) -> Result<JobState, GetJobError<Self::Error>> {
         let stored: Option<String> =
             sqlx::query_scalar("SELECT state FROM workflow_jobs WHERE id = ?")
@@ -49,8 +94,33 @@ impl JobRepository for InMemoryJobRepository<'_> {
                 .await?;
 
         let state = stored.ok_or(GetJobError::NotFound(job_id))?;
-        serde_json::from_value(serde_json::Value::String(state))
-            .map_err(|error| GetJobError::Storage(sqlx::Error::Decode(Box::new(error))))
+        decode_state(state).map_err(GetJobError::from)
+    }
+
+    async fn get_many(
+        &mut self,
+        job_ids: &[JobId],
+    ) -> Vec<Result<JobState, GetJobError<Self::Error>>> {
+        let mut results = Vec::with_capacity(job_ids.len());
+        for batch in job_ids.chunks(JOB_BATCH_SIZE) {
+            match load_states(self.connection, batch).await {
+                Ok(states) => results.extend(batch.iter().map(|job_id| {
+                    states
+                        .get(job_id)
+                        .copied()
+                        .ok_or(GetJobError::NotFound(*job_id))
+                })),
+                Err(error) => {
+                    let error = Arc::new(error);
+                    results.extend(
+                        batch
+                            .iter()
+                            .map(|_| Err(GetJobError::Storage(error.clone()))),
+                    );
+                }
+            }
+        }
+        results
     }
 
     async fn compare_and_set_state(
@@ -80,6 +150,149 @@ impl JobRepository for InMemoryJobRepository<'_> {
             actual,
         })
     }
+
+    async fn compare_and_set_state_many(
+        &mut self,
+        updates: &[(JobId, JobState, JobState)],
+    ) -> Vec<Result<(), CompareAndSetJobStateError<Self::Error>>> {
+        let mut results = Vec::with_capacity(updates.len());
+        let mut start = 0;
+        while start < updates.len() {
+            let mut seen = HashSet::new();
+            let mut end = start;
+            while end < updates.len() && end - start < JOB_BATCH_SIZE && seen.insert(updates[end].0)
+            {
+                end += 1;
+            }
+            results.extend(update_states(self.connection, &updates[start..end]).await);
+            start = end;
+        }
+        results
+    }
+}
+
+async fn load_states(
+    connection: &mut SqliteConnection,
+    job_ids: &[JobId],
+) -> Result<HashMap<JobId, JobState>, sqlx::Error> {
+    let mut query =
+        QueryBuilder::<Sqlite>::new("SELECT id, state FROM workflow_jobs WHERE id IN (");
+    let mut ids = query.separated(", ");
+    for job_id in job_ids {
+        ids.push_bind(job_id.to_string());
+    }
+    query.push(")");
+    let rows = query
+        .build_query_as::<(String, String)>()
+        .fetch_all(connection)
+        .await?;
+    rows.into_iter()
+        .map(|(id, state)| {
+            let id = Uuid::parse_str(&id).map_err(|error| sqlx::Error::Decode(Box::new(error)))?;
+            Ok((JobId::from(id), decode_state(state)?))
+        })
+        .collect()
+}
+
+async fn update_states(
+    connection: &mut SqliteConnection,
+    updates: &[(JobId, JobState, JobState)],
+) -> Vec<Result<(), CompareAndSetJobStateError<sqlx::Error>>> {
+    let job_ids: Vec<_> = updates.iter().map(|&(job_id, _, _)| job_id).collect();
+    let states = match load_states(connection, &job_ids).await {
+        Ok(states) => states,
+        Err(error) => {
+            let error = Arc::new(error);
+            return updates
+                .iter()
+                .map(|_| Err(CompareAndSetJobStateError::Storage(error.clone())))
+                .collect();
+        }
+    };
+    let mut results: Vec<_> = updates
+        .iter()
+        .map(
+            |&(job_id, expected, _)| match states.get(&job_id).copied() {
+                None => Err(CompareAndSetJobStateError::NotFound(job_id)),
+                Some(actual) if actual != expected => {
+                    Err(CompareAndSetJobStateError::StateContradicts {
+                        job_id,
+                        expected,
+                        actual,
+                    })
+                }
+                Some(_) => Ok(()),
+            },
+        )
+        .collect();
+    let changes: Vec<_> = updates
+        .iter()
+        .copied()
+        .enumerate()
+        .filter(|(index, _)| results[*index].is_ok())
+        .collect();
+    if changes.is_empty() {
+        return results;
+    }
+    let mut query =
+        QueryBuilder::<Sqlite>::new("WITH requested(id, expected_state, next_state) AS (");
+    query.push_values(&changes, |mut row, &(_, (job_id, expected, next))| {
+        row.push_bind(job_id.to_string())
+            .push_bind(encode_state(expected))
+            .push_bind(encode_state(next));
+    });
+    query.push(
+        ") UPDATE workflow_jobs SET state = requested.next_state FROM requested
+        WHERE workflow_jobs.id = requested.id AND workflow_jobs.state = requested.expected_state
+        RETURNING workflow_jobs.id",
+    );
+    let updated = match query
+        .build_query_as::<(String,)>()
+        .fetch_all(&mut *connection)
+        .await
+    {
+        Ok(rows) => rows.into_iter().map(|(id,)| id).collect::<HashSet<_>>(),
+        Err(error) => {
+            let error = Arc::new(error);
+            for &(index, _) in &changes {
+                results[index] = Err(CompareAndSetJobStateError::Storage(error.clone()));
+            }
+            return results;
+        }
+    };
+    let missed: Vec<_> = changes
+        .into_iter()
+        .filter(|&(_, (job_id, _, _))| !updated.contains(&job_id.to_string()))
+        .collect();
+    if !missed.is_empty() {
+        let job_ids: Vec<_> = missed.iter().map(|&(_, (job_id, _, _))| job_id).collect();
+        match load_states(connection, &job_ids).await {
+            Ok(states) => {
+                for (index, (job_id, expected, _)) in missed {
+                    results[index] = Err(match states.get(&job_id).copied() {
+                        Some(actual) => CompareAndSetJobStateError::StateContradicts {
+                            job_id,
+                            expected,
+                            actual,
+                        },
+                        None => CompareAndSetJobStateError::NotFound(job_id),
+                    });
+                }
+            }
+            Err(error) => {
+                let error = Arc::new(error);
+                for (index, _) in missed {
+                    results[index] = Err(CompareAndSetJobStateError::Storage(error.clone()));
+                }
+            }
+        }
+    }
+    results
+}
+
+fn decode_state(state: String) -> Result<JobState, sqlx::Error> {
+    serde_json::from_value(serde_json::Value::String(state))
+        .map_err(|error| sqlx::Error::Decode(Box::new(error)))
 }
 
 fn encode_state(state: JobState) -> &'static str {
@@ -93,3 +306,6 @@ fn encode_state(state: JobState) -> &'static str {
         JobState::Cancelled => "cancelled",
     }
 }
+
+#[cfg(test)]
+mod tests;
