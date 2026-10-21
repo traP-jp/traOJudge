@@ -1,4 +1,4 @@
-name: CI (cargo-hakari)
+name: CI / cargo-hakari
 
 on:
   pull_request:
