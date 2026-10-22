@@ -2757,9 +2757,14 @@ dependencies = [
  "clap",
  "futures",
  "reqwest",
+ "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "traojudge-core",
+ "traojudge-workflow",
+ "uuid",
  "workspace-hack",
 ]
 
@@ -2778,6 +2783,7 @@ dependencies = [
  "serde_json",
  "thiserror",
  "tokio",
+ "traojudge-workflow",
  "uuid",
  "workspace-hack",
 ]
@@ -3332,25 +3338,18 @@ name = "workspace-hack"
 version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
- "form_urlencoded",
  "futures-channel",
  "futures-core",
- "futures-executor",
  "futures-io",
  "futures-sink",
- "futures-task",
  "futures-util",
  "getrandom 0.4.2",
  "hyper",
  "hyper-util",
  "log",
- "memchr",
  "num-traits",
- "percent-encoding",
  "proc-macro2",
  "quote",
- "regex-automata",
- "regex-syntax",
  "serde_core",
  "serde_json",
  "slab",
@@ -3363,7 +3362,6 @@ dependencies = [
  "tracing",
  "tracing-core",
  "typenum",
- "zeroize",
 ]
 
 [[package]]

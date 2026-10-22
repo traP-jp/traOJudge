@@ -16,4 +16,5 @@ serde_json.workspace = true
 thiserror.workspace = true
 uuid.workspace = true
 tokio.workspace = true
+traojudge-workflow.workspace = true
 workspace-hack.workspace = true
