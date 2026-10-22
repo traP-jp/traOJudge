@@ -14,18 +14,7 @@ defaults:
     working-directory: UI
 
 jobs:
-  package:
-    name: node package install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: UI/.node-version
-          cache: npm
-          cache-dependency-path: UI/package-lock.json
-      - run: npm ci
-  build:
+  check:
     name: type and build check
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +24,11 @@ jobs:
           node-version-file: UI/.node-version
           cache: npm
           cache-dependency-path: UI/package-lock.json
+      - name: Use the project's npm version
+        run: |
+          ui_npm_version=$(node -p "require('./package.json').devEngines.packageManager.version")
+          ui_release_age=$(npm config get min-release-age)
+          npm install --global "npm@$ui_npm_version" --ignore-scripts --min-release-age="$ui_release_age"
       - run: npm ci
       - run: ./scripts/gen-api.sh development
       - run: npm run build

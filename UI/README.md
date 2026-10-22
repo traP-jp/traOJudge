@@ -2,7 +2,9 @@
 
 traP Online Judge フロントエンド
 
-This template should help get you started developing with Vue 3 in Vite.
+Node の版は `.node-version`、npm の版は `package.json` の
+`devEngines.packageManager.version` に合わせてください。
+依存の固定・インストール時のスクリプト制限は[依存の管理](../docs/ui/dependencies.md)を参照してください。
 
 ## Recommended IDE Setup
 
@@ -19,8 +21,14 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 ## Project Setup
 
 ```sh
-npm install
+npm ci
+npm run prepare
+./scripts/gen-api.sh development
 ```
+
+コマンドは `UI/` で実行します。`npm ci` ではインストール時のスクリプトを実行しないため、
+Git フックは `npm run prepare` で明示的に設定します。
+この設定は同じリポジトリの他のworktreeにも適用されます。
 
 ### Compile and Hot-Reload for Development
 
@@ -42,7 +50,7 @@ npm run lint
 
 ## API周りのコード生成の仕方
 
-ルートディレクトリで`./scripts/gen-api.sh development`を実行してください。APIを利用する部分については，生成されたコードを使って実装をしてください。
+`UI/` で `./scripts/gen-api.sh development` を実行してください。通常問題の旧契約と、コンテストトップの新契約をそれぞれ生成します。APIを利用する部分については，生成されたコードを使って実装をしてください。
 
 ## mockサーバーの立ち上げ方
 
