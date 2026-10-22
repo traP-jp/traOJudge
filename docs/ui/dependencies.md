@@ -27,6 +27,10 @@ npm install --global "npm@$ui_npm_version" --ignore-scripts --min-release-age="$
 
 根拠: [basic-ftp のアドバイザリ](https://github.com/advisories/GHSA-c475-qrg2-pj4r)。
 
-## API生成
+## GitHub ActionsとAPI生成
+
+UI用Actionsは40桁の commit SHA に固定し、コメントに版を書く。checkoutの認証情報は保存せず、workflowの権限は `contents: read` とする。既存のDependabot設定を利用する。
+
+UIのCIはbase branchを限定しない。`UI/`、`docs/API/`、`docs/ui/` とworkflow自身の変更で実行し、通常問題・コンテスト両方のAPI生成、lint、型検査、buildを確認する。
 
 OpenAPI Generatorはnpmの依存とは別にJARを取得する。JARの版は `UI/openapitools.json` で指定し、npmのlockfile・公開後の待機期間の対象外。通常問題のスキーマは現在 `UI/scripts/gen-api.sh` が旧ドキュメントリポジトリのdevelopを参照し、コンテストトップは同じリポジトリの `docs/API/front_back.yaml` を使う。

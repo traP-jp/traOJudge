@@ -2,12 +2,14 @@ name: CI (UI)
 
 on:
   pull_request:
-    branches:
-      - 'develop'
     paths:
       - 'UI/**'
       - 'docs/API/**'
+      - 'docs/ui/**'
       - '.github/workflows/ui-main.yaml'
+
+permissions:
+  contents: read
 
 defaults:
   run:
@@ -15,10 +17,12 @@ defaults:
 
 jobs:
   check:
-    name: type and build check
+    name: lint, type and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: UI/.node-version
@@ -31,4 +35,5 @@ jobs:
           npm install --global "npm@$ui_npm_version" --ignore-scripts --min-release-age="$ui_release_age"
       - run: npm ci
       - run: ./scripts/gen-api.sh development
+      - run: npm run lint
       - run: npm run build
