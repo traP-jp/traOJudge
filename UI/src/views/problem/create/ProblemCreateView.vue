@@ -104,7 +104,7 @@ async function createProblem() {
             id="difficulty"
             v-model="difficulty"
             class="h-5.5"
-            container-class="!w-24"
+            container-class="w-24!"
             label="難易度"
             supporting-text="1以上10以下の整数で入力してください。"
             required
@@ -121,7 +121,7 @@ async function createProblem() {
               id="time-limit"
               v-model="timeLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="実行時間制限"
               required
               unit="ms"
@@ -138,7 +138,7 @@ async function createProblem() {
               id="memory-limit"
               v-model="memoryLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="メモリ制限"
               required
               unit="MiB"
@@ -150,7 +150,7 @@ async function createProblem() {
         </div>
 
         <div class="w-full">
-          <label class="fontstyle-ui-control mb-1 block text-text-primary" for="problem-statement">
+          <label class="mb-1 block fontstyle-ui-control text-text-primary" for="problem-statement">
             問題文
           </label>
           <PlainTextArea id="problem-statement" v-model="statement" class="h-64 w-full" />

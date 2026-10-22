@@ -44,7 +44,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex w-full flex-col gap-6 py-6">
-    <div v-if="error" class="rounded border border-status-error bg-background-tertiary p-4">
+    <div v-if="error" class="rounded-sm border border-status-error bg-background-tertiary p-4">
       <p class="fontstyle-ui-body text-status-error">{{ error }}</p>
     </div>
     <div v-if="isLoading" class="flex items-center justify-center py-16">

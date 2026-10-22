@@ -52,13 +52,13 @@ onMounted(async () => {
             {{ editorialAuthroId }}
           </TextLink>
         </div>
-        <div class="fontstyle-ui-body-2 flex items-center justify-center gap-3 text-text-secondary">
+        <div class="flex items-center justify-center gap-3 fontstyle-ui-body-2 text-text-secondary">
           <div>最終更新</div>
           <div>{{ editorialUpdatedAt }}</div>
         </div>
       </div>
     </div>
-    <div class="fontstyle-ui-unit flex items-start whitespace-pre-wrap text-text-primary">
+    <div class="flex items-start fontstyle-ui-unit whitespace-pre-wrap text-text-primary">
       {{ editorialStatement }}
     </div>
   </div>

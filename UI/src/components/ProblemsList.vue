@@ -70,7 +70,7 @@ const filterDifficultyRangeError = computed(
 </script>
 
 <template>
-  <div class="fontstyle-ui-subtitle relative flex items-center text-text-primary">
+  <div class="relative flex items-center fontstyle-ui-subtitle text-text-primary">
     <slot />
     <MonochromeButton small @click="toggleFilterMenu">
       <span class="inline-flex items-center gap-1">
@@ -79,7 +79,7 @@ const filterDifficultyRangeError = computed(
       </span>
     </MonochromeButton>
     <!-- フィルタ画面 -->
-    <div v-if="filterMenuShown" class="absolute right-0 top-full pt-2">
+    <div v-if="filterMenuShown" class="absolute top-full right-0 pt-2">
       <div
         class="flex flex-col gap-4 rounded-lg border border-border-secondary bg-background-primary p-4 text-text-secondary shadow-lg"
       >
@@ -89,7 +89,7 @@ const filterDifficultyRangeError = computed(
         </div>
         <div class="flex flex-col gap-2">
           <span class="fontstyle-ui-control-strong">難易度</span>
-          <div class="fontstyle-ui-control flex gap-6">
+          <div class="flex gap-6 fontstyle-ui-control">
             <span class="flex items-center gap-2">
               <span class="w-16">
                 <NumberTextbox
@@ -115,7 +115,7 @@ const filterDifficultyRangeError = computed(
           </div>
           <div v-if="filterDifficultyRangeError" class="flex items-start gap-2 text-status-error">
             <MaterialIcon icon="error" size="1.25rem" is-filled />
-            <span class="fontstyle-ui-control min-w-0 break-words">範囲が正しくありません</span>
+            <span class="min-w-0 fontstyle-ui-control wrap-break-word">範囲が正しくありません</span>
           </div>
           <span class="fontstyle-ui-caption">難易度は1~10で表されます。</span>
         </div>

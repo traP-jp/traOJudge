@@ -59,11 +59,11 @@ const onClickInnerBorder = (e: MouseEvent) => {
         <span v-if="required" class="fontstyle-ui-caption-strong text-status-error">必須</span>
       </span>
       <span
-        class="flex rounded border bg-background-primary p-2"
+        class="flex rounded-sm border bg-background-primary p-2"
         :class="[
-          { 'outline outline-1': isFocused },
+          { 'outline-1': isFocused },
           { 'border-border-secondary outline-text-primary': !displaysError },
-          { 'border-status-error outline outline-1 outline-status-error': displaysError },
+          { 'border-status-error outline-1 outline-status-error': displaysError },
           { 'border-text-primary': isFocused && !displaysError },
           { 'bg-background-secondary': disabled }
         ]"
@@ -78,7 +78,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
               ref="textarea"
               v-model="value"
               :disabled="disabled"
-              class="fontstyle-ui-body w-full min-w-0 resize-none bg-transparent px-2 text-text-primary outline-none placeholder:text-text-tertiary"
+              class="w-full min-w-0 resize-none bg-transparent px-2 fontstyle-ui-body text-text-primary outline-hidden placeholder:text-text-tertiary"
               @focusin="onFocusin"
               @blur="onBlur"
             ></textarea>
@@ -104,7 +104,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
     </div>
     <div v-if="errorMessage != ''" class="mt-2 flex items-start gap-2 text-status-error">
       <MaterialIcon icon="error" size="1.25rem" is-filled />
-      <span class="fontstyle-ui-control min-w-0 break-words">{{ errorMessage }}</span>
+      <span class="min-w-0 fontstyle-ui-control wrap-break-word">{{ errorMessage }}</span>
     </div>
   </div>
 </template>

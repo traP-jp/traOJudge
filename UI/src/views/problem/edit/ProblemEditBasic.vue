@@ -141,7 +141,7 @@ onMounted(() => {
             id="difficulty"
             v-model="difficulty"
             class="h-5.5"
-            container-class="!w-24"
+            container-class="w-24!"
             label="難易度"
             supporting-text="1以上10以下の整数で入力してください。"
             required
@@ -158,7 +158,7 @@ onMounted(() => {
               id="time-limit"
               v-model="timeLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="実行時間制限"
               required
               unit="ms"
@@ -175,7 +175,7 @@ onMounted(() => {
               id="memory-limit"
               v-model="memoryLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="メモリ制限"
               required
               unit="MiB"

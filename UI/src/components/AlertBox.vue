@@ -21,7 +21,7 @@ const iconSrc = computed(() => (props.type === 'error' ? errorIcon : infoIcon))
 <template>
   <div
     v-if="show"
-    class="relative flex items-start gap-2 rounded border border-border-secondary bg-background-secondary px-4 py-3"
+    class="relative flex items-start gap-2 rounded-sm border border-border-secondary bg-background-secondary px-4 py-3"
   >
     <img :src="iconSrc" class="py-1" />
     <span class="flex flex-1 text-text-primary">{{ text }}</span>

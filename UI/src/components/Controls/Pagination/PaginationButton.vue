@@ -14,7 +14,7 @@ function onClick() {
 <template>
   <button
     :disabled="disabled"
-    class="fontstyle-ui-control-strong inline-block size-8 rounded disabled:opacity-50"
+    class="inline-block size-8 rounded-sm fontstyle-ui-control-strong disabled:opacity-50"
     :class="
       current
         ? 'bg-brand-primary text-text-inv-primary'

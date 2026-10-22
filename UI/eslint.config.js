@@ -16,11 +16,15 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
-  ...tailwind.configs['flat/recommended'],
+  {
+    ...tailwind.configs.recommended,
+    files: [...tailwind.configs.recommended.files, '**/*.mjs', '**/*.cjs']
+  },
   eslintPrettierConfig,
   { files: ['**/*.ts'], languageOptions: { parserOptions: { parser: tseslint.parser } } },
   { files: ['**/*.vue'], languageOptions: { parserOptions: { parser: tseslint.parser } } },
   {
+    settings: { tailwindcss: { cssConfigPath: './src/assets/main.css' } },
     plugins: {
       unicorn,
       '@eslint-community/eslint-comments': eslintComments

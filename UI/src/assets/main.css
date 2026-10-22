@@ -1,6 +1,46 @@
-@import './base.css';
+@import 'tailwindcss';
 
-.fontstyle-ui-title-large {
+@theme {
+  --color-*: initial;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f0f0f0;
+  --color-background-tertiary: #f5f5f5;
+  --color-background-inv-primary: #252525;
+  --color-border-primary: #d4d4d4;
+  --color-border-secondary: #eaeaea;
+  --color-brand-primary: #ac004b;
+  --color-brand-secondary: #79083a;
+  --color-brand-light-primary: #fff3f3;
+  --color-text-primary: #2a2a2a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-tertiary: #9a9a9a;
+  --color-text-inv-primary: #f0f0f0;
+  --color-status-error: #e02a2a;
+  --color-status-accepted: #31bf8c;
+  --color-status-failed: #dc802c;
+  --color-status-pending: #74889a;
+  --color-red: #ff0000;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+  --font-primary: 'Open Sans', 'Noto Sans JP', sans-serif;
+  --font-noto-sans-jp: 'Noto Sans JP', sans-serif;
+  --radius-15: 15px;
+  --spacing-header-offset: calc(100vh - 56px);
+  --spacing-auth-form: 360px;
+  --spacing-container-x: 120px;
+  --spacing-dropdown-indicator: 0.40625rem;
+  --container-form-max: 600px;
+  --container-profile-max: 500px;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility fontstyle-ui-title-large {
   @apply font-primary;
   font-size: 2.5rem;
   font-style: normal;
@@ -8,7 +48,7 @@
   line-height: 3.25rem;
 }
 
-.fontstyle-ui-title {
+@utility fontstyle-ui-title {
   @apply font-primary;
   font-size: 1.75rem;
   font-style: normal;
@@ -16,7 +56,7 @@
   line-height: 2.25rem;
 }
 
-.fontstyle-ui-subtitle {
+@utility fontstyle-ui-subtitle {
   @apply font-primary;
   font-size: 1.25rem;
   font-style: normal;
@@ -24,7 +64,7 @@
   line-height: 1.75rem;
 }
 
-.fontstyle-ui-body {
+@utility fontstyle-ui-body {
   @apply font-primary;
   font-size: 1rem;
   font-style: normal;
@@ -32,7 +72,7 @@
   line-height: 1.5rem;
 }
 
-.fontstyle-ui-body-strong {
+@utility fontstyle-ui-body-strong {
   @apply font-primary;
   font-size: 1rem;
   font-style: normal;
@@ -40,7 +80,7 @@
   line-height: 1.5rem;
 }
 
-.fontstyle-ui-body-2 {
+@utility fontstyle-ui-body-2 {
   @apply font-primary;
   font-size: 0.875rem;
   font-style: normal;
@@ -48,7 +88,7 @@
   line-height: 1.5rem;
 }
 
-.fontstyle-ui-body-2-strong {
+@utility fontstyle-ui-body-2-strong {
   @apply font-primary;
   font-size: 0.875rem;
   font-style: normal;
@@ -56,7 +96,7 @@
   line-height: 1.5rem;
 }
 
-.fontstyle-ui-control {
+@utility fontstyle-ui-control {
   @apply font-primary;
   font-size: 0.875rem;
   font-style: normal;
@@ -64,7 +104,7 @@
   line-height: 1.25rem;
 }
 
-.fontstyle-ui-control-strong {
+@utility fontstyle-ui-control-strong {
   @apply font-primary;
   font-size: 0.875rem;
   font-style: normal;
@@ -72,7 +112,7 @@
   line-height: 1.25rem;
 }
 
-.fontstyle-ui-caption {
+@utility fontstyle-ui-caption {
   @apply font-primary;
   font-size: 0.75rem;
   font-style: normal;
@@ -80,7 +120,7 @@
   line-height: 1rem;
 }
 
-.fontstyle-ui-caption-link {
+@utility fontstyle-ui-caption-link {
   @apply font-primary;
   font-size: 0.75rem;
   font-style: normal;
@@ -89,7 +129,7 @@
   text-decoration: underline;
 }
 
-.fontstyle-ui-caption-strong {
+@utility fontstyle-ui-caption-strong {
   @apply font-primary;
   font-size: 0.75rem;
   font-style: normal;
@@ -97,7 +137,7 @@
   line-height: 1rem;
 }
 
-.fontstyle-ui-unit {
+@utility fontstyle-ui-unit {
   @apply font-primary;
   font-size: 0.875rem;
   font-style: normal;

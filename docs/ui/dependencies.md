@@ -21,6 +21,10 @@ npm install --global "npm@$ui_npm_version" --ignore-scripts --min-release-age="$
 
 `.npmrc` の `ignore-scripts=true` で、インストール時のスクリプトの自動実行を無効にしてある。Git フックの設定手順は [UI の README](../../UI/README.md#project-setup) を参照する。
 
+## 対応ブラウザー
+
+Tailwind CSS 4の対応条件に合わせ、Safari 16.4、Chrome 111、Firefox 128以降を対象とする。[公式のブラウザー要件](https://tailwindcss.com/docs/upgrade-guide#browser-requirements)を参照。
+
 ## 推移依存の修正版
 
 `basic-ftp` の脆弱性対応として、`get-uri` 経由の依存を `overrides` で上書きしてある。`get-uri` の要求範囲を超えるため、更新時は互換性を確認する。上書きなしで修正版を利用できるようになったら、この設定を削除する。

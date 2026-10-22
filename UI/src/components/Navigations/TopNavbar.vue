@@ -68,10 +68,10 @@ const handleSettings = () => {
   >
     <RouterLink class="flex shrink-0 items-center gap-3" to="/" aria-label="traO Judge ホーム">
       <img :src="traOLogo" class="inline-block size-7.5" alt="" />
-      <span class="hidden whitespace-nowrap text-xl font-semibold sm:inline">traO Judge</span>
+      <span class="hidden text-xl font-semibold whitespace-nowrap sm:inline">traO Judge</span>
     </RouterLink>
     <span
-      class="fontstyle-ui-control-strong ml-auto flex min-w-0 flex-wrap items-center justify-end gap-3 whitespace-nowrap sm:flex-nowrap sm:gap-5"
+      class="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-3 fontstyle-ui-control-strong whitespace-nowrap sm:flex-nowrap sm:gap-5"
     >
       <RouterLink v-if="canCreateProblem" to="/problems/create" class="hover:text-text-secondary"
         >問題作成</RouterLink
@@ -90,13 +90,13 @@ const handleSettings = () => {
         <button v-if="isLoggedIn" class="flex items-center gap-1" @click="toggleMenu">
           <span class="inline-block max-w-24 truncate sm:max-w-none">{{ username }}</span>
           <IconDropdownTriangle
-            class="inline-block h-1.625"
+            class="inline-block h-dropdown-indicator"
             :class="isMenuOpen ? [] : ['rotate-180']"
           />
         </button>
         <div
           v-if="isMenuOpen"
-          class="absolute right-0 top-7 flex w-50 flex-col gap-y-1 rounded-lg border border-border-secondary bg-background-primary p-2"
+          class="absolute top-7 right-0 flex w-50 flex-col gap-y-1 rounded-lg border border-border-secondary bg-background-primary p-2"
         >
           <MenuButton icon="person" @click="handleProfile"> プロフィール </MenuButton>
           <MenuButton icon="settings" @click="handleSettings"> 設定 </MenuButton>

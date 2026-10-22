@@ -10,9 +10,7 @@ const current = defineModel<number>({ required: true })
 <template>
   <div class="flex items-center justify-center gap-2">
     <PaginationButton v-if="current >= 3" @click="current = 1">1</PaginationButton>
-    <span v-if="current >= 4" class="fontstyle-ui-body-strong !font-noto-sans-jp">
-      …
-    </span>
+    <span v-if="current >= 4" class="fontstyle-ui-body-strong font-noto-sans-jp!"> … </span>
     <PaginationButton v-if="current >= 2" @click="current--">
       {{ current - 1 }}
     </PaginationButton>
@@ -20,12 +18,7 @@ const current = defineModel<number>({ required: true })
     <PaginationButton v-if="current <= end - 1" @click="current++">
       {{ current + 1 }}
     </PaginationButton>
-    <span
-      v-if="current <= end - 3"
-      class="fontstyle-ui-body-strong !font-noto-sans-jp"
-    >
-      …
-    </span>
+    <span v-if="current <= end - 3" class="fontstyle-ui-body-strong font-noto-sans-jp!"> … </span>
     <PaginationButton v-if="current <= end - 2" @click="current = end">{{ end }}</PaginationButton>
   </div>
 </template>

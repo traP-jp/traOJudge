@@ -97,10 +97,10 @@ onUnmounted(() => {
       コンテストを読み込み中…
     </div>
     <section v-else-if="error" aria-labelledby="contest-error" class="max-w-2xl py-12">
-      <h1 id="contest-error" class="fontstyle-ui-title mb-4">コンテストを表示できません</h1>
+      <h1 id="contest-error" class="mb-4 fontstyle-ui-title">コンテストを表示できません</h1>
       <p role="alert" class="mb-6 leading-7 text-text-secondary">{{ error }}</p>
       <BorderedButton
-        class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+        class="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
         @click="loadContest"
         >再試行</BorderedButton
       >
@@ -109,7 +109,7 @@ onUnmounted(() => {
       <header class="border-b border-border-primary pb-6">
         <div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
           <span
-            class="rounded px-3 py-1 font-medium"
+            class="rounded-sm px-3 py-1 font-medium"
             :class="
               phase === 'running'
                 ? 'bg-brand-primary text-white'
@@ -119,15 +119,17 @@ onUnmounted(() => {
           >
           <span v-if="contest.visibility === 'private'" class="text-text-secondary">非公開</span>
         </div>
-        <h1 class="break-words text-2xl font-semibold leading-snug text-text-primary sm:text-3xl">
+        <h1
+          class="text-2xl leading-snug font-semibold wrap-break-word text-text-primary sm:text-3xl sm:leading-9"
+        >
           {{ contest.title }}
         </h1>
-        <p class="mt-4 text-sm tabular-nums text-text-secondary">{{ remainingTime }}</p>
+        <p class="mt-4 text-sm text-text-secondary tabular-nums">{{ remainingTime }}</p>
       </header>
 
       <div class="flex min-w-0 flex-col gap-10 py-8 lg:flex-row lg:gap-12">
         <article aria-labelledby="contest-overview" class="min-w-0 flex-1">
-          <h2 id="contest-overview" class="fontstyle-ui-subtitle mb-6">コンテスト概要</h2>
+          <h2 id="contest-overview" class="mb-6 fontstyle-ui-subtitle">コンテスト概要</h2>
           <MarkdownContent v-if="contest.description?.trim()" :source="contest.description" />
           <p v-else class="leading-7 text-text-secondary">
             コンテストの概要はまだ掲載されていません．
@@ -139,11 +141,11 @@ onUnmounted(() => {
             aria-labelledby="contest-schedule"
             class="border-t border-border-primary pt-6 lg:border-t-0 lg:pt-0"
           >
-            <h2 id="contest-schedule" class="fontstyle-ui-subtitle mb-5">開催情報</h2>
+            <h2 id="contest-schedule" class="mb-5 fontstyle-ui-subtitle">開催情報</h2>
             <dl class="space-y-5 text-sm">
               <div>
                 <dt class="mb-1 text-text-secondary">開始日時</dt>
-                <dd class="font-medium tabular-nums text-text-primary">
+                <dd class="font-medium text-text-primary tabular-nums">
                   <time :datetime="contest.startsAt.toISOString()">{{
                     formatContestDate(contest.startsAt)
                   }}</time>
@@ -151,7 +153,7 @@ onUnmounted(() => {
               </div>
               <div>
                 <dt class="mb-1 text-text-secondary">終了日時</dt>
-                <dd class="font-medium tabular-nums text-text-primary">
+                <dd class="font-medium text-text-primary tabular-nums">
                   <time :datetime="contest.endsAt.toISOString()">{{
                     formatContestDate(contest.endsAt)
                   }}</time>
@@ -159,7 +161,7 @@ onUnmounted(() => {
               </div>
               <div>
                 <dt class="mb-1 text-text-secondary">開催時間</dt>
-                <dd class="font-medium tabular-nums text-text-primary">
+                <dd class="font-medium text-text-primary tabular-nums">
                   {{ formatContestDuration(contest.endsAt.getTime() - contest.startsAt.getTime()) }}
                 </dd>
               </div>
@@ -168,7 +170,7 @@ onUnmounted(() => {
           </section>
 
           <section aria-labelledby="contest-rules" class="mt-8 border-t border-border-primary pt-6">
-            <h2 id="contest-rules" class="fontstyle-ui-subtitle mb-5">ルール</h2>
+            <h2 id="contest-rules" class="mb-5 fontstyle-ui-subtitle">ルール</h2>
             <dl class="space-y-5 text-sm">
               <div>
                 <dt class="mb-1 text-text-secondary">同点時の順位</dt>
@@ -178,7 +180,7 @@ onUnmounted(() => {
               </div>
               <div>
                 <dt class="mb-1 text-text-secondary">誤答ペナルティ</dt>
-                <dd class="font-medium tabular-nums text-text-primary">
+                <dd class="font-medium text-text-primary tabular-nums">
                   {{
                     contest.rules.penaltyMinutes === 0
                       ? 'なし'

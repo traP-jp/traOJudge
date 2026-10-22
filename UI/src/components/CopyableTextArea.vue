@@ -68,14 +68,14 @@ const updateValue = (value: string | undefined) => {
       </div>
       <button
         v-if="showCopyButton"
-        class="group relative rounded p-1 text-text-secondary hover:bg-background-secondary"
+        class="group relative rounded-sm p-1 text-text-secondary hover:bg-background-secondary"
         :title="copyTooltip"
         @click="handleCopy"
       >
         <MaterialIcon icon="content_copy" size="18px" />
         <span
           v-if="showCopied"
-          class="absolute -top-8 right-0 whitespace-nowrap rounded bg-background-secondary px-2 py-1 text-xs text-text-primary shadow"
+          class="absolute -top-8 right-0 rounded-sm bg-background-secondary px-2 py-1 text-xs whitespace-nowrap text-text-primary shadow-sm"
         >
           コピーしました
         </span>

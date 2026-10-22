@@ -277,13 +277,13 @@ watch(problemId, () => {
             <template v-else-if="colId === 'actions'">
               <div class="relative flex items-center justify-center gap-3">
                 <button
-                  class="rounded p-1 text-text-secondary hover:bg-background-secondary"
+                  class="rounded-sm p-1 text-text-secondary hover:bg-background-secondary"
                   @click="handleEdit(rowId)"
                 >
                   <MaterialIcon icon="edit" size="24px" />
                 </button>
                 <button
-                  class="rounded p-1 text-text-secondary hover:bg-background-secondary"
+                  class="rounded-sm p-1 text-text-secondary hover:bg-background-secondary"
                   :class="{ 'bg-background-secondary': dropdownOpenId === rowId }"
                   @click="handleMore($event, rowId)"
                 >
@@ -293,7 +293,7 @@ watch(problemId, () => {
                 <div
                   v-if="dropdownOpenId === rowId"
                   ref="dropdownRef"
-                  class="absolute right-0 top-8 z-10 w-40 rounded-lg border border-border-secondary bg-background-primary shadow-lg"
+                  class="absolute top-8 right-0 z-10 w-40 rounded-lg border border-border-secondary bg-background-primary shadow-lg"
                   @click.stop
                 >
                   <div class="p-2">
@@ -305,7 +305,7 @@ watch(problemId, () => {
                       <span class="fontstyle-ui-control-strong text-text-primary">複製</span>
                     </button>
                     <button
-                      class="flex w-full items-center gap-2 rounded px-4 py-1 text-left hover:bg-background-secondary"
+                      class="flex w-full items-center gap-2 rounded-sm px-4 py-1 text-left hover:bg-background-secondary"
                       @click="handleDelete(rowId)"
                     >
                       <MaterialIcon icon="delete" size="18px" class="text-status-error" />
@@ -320,7 +320,7 @@ watch(problemId, () => {
       </div>
 
       <div
-        class="flex flex-col gap-4 rounded border border-border-primary bg-background-primary p-4"
+        class="flex flex-col gap-4 rounded-sm border border-border-primary bg-background-primary p-4"
         style="width: 300px"
       >
         <template v-if="showEditForm">
@@ -329,7 +329,7 @@ watch(problemId, () => {
               テストケースを{{ editingTestcase ? '編集' : '追加' }}
             </h2>
             <button
-              class="rounded p-1 text-text-secondary hover:bg-background-secondary"
+              class="rounded-sm p-1 text-text-secondary hover:bg-background-secondary"
               @click="closeEditArea"
             >
               <MaterialIcon icon="close" size="24px" />

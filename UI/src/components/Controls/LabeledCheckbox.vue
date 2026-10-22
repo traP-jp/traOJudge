@@ -26,7 +26,7 @@ const isDisabled = computed(() => attrs.disabled !== undefined && attrs.disabled
         v-bind="$attrs"
         v-model="value"
         type="checkbox"
-        class="size-4 cursor-pointer rounded border-border-primary accent-brand-primary"
+        class="size-4 cursor-pointer rounded-sm border-border-primary accent-brand-primary"
         :class="{ 'cursor-not-allowed opacity-50': isDisabled }"
       />
       <span

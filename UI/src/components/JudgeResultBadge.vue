@@ -11,7 +11,7 @@ const config = statusConfig[props.status] || statusConfig.WJ
 
 <template>
   <div
-    class="fontstyle-ui-control-strong inline-flex items-center justify-center rounded px-2"
+    class="inline-flex items-center justify-center rounded-sm px-2 fontstyle-ui-control-strong"
     :class="[config.bgColor, config.textColor]"
   >
     {{ config.label }}

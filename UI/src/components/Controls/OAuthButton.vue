@@ -41,7 +41,7 @@ async function onOAuthClick() {
 <template>
   <button
     :disabled="disabled"
-    class="fontstyle-ui-control-strong inline-block space-x-2.5 rounded-lg border border-border-secondary px-3 py-2 text-text-primary enabled:hover:bg-background-secondary disabled:opacity-50"
+    class="inline-flex items-center justify-center gap-2.5 rounded-lg border border-border-secondary px-3 py-2 fontstyle-ui-control-strong text-text-primary enabled:hover:bg-background-secondary disabled:opacity-50"
     @click="onOAuthClick"
   >
     <span v-if="app === 'GitHub'" class="inline-block align-middle"

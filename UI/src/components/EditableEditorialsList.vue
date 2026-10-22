@@ -87,9 +87,9 @@ function closeActionMenu() {
 </script>
 
 <template>
-  <div class="fontstyle-ui-subtitle flex items-center justify-end self-stretch text-text-primary">
+  <div class="flex items-center justify-end self-stretch fontstyle-ui-subtitle text-text-primary">
     <slot />
-    <BorderedButton class="h-8 !px-2" @click="handleAddEditorial">
+    <BorderedButton class="h-8 px-2!" @click="handleAddEditorial">
       <span class="mx-0 inline-flex items-center gap-2">
         <span class="ml-2">解説を追加</span>
         <MaterialIcon icon="add" size="20px" />
@@ -130,13 +130,13 @@ function closeActionMenu() {
             </span>
           </button>
 
-          <div v-if="focused === rowId" class="absolute right-0 top-full">
+          <div v-if="focused === rowId" class="absolute top-full right-0">
             <div
               class="flex w-36 flex-col gap-4 rounded-lg border border-border-secondary bg-background-primary py-2 text-text-secondary shadow-lg"
             >
               <MenuButton
                 icon="delete"
-                class="rounded-none pl-2 !text-status-error hover:bg-status-error/10"
+                class="rounded-none pl-2 text-status-error! hover:bg-status-error/10"
                 @click="deleteEditorial()"
               >
                 <span class="inline-flex items-start gap-1">削除</span>

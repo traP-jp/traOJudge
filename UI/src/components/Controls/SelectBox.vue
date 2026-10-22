@@ -53,7 +53,7 @@ const onChange = (event: Event) => {
       <select
         :value="value?.id"
         :disabled="disabled"
-        class="fontstyle-ui-body w-full appearance-none rounded border bg-white px-3 py-2 pr-10 text-text-primary focus:outline-none"
+        class="w-full appearance-none rounded-sm border bg-white px-3 py-2 pr-10 fontstyle-ui-body text-text-primary focus:outline-hidden"
         :class="[
           disabled ? 'cursor-not-allowed opacity-50' : '',
           displaysError
@@ -70,7 +70,7 @@ const onChange = (event: Event) => {
       <MaterialIcon
         icon="keyboard_arrow_down"
         size="1.25rem"
-        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+        class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
         :class="disabled ? 'text-text-disabled' : 'text-text-secondary'"
       />
     </div>

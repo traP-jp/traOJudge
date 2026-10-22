@@ -67,7 +67,7 @@ const handleSubmit = async () => {
 
 <template>
   <div class="flex flex-col gap-4">
-    <div v-if="error" class="rounded border border-status-error bg-background-tertiary p-4">
+    <div v-if="error" class="rounded-sm border border-status-error bg-background-tertiary p-4">
       <p class="fontstyle-ui-body text-status-error">{{ error }}</p>
     </div>
     <div v-if="isLoading" class="flex items-center justify-center py-8">

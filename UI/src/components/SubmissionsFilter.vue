@@ -11,7 +11,7 @@ const toggleFilterMenu = () => {
 
 <template>
   <div class="relative flex items-center gap-4">
-    <h2 class="fontstyle-ui-subtitle flex-1 text-text-primary">
+    <h2 class="flex-1 fontstyle-ui-subtitle text-text-primary">
       <slot name="title" />
     </h2>
     <MonochromeButton small @click="toggleFilterMenu">
@@ -21,7 +21,7 @@ const toggleFilterMenu = () => {
       </span>
     </MonochromeButton>
 
-    <div v-if="filterMenuShown" class="absolute right-0 top-full z-10 pt-2">
+    <div v-if="filterMenuShown" class="absolute top-full right-0 z-10 pt-2">
       <div
         class="rounded-lg border border-border-secondary bg-background-primary p-4 text-text-secondary shadow-lg"
       >

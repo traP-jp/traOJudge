@@ -122,7 +122,7 @@ onMounted(async () => {
         <h1 class="fontstyle-ui-subtitle text-status-error">認証エラー</h1>
         <p class="fontstyle-ui-body text-text-secondary">{{ error }}</p>
         <button
-          class="fontstyle-ui-control-strong rounded-lg bg-brand-primary px-4 py-2 text-white hover:bg-brand-secondary"
+          class="rounded-lg bg-brand-primary px-4 py-2 fontstyle-ui-control-strong text-white hover:bg-brand-secondary"
           @click="goToLogin"
         >
           ログイン画面へ戻る

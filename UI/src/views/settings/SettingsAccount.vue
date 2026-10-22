@@ -446,7 +446,7 @@ onMounted(() => {
                 </span>
               </div>
               <button
-                class="h-8 rounded border border-border-secondary px-4 py-1 text-sm text-text-secondary"
+                class="h-8 rounded-sm border border-border-secondary px-4 py-1 text-sm text-text-secondary"
                 @click="toggleLink(service)"
               >
                 {{ service.linked ? '連携解除' : '連携' }}
