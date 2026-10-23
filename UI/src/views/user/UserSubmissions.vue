@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { User } from '@/api/generated'
-import NumberedPagination from '@/components/NumberedPagination.vue'
+import NumberedPagination from '@/components/controls/pagination/NumberedPagination.vue'
 import QueryState from '@/components/QueryState.vue'
-import SubmissionsFilter from '@/components/SubmissionsFilter.vue'
-import SubmissionsTable from '@/components/SubmissionsTable.vue'
+import SubmissionsFilter from '@/components/submissions/SubmissionsFilter.vue'
+import SubmissionsTable from '@/components/submissions/SubmissionsTable.vue'
 import { useSubmissionsQuery } from '@/composables/submissions/useSubmissionsQuery'
 import { useListRoute } from '@/router/listConditions'
 const props = defineProps<{ userId: string; user: User | null }>()

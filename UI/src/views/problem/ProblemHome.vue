@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MarkdownContent from '@/components/MarkdownContent.vue'
-import SubmitForm from '@/components/SubmitForm.vue'
+import ProblemSubmitForm from '@/components/submissions/ProblemSubmitForm.vue'
 import { useProblemQuery } from '@/composables/problems/useProblemQuery'
 import { useRouteId } from '@/router/locations'
 
@@ -18,6 +18,6 @@ const { view } = useProblemQuery(problemId)
       />
     </div>
     <hr class="border-t border-border-secondary" />
-    <SubmitForm :key="problemId" :problem-id="problemId" />
+    <ProblemSubmitForm :key="problemId" :problem-id="problemId" />
   </div>
 </template>

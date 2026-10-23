@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted } from 'vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import { ProblemsApi, type Problem } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import AlertBox from '@/components/AlertBox.vue'
 
 const route = useRoute()

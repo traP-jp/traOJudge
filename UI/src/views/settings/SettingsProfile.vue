@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import PlainTextArea from '@//components/PlainTextArea.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import { MeApi } from '@/api/generated/apis/MeApi'
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import SnsTextbox from '@/components/Controls/Textbox/SnsTextbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import SnsTextbox from '@/components/controls/textbox/SnsTextbox.vue'
 import { onMounted, ref } from 'vue'
 
 const displayName = ref<string>('')

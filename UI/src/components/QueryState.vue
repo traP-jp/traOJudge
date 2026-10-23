@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
-import MonochromeButton from '@/components/Controls/MonochromeButton.vue'
-import type { QueryView } from '@/composables/useSessionQuery'
+import MonochromeButton from '@/components/controls/MonochromeButton.vue'
+import type { QueryView } from '@/types/query'
 
 defineProps<{ view: QueryView<T> }>()
 defineEmits<{ retry: [] }>()

@@ -4,10 +4,10 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-import OAuthButton from '@/components/Controls/OAuthButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import OAuthButton from '@/components/auth/OAuthButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
 
 const email = ref<string>('')
 const emailErrorMessage = ref<string | undefined>()

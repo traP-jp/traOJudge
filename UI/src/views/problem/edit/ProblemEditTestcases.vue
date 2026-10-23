@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import CopyableTextArea from '@/components/CopyableTextArea.vue'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import CopyableTextArea from '@/components/controls/CopyableTextArea.vue'
 import ListingTable from '@/components/ListingTable.vue'
 import type { Column } from '@/types/listingTable'
-import MaterialIcon from '@/components/MaterialIcon.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import { TestcasesApi } from '@/api/generated/apis/TestcasesApi'
 import type {
   TestcaseSummary,
@@ -15,7 +15,7 @@ import type {
   PostTestcaseRequestInner,
   PutTestcaseRequest
 } from '@/api/generated/models'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 
 const route = useRoute()
 const { requireTraqAuth } = useTraqAuthGuard()

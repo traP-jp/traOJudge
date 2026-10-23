@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EditorialsList from '@/components/EditorialsList.vue'
+import EditorialsList from '@/components/problems/EditorialsList.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()

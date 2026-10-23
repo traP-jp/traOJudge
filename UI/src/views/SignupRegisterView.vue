@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { AuthenticationApi } from '@/api/generated'
 import { ResponseError } from '@/api/generated/runtime'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import { passwordValidator, usernameValidator } from '@/utils/validator'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'

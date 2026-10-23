@@ -3,8 +3,8 @@ import { AuthenticationApi } from '@/api/generated'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
 import { passwordValidator } from '@/utils/validator'
 
 const route = useRoute()

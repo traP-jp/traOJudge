@@ -23,6 +23,20 @@
 | `src/types/`       | 複数ファイルで使う型                                                                            |
 | `src/utils/`       | 副作用やI/Oを持たない関数                                                                       |
 
+### componentsとcomposablesの配置
+
+部品の配置は、扱う機能と役割で決める。複数のページで使っていても、問題や提出の知識を持つ部品は、その機能のディレクトリに置く。
+
+| components内の配置                                          | 内容・例                                                                            |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 直下                                                        | 機能を問わず使う表示部品。`ListingTable`、`QueryState`、`MarkdownContent`など       |
+| `controls/`                                                 | ボタン・入力・メニュー操作。テキスト入力は `textbox/`、ページ送りは `pagination/`   |
+| `icons/`・`editor/`                                         | アイコンとコードエディター。エディター用のハイライト処理も `editor/` に置く         |
+| `navigation/`                                               | 共通のナビゲーションとサイドメニューの枠                                            |
+| `auth/`・`problems/`・`submissions/`・`users/`・`settings/` | 機能固有の部品。サイドメニューの項目定義や `ProblemSubmitForm` も対応する機能に置く |
+
+composablesは `problems/`、`submissions/`、`users/` に機能別の処理を置く。機能をまたいで使う `useSessionQuery` は直下に置く。URLを扱う `useListRoute` と `useRouteId` は `router/` にまとめる。テストは対象の実装と同じディレクトリに置く。
+
 ## 自動チェック
 
 - `.claude/hooks/ui-format.sh` — Edit/Write 直後に Prettier → ESLint `--fix` を該当ファイルに実行
@@ -118,7 +132,7 @@ Queryの取得結果を編集するフォームでは、入力用の状態を別
 
 提出は `useSubmitSolution` が送信時の対象と入力を保持し、成功後に問題別・本人別の提出一覧を再取得の対象にする。フォームは、その後の画面遷移と入力状態を扱う。
 
-実装例は[問題一覧](../../UI/src/views/ProblemsView.vue)、[ユーザーの提出一覧](../../UI/src/views/user/UserSubmissions.vue)、[提出フォーム](../../UI/src/components/SubmitForm.vue)を参照。
+実装例は[問題一覧](../../UI/src/views/ProblemsView.vue)、[ユーザーの提出一覧](../../UI/src/views/user/UserSubmissions.vue)、[提出フォーム](../../UI/src/components/submissions/ProblemSubmitForm.vue)を参照。
 
 ### 型の書き方バランス
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
-import EditableEditorialsList from '@/components/EditableEditorialsList.vue'
+import EditableEditorialsList from '@/components/problems/EditableEditorialsList.vue'
 
 const route = useRoute()
 

@@ -2,12 +2,12 @@
 import { useRouter } from 'vue-router'
 import { ref, computed } from 'vue'
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import NumberTextbox from '@/components/Controls/Textbox/NumberTextbox.vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import { ProblemsApi } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import { type Ref } from 'vue'
 
 const router = useRouter()

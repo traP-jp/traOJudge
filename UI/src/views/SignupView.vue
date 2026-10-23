@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { AuthenticationApi } from '@/api/generated'
 import { ResponseError } from '@/api/generated/runtime'
-import OAuthButton from '@/components/Controls/OAuthButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
+import OAuthButton from '@/components/auth/OAuthButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
 import { useSignupStore } from '@/stores/signup'
 import isEmail from 'validator/lib/isEmail'
 import { ref } from 'vue'

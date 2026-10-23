@@ -3,7 +3,7 @@ import { responseErrorMessage } from '@/api/errors'
 import { MeApi } from '@/api/generated/apis/MeApi'
 import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
 import { ResponseError } from '@/api/generated/runtime'
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
 import { passwordValidator } from '@/utils/validator'
 import isEmail from 'validator/lib/isEmail'
 import { onMounted, ref } from 'vue'
@@ -14,9 +14,9 @@ import GoogleIcon from '@/assets/service_icons/google.svg'
 import traQIcon from '@/assets/service_icons/traq.svg'
 
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
 
 const email = ref<string>('')
 const username = ref<string>('')

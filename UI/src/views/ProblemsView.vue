@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import NumberedPagination from '@/components/NumberedPagination.vue'
-import ProblemFilters from '@/components/ProblemFilters.vue'
-import ProblemsList from '@/components/ProblemsList.vue'
+import NumberedPagination from '@/components/controls/pagination/NumberedPagination.vue'
+import ProblemFilters from '@/components/problems/ProblemFilters.vue'
+import ProblemsList from '@/components/problems/ProblemsList.vue'
 import QueryState from '@/components/QueryState.vue'
 import { useProblemsQuery } from '@/composables/problems/useProblemsQuery'
 import { useListRoute } from '@/router/listConditions'

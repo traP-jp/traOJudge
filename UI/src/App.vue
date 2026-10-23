@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
-import MonochromeButton from '@/components/Controls/MonochromeButton.vue'
-import BottomNavbar from '@/components/Navigations/BottomNavbar.vue'
-import TopNavbar from '@/components/Navigations/TopNavbar.vue'
+import MonochromeButton from '@/components/controls/MonochromeButton.vue'
+import BottomNavbar from '@/components/navigation/BottomNavbar.vue'
+import TopNavbar from '@/components/navigation/TopNavbar.vue'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()

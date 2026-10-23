@@ -4,7 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest'
 
 import { ProblemsApi, type ProblemSummaries } from '@/api/generated'
 import { queryClient } from '@/api/queryClient'
-import ProblemFilters from '@/components/ProblemFilters.vue'
+import ProblemFilters from '@/components/problems/ProblemFilters.vue'
 import { cleanupQueries, deferred, problem, setupSession, testRouter } from '@/test/helpers'
 import ProblemsView from '@/views/ProblemsView.vue'
 

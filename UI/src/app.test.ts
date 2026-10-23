@@ -7,7 +7,7 @@ import { AuthenticationApi, MeApi, Oauth2Api, ResponseError } from '@/api/genera
 import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
 import { queryClient } from '@/api/queryClient'
 import App from '@/App.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import appRouter, { watchSessionRouting } from '@/router'
 import { useUserStore } from '@/stores/user'
 import { deferred, me } from '@/test/helpers'

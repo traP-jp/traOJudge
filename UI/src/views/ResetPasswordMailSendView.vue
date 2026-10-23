@@ -3,8 +3,8 @@ import type { Email } from '@/api/generated'
 import { AuthenticationApi } from '@/api/generated'
 import { useRouter } from 'vue-router'
 
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 
 const router = useRouter()
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import SideMenuProbleEdit from '@/components/Navigations/SideMenu/SideMenuProbleEdit.vue'
+import SideMenuProblemEdit from '@/components/problems/SideMenuProblemEdit.vue'
 import { ref, watch } from 'vue'
 
 const route = useRoute()
@@ -19,7 +19,7 @@ watch(
 <template>
   <div class="flex gap-8 px-container-x">
     <nav class="sticky top-14 h-header-offset">
-      <SideMenuProbleEdit :problem-id="problemId" />
+      <SideMenuProblemEdit :problem-id="problemId" />
     </nav>
     <main class="flex-auto py-6">
       <RouterView />

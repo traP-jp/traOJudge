@@ -4,11 +4,7 @@ import { computed, type MaybeRefOrGetter, toValue, watch } from 'vue'
 import { ResponseError } from '@/api/generated/runtime'
 import { sessionQueryKey } from '@/api/queryClient'
 import { useUserStore } from '@/stores/user'
-
-export type QueryView<T> =
-  | { status: 'pending' }
-  | { status: 'error'; message: string }
-  | { status: 'success'; data: T; refreshing: boolean; warning?: string }
+import type { QueryView } from '@/types/query'
 
 const errorMessage = (error: Error): string => {
   if (!(error instanceof ResponseError)) return '読み込みに失敗しました。もう一度お試しください。'

@@ -5,8 +5,8 @@ import isEmail from 'validator/lib/isEmail'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
 
 const router = useRouter()
 

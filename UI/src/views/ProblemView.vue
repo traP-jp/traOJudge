@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import SideMenuProblem from '@/components/Navigations/SideMenu/SideMenuProblem.vue'
+import SideMenuProblem from '@/components/problems/SideMenuProblem.vue'
 import QueryState from '@/components/QueryState.vue'
 import { useProblemQuery } from '@/composables/problems/useProblemQuery'
 import { useRouteId } from '@/router/locations'

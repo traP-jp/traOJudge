@@ -2,11 +2,11 @@
 import { responseErrorMessage } from '@/api/errors'
 import { useRoute } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import MaterialIcon from '@/components/MaterialIcon.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import TextLink from '@/components/TextLink.vue'
 import {
   EditorialsApi,
@@ -16,7 +16,7 @@ import {
   type PutEditorialOperationRequest,
   type PutEditorialRequest
 } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import router from '@/router'
 
 const { requireTraqAuth } = useTraqAuthGuard()
