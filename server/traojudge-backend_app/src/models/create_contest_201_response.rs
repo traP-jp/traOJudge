@@ -13,19 +13,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateContest201Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "id")]
     pub id: String,
     #[serde(rename = "title")]
     pub title: String,
+    /// コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．
+    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
     #[serde(rename = "visibility")]
     pub visibility: Visibility,
     #[serde(rename = "startsAt")]
     pub starts_at: String,
+    /// 個人戦またはチーム戦。
+    #[serde(rename = "participationMode")]
+    pub participation_mode: ParticipationMode,
     #[serde(rename = "endsAt")]
     pub ends_at: String,
     #[serde(rename = "rules")]
-    pub rules: models::CreateContestRequestRules,
+    pub rules: models::ListContests200ResponseItemsInnerRules,
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
@@ -37,15 +43,18 @@ impl CreateContest201Response {
         title: String,
         visibility: Visibility,
         starts_at: String,
+        participation_mode: ParticipationMode,
         ends_at: String,
-        rules: models::CreateContestRequestRules,
+        rules: models::ListContests200ResponseItemsInnerRules,
         revision: String,
     ) -> CreateContest201Response {
         CreateContest201Response {
             id,
             title,
+            description: None,
             visibility,
             starts_at,
+            participation_mode,
             ends_at,
             rules,
             revision,
@@ -64,5 +73,19 @@ pub enum Visibility {
 impl Default for Visibility {
     fn default() -> Visibility {
         Self::Public
+    }
+}
+/// 個人戦またはチーム戦。
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum ParticipationMode {
+    #[serde(rename = "individual")]
+    Individual,
+    #[serde(rename = "team")]
+    Team,
+}
+
+impl Default for ParticipationMode {
+    fn default() -> ParticipationMode {
+        Self::Individual
     }
 }

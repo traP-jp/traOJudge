@@ -13,9 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListProblems200ResponseItemsInner {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "id")]
     pub id: String,
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
+    #[serde(rename = "createdByUserId")]
+    pub created_by_user_id: String,
     #[serde(rename = "title")]
     pub title: String,
     #[serde(rename = "statement")]
@@ -25,8 +28,9 @@ pub struct ListProblems200ResponseItemsInner {
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
-    #[serde(rename = "currentVersionId")]
-    pub current_version_id: models::ListProblems200ResponseItemsInnerCurrentVersionId,
+    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    #[serde(rename = "currentVersionId", deserialize_with = "Option::deserialize")]
+    pub current_version_id: Option<String>,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
@@ -36,16 +40,18 @@ pub struct ListProblems200ResponseItemsInner {
 impl ListProblems200ResponseItemsInner {
     pub fn new(
         id: String,
+        created_by_user_id: String,
         title: String,
         statement: String,
         visibility: Visibility,
         revision: String,
-        current_version_id: models::ListProblems200ResponseItemsInnerCurrentVersionId,
+        current_version_id: Option<String>,
         created_at: String,
         updated_at: String,
     ) -> ListProblems200ResponseItemsInner {
         ListProblems200ResponseItemsInner {
             id,
+            created_by_user_id,
             title,
             statement,
             visibility,

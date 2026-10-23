@@ -12,10 +12,19 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListProblems200ResponseNextCursor {}
+pub struct CreateOrJoinContestTeam201Response {
+    #[serde(rename = "team")]
+    pub team: models::CreateOrJoinContestTeam201ResponseTeam,
+    /// ログイン中の本人がこのチームに参加した時刻。
+    #[serde(rename = "joinedAt")]
+    pub joined_at: String,
+}
 
-impl ListProblems200ResponseNextCursor {
-    pub fn new() -> ListProblems200ResponseNextCursor {
-        ListProblems200ResponseNextCursor {}
+impl CreateOrJoinContestTeam201Response {
+    pub fn new(
+        team: models::CreateOrJoinContestTeam201ResponseTeam,
+        joined_at: String,
+    ) -> CreateOrJoinContestTeam201Response {
+        CreateOrJoinContestTeam201Response { team, joined_at }
     }
 }

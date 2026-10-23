@@ -15,12 +15,18 @@ use serde::{Deserialize, Serialize};
 pub struct CreateContestRequest {
     #[serde(rename = "title")]
     pub title: String,
+    /// コンテストtopに表示するMarkdown形式の概要．HTMLは許可しない．
+    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    /// 大会主催側が選ぶ参加方式。個人戦またはチーム戦。
+    #[serde(rename = "participationMode")]
+    pub participation_mode: ParticipationMode,
     #[serde(rename = "startsAt")]
     pub starts_at: String,
     #[serde(rename = "endsAt")]
     pub ends_at: String,
     #[serde(rename = "rules")]
-    pub rules: models::CreateContestRequestRules,
+    pub rules: models::ListContests200ResponseItemsInnerRules,
     /// 作成時の公開範囲。作成後の変更権限は別途具体化する。
     #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
     pub visibility: Option<Visibility>,
@@ -29,17 +35,34 @@ pub struct CreateContestRequest {
 impl CreateContestRequest {
     pub fn new(
         title: String,
+        participation_mode: ParticipationMode,
         starts_at: String,
         ends_at: String,
-        rules: models::CreateContestRequestRules,
+        rules: models::ListContests200ResponseItemsInnerRules,
     ) -> CreateContestRequest {
         CreateContestRequest {
             title,
+            description: None,
+            participation_mode,
             starts_at,
             ends_at,
             rules,
             visibility: None,
         }
+    }
+}
+/// 大会主催側が選ぶ参加方式。個人戦またはチーム戦。
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum ParticipationMode {
+    #[serde(rename = "individual")]
+    Individual,
+    #[serde(rename = "team")]
+    Team,
+}
+
+impl Default for ParticipationMode {
+    fn default() -> ParticipationMode {
+        Self::Individual
     }
 }
 /// 作成時の公開範囲。作成後の変更権限は別途具体化する。

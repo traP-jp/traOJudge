@@ -83,6 +83,9 @@ SubmissionAccepted:
       $ref: './common.yaml#/ResourceId'
     problemVersionId:
       $ref: './common.yaml#/ResourceId'
+    teamId:
+      $ref: './common.yaml#/ResourceId'
+      description: '通常大会のチーム戦で、提出得点を集計するチーム。チーム戦以外では省略する。'
     acceptedAt:
       type: 'string'
       format: 'date-time'
@@ -265,6 +268,9 @@ Submission:
       $ref: './common.yaml#/ResourceId'
     context:
       $ref: './submissions.yaml#/SubmissionContext'
+    teamId:
+      $ref: './common.yaml#/ResourceId'
+      description: '通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。'
     submittedAt:
       type: 'string'
       format: 'date-time'
@@ -278,6 +284,49 @@ Submission:
     - 'context'
     - 'submittedAt'
     - 'currentJudgeRunId'
+SubmissionSourceFileDownload:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    path:
+      type: 'string'
+      description: '提出時のファイル集合内の相対パス。'
+    byteLength:
+      type: 'integer'
+      minimum: 0
+    sha256:
+      type: 'string'
+      pattern: '^[a-f0-9]{64}$'
+    method:
+      type: 'string'
+      const: 'GET'
+    url:
+      type: 'string'
+      format: 'uri'
+      description: 'このファイルをS3から直接取得するための署名付きURL。アクセス権は発行時にAPIが検証する。'
+    expiresAt:
+      type: 'string'
+      format: 'date-time'
+      description: '署名付きURL自体の有効期限。再取得時はこのAPIを呼び出す。'
+  required:
+    - 'path'
+    - 'byteLength'
+    - 'sha256'
+    - 'method'
+    - 'url'
+    - 'expiresAt'
+SubmissionSourceDownload:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    files:
+      type: 'array'
+      minItems: 1
+      items:
+        $ref: './submissions.yaml#/SubmissionSourceFileDownload'
+      description: '提出時のパスを維持して取得する各ソースファイル。'
+  required:
+    - 'files'
 Submissions:
   type: 'object'
   additionalProperties: false

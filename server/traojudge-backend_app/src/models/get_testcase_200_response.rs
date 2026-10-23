@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetTestcase200Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "id")]
     pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "problemId")]
     pub problem_id: String,
     #[serde(rename = "name")]
     pub name: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "inputFileId")]
     pub input_file_id: String,
     /// 外部向けの不透明な識別子。内部DBの型を仮定しない。

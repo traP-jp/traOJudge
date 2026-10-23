@@ -15,10 +15,10 @@ use serde::{Deserialize, Serialize};
 pub struct CreateTestcaseRequest {
     #[serde(rename = "name")]
     pub name: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "inputFileId")]
     pub input_file_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(
         rename = "expectedOutputFileId",
         skip_serializing_if = "Option::is_none"

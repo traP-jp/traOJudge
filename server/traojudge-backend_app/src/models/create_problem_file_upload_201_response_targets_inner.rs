@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateProblemFileUpload201ResponseTargetsInner {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "fileId")]
     pub file_id: String,
     #[serde(rename = "path")]

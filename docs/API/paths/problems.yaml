@@ -32,7 +32,7 @@ problems:
     tags:
       - 'problems'
     summary: '非公開の問題を作成する'
-    description: 'writerが新しい非公開問題を作る。作成者へのproblem-ownerの自動付与は未決であり、この応答だけで付与済みと扱わない。'
+    description: 'writerが新しい非公開問題を作る。createdByUserIdにはログイン中の本人を記録する。作成者へのproblem-ownerの自動付与は未決であり、作成者の記録だけで編集権限が付与されたとは扱わない。'
     x-authorization:
       status: 'defined'
       anyOf:

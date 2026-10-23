@@ -19,11 +19,11 @@ pub struct ListJudgeRuns200ResponseItemsInnerFailureAnyOf {
     /// 利用者に説明可能なエラー。秘密や非公開リソースの詳細を含めない。
     #[serde(rename = "message")]
     pub message: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "requestId")]
     pub request_id: String,
     #[serde(rename = "details", skip_serializing_if = "Option::is_none")]
-    pub details: Option<Vec<models::ListJudgeRuns200ResponseItemsInnerFailureAnyOfDetailsInner>>,
+    pub details: Option<Vec<models::RequestEmailRegistration403ResponseDetailsInner>>,
 }
 
 impl ListJudgeRuns200ResponseItemsInnerFailureAnyOf {

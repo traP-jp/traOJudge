@@ -12,33 +12,22 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateContestRequestRules {
-    #[serde(rename = "tieBreak")]
-    pub tie_break: TieBreak,
-    /// 開始前まで変更可能。0は誤答ペナルティなし。
-    #[serde(rename = "penaltyMinutes")]
-    pub penalty_minutes: i32,
+pub struct GetContestTeam200Response {
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
+    #[serde(rename = "id")]
+    pub id: String,
+    #[serde(rename = "name")]
+    pub name: String,
+    #[serde(rename = "members")]
+    pub members: Vec<models::GetContestTeam200ResponseMembersInner>,
 }
 
-impl CreateContestRequestRules {
-    pub fn new(tie_break: TieBreak, penalty_minutes: i32) -> CreateContestRequestRules {
-        CreateContestRequestRules {
-            tie_break,
-            penalty_minutes,
-        }
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum TieBreak {
-    #[serde(rename = "icpc")]
-    Icpc,
-    #[serde(rename = "atcoder")]
-    Atcoder,
-}
-
-impl Default for TieBreak {
-    fn default() -> TieBreak {
-        Self::Icpc
+impl GetContestTeam200Response {
+    pub fn new(
+        id: String,
+        name: String,
+        members: Vec<models::GetContestTeam200ResponseMembersInner>,
+    ) -> GetContestTeam200Response {
+        GetContestTeam200Response { id, name, members }
     }
 }

@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct JoinVirtualContest201Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "userId")]
     pub user_id: String,
     #[serde(rename = "joinedAt")]

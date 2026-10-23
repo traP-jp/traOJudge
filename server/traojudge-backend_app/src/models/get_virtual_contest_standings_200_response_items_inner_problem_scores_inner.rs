@@ -12,10 +12,26 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListProblems200ResponseItemsInnerCurrentVersionId {}
+pub struct GetVirtualContestStandings200ResponseItemsInnerProblemScoresInner {
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
+    #[serde(rename = "problemId")]
+    pub problem_id: String,
+    #[serde(rename = "label")]
+    pub label: String,
+    #[serde(rename = "score")]
+    pub score: f64,
+}
 
-impl ListProblems200ResponseItemsInnerCurrentVersionId {
-    pub fn new() -> ListProblems200ResponseItemsInnerCurrentVersionId {
-        ListProblems200ResponseItemsInnerCurrentVersionId {}
+impl GetVirtualContestStandings200ResponseItemsInnerProblemScoresInner {
+    pub fn new(
+        problem_id: String,
+        label: String,
+        score: f64,
+    ) -> GetVirtualContestStandings200ResponseItemsInnerProblemScoresInner {
+        GetVirtualContestStandings200ResponseItemsInnerProblemScoresInner {
+            problem_id,
+            label,
+            score,
+        }
     }
 }

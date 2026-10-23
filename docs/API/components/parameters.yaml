@@ -40,6 +40,13 @@ ContestId:
   description: '対象のcontestId。URLに含まれる親子リソースの所属関係も検証する。'
   schema:
     $ref: '../schemas/common.yaml#/ResourceId'
+TeamId:
+  name: 'teamId'
+  in: 'path'
+  required: true
+  description: '対象大会内のteamId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
 VirtualContestId:
   name: 'virtualContestId'
   in: 'path'

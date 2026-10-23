@@ -18,7 +18,7 @@ pub struct UpdateVirtualContestRequest {
     #[serde(rename = "endsAt", skip_serializing_if = "Option::is_none")]
     pub ends_at: Option<String>,
     #[serde(rename = "rules", skip_serializing_if = "Option::is_none")]
-    pub rules: Option<models::CreateContestRequestRules>,
+    pub rules: Option<models::ListContests200ResponseItemsInnerRules>,
 }
 
 impl UpdateVirtualContestRequest {

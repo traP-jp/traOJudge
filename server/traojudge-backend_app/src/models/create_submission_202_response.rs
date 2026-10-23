@@ -13,15 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateSubmission202Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "submissionId")]
     pub submission_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "judgeRunId")]
     pub judge_run_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "problemVersionId")]
     pub problem_version_id: String,
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
+    #[serde(rename = "teamId", skip_serializing_if = "Option::is_none")]
+    pub team_id: Option<String>,
     #[serde(rename = "acceptedAt")]
     pub accepted_at: String,
 }
@@ -37,6 +40,7 @@ impl CreateSubmission202Response {
             submission_id,
             judge_run_id,
             problem_version_id,
+            team_id: None,
             accepted_at,
         }
     }

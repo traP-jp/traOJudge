@@ -11,19 +11,34 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListJudgeRuns200ResponseItemsInnerFailureAnyOfDetailsInner {
-    #[serde(rename = "field")]
-    pub field: String,
-    #[serde(rename = "reason")]
-    pub reason: String,
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ListContestTeamSubmissions200ResponseItemsInnerContext {
+    ListContestTeamSubmissions200ResponseItemsInnerContextOneOf(
+        models::ListContestTeamSubmissions200ResponseItemsInnerContextOneOf,
+    ),
+    ListContestTeamSubmissions200ResponseItemsInnerContextOneOf1(
+        models::ListContestTeamSubmissions200ResponseItemsInnerContextOneOf1,
+    ),
+    ListContestTeamSubmissions200ResponseItemsInnerContextOneOf2(
+        models::ListContestTeamSubmissions200ResponseItemsInnerContextOneOf2,
+    ),
 }
 
-impl ListJudgeRuns200ResponseItemsInnerFailureAnyOfDetailsInner {
-    pub fn new(
-        field: String,
-        reason: String,
-    ) -> ListJudgeRuns200ResponseItemsInnerFailureAnyOfDetailsInner {
-        ListJudgeRuns200ResponseItemsInnerFailureAnyOfDetailsInner { field, reason }
+impl Default for ListContestTeamSubmissions200ResponseItemsInnerContext {
+    fn default() -> Self {
+        Self::ListContestTeamSubmissions200ResponseItemsInnerContextOneOf(Default::default())
+    }
+}
+///
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Kind {
+    #[serde(rename = "virtual-contest")]
+    VirtualContest,
+}
+
+impl Default for Kind {
+    fn default() -> Kind {
+        Self::VirtualContest
     }
 }

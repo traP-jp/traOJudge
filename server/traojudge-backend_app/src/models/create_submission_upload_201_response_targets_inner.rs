@@ -13,13 +13,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateSubmissionUpload201ResponseTargetsInner {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "fileId")]
     pub file_id: String,
     #[serde(rename = "path")]
     pub path: String,
     #[serde(rename = "method")]
-    pub method: Method,
+    pub method: String,
     /// 署名付きの直接アップロードURL。発行元のAPI認証トークンを失効しても取り消されず、expiresAtまで利用できる。
     #[serde(rename = "url")]
     pub url: String,
@@ -35,7 +35,7 @@ impl CreateSubmissionUpload201ResponseTargetsInner {
     pub fn new(
         file_id: String,
         path: String,
-        method: Method,
+        method: String,
         url: String,
         headers: std::collections::HashMap<String, String>,
         expires_at: String,
@@ -48,17 +48,5 @@ impl CreateSubmissionUpload201ResponseTargetsInner {
             headers,
             expires_at,
         }
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Method {
-    #[serde(rename = "PUT")]
-    Put,
-}
-
-impl Default for Method {
-    fn default() -> Method {
-        Self::Put
     }
 }

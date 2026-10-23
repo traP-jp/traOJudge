@@ -11,19 +11,20 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListMyProblems200Response {
-    #[serde(rename = "items")]
-    pub items: Vec<models::ListMyProblems200ResponseItemsInner>,
-    #[serde(rename = "nextCursor", deserialize_with = "Option::deserialize")]
-    pub next_cursor: Option<String>,
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ListMySubmissions200ResponseItemsInnerContext {
+    GetMe200ResponseRolesInnerScopeOneOf(models::GetMe200ResponseRolesInnerScopeOneOf),
+    ListMySubmissions200ResponseItemsInnerContextOneOf(
+        models::ListMySubmissions200ResponseItemsInnerContextOneOf,
+    ),
+    ListMySubmissions200ResponseItemsInnerContextOneOf1(
+        models::ListMySubmissions200ResponseItemsInnerContextOneOf1,
+    ),
 }
 
-impl ListMyProblems200Response {
-    pub fn new(
-        items: Vec<models::ListMyProblems200ResponseItemsInner>,
-        next_cursor: Option<String>,
-    ) -> ListMyProblems200Response {
-        ListMyProblems200Response { items, next_cursor }
+impl Default for ListMySubmissions200ResponseItemsInnerContext {
+    fn default() -> Self {
+        Self::GetMe200ResponseRolesInnerScopeOneOf(Default::default())
     }
 }

@@ -25,6 +25,8 @@ tags:
     description: 'メール・外部サービスによる本人確認とセッション。'
   - name: 'me'
     description: '本人のプロフィール・認証手段・開発者トークン。'
+  - name: 'users'
+    description: '公開プロフィールと、利用者が作成した公開問題。'
   - name: 'permissions'
     description: '役割と対象を固定した付与・剥奪。'
   - name: 'problems'
@@ -66,6 +68,10 @@ paths:
     $ref: './paths/authentication.yaml#/authExternalSessionsByAuthorizationIdComplete'
   '/me':
     $ref: './paths/me.yaml#/me'
+  '/users/{userId}':
+    $ref: './paths/users.yaml#/usersByUserId'
+  '/users/{userId}/problems':
+    $ref: './paths/users.yaml#/usersByUserIdProblems'
   '/me/email-changes':
     $ref: './paths/me.yaml#/meEmailChanges'
   '/me/email-changes/complete':
@@ -134,6 +140,8 @@ paths:
     $ref: './paths/submissions.yaml#/meSubmissions'
   '/submissions/{submissionId}':
     $ref: './paths/submissions.yaml#/submissionsBySubmissionId'
+  '/submissions/{submissionId}/source':
+    $ref: './paths/submissions.yaml#/submissionsBySubmissionIdSource'
   '/submissions/{submissionId}/judge-runs':
     $ref: './paths/submissions.yaml#/submissionsBySubmissionIdJudgeRuns'
   '/submissions/{submissionId}/judge-runs/{judgeRunId}':
@@ -160,10 +168,18 @@ paths:
     $ref: './paths/contests.yaml#/contestsByContestIdProblemsByProblemId'
   '/contests/{contestId}/participation':
     $ref: './paths/contests.yaml#/contestsByContestIdParticipation'
+  '/contests/{contestId}/teams':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeams'
+  '/contests/{contestId}/teams/{teamId}':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamsByTeamId'
+  '/contests/{contestId}/teams/{teamId}/submissions':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamsByTeamIdSubmissions'
   '/contests/{contestId}/submissions':
     $ref: './paths/contests.yaml#/contestsByContestIdSubmissions'
   '/contests/{contestId}/standings':
     $ref: './paths/contests.yaml#/contestsByContestIdStandings'
+  '/contests/{contestId}/standings/team':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamStandings'
   '/contests/{contestId}/clarifications':
     $ref: './paths/clarifications.yaml#/contestsByContestIdClarifications'
   '/contests/{contestId}/clarifications/{clarificationId}/answer':

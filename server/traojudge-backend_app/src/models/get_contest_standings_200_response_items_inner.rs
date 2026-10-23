@@ -13,9 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetContestStandings200ResponseItemsInner {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "userId")]
     pub user_id: String,
+    /// 大会の全出題を出題順に返す。提出得点がない問題のscoreは0。
+    #[serde(rename = "problemScores")]
+    pub problem_scores: Vec<models::GetContestStandings200ResponseItemsInnerProblemScoresInner>,
     #[serde(rename = "rank")]
     pub rank: i32,
     #[serde(rename = "score")]
@@ -29,6 +32,7 @@ pub struct GetContestStandings200ResponseItemsInner {
 impl GetContestStandings200ResponseItemsInner {
     pub fn new(
         user_id: String,
+        problem_scores: Vec<models::GetContestStandings200ResponseItemsInnerProblemScoresInner>,
         rank: i32,
         score: f64,
         tie_break_value: f64,
@@ -36,6 +40,7 @@ impl GetContestStandings200ResponseItemsInner {
     ) -> GetContestStandings200ResponseItemsInner {
         GetContestStandings200ResponseItemsInner {
             user_id,
+            problem_scores,
             rank,
             score,
             tie_break_value,

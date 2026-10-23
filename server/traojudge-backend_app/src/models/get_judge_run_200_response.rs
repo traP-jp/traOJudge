@@ -13,13 +13,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetJudgeRun200Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "id")]
     pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "submissionId")]
     pub submission_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "problemVersionId")]
     pub problem_version_id: String,
     #[serde(rename = "state")]
@@ -43,7 +43,7 @@ pub struct GetJudgeRun200Response {
     #[serde(rename = "result")]
     pub result: models::GetJudgeRun200ResponseResult,
     #[serde(rename = "failure")]
-    pub failure: models::ListJudgeRuns200ResponseItemsInnerFailure,
+    pub failure: models::GetJudgeRun200ResponseFailure,
 }
 
 impl GetJudgeRun200Response {
@@ -60,7 +60,7 @@ impl GetJudgeRun200Response {
         started_at: Option<models::ListDeveloperTokens200ResponseItemsInnerRevokedAt>,
         finished_at: Option<models::ListDeveloperTokens200ResponseItemsInnerRevokedAt>,
         result: models::GetJudgeRun200ResponseResult,
-        failure: models::ListJudgeRuns200ResponseItemsInnerFailure,
+        failure: models::GetJudgeRun200ResponseFailure,
     ) -> GetJudgeRun200Response {
         GetJudgeRun200Response {
             id,

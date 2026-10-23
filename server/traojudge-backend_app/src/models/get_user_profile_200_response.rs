@@ -11,30 +11,32 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ListContestSubmissions200ResponseItemsInnerContext {
-    ListContestSubmissions200ResponseItemsInnerContextOneOf(
-        models::ListContestSubmissions200ResponseItemsInnerContextOneOf,
-    ),
-    UpdateMe200ResponseRolesInnerScopeOneOf2(models::UpdateMe200ResponseRolesInnerScopeOneOf2),
-    UpdateMe200ResponseRolesInnerScopeOneOf3(models::UpdateMe200ResponseRolesInnerScopeOneOf3),
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct GetUserProfile200Response {
+    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    #[serde(rename = "id")]
+    pub id: String,
+    #[serde(rename = "displayName")]
+    pub display_name: String,
+    #[serde(rename = "bio")]
+    pub bio: String,
+    /// 対象の版を識別する不透明な文字列。
+    #[serde(rename = "revision")]
+    pub revision: String,
 }
 
-impl Default for ListContestSubmissions200ResponseItemsInnerContext {
-    fn default() -> Self {
-        Self::ListContestSubmissions200ResponseItemsInnerContextOneOf(Default::default())
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Kind {
-    #[serde(rename = "virtual-contest")]
-    VirtualContest,
-}
-
-impl Default for Kind {
-    fn default() -> Kind {
-        Self::VirtualContest
+impl GetUserProfile200Response {
+    pub fn new(
+        id: String,
+        display_name: String,
+        bio: String,
+        revision: String,
+    ) -> GetUserProfile200Response {
+        GetUserProfile200Response {
+            id,
+            display_name,
+            bio,
+            revision,
+        }
     }
 }

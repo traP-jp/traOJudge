@@ -12,44 +12,48 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListContestSubmissions200ResponseItemsInner {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+pub struct ListContestTeamSubmissions200ResponseItemsInner {
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "id")]
     pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "userId")]
     pub user_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "problemId")]
     pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "languageId")]
     pub language_id: String,
     #[serde(rename = "context")]
-    pub context: models::ListContestSubmissions200ResponseItemsInnerContext,
+    pub context: models::ListContestTeamSubmissions200ResponseItemsInnerContext,
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
+    #[serde(rename = "teamId", skip_serializing_if = "Option::is_none")]
+    pub team_id: Option<String>,
     #[serde(rename = "submittedAt")]
     pub submitted_at: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "currentJudgeRunId")]
     pub current_judge_run_id: String,
 }
 
-impl ListContestSubmissions200ResponseItemsInner {
+impl ListContestTeamSubmissions200ResponseItemsInner {
     pub fn new(
         id: String,
         user_id: String,
         problem_id: String,
         language_id: String,
-        context: models::ListContestSubmissions200ResponseItemsInnerContext,
+        context: models::ListContestTeamSubmissions200ResponseItemsInnerContext,
         submitted_at: String,
         current_judge_run_id: String,
-    ) -> ListContestSubmissions200ResponseItemsInner {
-        ListContestSubmissions200ResponseItemsInner {
+    ) -> ListContestTeamSubmissions200ResponseItemsInner {
+        ListContestTeamSubmissions200ResponseItemsInner {
             id,
             user_id,
             problem_id,
             language_id,
             context,
+            team_id: None,
             submitted_at,
             current_judge_run_id,
         }

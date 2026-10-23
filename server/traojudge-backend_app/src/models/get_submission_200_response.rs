@@ -13,23 +13,26 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetSubmission200Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "id")]
     pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "userId")]
     pub user_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "problemId")]
     pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "languageId")]
     pub language_id: String,
     #[serde(rename = "context")]
-    pub context: models::CreateSubmissionUploadRequestContext,
+    pub context: models::ListMySubmissions200ResponseItemsInnerContext,
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
+    #[serde(rename = "teamId", skip_serializing_if = "Option::is_none")]
+    pub team_id: Option<String>,
     #[serde(rename = "submittedAt")]
     pub submitted_at: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "currentJudgeRunId")]
     pub current_judge_run_id: String,
 }
@@ -40,7 +43,7 @@ impl GetSubmission200Response {
         user_id: String,
         problem_id: String,
         language_id: String,
-        context: models::CreateSubmissionUploadRequestContext,
+        context: models::ListMySubmissions200ResponseItemsInnerContext,
         submitted_at: String,
         current_judge_run_id: String,
     ) -> GetSubmission200Response {
@@ -50,6 +53,7 @@ impl GetSubmission200Response {
             problem_id,
             language_id,
             context,
+            team_id: None,
             submitted_at,
             current_judge_run_id,
         }

@@ -20,7 +20,7 @@ pub struct CreateVirtualContestRequest {
     #[serde(rename = "endsAt")]
     pub ends_at: String,
     #[serde(rename = "rules")]
-    pub rules: models::CreateContestRequestRules,
+    pub rules: models::ListContests200ResponseItemsInnerRules,
     /// 作成時の公開範囲。作成後の変更権限は別途具体化する。
     #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
     pub visibility: Option<Visibility>,
@@ -31,7 +31,7 @@ impl CreateVirtualContestRequest {
         title: String,
         starts_at: String,
         ends_at: String,
-        rules: models::CreateContestRequestRules,
+        rules: models::ListContests200ResponseItemsInnerRules,
     ) -> CreateVirtualContestRequest {
         CreateVirtualContestRequest {
             title,

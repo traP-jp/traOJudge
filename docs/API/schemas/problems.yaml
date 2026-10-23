@@ -4,6 +4,9 @@ Problem:
   properties:
     id:
       $ref: './common.yaml#/ResourceId'
+    createdByUserId:
+      $ref: './common.yaml#/ResourceId'
+      description: '作成時のログイン中利用者。APIが記録し、作成後は変更しない。'
     title:
       type: 'string'
     statement:
@@ -27,6 +30,7 @@ Problem:
       format: 'date-time'
   required:
     - 'id'
+    - 'createdByUserId'
     - 'title'
     - 'statement'
     - 'visibility'

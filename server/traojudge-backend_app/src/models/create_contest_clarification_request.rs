@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 pub struct CreateContestClarificationRequest {
     #[serde(rename = "body")]
     pub body: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 通常大会のチーム戦で、提出得点を集計するチーム。受理時にサーバーが本人の所属から決める。チーム戦以外では省略する。
     #[serde(rename = "problemId", skip_serializing_if = "Option::is_none")]
     pub problem_id: Option<String>,
 }

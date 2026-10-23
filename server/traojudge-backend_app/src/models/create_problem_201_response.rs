@@ -13,9 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateProblem201Response {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "id")]
     pub id: String,
+    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
+    #[serde(rename = "createdByUserId")]
+    pub created_by_user_id: String,
     #[serde(rename = "title")]
     pub title: String,
     #[serde(rename = "statement")]
@@ -36,6 +39,7 @@ pub struct CreateProblem201Response {
 impl CreateProblem201Response {
     pub fn new(
         id: String,
+        created_by_user_id: String,
         title: String,
         statement: String,
         visibility: Visibility,
@@ -46,6 +50,7 @@ impl CreateProblem201Response {
     ) -> CreateProblem201Response {
         CreateProblem201Response {
             id,
+            created_by_user_id,
             title,
             statement,
             visibility,
