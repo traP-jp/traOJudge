@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import ListingTable, { type Column } from '@/components/ListingTable.vue'
+import ListingTable from '@/components/ListingTable.vue'
+import type { Column } from '@/types/listingTable'
 import { EditorialsApi, type EditorialSummary, type User, UsersApi } from '@/api/generated'
 import { dateToString } from '@/utils/date'
 import MaterialIcon from '@/components/MaterialIcon.vue'

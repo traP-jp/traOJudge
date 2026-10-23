@@ -1,9 +1,33 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 import { Oauth2Api } from '@/api/generated'
 import { useUserStore } from '@/stores/user'
-import type { OAuthProvider, OAuthAction, OAuthState } from '@/types/oauth'
+import type { OAuthAction, OAuthProvider, OAuthState } from '@/types/oauth'
+
+const parseOAuthState = (json: string): OAuthState => {
+  const state: unknown = JSON.parse(json)
+  if (
+    typeof state !== 'object' ||
+    state === null ||
+    !('provider' in state) ||
+    !('action' in state) ||
+    !('timestamp' in state)
+  )
+    throw new Error('Invalid OAuth state')
+  const { provider, action, timestamp } = state
+  const redirectTo = 'redirectTo' in state ? state.redirectTo : undefined
+  if (
+    (provider !== 'google' && provider !== 'github' && provider !== 'traq') ||
+    (action !== 'login' && action !== 'signup' && action !== 'bind') ||
+    typeof timestamp !== 'number' ||
+    !Number.isFinite(timestamp) ||
+    (redirectTo !== undefined && typeof redirectTo !== 'string')
+  )
+    throw new Error('Invalid OAuth state')
+  return { provider, action, timestamp, redirectTo }
+}
 
 export const useOAuthStore = defineStore('oauth', () => {
   const router = useRouter()
@@ -24,7 +48,7 @@ export const useOAuthStore = defineStore('oauth', () => {
       try {
         const stateData = sessionStorage.getItem(key)
         if (!stateData) return
-        const state = JSON.parse(stateData)
+        const state = parseOAuthState(stateData)
         // 10分以上古いstateは削除
         // TODO: 有効期限はどうする？
         if (now - state.timestamp > 10 * 60 * 1000) {
@@ -50,7 +74,8 @@ export const useOAuthStore = defineStore('oauth', () => {
       oauthError.value = null
 
       const currentRoute = router.currentRoute.value
-      const redirectTo = currentRoute.query.redirect as string
+      const redirectTo =
+        typeof currentRoute.query.redirect === 'string' ? currentRoute.query.redirect : undefined
 
       const stateValue = generateSecureState()
       const stateMetadata: OAuthState = {
@@ -83,7 +108,7 @@ export const useOAuthStore = defineStore('oauth', () => {
           return
         }
         default:
-          throw new Error(`Unsupported OAuth provider: ${provider}`)
+          throw new Error('Unsupported OAuth provider')
       }
 
       const separator = response.url.includes('?') ? '&' : '?'
@@ -113,7 +138,7 @@ export const useOAuthStore = defineStore('oauth', () => {
         throw new Error('Invalid state parameter')
       }
 
-      const state: OAuthState = JSON.parse(savedStateData)
+      const state = parseOAuthState(savedStateData)
 
       const stateAge = Date.now() - state.timestamp
       if (stateAge > 10 * 60 * 1000) {
@@ -136,13 +161,13 @@ export const useOAuthStore = defineStore('oauth', () => {
             oAuthAuthorizationCode: { code }
           })
           break
-        default:
-          throw new Error(`Unsupported OAuth provider: ${state.provider}`)
+        case 'traq':
+          throw new Error('traQ OAuth uses a separate callback')
       }
 
       // レスポンスに基づいて処理
       if (state.action === 'signup' && response?.token) {
-        router.push(`/signup/register?oauth=true&token=${encodeURIComponent(response.token)}`)
+        await router.push(`/signup/register?oauth=true&token=${encodeURIComponent(response.token)}`)
       } else if (state.action === 'login') {
         const userStore = useUserStore()
         try {
@@ -186,7 +211,7 @@ export const useOAuthStore = defineStore('oauth', () => {
           })
           break
         default:
-          throw new Error(`Unsupported OAuth provider: ${provider}`)
+          throw new Error('Unsupported OAuth provider')
       }
     } catch (error) {
       console.error('OAuth revoke failed:', error)

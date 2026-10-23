@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import MenuButton from '@/components/Navigations/MenuButton.vue'
-import type { Icon } from '@/components/MaterialIcon.vue'
+import type { SideMenuProps } from '@/types/sideMenu'
 
 const router = useRouter()
-
-export type SideMenuProps = {
-  icon?: Icon
-  text: string
-  href?: string
-  onClick?: () => void
-}
 
 const { bottomContents = [] } = defineProps<{
   mainContents: SideMenuProps[]

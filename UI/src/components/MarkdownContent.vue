@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import MarkdownIt from 'markdown-it'
 
-const props = defineProps<{ source: string }>()
+const { source, typographer = false } = defineProps<{ source: string; typographer?: boolean }>()
 const markdown = new MarkdownIt({ html: false, linkify: true })
-const renderedContent = computed(() => markdown.render(props.source))
+const renderedContent = computed(() => markdown.set({ typographer }).render(source))
 </script>
 
 <template>

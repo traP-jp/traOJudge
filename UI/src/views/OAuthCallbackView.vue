@@ -15,7 +15,7 @@ const isProcessing = ref(true)
 const error = ref<string | null>(null)
 
 const goToLogin = () => {
-  router.push('/login')
+  return router.push('/login')
 }
 
 onMounted(async () => {

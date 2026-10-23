@@ -1,42 +1,37 @@
 <script setup lang="ts">
-import { useQueryParamInt } from '@/composables/useQueryParam'
-import SubmissionsTable from '@/components/SubmissionsTable.vue'
+import type { User } from '@/api/generated'
+import NumberedPagination from '@/components/NumberedPagination.vue'
+import QueryState from '@/components/QueryState.vue'
 import SubmissionsFilter from '@/components/SubmissionsFilter.vue'
-import { SubmissionsApi, type SubmissionSummary, type User } from '@/api/generated'
-
+import SubmissionsTable from '@/components/SubmissionsTable.vue'
+import { useSubmissionsQuery } from '@/composables/submissions/useSubmissionsQuery'
+import { useListRoute } from '@/router/listConditions'
 const props = defineProps<{ userId: string; user: User | null }>()
-const page = useQueryParamInt('page', 1, true)
-
-const rowPerPage = 20
-
-const loadSubmissions = async (
-  currentPage: number
-): Promise<{ submissions: Map<string, SubmissionSummary>; totalPage: number }> => {
-  const summaries = await new SubmissionsApi().getSubmissions({
-    orderBy: 'submittedAtDesc',
-    userId: props.userId,
-    limit: rowPerPage,
-    offset: (currentPage - 1) * rowPerPage
-  })
-
-  const submissions = new Map(
-    summaries.submissions?.map((submission) => [submission.id, submission])
-  )
-  const totalPage = Math.ceil((summaries.total ?? 0) / rowPerPage)
-
-  return { submissions, totalPage }
-}
+const { conditions, updateConditions } = useListRoute()
+const { view, refresh } = useSubmissionsQuery(
+  () => ({ kind: 'user', userId: props.userId }),
+  () => conditions.value.page
+)
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 py-6">
-    <SubmissionsFilter>
-      <template #title>
-        <span>{{ props.user?.name }}</span>
-        <span>の提出</span>
+  <div class="flex w-full flex-col gap-6 py-6">
+    <SubmissionsFilter
+      ><template #title
+        ><span>{{ props.user?.name }}</span
+        ><span>の提出</span></template
+      ></SubmissionsFilter
+    >
+    <QueryState :view="view" @retry="refresh">
+      <template #default="{ data }">
+        <SubmissionsTable :rows="data.rows" :columns="['title']" />
+        <NumberedPagination
+          :page="conditions.page"
+          :total-pages="data.totalPages"
+          @change="updateConditions({ page: $event })"
+          @normalize="updateConditions({ page: $event }, true)"
+        />
       </template>
-    </SubmissionsFilter>
-
-    <SubmissionsTable v-model="page" :load-submissions="loadSubmissions" />
+    </QueryState>
   </div>
 </template>

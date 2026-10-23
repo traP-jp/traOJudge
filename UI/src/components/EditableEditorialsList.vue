@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import ListingTable, { type Column } from '@/components/ListingTable.vue'
+import ListingTable from '@/components/ListingTable.vue'
+import type { Column } from '@/types/listingTable'
 import { EditorialsApi, type EditorialSummary } from '@/api/generated'
 import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
 import { dateToString } from '@/utils/date'

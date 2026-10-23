@@ -35,7 +35,7 @@ const handleSignupRequest = async () => {
       }
     })
     signupStore.setEmail(email.value)
-    router.push('/signup/mail-send')
+    await router.push('/signup/mail-send')
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       // TODO: エラーハンドリングの文章

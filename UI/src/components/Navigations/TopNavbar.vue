@@ -3,7 +3,7 @@ import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import IconDropdownTriangle from '@/components/icons/IconDropdownTriangle.vue'
 import MenuButton from '@/components/Navigations/MenuButton.vue'
 import traOLogo from '@/assets/traO_logo.svg'
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
@@ -31,7 +31,7 @@ const modalHandler = (e: MouseEvent) => {
 }
 
 const toggleMenu = () => {
-  setMenuState(!(isMenuOpen.value as boolean))
+  setMenuState(!isMenuOpen.value)
 }
 
 const setMenuState = (state: boolean) => {
@@ -40,25 +40,31 @@ const setMenuState = (state: boolean) => {
   else document.removeEventListener('mousedown', modalHandler)
 }
 
+watch(
+  () => isLoggedIn,
+  () => setMenuState(false)
+)
+onBeforeUnmount(() => setMenuState(false))
+
 const handleLogout = async () => {
   try {
     await userStore.logout()
-    router.push('/login')
+    await router.push('/login')
   } catch (error) {
     console.error('ログアウトエラー:', error)
   }
 }
 
 const handleLogin = () => {
-  router.push('/login')
+  return router.push('/login')
 }
 
 const handleProfile = () => {
-  router.push(`/users/${userId}`)
+  return router.push(`/users/${userId}`)
 }
 
 const handleSettings = () => {
-  router.push('/settings/profile')
+  return router.push('/settings/profile')
 }
 </script>
 

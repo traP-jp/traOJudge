@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { responseErrorMessage } from '@/api/errors'
 import { MeApi } from '@/api/generated/apis/MeApi'
 import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
 import { ResponseError } from '@/api/generated/runtime'
@@ -67,16 +68,16 @@ const unlinkGitHubGoogle = async (service: Service) => {
       console.error(`Revoke ${service.name} OAuth Error:`, error)
       return
     }
-    const responseJson = await error.response.json()
+    const message = await responseErrorMessage(error.response)
     switch (error.response.status) {
       case 400:
-        throw new Error(`Bad Request: ${responseJson.message}`)
+        throw new Error(`Bad Request: ${message}`)
       case 401:
-        throw new Error(`Unauthorized: ${responseJson.message}`)
+        throw new Error(`Unauthorized: ${message}`)
       case 404:
-        throw new Error(`Not Found: ${responseJson.message}`)
+        throw new Error(`Not Found: ${message}`)
       case 500:
-        throw new Error(`Internal Server Error: ${responseJson.message}`)
+        throw new Error(`Internal Server Error: ${message}`)
       default:
         throw new Error(`Unknown error: ${error.response.status}`)
     }
@@ -90,15 +91,15 @@ const linkGitHubGoogle = async (service: Service) => {
       service.name === 'GitHub'
         ? await oauth2Api.getgithubAuthParams({ oauthAction: 'bind' })
         : await oauth2Api.getGoogleAuthParams({ oauthAction: 'bind' })
-    router.push(response.url)
+    await router.push(response.url)
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       console.error(`Bind ${service.name} OAuth Error:`, error)
       return
     }
     if (error.response.status === 500) {
-      const responseJson = await error.response.json()
-      throw new Error(`Internal Server Error: ${responseJson.message}`)
+      const message = await responseErrorMessage(error.response)
+      throw new Error(`Internal Server Error: ${message}`)
     }
     throw new Error(`Unknown error: ${error.response.status}`)
   }

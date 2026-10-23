@@ -26,7 +26,7 @@ const submit = async () => {
         token: token ?? ''
       }
     })
-    router.push('/reset-password/success')
+    await router.push('/reset-password/success')
   } catch (error) {
     alert('パスワードの再設定に失敗しました。もう一度お試しください。')
     console.error('パスワード再設定エラー:', error)

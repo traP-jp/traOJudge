@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
 import SubmitForm from '@/components/SubmitForm.vue'
-
-const route = useRoute()
-const problemId = route.params.id as string
+import { useRouteId } from '@/router/locations'
+const problemId = useRouteId()
 </script>
 
 <template>
   <div class="flex w-full flex-col gap-6 py-6">
-    <SubmitForm :problem-id="problemId" />
+    <SubmitForm :key="problemId" :problem-id="problemId" />
   </div>
 </template>

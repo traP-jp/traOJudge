@@ -69,7 +69,7 @@ async function createProblem() {
         }
       })
     )
-    router.push(`/problems/${createdProblem.id}/edit`)
+    await router.push(`/problems/${createdProblem.id}/edit`)
   } catch (error) {
     console.error('問題の作成に失敗しました:', error)
     saveError.value = error instanceof Error ? error.message : '問題の作成に失敗しました。'

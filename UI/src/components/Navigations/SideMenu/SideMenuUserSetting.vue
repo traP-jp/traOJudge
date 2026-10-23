@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import SideMenuBase, {
-  type SideMenuProps
-} from '@/components/Navigations/SideMenu/SideMenuBase.vue'
+import SideMenuBase from '@/components/Navigations/SideMenu/SideMenuBase.vue'
+import type { SideMenuProps } from '@/types/sideMenu'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 

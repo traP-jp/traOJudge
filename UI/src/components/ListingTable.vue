@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export type Column = { id: string; textAlign?: 'start' | 'end' | 'center'; width?: string }
+import type { Column } from '@/types/listingTable'
 
 // TODO: add sorting and filtering features
 const { cols, rowIds, selectedRows } = defineProps<{

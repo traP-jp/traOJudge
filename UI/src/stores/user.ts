@@ -1,133 +1,119 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { MeApi, AuthenticationApi } from '@/api/generated'
-import { ResponseError } from '@/api/generated/runtime'
+
 import type { Me, UserEmailAndPassword } from '@/api/generated'
-import router from '@/router'
+import { AuthenticationApi, MeApi, ResponseError } from '@/api/generated'
+import { queryClient } from '@/api/queryClient'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<Me | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const isInitialized = ref(false)
+  const epoch = ref(0)
   let initPromise: Promise<void> | null = null
+  let controller: AbortController | undefined
 
   const isAuthenticated = computed(() => !!user.value)
   const userId = computed(() => user.value?.id ?? '')
   const username = computed(() => user.value?.name ?? '')
 
-  const SESSION_FLAG_KEY = 'traOJudge_hasSession'
+  const beginSession = () => {
+    controller?.abort()
+    controller = new AbortController()
+    user.value = null
+    isInitialized.value = false
+    isLoading.value = true
+    error.value = null
+    initPromise = null
+    epoch.value++
+    queryClient.clear()
+    return { epoch: epoch.value, signal: controller.signal }
+  }
 
-  const setSessionFlag = (value: boolean) => {
-    if (value) {
-      localStorage.setItem(SESSION_FLAG_KEY, 'true')
-    } else {
-      localStorage.removeItem(SESSION_FLAG_KEY)
+  const assertCurrent = (operation: { epoch: number }): void => {
+    if (operation.epoch !== epoch.value) throw new DOMException('Session changed', 'AbortError')
+  }
+
+  const readUser = async (operation: { epoch: number; signal: AbortSignal }): Promise<Me> => {
+    const response = await new MeApi().getMe({ signal: operation.signal })
+    assertCurrent(operation)
+    user.value = response
+    isInitialized.value = true
+    return response
+  }
+
+  const recordFailure = (err: unknown, operation: { epoch: number }): void => {
+    if (operation.epoch !== epoch.value) return
+    const unauthorized = err instanceof ResponseError && err.response.status === 401
+    isInitialized.value = unauthorized
+    error.value = unauthorized
+      ? null
+      : 'ログイン状態を確認できませんでした。もう一度お試しください。'
+  }
+
+  const fetchCurrentUser = async (): Promise<Me> => {
+    const operation = beginSession()
+    try {
+      return await readUser(operation)
+    } catch (err) {
+      recordFailure(err, operation)
+      throw err
+    } finally {
+      if (operation.epoch === epoch.value) isLoading.value = false
     }
   }
 
-  const hasSessionFlag = (): boolean => {
-    return localStorage.getItem(SESSION_FLAG_KEY) === 'true'
+  const initialize = (): Promise<void> => {
+    if (initPromise) return initPromise
+    if (isInitialized.value) return Promise.resolve()
+    // localStorageに記録がなくてもCookieのセッションは有効な場合がある。
+    const pending = fetchCurrentUser().then(
+      () => undefined,
+      () => undefined
+    )
+    initPromise = pending
+    void pending.finally(() => {
+      if (initPromise === pending) initPromise = null
+    })
+    return pending
   }
 
-  const initialize = async () => {
-    if (initPromise) {
-      return initPromise
+  const login = async (credentials: UserEmailAndPassword): Promise<void> => {
+    const operation = beginSession()
+    try {
+      await new AuthenticationApi().postLogin(
+        { userEmailAndPassword: credentials },
+        { signal: operation.signal }
+      )
+      assertCurrent(operation)
+      await readUser(operation)
+    } catch (err) {
+      recordFailure(err, operation)
+      throw err
+    } finally {
+      if (operation.epoch === epoch.value) isLoading.value = false
     }
+  }
 
-    initPromise = (async () => {
-      if (hasSessionFlag()) {
-        try {
-          await fetchCurrentUser()
-        } catch {
-          // ignore
-        }
-      }
+  const logout = async (): Promise<void> => {
+    const operation = beginSession()
+    try {
+      await new AuthenticationApi().postLogout({ signal: operation.signal })
+      assertCurrent(operation)
       isInitialized.value = true
-    })()
-
-    return initPromise
-  }
-
-  const fetchCurrentUser = async () => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const meApi = new MeApi()
-      const response = await meApi.getMe()
-      user.value = response
-      setSessionFlag(true)
-      return response
     } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Unknown error'
-      throw err
+      recordFailure(err, operation)
+      if (!(err instanceof ResponseError && err.response.status === 401)) throw err
     } finally {
-      isLoading.value = false
+      if (operation.epoch === epoch.value) isLoading.value = false
     }
   }
 
-  const login = async (credentials: UserEmailAndPassword) => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const authApi = new AuthenticationApi()
-      await authApi.postLogin({ userEmailAndPassword: credentials })
-      await fetchCurrentUser()
-    } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Login failed'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const logout = async () => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const authApi = new AuthenticationApi()
-      await authApi.postLogout()
-      user.value = null
-      setSessionFlag(false)
-    } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Logout failed'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const handleUnauthorized = () => {
-    user.value = null
-    setSessionFlag(false)
-
-    // ログインページ以外から401が発生した場合はリダイレクト
-    const currentPath = router.currentRoute.value.fullPath
-    if (currentPath !== '/login' && !currentPath.startsWith('/signup')) {
-      router.push({
-        path: '/login',
-        query: { redirect: currentPath }
-      })
-    }
-  }
-
-  const reset = () => {
-    user.value = null
-    error.value = null
+  const reset = (): void => {
+    beginSession()
+    isInitialized.value = true
     isLoading.value = false
-    setSessionFlag(false)
   }
 
   return {
@@ -136,10 +122,10 @@ export const useUserStore = defineStore('user', () => {
     error,
     isAuthenticated,
     isInitialized,
+    epoch,
     userId,
     username,
     initialize,
-    hasSessionFlag,
     fetchCurrentUser,
     login,
     logout,

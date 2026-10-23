@@ -12,7 +12,7 @@ const email: string = history.state.email ?? ''
 const emailAddress: Email = { email: email }
 
 const closeWindow = () => {
-  router.push('/')
+  return router.push('/')
 }
 
 const requestResetPassword = async () => {

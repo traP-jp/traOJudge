@@ -93,7 +93,7 @@ async function onSignupRegister() {
       }
     })
     await userStore.fetchCurrentUser()
-    router.push('/')
+    await router.push('/')
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       formError.value = '予期せぬエラーが発生しました。もう一度お試しください。'

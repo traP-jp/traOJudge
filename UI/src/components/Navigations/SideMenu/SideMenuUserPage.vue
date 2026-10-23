@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import SideMenuBase, {
-  type SideMenuProps
-} from '@/components/Navigations/SideMenu/SideMenuBase.vue'
+import SideMenuBase from '@/components/Navigations/SideMenu/SideMenuBase.vue'
+import type { SideMenuProps } from '@/types/sideMenu'
 
 const route = useRoute()
 

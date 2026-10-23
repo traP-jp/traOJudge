@@ -15,11 +15,11 @@ npm install --global "npm@$ui_npm_version" --ignore-scripts --min-release-age="$
 - 通常のセットアップ・CI は `npm ci` で lockfile の解決結果を再現する。
 - 直接依存は完全なバージョン番号で指定する。`.npmrc` の `save-exact=true` により、追加時も範囲指定にしない。
 - `.npmrc` の `min-release-age=3` は、新しく依存を解決するときに公開後3日の待機期間を設ける。既存の lockfile 全体を検査する機能ではないため、lockfile の更新内容も確認する。
-- 更新時は `package.json` と `package-lock.json` を一緒に変更し、API生成・lint・型検査・buildと、変更したツールの起動を確認する。
+- 更新時は `package.json` と `package-lock.json` を一緒に変更し、[開発手順](development.md)に沿ってAPI生成・lint・テスト・buildと、変更したツールの起動を確認する。
 
 ## インストール時のスクリプト
 
-`.npmrc` の `ignore-scripts=true` で、インストール時のスクリプトの自動実行を無効にしてある。Git フックの設定手順は [UI の README](../../UI/README.md#project-setup) を参照する。
+`.npmrc` の `ignore-scripts=true` で、インストール時のスクリプトの自動実行を無効にしてある。Git フックの設定は[セットアップ](development.md#セットアップ)を参照する。
 
 ## 対応ブラウザー
 
@@ -35,6 +35,6 @@ Tailwind CSS 4の対応条件に合わせ、Safari 16.4、Chrome 111、Firefox 1
 
 UI用Actionsは40桁の commit SHA に固定し、コメントに版を書く。checkoutの認証情報は保存せず、workflowの権限は `contents: read` とする。既存のDependabot設定を利用する。
 
-UIのCIはbase branchを限定しない。`UI/`、`docs/API/`、`docs/ui/` とworkflow自身の変更で実行し、通常問題・コンテスト両方のAPI生成、lint、型検査、buildを確認する。
+UIのCIはbase branchを限定しない。`UI/`、`docs/API/`、`docs/ui/` とworkflow自身の変更で実行し、通常問題・コンテスト両方のAPI生成、lint、テスト、型検査、buildを確認する。
 
-OpenAPI Generatorはnpmの依存とは別にJARを取得する。JARの版は `UI/openapitools.json` で指定し、npmのlockfile・公開後の待機期間の対象外。通常問題のスキーマは現在 `UI/scripts/gen-api.sh` が旧ドキュメントリポジトリのdevelopを参照し、コンテストトップは同じリポジトリの `docs/API/front_back.yaml` を使う。
+OpenAPI Generatorはnpmの依存とは別にJARを取得する。JARの版は `UI/openapitools.json` で指定し、npmのlockfile・公開後の待機期間の対象外。通常問題のスキーマは、`UI/scripts/gen-api.sh` の `SCHEMA_COMMIT` で指定した旧ドキュメントリポジトリのcommitから取得する。コンテストトップは、このモノレポの `docs/API/front_back.yaml` を使う。

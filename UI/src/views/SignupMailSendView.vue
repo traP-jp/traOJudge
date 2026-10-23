@@ -14,18 +14,17 @@ const router = useRouter()
 onMounted(() => {
   // URL直打ち対策
   if (!signupStore.isValid) {
-    router.push('/signup')
+    return router.push('/signup')
   }
 })
 
 const handleClose = () => {
-  router.push('/')
+  return router.push('/')
 }
 
 const handleResendEmail = async () => {
   if (!signupStore.isValid) {
-    router.push('/signup')
-    return
+    return router.push('/signup')
   }
   const authApi = new AuthenticationApi()
   try {

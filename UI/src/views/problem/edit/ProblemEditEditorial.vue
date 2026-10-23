@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { responseErrorMessage } from '@/api/errors'
 import { useRoute } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
 import PlainTextArea from '@/components/PlainTextArea.vue'
@@ -83,8 +84,8 @@ async function fetchEditorial() {
     console.error('解説取得エラー:', error)
 
     if (error instanceof ResponseError) {
-      const response = await error.response.json()
-      saveError.value = `解説の取得に失敗しました: ${response.body.message} (${response.status})`
+      const message = await responseErrorMessage(error.response)
+      saveError.value = `解説の取得に失敗しました: ${message} (${error.response.status})`
     } else {
       saveError.value = '解説の取得に失敗しました。もう一度お試しください。'
     }
@@ -117,7 +118,7 @@ async function saveEditorial() {
         } as PostEditorialOperationRequest)
       )
 
-      router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
+      await router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
     } else {
       await requireTraqAuth(() =>
         editorialApi.putEditorial({

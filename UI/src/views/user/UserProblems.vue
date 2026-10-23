@@ -1,55 +1,39 @@
-<script lang="ts" setup>
-import { useQueryParamInt } from '@/composables/useQueryParam'
-import { ProblemsApi, type ProblemSummaries, type ProblemSummary, type User } from '@/api/generated'
+<script setup lang="ts">
+import type { User } from '@/api/generated'
+import NumberedPagination from '@/components/NumberedPagination.vue'
+import ProblemFilters from '@/components/ProblemFilters.vue'
 import ProblemsList from '@/components/ProblemsList.vue'
-
+import QueryState from '@/components/QueryState.vue'
+import { useProblemsQuery } from '@/composables/problems/useProblemsQuery'
+import { useListRoute } from '@/router/listConditions'
 const props = defineProps<{ userId: string; user: User | null }>()
-const page = useQueryParamInt('page', 1, true)
-
-const rowPerPage = 20
-
-/**
- * Fetch the problems with the current state and update the state
- */
-const loadProblems = async (page: number, difficultyBegin: number, difficultyEnd: number) => {
-  try {
-    const summaries: ProblemSummaries = await new ProblemsApi().getProblems({
-      orderBy: 'createdAtDesc',
-      userId: props.userId,
-      limit: rowPerPage,
-      offset: (page - 1) * rowPerPage
-      // TODO: ここで上限・下限を渡せるようにする
-    })
-
-    const problems = new Map(
-      summaries.problems
-        ?.filter(({ difficulty }) => difficultyBegin <= difficulty && difficulty <= difficultyEnd)
-        .map((problem) => [problem.id, problem])
-    )
-
-    const totalProblems = summaries.total ?? problems.size
-    const totalPage = Math.ceil(totalProblems / rowPerPage)
-
-    return {
-      problems: problems,
-      totalPage: totalPage
-    }
-  } catch (error) {
-    console.error('API Error:', error)
-    alert(`API Error: ${error}`)
-    return {
-      problems: new Map<string, ProblemSummary>(),
-      totalPage: 0
-    }
-  }
-}
+const { conditions, updateConditions } = useListRoute()
+const { view, refresh } = useProblemsQuery(
+  () => ({ kind: 'user', userId: props.userId }),
+  conditions
+)
 </script>
 
 <template>
   <section class="flex flex-col gap-4">
-    <ProblemsList v-model="page" :load-problems="loadProblems">
-      <span class="mr-1">{{ props.user?.name }}</span>
-      <span class="grow">の問題</span>
-    </ProblemsList>
+    <ProblemFilters
+      :difficulty-begin="conditions.difficultyBegin"
+      :difficulty-end="conditions.difficultyEnd"
+      @filter="updateConditions($event)"
+    >
+      <span class="mr-1">{{ props.user?.name }}</span
+      ><span class="grow">の問題</span>
+    </ProblemFilters>
+    <QueryState :view="view" @retry="refresh">
+      <template #default="{ data }">
+        <ProblemsList :rows="data.problems" />
+        <NumberedPagination
+          :page="conditions.page"
+          :total-pages="data.totalPages"
+          @change="updateConditions({ page: $event })"
+          @normalize="updateConditions({ page: $event }, true)"
+        />
+      </template>
+    </QueryState>
   </section>
 </template>

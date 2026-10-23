@@ -1,43 +1,48 @@
 <script setup lang="ts">
-import SideMenuBase, {
-  type SideMenuProps
-} from '@/components/Navigations/SideMenu/SideMenuBase.vue'
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+
+import SideMenuBase from '@/components/Navigations/SideMenu/SideMenuBase.vue'
+import { problemLocation } from '@/router/locations'
+import type { SideMenuProps } from '@/types/sideMenu'
 
 const route = useRoute()
+const router = useRouter()
 
-const { isAdmin = false, isEditorialAvailable = false } = defineProps<{
+const {
+  problemId,
+  isAdmin = false,
+  isEditorialAvailable = false
+} = defineProps<{
+  problemId: string
   problemName: string
   isAdmin?: boolean
   isEditorialAvailable?: boolean
 }>()
-
-const problemId = route.params.id as string
 
 const mainContents = computed(() => {
   const contents: SideMenuProps[] = [
     {
       text: '問題',
       icon: 'assignment',
-      href: `/problems/${problemId}`
+      href: router.resolve(problemLocation(problemId, 'home')).href
     },
     {
       text: '提出',
       icon: 'edit',
-      href: `/problems/${problemId}/submit`
+      href: router.resolve(problemLocation(problemId, 'submit')).href
     },
     {
       text: '提出一覧',
       icon: 'format_list_bulleted',
-      href: `/problems/${problemId}/submissions`
+      href: router.resolve(problemLocation(problemId, 'submissions')).href
     }
   ]
   if (isEditorialAvailable) {
     contents.push({
       text: '解説',
       icon: 'assignment_turned_in',
-      href: `/problems/${problemId}/editorials`
+      href: router.resolve(problemLocation(problemId, 'editorials')).href
     })
   }
   return contents

@@ -10,7 +10,11 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     proxy: {
-      '/api/v1': 'http://localhost:4010'
+      '/api/v1': 'http://localhost:4010',
+      '/api': {
+        target: 'http://localhost:4010',
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   },
   resolve: {

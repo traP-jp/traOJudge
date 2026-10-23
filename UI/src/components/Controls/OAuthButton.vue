@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { responseErrorMessage } from '@/api/errors'
 import { useOAuthStore } from '@/stores/oauth'
-import type { OAuthProvider, OAuthAction } from '@/types/oauth'
+import type { OAuthProvider } from '@/types/oauth'
 import { ResponseError } from '@/api/generated/runtime'
 
 const {
@@ -19,7 +20,7 @@ async function onOAuthClick() {
   try {
     if (app === 'GitHub' || app === 'Google' || app === 'traQ') {
       const provider = app.toLowerCase() as OAuthProvider
-      await oauthStore.initiateOAuth(provider, action as OAuthAction)
+      await oauthStore.initiateOAuth(provider, action)
     } else {
       throw new Error('Unknown OAuth app: ' + app)
     }
@@ -29,8 +30,8 @@ async function onOAuthClick() {
       return
     }
     if (error.response.status === 500) {
-      const responseJson = await error.response.json()
-      console.error('Internal Server Error: ' + responseJson.message)
+      const message = await responseErrorMessage(error.response)
+      console.error('Internal Server Error: ' + message)
     } else {
       console.error('Unknown error: ' + error.response.status)
     }

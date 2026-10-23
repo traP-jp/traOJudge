@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+import type { Language } from '@/api/generated'
+import { LanguageApi } from '@/api/generated'
 import CodeBlock from '@/components/CodeBlock.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import SelectBox from '@/components/Controls/SelectBox.vue'
-import { LanguageApi, SubmissionsApi } from '@/api/generated'
-import type { Language } from '@/api/generated'
+import { useSubmitSolution } from '@/composables/submissions/useSubmitSolution'
+import { problemLocation } from '@/router/locations'
 
 const router = useRouter()
+const route = useRoute()
+const { submit, isSubmitting } = useSubmitSolution()
+let active = true
+let targetRevision = 0
+onBeforeUnmount(() => {
+  active = false
+})
 
 const { problemId } = defineProps<{
   problemId: string
@@ -18,9 +28,15 @@ const selectedLanguage = ref<Language>({ id: '', name: '' })
 const sourceCode = ref<string | null>(null)
 
 const isLoading = ref(true)
-const isSubmitting = ref(false)
 
 const error = ref<string>('')
+watch(
+  () => problemId,
+  () => {
+    targetRevision++
+    sourceCode.value = null
+  }
+)
 
 onMounted(async () => {
   try {
@@ -45,22 +61,28 @@ const handleSubmit = async () => {
     return
   }
 
-  isSubmitting.value = true
+  if (isSubmitting.value) return
+  const targetId = problemId
+  const startedAt = route.fullPath
+  const revision = targetRevision
   try {
-    await new SubmissionsApi().postSubmission({
-      problemId: problemId,
-      postSubmissionRequest: {
-        languageId: selectedLanguage.value.id,
-        source: sourceCode.value
-      }
+    const completed = await submit(targetId, {
+      languageId: selectedLanguage.value.id,
+      source: sourceCode.value
     })
-
-    await router.push(`/problems/${problemId}/submissions`)
+    if (
+      completed &&
+      active &&
+      revision === targetRevision &&
+      problemId === targetId &&
+      route.fullPath === startedAt
+    ) {
+      await router.push(problemLocation(targetId, 'submissions'))
+    }
   } catch (err) {
+    if (!active || revision !== targetRevision) return
     console.error('Submission failed:', err)
     alert(`提出に失敗しました: ${err instanceof Error ? err.message : 'Unknown error'}`)
-  } finally {
-    isSubmitting.value = false
   }
 }
 </script>

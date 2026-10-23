@@ -1,6 +1,8 @@
-import TopView from '@/views/TopView.vue'
+import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+
 import { useUserStore } from '@/stores/user'
+import TopView from '@/views/TopView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,6 +67,7 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'user-home',
           component: () => import('@/views/user/UserHome.vue')
         },
         {
@@ -91,14 +94,17 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'problem-home',
           component: () => import('@/views/problem/ProblemHome.vue')
         },
         {
           path: 'submit',
+          name: 'problem-submit',
           component: () => import('@/views/problem/ProblemSubmit.vue')
         },
         {
           path: 'submissions',
+          name: 'problem-submissions',
           component: () => import('@/views/problem/ProblemSubmissions.vue')
         },
         {
@@ -107,6 +113,7 @@ const router = createRouter({
         },
         {
           path: 'editorials',
+          name: 'problem-editorials',
           component: () => import('@/views/problem/ProblemEditorials.vue')
         },
         {
@@ -123,7 +130,9 @@ const router = createRouter({
         {
           path: '',
           redirect: (to) => {
-            return `/problems/${to.params.id}/edit/basic`
+            const id = to.params.id
+            if (typeof id !== 'string') throw new Error('Invalid route')
+            return `/problems/${id}/edit/basic`
           }
         },
         {
@@ -167,33 +176,43 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to) => {
   const userStore = useUserStore()
 
+  // 公開ページは旧認証APIの応答を待たず表示する。
+  if (!to.meta.requiresAuth && to.path !== '/login') {
+    void userStore.initialize()
+    return
+  }
   await userStore.initialize()
+  // 通信失敗時は遷移先を保ち、Appの再試行UIを表示する。
+  if (!userStore.isInitialized) return
 
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  if (requiresAuth && !userStore.isAuthenticated) {
-    next({
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    return {
       path: '/login',
       query: { redirect: to.fullPath }
-    })
-    return
+    }
   }
 
-  const requiresTraqAuth = to.matched.some((record) => record.meta.requiresTraqAuth)
   const isAdmin = userStore.user?.role === 'Admin'
   const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
-  if (requiresTraqAuth && !isAdmin && !isTraqAuthenticated) {
-    next('/')
-    return
-  }
+  if (to.meta.requiresTraqAuth && !isAdmin && !isTraqAuthenticated) return '/'
 
-  if (to.path === '/login' && userStore.isAuthenticated) {
-    next('/')
-    return
-  }
-  next()
+  if (to.path === '/login' && userStore.isAuthenticated) return '/'
 })
+
+// セッション失効時もガードを通し、ログイン画面への遷移先を一元化する。
+export const watchSessionRouting = () => {
+  const session = useUserStore()
+  return watch(
+    () => [session.isInitialized, session.isAuthenticated],
+    ([ready, authenticated]) => {
+      if (!ready || authenticated || !router.currentRoute.value.meta.requiresAuth) return
+      const { path, query, hash } = router.currentRoute.value
+      void router.replace({ path, query, hash, force: true })
+    }
+  )
+}
 
 export default router
