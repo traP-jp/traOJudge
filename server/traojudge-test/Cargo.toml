@@ -10,10 +10,14 @@ workspace-hack.workspace = true
 
 [dev-dependencies]
 async-trait.workspace = true
+base64.workspace = true
+chrono.workspace = true
 axum.workspace = true
 serde_json.workspace = true
+sha2.workspace = true
 sqlx = { workspace = true, features = ["postgres", "macros", "migrate"] }
 tokio.workspace = true
 tower.workspace = true
 traojudge-backend_app.workspace = true
 uuid.workspace = true
+url.workspace = true

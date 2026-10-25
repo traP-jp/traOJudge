@@ -5,6 +5,8 @@ edition.workspace = true
 
 [dependencies]
 axum.workspace = true
+base64.workspace = true
+chrono.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde_with.workspace = true
@@ -14,4 +16,5 @@ tracing-subscriber.workspace = true
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
 uuid.workspace = true
+url.workspace = true
 workspace-hack.workspace = true

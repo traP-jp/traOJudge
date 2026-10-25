@@ -4,6 +4,8 @@ use std::time::Duration;
 
 use sqlx::{PgPool, migrate::Migrator, postgres::PgPoolOptions};
 
+pub mod accounts;
+pub mod sessions;
 pub mod users;
 
 pub static MIGRATOR: Migrator = sqlx::migrate!("./src/postgres/migrations");

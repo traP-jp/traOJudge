@@ -1,17 +1,36 @@
 //! 設定の読み込み、依存の組み立て、HTTP・バックグラウンド処理の起動。
 
+use crate::http::{build_router, middleware::origin::WebOrigin};
 use std::net::SocketAddr;
-use traojudge_infra::postgres::{self, users::PgUserProfileRepository};
+use traojudge_core::application::{
+    account::AccountService, session::SessionService, users::GetUserProfile,
+};
+use traojudge_infra::{
+    account_services::UnconfiguredAccountServices,
+    postgres::{
+        self, accounts::PgAccountUnitOfWorkProvider, sessions::PgSessionRepository,
+        users::PgUserProfileRepository,
+    },
+};
 
 pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let addr = std::env::var("TRAOJUDGE_ADDR")
         .unwrap_or_else(|_| "127.0.0.1:3000".to_owned())
         .parse::<SocketAddr>()?;
 
+    let origin = WebOrigin::parse(&std::env::var("TRAOJUDGE_WEB_ORIGIN")?)?;
     let database_url = std::env::var("TRAOJUDGE_DATABASE_URL")?;
     let pool = postgres::connect(&database_url).await?;
     postgres::MIGRATOR.run(&pool).await?;
-    let router = crate::http::build_router(PgUserProfileRepository::new(pool));
+    let router = build_router(
+        GetUserProfile::new(PgUserProfileRepository::new(pool.clone())),
+        AccountService::new(
+            PgAccountUnitOfWorkProvider::new(pool.clone()),
+            UnconfiguredAccountServices,
+        ),
+        SessionService::new(PgSessionRepository::new(pool)),
+        origin,
+    );
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
     tracing::info!(%addr, "listening");

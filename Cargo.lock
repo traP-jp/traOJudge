@@ -702,6 +702,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "email_address"
+version = "0.2.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e079f19b08ca6239f47f8ba8509c11cf3ea30095831f7fed61441475edd8c449"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "encoding_rs"
 version = "0.8.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2398,6 +2407,7 @@ dependencies = [
  "base64 0.22.1",
  "bytes",
  "cfg-if",
+ "chrono",
  "crc",
  "crossbeam-queue",
  "either",
@@ -2474,6 +2484,7 @@ dependencies = [
  "bitflags 2.13.0",
  "byteorder",
  "bytes",
+ "chrono",
  "crc",
  "digest 0.11.3",
  "dotenvy",
@@ -2502,6 +2513,7 @@ dependencies = [
  "base64 0.22.1",
  "bitflags 2.13.0",
  "byteorder",
+ "chrono",
  "crc",
  "dotenvy",
  "etcetera",
@@ -2535,6 +2547,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "488e99c397a62007e4229aec669a179816339afc6d2620ca6fa420dbee2e982c"
 dependencies = [
  "atoi",
+ "chrono",
  "flume",
  "form_urlencoded",
  "futures-channel",
@@ -2904,6 +2917,8 @@ name = "traojudge-backend_app"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "base64 0.23.1",
+ "chrono",
  "serde",
  "serde_json",
  "serde_with",
@@ -2912,6 +2927,7 @@ dependencies = [
  "tracing-subscriber",
  "traojudge-core",
  "traojudge-infra",
+ "url",
  "uuid",
  "workspace-hack",
 ]
@@ -2940,10 +2956,12 @@ dependencies = [
  "async-trait",
  "base64 0.23.1",
  "chrono",
+ "email_address",
  "fancy-regex",
  "jsonwebtoken",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "thiserror",
  "tokio",
  "uuid",
@@ -2956,6 +2974,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "async-trait",
+ "chrono",
  "sqlx",
  "tokio",
  "traojudge-core",
@@ -2969,13 +2988,17 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "axum",
+ "base64 0.23.1",
+ "chrono",
  "serde_json",
+ "sha2 0.10.9",
  "sqlx",
  "tokio",
  "tower",
  "traojudge-backend_app",
  "traojudge-core",
  "traojudge-infra",
+ "url",
  "uuid",
  "workspace-hack",
 ]
@@ -3546,6 +3569,7 @@ version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
  "cc",
+ "chrono",
  "crypto-common 0.1.7",
  "crypto-common 0.2.2",
  "digest 0.10.7",

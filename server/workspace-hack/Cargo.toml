@@ -16,6 +16,7 @@ publish = false
 ### BEGIN HAKARI SECTION
 [dependencies]
 base64 = { version = "0.22" }
+chrono = { version = "0.4" }
 crypto-common-6f8ce4dd05d13bba = { package = "crypto-common", version = "0.2", default-features = false, features = ["getrandom"] }
 crypto-common-c65f7effa3be6d31 = { package = "crypto-common", version = "0.1", default-features = false, features = ["std"] }
 digest = { version = "0.10", features = ["std"] }
@@ -40,9 +41,9 @@ serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
 sha2 = { version = "0.10" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
-sqlx = { version = "0.9", default-features = false, features = ["macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring", "uuid"] }
-sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+sqlx = { version = "0.9", default-features = false, features = ["chrono", "macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring", "uuid"] }
+sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "chrono", "json", "migrate", "offline", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "chrono", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
 sync_wrapper = { version = "1", default-features = false, features = ["futures"] }
 thiserror = { version = "2" }
 tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
@@ -54,6 +55,7 @@ zeroize = { version = "1", features = ["derive"] }
 
 [build-dependencies]
 base64 = { version = "0.22" }
+chrono = { version = "0.4" }
 crypto-common-6f8ce4dd05d13bba = { package = "crypto-common", version = "0.2", default-features = false, features = ["getrandom"] }
 crypto-common-c65f7effa3be6d31 = { package = "crypto-common", version = "0.1", default-features = false, features = ["std"] }
 digest = { version = "0.10", features = ["std"] }
@@ -76,8 +78,8 @@ serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
 sha2 = { version = "0.10" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
-sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "chrono", "json", "migrate", "offline", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "chrono", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
 syn-7b89eefb6aaa9bf3 = { package = "syn", version = "3", features = ["extra-traits", "fold", "full", "visit", "visit-mut"] }
 syn-f595c2ba2a3f28df = { package = "syn", version = "2", features = ["extra-traits", "full", "visit", "visit-mut"] }
 thiserror = { version = "2" }

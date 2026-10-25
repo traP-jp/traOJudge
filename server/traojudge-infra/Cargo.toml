@@ -7,7 +7,8 @@ edition.workspace = true
 traojudge-core.workspace = true
 anyhow.workspace = true
 async-trait.workspace = true
-sqlx = { workspace = true, features = ["postgres", "migrate", "macros", "tls-rustls-ring", "uuid"] }
+chrono.workspace = true
+sqlx = { workspace = true, features = ["postgres", "migrate", "macros", "tls-rustls-ring", "uuid", "chrono"] }
 tokio = { workspace = true, features = ["fs", "io-util"] }
 uuid.workspace = true
 workspace-hack.workspace = true

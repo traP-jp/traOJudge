@@ -57,3 +57,6 @@ providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする�
 重複結果と並行更新による二重反映を防ぐ制約はDB側にも設ける。具体的な契約、スキーマ、再試行・期限切れからの復旧は実装時に定義する。ジャッジ結果の受理・送信待ちなどのapplication・ports・infra・consumersは配置先を用意した段階であり、これらの機能の実装完了を意味しない。
 
 [利用者の公開プロフィール](../backend/users.md)では、Coreの取得処理・PostgreSQLのRepositoryとマイグレーション・HTTPを実装している。
+[本人情報とアカウント管理](../backend/me.md)では、セッション認証・本人プロフィール更新・認証手段管理を実装している。メール配送・外部OAuthは接続契約とテスト用アダプターまでを扱う。
+
+アカウント管理では `core::ports::repository::account` の `AccountUnitOfWorkProvider` / `AccountUnitOfWork` を使う。業務判断・永続化操作の組み合わせ・commitはapplication、本人に限定したSQL・行ロック・未確定時のrollbackはinfraが担当する。メール配送やOAuth照会の間はUoWを保持しない。HTTPのmiddleware・extractor・生成DTOはHTTP層に置く。

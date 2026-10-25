@@ -31,6 +31,15 @@ impl UserProfileRepository for FailingRepository {
     }
 }
 
+fn public_router<R: UserProfileRepository + 'static>(repository: R) -> Router {
+    Router::new().nest(
+        "/api/v1/users",
+        traojudge_backend_app::http::users::router(
+            traojudge_core::application::users::GetUserProfile::new(repository),
+        ),
+    )
+}
+
 async fn get(router: Router, path: &str) -> (StatusCode, Value) {
     let response = router
         .oneshot(Request::builder().uri(path).body(Body::empty()).unwrap())
@@ -45,7 +54,7 @@ async fn get(router: Router, path: &str) -> (StatusCode, Value) {
 #[tokio::test]
 async fn repository_failure_is_500_without_leaking_internal_details() {
     let (status, body) = get(
-        traojudge_backend_app::build_router(FailingRepository),
+        public_router(FailingRepository),
         &format!("/api/v1/users/{USER_ID}"),
     )
     .await;
@@ -60,7 +69,7 @@ async fn repository_failure_is_500_without_leaking_internal_details() {
 async fn invalid_id_is_404_without_querying_repository() {
     for id in ["user_123", "bad.id", &"a".repeat(129)] {
         let (status, body) = get(
-            traojudge_backend_app::build_router(FailingRepository),
+            public_router(FailingRepository),
             &format!("/api/v1/users/{id}"),
         )
         .await;
@@ -84,7 +93,7 @@ async fn public_profile_from_postgres(pool: PgPool) {
         .await
         .unwrap();
 
-    let router = traojudge_backend_app::build_router(PgUserProfileRepository::new(pool.clone()));
+    let router = public_router(PgUserProfileRepository::new(pool.clone()));
     let (status, body) = get(router.clone(), &format!("/api/v1/users/{USER_ID}")).await;
     assert_eq!(status, StatusCode::OK);
     assert_eq!(
@@ -183,7 +192,7 @@ async fn uuid_migration_preserves_existing_profile(pool: PgPool) {
     .unwrap();
 
     let (status, body) = get(
-        traojudge_backend_app::build_router(PgUserProfileRepository::new(pool)),
+        public_router(PgUserProfileRepository::new(pool)),
         &format!("/api/v1/users/{USER_ID}"),
     )
     .await;
