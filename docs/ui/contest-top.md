@@ -20,11 +20,6 @@ bash scripts/gen-contest-api.sh
 
 ## モックで表示を確認する
 
-コンテストAPIのバックエンド実装はまだないため，開発時はモックを使う．`UI/`でモックサーバーとViteを起動する．
-
-```sh
-bash scripts/run-mock-api.sh
-npm run dev
-```
+コンテストAPIのバックエンド実装はまだないため，開発時はモックを使う．[共通の起動手順](development.md#起動と検証)に沿って，モックサーバーとViteを別々のターミナルで起動する．
 
 `http://localhost:5173/contest/1`でサンプル大会を表示する．Viteは`/api/v1`へのリクエストを`localhost:4010`へ転送する．別のAPIに接続する場合は，`VITE_CONTEST_API_BASE_URL`に`/api/v1`まで含むURLを設定する．本番環境の既定値は同一オリジンの`/api/v1`である．

@@ -11,3 +11,20 @@ export const useRouteId = () => {
   const route = useRoute()
   return computed(() => (typeof route.params.id === 'string' ? route.params.id : ''))
 }
+
+export const contestLocation = (contestId: string, tab: 'top' | 'editorials' = 'top') => ({
+  name: `contest-${tab}`,
+  params: { contestId }
+})
+export const contestEditorialLocation = (
+  contestId: string,
+  problemId: string,
+  editorialId: string
+) => ({
+  name: 'contest-editorial',
+  params: { contestId, problemId, editorialId }
+})
+export const useContestId = () => {
+  const route = useRoute()
+  return computed(() => (typeof route.params.contestId === 'string' ? route.params.contestId : ''))
+}

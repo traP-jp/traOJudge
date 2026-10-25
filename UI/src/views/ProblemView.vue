@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import SideMenuProblem from '@/components/problems/SideMenuProblem.vue'
 import QueryState from '@/components/QueryState.vue'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 import { useProblemQuery } from '@/composables/problems/useProblemQuery'
 import { useRouteId } from '@/router/locations'
-import { useUserStore } from '@/stores/user'
 
-const userStore = useUserStore()
+const { canEditProblem } = useMockAuthGuard()
 const problemId = useRouteId()
 const { view, refresh } = useProblemQuery(problemId)
-const isAuthor = computed(
-  () => view.value.status === 'success' && userStore.userId === view.value.data.authorId
-)
 </script>
 
 <template>
@@ -21,7 +16,7 @@ const isAuthor = computed(
       :problem-id="problemId"
       :problem-name="view.status === 'success' ? view.data.title : ''"
       :is-editorial-available="true"
-      :is-admin="isAuthor"
+      :is-admin="canEditProblem"
     />
     <div class="min-w-0 flex-1">
       <QueryState :view="view" @retry="refresh">

@@ -80,6 +80,7 @@
 ### 権限
 - contest内の問題に対して、コンテスト時間中に提出できる
 - contestに対してClarを送信できる
+- チーム戦では、同じチームの全メンバーの提出情報・採点結果・提出ソースを閲覧できる
 
 ## virtual-contestant (VirtualContestId virtual_contest_id)
 ### 権限
@@ -89,7 +90,8 @@
 
 
 ## 非ログイン
-pubic なものを閲覧可能
+public なものを閲覧可能
+- 通常contest・virtual-contestの終了時刻に到達した後は、その大会に紐づく提出情報・ソースを閲覧可能。非公開問題への提出も含む
 
 ---
 

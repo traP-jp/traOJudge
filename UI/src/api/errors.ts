@@ -1,3 +1,10 @@
+export class ApiError extends Error {
+  constructor(public readonly response: Response) {
+    super(`HTTP ${response.status}`)
+    this.name = 'ApiError'
+  }
+}
+
 export const responseErrorMessage = async (response: Response): Promise<string> => {
   // エラー応答がJSONでなくても、元のHTTPエラーを表示できるようにする。
   const body: unknown = await response.json().catch(() => null)

@@ -15,11 +15,11 @@ import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import ListingTable from '@/components/ListingTable.vue'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 import type { Column } from '@/types/listingTable'
 
 const route = useRoute()
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 if (typeof route.params.id !== 'string') throw new Error('Invalid route')
 const problemId = ref<string>('')
@@ -146,7 +146,7 @@ async function handleDelete(id: string) {
     return
   }
   try {
-    await requireTraqAuth(() => testcasesApi.deleteTestcase({ testcaseId: id }))
+    await requireMockLogin(() => testcasesApi.deleteTestcase({ testcaseId: id }))
 
     testcases.value.delete(id)
     testcaseDetails.value.delete(id)
@@ -180,7 +180,7 @@ async function handleSaveTestcase() {
         testOutput: formData.value.output
       }
 
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         testcasesApi.putTestcase({
           testcaseId: editingTestcase.value!.id,
           putTestcaseRequest: putRequest
@@ -202,7 +202,7 @@ async function handleSaveTestcase() {
       }
       // TODO: 配列型でいいのか確認
       // 複数の一括追加を想定して作ったが，本当に必要？
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         testcasesApi.postTestcases({
           problemId: problemId.value,
           postTestcaseRequestInner: [postRequest]

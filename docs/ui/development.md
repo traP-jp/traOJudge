@@ -27,15 +27,29 @@ API生成にはJavaが必要。`gen-api.sh` は通常問題とコンテストト
 
 ## 起動と検証
 
+モックを使う場合は、別のターミナルで起動する。
+
+```sh
+npm run mock
+```
+
+モックは `127.0.0.1:4010` で待ち受け、設定ファイルの変更を自動で読み込む。停止は `Ctrl+C`。`./scripts/run-mock-api.sh` からも同じコマンドを実行できる。管理APIは無効にしてある。
+
+フロントエンドを起動し、モックのCORS設定に合わせて `http://localhost:5173` を開く。
+
 ```sh
 npm run dev
 ```
 
-APIも別途起動する。コンテストトップのモック起動は[専用の手順](contest-top.md#モックで表示を確認する)を参照。
+モック接続時は、ログイン画面で形式の正しいメールアドレスとパスワードを送るとCookieが設定され、ログアウトで削除される。問題の作成・更新内容は保存されず、再取得すると別の仮データになる。コンテストトップのサンプルは `/contest/1` で確認できる。
+
+ポートを変える場合は `npm run mock -- --port 4011` のように指定する。UI側も `VITE_API_BASE_URL` と `VITE_CONTEST_API_BASE_URL` をそのポートに合わせる。
 
 ```sh
 npm run lint
+npm run format:check
 npm test
+npm run test:lint
 npm run build
 ```
 

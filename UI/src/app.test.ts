@@ -1,24 +1,28 @@
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import { AuthenticationApi, MeApi, Oauth2Api, ResponseError } from '@/api/generated'
-import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
+import { apiClient } from '@/api/client'
+import { ApiError } from '@/api/errors'
 import { queryClient } from '@/api/queryClient'
 import App from '@/App.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import appRouter, { watchSessionRouting } from '@/router'
 import { useUserStore } from '@/stores/user'
 import { deferred, me } from '@/test/helpers'
+import AuthTodoView from '@/views/AuthTodoView.vue'
 import LoginView from '@/views/LoginView.vue'
-import OAuthCallbackView from '@/views/OAuthCallbackView.vue'
+
+vi.hoisted(() => vi.stubEnv('VITE_API_V1_BASE_URL', 'http://localhost/api/v1'))
 
 const wrappers: Pick<VueWrapper, 'unmount'>[] = []
 afterEach(() => {
   wrappers.splice(0).forEach((w) => w.unmount())
   queryClient.clear()
   sessionStorage.clear()
+  vi.unstubAllGlobals()
 })
 async function setup(path: string) {
   const pinia = createPinia()
@@ -31,7 +35,7 @@ async function setup(path: string) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
       { path: '/login', component: LoginView },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
-      { path: '/oauth/:provider/:action/callback', component: OAuthCallbackView },
+      { path: '/oauth/:pathMatch(.*)*', component: AuthTodoView },
       { path: '/problems', component: { template: '<p>Problems</p>' } },
       { path: '/', component: { template: '<p>Home</p>' } },
       { path: '/contest/:contestId', component: { template: '<p>Public contest</p>' } }
@@ -48,68 +52,94 @@ async function setup(path: string) {
   return { wrapper, session, router }
 }
 
-it('keeps the login error visible after a real delayed 401', async () => {
-  vi.spyOn(console, 'error').mockImplementation(() => undefined)
-  const pending = deferred<void>()
-  vi.spyOn(AuthenticationApi.prototype, 'postLogin').mockReturnValue(pending.promise)
+it('keeps a delayed mock login failure visible', async () => {
+  const pending = deferred<never>()
+  vi.spyOn(apiClient, 'POST').mockReturnValue(pending.promise)
   const { wrapper } = await setup('/login')
-  await wrapper.get('input[placeholder="メールアドレス"]').setValue('alice@example.com')
-  await wrapper.get('input[type=password]').setValue('wrong-password')
   await wrapper.getComponent(PrimaryButton).trigger('click')
+  pending.reject(new ApiError(new Response(null, { status: 401 })))
   await flushPromises()
-  pending.reject(new ResponseError(new Response(null, { status: 401 })))
-  await flushPromises()
-  expect(wrapper.text()).toContain('メールアドレスまたはパスワードが正しくありません。')
+  expect(wrapper.text()).toContain('モックでログインできませんでした')
 })
 
-it('runs the OAuth authorize call once across a delayed /me', async () => {
-  const pending = deferred<typeof me>()
-  const authorize = vi
-    .spyOn(Oauth2Api.prototype, 'postTraqOAuthAuthorize')
-    .mockResolvedValue(undefined)
-  vi.spyOn(MeApi.prototype, 'getMe').mockReturnValue(pending.promise)
-  const { wrapper, router } = await setup('/oauth/traq/login/callback?redirect=/problems')
-  await flushPromises()
-  expect(wrapper.findComponent({ name: 'OAuthCallbackView' }).exists()).toBe(true)
-  pending.resolve(me)
-  await flushPromises()
-  expect(authorize).toHaveBeenCalledTimes(1)
-  expect(router.currentRoute.value.path).toBe('/problems')
+it('shows the placeholder for removed external authentication routes', async () => {
+  const { wrapper } = await setup('/oauth/traq/login/callback')
+  expect(wrapper.text()).toContain('認証機能は準備中です')
 })
+
+it('keeps mock login unavailable in production', async () => {
+  vi.stubEnv('DEV', false)
+  try {
+    const { wrapper } = await setup('/login')
+    expect(wrapper.find('main button').exists()).toBe(false)
+  } finally {
+    vi.unstubAllEnvs()
+  }
+})
+
+it.each(['/problems/create', '/problems/problem-a/edit/basic'])(
+  'blocks development-only editing in production: %s',
+  async (path) => {
+    vi.stubEnv('DEV', false)
+    setActivePinia(createPinia())
+    useUserStore().$patch({ user: me, isInitialized: true })
+    try {
+      await appRouter.push(path)
+      expect(appRouter.currentRoute.value.path).toBe('/')
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  }
+)
 
 it.each([401, 503])(
-  'keeps the real public contest visible before and after a legacy %i',
+  'keeps the real public contest visible before and after an authentication %i',
   async (status) => {
     const pinia = createPinia()
     setActivePinia(pinia)
-    const pending = deferred<typeof me>()
-    vi.spyOn(MeApi.prototype, 'getMe').mockReturnValue(pending.promise)
-    const getContest = vi.spyOn(ContestsApi.prototype, 'getContest').mockResolvedValue({
-      id: '1',
-      title: 'Public contest',
-      description: '- Overview',
-      visibility: 'public',
-      startsAt: new Date('2026-01-01T00:00:00Z'),
-      endsAt: new Date('2026-01-01T01:00:00Z'),
-      rules: { tieBreak: 'icpc', penaltyMinutes: 5 },
-      revision: '1'
-    })
+    const pending = deferred<Response>()
+    const contestResponse = {
+      data: {
+        id: '1',
+        title: 'Public contest',
+        description: '- Overview',
+        visibility: 'public',
+        startsAt: '2026-01-01T00:00:00Z',
+        endsAt: '2026-01-01T01:00:00Z',
+        participationMode: 'individual',
+        rules: { tieBreak: 'icpc', penaltyMinutes: 5 },
+        revision: '1'
+      },
+      response: new Response(null, { status: 200 })
+    }
+    const get = vi
+      .fn<(request: Request) => Promise<Response>>()
+      .mockImplementation((request) =>
+        new URL(request.url).pathname === '/api/v1/me'
+          ? pending.promise
+          : Promise.resolve(Response.json(contestResponse.data))
+      )
+    vi.stubGlobal('fetch', get)
     try {
       await appRouter.push({ path: '/contest/1', force: true })
       const wrapper = mount(App, {
-        global: { plugins: [pinia, appRouter], stubs: { TopNavbar: true, BottomNavbar: true } }
+        global: {
+          plugins: [pinia, appRouter, [VueQueryPlugin, { queryClient }]],
+          stubs: { TopNavbar: true, BottomNavbar: true }
+        }
       })
       wrappers.push(wrapper)
       await flushPromises()
       expect(wrapper.get('h1').text()).toBe('Public contest')
       expect(useUserStore().isInitialized).toBe(false)
-      pending.reject(new ResponseError(new Response(null, { status })))
+      pending.resolve(new Response(null, { status }))
       await flushPromises()
       expect(wrapper.get('h1').text()).toBe('Public contest')
       expect(appRouter.currentRoute.value.path).toBe('/contest/1')
-      expect(getContest).toHaveBeenCalledTimes(1)
+      expect(
+        get.mock.calls.filter(([request]) => request.url.endsWith('/contests/1'))
+      ).toHaveLength(1)
     } finally {
-      pending.resolve(me)
       await flushPromises()
     }
   }
@@ -118,7 +148,7 @@ it.each([401, 503])(
 it('does not mount protected content while the session is unknown and supports retry', async () => {
   const pinia = createPinia()
   setActivePinia(pinia)
-  const getMe = vi.spyOn(MeApi.prototype, 'getMe').mockRejectedValue(new Error('offline'))
+  const getMe = vi.spyOn(apiClient, 'GET').mockRejectedValue(new Error('offline'))
   const stop = watchSessionRouting()
   const remove = appRouter.addRoute({
     path: '/private-test',
@@ -128,11 +158,14 @@ it('does not mount protected content while the session is unknown and supports r
   try {
     await appRouter.push('/private-test')
     const wrapper = mount(App, {
-      global: { plugins: [pinia, appRouter], stubs: { TopNavbar: true, BottomNavbar: true } }
+      global: {
+        plugins: [pinia, appRouter, [VueQueryPlugin, { queryClient }]],
+        stubs: { TopNavbar: true, BottomNavbar: true }
+      }
     })
     wrappers.push(wrapper)
     expect(wrapper.text()).not.toContain('Private content')
-    getMe.mockResolvedValue(me)
+    getMe.mockResolvedValue({ data: me, response: Response.json(me) })
     await wrapper.get('button').trigger('click')
     await flushPromises()
     expect(wrapper.text()).toContain('Private content')

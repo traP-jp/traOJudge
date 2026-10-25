@@ -1,8 +1,12 @@
 export type ContestPhase = 'upcoming' | 'running' | 'finished'
 
-export function getContestPhase(startsAt: Date, endsAt: Date, now: number): ContestPhase {
-  if (now < startsAt.getTime()) return 'upcoming'
-  if (now < endsAt.getTime()) return 'running'
+export function getContestPhase(
+  startsAt: Date | string,
+  endsAt: Date | string,
+  now: number
+): ContestPhase {
+  if (now < new Date(startsAt).getTime()) return 'upcoming'
+  if (now < new Date(endsAt).getTime()) return 'running'
   return 'finished'
 }
 
@@ -18,7 +22,7 @@ export function formatContestDuration(milliseconds: number): string {
   return parts.join(' ')
 }
 
-export function formatContestDate(date: Date): string {
+export function formatContestDate(date: Date | string): string {
   return new Intl.DateTimeFormat('ja-JP', {
     timeZone: 'Asia/Tokyo',
     year: 'numeric',
@@ -28,5 +32,5 @@ export function formatContestDate(date: Date): string {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23'
-  }).format(date)
+  }).format(new Date(date))
 }

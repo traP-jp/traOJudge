@@ -35,7 +35,7 @@ server/
 - `domain`は外部I/Oに依存しない業務ルールを扱う。`application`はdomainとportsを使ってユースケースを組み立て、操作権限の確認とトランザクション境界を担う。
 - `ports`は必要になった外部操作のtraitと入出力型を定義する。永続化以外のファイル・外部通信の契約もここに追加する。SQL・AWS SDK・HTTPの型を契約に含めない。
 - `infra`はportsの実装を提供する。業務上の再試行や後続ノードの選択はapplicationが判断する。
-- `http`と`consumers`は入力をapplicationへ渡す。生成済みの`models`はHTTP境界で使い、Coreには持ち込まない。`http::schema`からも参照できる。生成先は既存のスクリプトに合わせて維持する。
+- `http`と`consumers`は入力をapplicationへ渡す。生成済みの`models`はHTTP境界で使い、Coreには持ち込まない。`http::schema`からも参照できる。[OpenAPIからのRust型生成](../backend/openapi-generation.md)に従い、型名・共有範囲はスキーマ側で定義する。
 - `bootstrap`で具体的なアダプターとユースケースを組み立て、HTTPや受信処理を起動する。
 
 ## ワークフローのStorage backend
@@ -54,4 +54,6 @@ providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする�
 
 結果の受理、ノード状態の更新、実行可能になった後続ノードの送信待ち登録は、applicationが同じDBトランザクションで確定する。トランザクションの契約はports、DB上の実装はinfraに置く。SQSへの送信は送信待ちの記録から行い、DBトランザクション中の外部送信を前提にしない。
 
-重複結果と並行更新による二重反映を防ぐ制約はDB側にも設ける。具体的な契約、スキーマ、再試行・期限切れからの復旧は実装時に定義する。現在のapplication・ports・infra・consumersは配置先を用意した段階であり、これらの機能の実装完了を意味しない。
+重複結果と並行更新による二重反映を防ぐ制約はDB側にも設ける。具体的な契約、スキーマ、再試行・期限切れからの復旧は実装時に定義する。ジャッジ結果の受理・送信待ちなどのapplication・ports・infra・consumersは配置先を用意した段階であり、これらの機能の実装完了を意味しない。
+
+[利用者の公開プロフィール](../backend/users.md)では、Coreの取得処理・PostgreSQLのRepositoryとマイグレーション・HTTPを実装している。

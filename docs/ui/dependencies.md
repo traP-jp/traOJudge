@@ -27,9 +27,13 @@ Tailwind CSS 4の対応条件に合わせ、Safari 16.4、Chrome 111、Firefox 1
 
 ## 推移依存の修正版
 
-`basic-ftp` の脆弱性対応として、`get-uri` 経由の依存を `overrides` で上書きしてある。`get-uri` の要求範囲を超えるため、更新時は互換性を確認する。上書きなしで修正版を利用できるようになったら、この設定を削除する。
+脆弱性対応として、`get-uri` 経由の `basic-ftp` と、Mockoon経由の `handlebars`・`@modelcontextprotocol/sdk`・`@faker-js/faker`・`zod` を、利用元の版に限定して `overrides` で上書きしてある。
 
-根拠: [basic-ftp のアドバイザリ](https://github.com/advisories/GHSA-c475-qrg2-pj4r)。
+`basic-ftp` とFakerはメジャー版を変更しているため、更新時は互換性を確認する。上書きなしで修正版を利用できるようになったら、この設定を削除する。
+
+根拠: [basic-ftp](https://github.com/advisories/GHSA-c475-qrg2-pj4r)、[Faker](https://github.com/advisories/GHSA-qxc2-j82w-r537)、[Zod](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)。
+
+2026-10-25時点では、Mockoon経由の [body-parserの指摘](https://github.com/advisories/GHSA-27r3-jxmh-p828)が残る。修正版1.20.9・2.4.0は公開後3日未満のため、10月25日20:40 JST以降に更新して再検証する。
 
 ## GitHub ActionsとAPI生成
 

@@ -134,6 +134,8 @@ Queryの取得結果を編集するフォームでは、入力用の状態を別
 
 実装例は[問題一覧](../../UI/src/views/ProblemsView.vue)、[ユーザーの提出一覧](../../UI/src/views/user/UserSubmissions.vue)、[提出フォーム](../../UI/src/components/submissions/ProblemSubmitForm.vue)を参照。
 
+認証処理が未実装の間に画面を確認する方法は，[モックを使った仮ログイン](./mock-login.md)を参照する．
+
 ### 型の書き方バランス
 
 - 型は **推論を優先**。冗長な明示は避ける (`const x: number = 1` のような明示は不要)

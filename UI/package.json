@@ -20,7 +20,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:lint": "node scripts/lint.test.mjs",
-    "format:check": "prettier --check . ../docs/ui"
+    "format:check": "prettier --check . ../docs/ui",
+    "mock": "mockoon-cli start --data ./src/api/mock/front-back-api-mock.json --hostname 127.0.0.1 --disable-admin-api --watch"
   },
   "lint-staged": {
     "*.{ts,tsx,vue,js,mjs,cjs}": [
@@ -33,9 +34,12 @@
   },
   "dependencies": {
     "@tanstack/vue-query": "5.104.4",
-    "jwt-decode": "4.0.0",
+    "@vscode/markdown-it-katex": "1.1.2",
+    "dompurify": "3.4.17",
+    "katex": "0.18.3",
     "markdown-it": "14.3.3",
     "monaco-editor": "0.52.2",
+    "openapi-fetch": "0.17.0",
     "pinia": "3.0.4",
     "shiki": "1.29.2",
     "validator": "13.15.22",
@@ -45,11 +49,11 @@
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
     "@eslint/js": "10.0.1",
+    "@mockoon/cli": "9.9.0",
     "@openapitools/openapi-generator-cli": "2.41.0",
     "@shikijs/monaco": "1.29.2",
     "@tailwindcss/vite": "4.3.3",
     "@tsconfig/node24": "24.0.5",
-    "@types/jwt-decode": "3.1.0",
     "@types/markdown-it": "14.1.2",
     "@types/node": "24.19.2",
     "@types/validator": "13.15.4",
@@ -69,6 +73,7 @@
     "husky": "9.1.7",
     "jsdom": "30.1.3",
     "lint-staged": "17.0.4",
+    "openapi-typescript": "7.13.0",
     "prettier": "3.8.3",
     "prettier-plugin-tailwindcss": "0.8.1",
     "tailwindcss": "4.3.3",
@@ -90,6 +95,17 @@
   "overrides": {
     "get-uri@8.0.1": {
       "basic-ftp": "6.2.3"
+    },
+    "@mockoon/cli@9.9.0": {
+      "@modelcontextprotocol/sdk": "1.32.1",
+      "zod": "4.6.6"
+    },
+    "@mockoon/commons-server@9.9.0": {
+      "handlebars": "4.7.10",
+      "@faker-js/faker": "10.6.0"
+    },
+    "@vscode/markdown-it-katex@1.1.2": {
+      "katex": "$katex"
     }
   }
 }

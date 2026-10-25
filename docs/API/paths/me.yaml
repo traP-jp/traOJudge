@@ -47,7 +47,7 @@ me:
     tags:
       - 'me'
     summary: '本人のプロフィールを変更する'
-    description: '本人のプロフィールを変更する'
+    description: '本人のプロフィールを変更する。githubId・atcoderId・xIdは本人が申告するユーザー名で、外部サービスとの認証・連携には使わない。変更項目を省略すると維持し、空文字を指定すると未設定にする。'
     x-authorization:
       status: 'defined'
       subject: 'authenticated-user'
@@ -213,13 +213,11 @@ meSignInMethods:
               $ref: '../schemas/authentication.yaml#/SignInMethods'
             example:
               items:
-                - id: 'sign_in_method_email_1'
+                - id: '97a8339b-086e-5593-8adf-dbde6f030941'
                   kind: 'email'
-                  label: 'a***@example.com'
                   createdAt: '2026-10-18T13:00:00Z'
-                - id: 'sign_in_method_google_1'
+                - id: 'c94a466f-1c1f-51fa-9aa7-3fa8a960d179'
                   kind: 'google'
-                  label: 'alice@example.com'
                   createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:
@@ -270,7 +268,7 @@ meSignInMethodsExternalAuthorizations:
             schema:
               $ref: '../schemas/authentication.yaml#/Authorization'
             example:
-              authorizationId: 'authorization_example_3'
+              authorizationId: 'ca1ed093-fc24-51c6-be78-d2f608941072'
               authorizationUrl: 'https://provider.example/authorize?client_id=app_example&state=state_example_3'
               expiresAt: '2026-10-19T13:30:00Z'
         headers:
@@ -335,9 +333,8 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             schema:
               $ref: '../schemas/authentication.yaml#/SignInMethod'
             example:
-              id: 'sign_in_method_google_2'
+              id: '47e16edb-e89b-5504-a455-be6de7e60367'
               kind: 'google'
-              label: 'alice@example.com'
               createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:
@@ -356,9 +353,8 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             schema:
               $ref: '../schemas/authentication.yaml#/SignInMethod'
             example:
-              id: 'sign_in_method_google_2'
+              id: '47e16edb-e89b-5504-a455-be6de7e60367'
               kind: 'google'
-              label: 'alice@example.com'
               createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:

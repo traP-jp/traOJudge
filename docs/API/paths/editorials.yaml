@@ -54,13 +54,15 @@ problemsByProblemIdEditorials:
     operationId: 'listProblemEditorials'
     tags:
       - 'editorials'
-    summary: '問題の公開解説を取得する'
-    description: '一般公開された解説のみを返す。非公開解説を編集できることとは別の閲覧経路。'
-    security: []
+    summary: '問題の閲覧可能な解説を取得する'
+    description: '閲覧者ごとに許可された解説だけを返す．大会に紐づく問題では，endsAtに到達するまで一般利用者に公開解説も返さない．対象大会のcontest-adminまたはcontest-setterにはすべての解説を返し，解説のauthorId本人とeditiorial-authorにはそれぞれ担当する解説を返す．大会終了後は公開解説を全員に返す．大会に紐づかない問題では，公開解説を全員に返す．閲覧者に許可されない解説はitemsへ含めず，nextCursorも許可された結果だけを対象に計算する．'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
       subject: 'anyone'
-      target: 'public-resources'
+      target: '各解説の公開状態，大会終了時刻，対象範囲付きロールにより閲覧を許可された結果'
     x-scenarios: []
     parameters:
       - $ref: '../components/parameters.yaml#/Limit'
@@ -72,6 +74,12 @@ problemsByProblemIdEditorials:
           'application/json':
             schema:
               $ref: '../schemas/editorials.yaml#/Editorials'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '閲覧者ごとに内容が異なるため，キャッシュしない．'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
       '404':
@@ -87,17 +95,22 @@ editorialsByEditorialId:
     operationId: 'getEditorial'
     tags:
       - 'editorials'
-    summary: '公開または本人が編集を担当する解説を取得する'
-    description: '公開または本人が編集を担当する解説を取得する'
+    summary: '閲覧可能な解説を取得する'
+    description: '大会に紐づく問題の解説は，大会終了前には公開設定でも一般利用者へ本文を返さない．対象大会のcontest-adminまたはcontest-setter，および当該解説のauthorId本人とeditiorial-authorは終了前から閲覧できる．大会終了後は公開解説を全員が閲覧できる．大会に紐づかない問題の公開解説は全員が閲覧できる．'
     security:
       - {}
       - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
-        - condition: '公開されている'
+        - condition: '公開されており，対象問題が大会に紐づかないか，対象大会の終了時刻に到達している'
         - role: 'editiorial-author'
           scope: 'editorialId'
+        - condition: 'ログイン中の本人がauthorIdに一致する'
+        - role: 'contest-admin'
+          scope: '対象問題が属するcontestId'
+        - role: 'contest-setter'
+          scope: '対象問題が属するcontestId'
     x-scenarios: []
     responses:
       '200':
@@ -111,6 +124,11 @@ editorialsByEditorialId:
             description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
             schema:
               type: 'string'
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '終了前の解説や非公開解説をキャッシュしない．'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
       '404':
