@@ -22,9 +22,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$SCRIPT_DIR/.."
 cd "$ROOT_DIR"
 
-# APIクライアントの生成
+# 既存画面は旧API契約に依存するため，3.1への刷新直前の定義に固定する．
+# 新契約のクライアントは別の生成スクリプトで生成する．
 npx @openapitools/openapi-generator-cli generate \
-  -i https://raw.githubusercontent.com/traP-jp/traO-Judge-docs/refs/heads/develop/api/backend/frontend-backend.yaml \
+  -i https://raw.githubusercontent.com/traP-jp/traOJudge/2df99fc3040c2409be0d5356b9d05f8251c6fa54/docs/API/front_back.yaml \
   -g typescript-fetch \
   -o "$ROOT_DIR/src/api/generated"
 
@@ -70,3 +71,4 @@ echo "  import { apiConfig } from '@/api/config'"
 echo "  const api = new SomeApi(apiConfig)"
 
 bash "$SCRIPT_DIR/gen-contest-api.sh"
+bash "$SCRIPT_DIR/gen-auth-api.sh"

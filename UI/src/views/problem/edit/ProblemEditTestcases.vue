@@ -14,10 +14,10 @@ import type {
   PostTestcaseRequestInner,
   PutTestcaseRequest
 } from '@/api/generated/models'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 
 const route = useRoute()
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 if (typeof route.params.id !== 'string') throw new Error('Invalid route')
 const problemId = ref<string>('')
@@ -144,7 +144,7 @@ async function handleDelete(id: string) {
     return
   }
   try {
-    await requireTraqAuth(() => testcasesApi.deleteTestcase({ testcaseId: id }))
+    await requireMockLogin(() => testcasesApi.deleteTestcase({ testcaseId: id }))
 
     testcases.value.delete(id)
     testcaseDetails.value.delete(id)
@@ -178,7 +178,7 @@ async function handleSaveTestcase() {
         testOutput: formData.value.output
       }
 
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         testcasesApi.putTestcase({
           testcaseId: editingTestcase.value!.id,
           putTestcaseRequest: putRequest
@@ -200,7 +200,7 @@ async function handleSaveTestcase() {
       }
       // TODO: 配列型でいいのか確認
       // 複数の一括追加を想定して作ったが，本当に必要？
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         testcasesApi.postTestcases({
           problemId: problemId.value,
           postTestcaseRequestInner: [postRequest]

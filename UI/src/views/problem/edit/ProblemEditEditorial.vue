@@ -15,10 +15,10 @@ import {
   type PutEditorialOperationRequest,
   type PutEditorialRequest
 } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 import router from '@/router'
 
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const title = ref<string>('')
 const body = ref<string>('')
@@ -110,7 +110,7 @@ async function saveEditorial() {
 
   try {
     if (editorialId.value === 'new') {
-      const response = await requireTraqAuth(() =>
+      const response = await requireMockLogin(() =>
         editorialApi.postEditorial({
           problemId: problemId.value,
           postEditorialRequest: editorialPayload as PostEditorialRequest
@@ -119,7 +119,7 @@ async function saveEditorial() {
 
       router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
     } else {
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         editorialApi.putEditorial({
           editorialId: editorialId.value,
           putEditorialRequest: editorialPayload as PutEditorialRequest
