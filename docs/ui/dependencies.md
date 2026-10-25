@@ -33,12 +33,16 @@ Tailwind CSS 4の対応条件に合わせ、Safari 16.4、Chrome 111、Firefox 1
 
 根拠: [basic-ftp](https://github.com/advisories/GHSA-c475-qrg2-pj4r)、[Faker](https://github.com/advisories/GHSA-qxc2-j82w-r537)、[Zod](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)。
 
+`@vscode/markdown-it-katex` 経由のKaTeXは、直接依存と同じ版を使うように `overrides` で揃えてある。
+
 2026-10-25時点では、Mockoon経由の [body-parserの指摘](https://github.com/advisories/GHSA-27r3-jxmh-p828)が残る。修正版1.20.9・2.4.0は公開後3日未満のため、10月25日20:40 JST以降に更新して再検証する。
 
 ## GitHub ActionsとAPI生成
 
 UI用Actionsは40桁の commit SHA に固定し、コメントに版を書く。checkoutの認証情報は保存せず、workflowの権限は `contents: read` とする。既存のDependabot設定を利用する。
 
-UIのCIはbase branchを限定しない。`UI/`、`docs/API/`、`docs/ui/` とworkflow自身の変更で実行し、通常問題・コンテスト両方のAPI生成、lint、テスト、型検査、buildを確認する。
+UIのCIはbase branchを限定しない。`UI/`、`docs/API/`、`docs/ui/` とworkflow自身の変更で実行し、旧API・新APIの生成、lint、テスト、型検査、buildを確認する。
 
-OpenAPI Generatorはnpmの依存とは別にJARを取得する。JARの版は `UI/openapitools.json` で指定し、npmのlockfile・公開後の待機期間の対象外。通常問題のスキーマは、`UI/scripts/gen-api.sh` の `SCHEMA_COMMIT` で指定した旧ドキュメントリポジトリのcommitから取得する。コンテストトップは、このモノレポの `docs/API/front_back.yaml` を使う。
+通常問題・プロフィールなどの旧APIは、OpenAPI Generatorでクライアントを生成する。スキーマは `UI/scripts/gen-api.sh` の `SCHEMA_COMMIT` で指定した旧ドキュメントリポジトリのcommitから取得する。生成に必要なJARはnpmの依存とは別に取得し、版は `UI/openapitools.json` で指定する。JARはnpmのlockfile・公開後の待機期間の対象外。
+
+認証・コンテストの新APIは、このモノレポの `docs/API/front_back.yaml` からopenapi-typescriptで型を生成し、openapi-fetchで通信する。生成コマンドは[セットアップ](development.md#セットアップ)を参照。

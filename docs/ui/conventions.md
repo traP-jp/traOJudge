@@ -8,7 +8,7 @@
 - Pinia (認証・クライアント状態), TanStack Vue Query (サーバー状態), Vue Router (ルーティング)
 - Tailwind CSS (スタイリング)
 - ESLint + Prettier
-- API クライアントは OpenAPI から自動生成
+- APIの型はOpenAPIから生成。旧APIは生成クライアント、新APIはopenapi-fetchを使う
 
 ## ディレクトリ構成と責務
 
@@ -27,27 +27,27 @@
 
 部品の配置は、扱う機能と役割で決める。複数のページで使っていても、問題や提出の知識を持つ部品は、その機能のディレクトリに置く。
 
-| components内の配置                                          | 内容・例                                                                            |
-| ----------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| 直下                                                        | 機能を問わず使う表示部品。`ListingTable`、`QueryState`、`MarkdownContent`など       |
-| `controls/`                                                 | ボタン・入力・メニュー操作。テキスト入力は `textbox/`、ページ送りは `pagination/`   |
-| `icons/`・`editor/`                                         | アイコンとコードエディター。エディター用のハイライト処理も `editor/` に置く         |
-| `navigation/`                                               | 共通のナビゲーションとサイドメニューの枠                                            |
-| `auth/`・`problems/`・`submissions/`・`users/`・`settings/` | 機能固有の部品。サイドメニューの項目定義や `ProblemSubmitForm` も対応する機能に置く |
+| components内の配置                                              | 内容・例                                                                                 |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 直下                                                            | 機能を問わず使う表示部品。`ListingTable`、`QueryState`、`MarkdownContent`など            |
+| `controls/`                                                     | ボタン・入力・メニュー操作。テキスト入力は `textbox/`、ページ送りは `pagination/`        |
+| `icons/`・`editor/`                                             | アイコンとコードエディター。エディター用のハイライト処理も `editor/` に置く              |
+| `navigation/`                                                   | 共通のナビゲーションとサイドメニューの枠                                                 |
+| `contests/`・`problems/`・`submissions/`・`users/`・`settings/` | 機能固有の部品。コンテストのヘッダー、サイドメニューの項目定義、`ProblemSubmitForm` など |
 
-composablesは `problems/`、`submissions/`、`users/` に機能別の処理を置く。機能をまたいで使う `useSessionQuery` は直下に置く。URLを扱う `useListRoute` と `useRouteId` は `router/` にまとめる。テストは対象の実装と同じディレクトリに置く。
+composablesは `contests/`、`problems/`、`submissions/`、`users/` に機能別の処理を置く。機能をまたいで使う `useApiQuery`、`useSessionQuery`、`useMarkdownRenderer` は直下に置く。URLを扱う `useListRoute` と `useRouteId` は `router/` にまとめる。テストは対象の実装と同じディレクトリに置く。
 
 ## 自動チェック
 
-- `.claude/hooks/ui-format.sh` — Edit/Write 直後に Prettier → ESLint `--fix` を該当ファイルに実行
-- `.claude/hooks/ui-typecheck.sh` — タスク完了時に `vue-tsc` を実行 (UI ファイルを編集したセッションのみ)
-- `.husky/pre-commit` — コミット時に lint-staged (ESLint+Prettier) と `vue-tsc` を実行
-
-エラーが出た場合は自動修正で済むものは直り、残ったエラーは AI にフィードバックされて再修正を促します。
+| フック                          | 実行条件                                                             | 処理                                        |
+| ------------------------------- | -------------------------------------------------------------------- | ------------------------------------------- |
+| `.claude/hooks/ui-format.sh`    | Claude CodeでUI内のVue・TypeScript・JavaScriptファイルを編集した直後 | ESLint `--fix` → Prettier。生成物などは除く |
+| `.claude/hooks/ui-typecheck.sh` | 上記の編集があったセッションの完了時                                 | `vue-tsc`                                   |
+| `.husky/pre-commit`             | `UI/` 配下の変更がステージされているコミット時                       | lint-staged → `vue-tsc`                     |
 
 ---
 
-## lint で強制している規約と意図
+## lint・formatterで確認する規約と意図
 
 ### Vue コンポーネント
 
@@ -88,10 +88,10 @@ composablesは `problems/`、`submissions/`、`users/` に機能別の処理を�
 
 ### Tailwind
 
-- **クラス順序を強制** (`tailwindcss/classnames-order`)
-  - 順序統一で diff のノイズを減らし、共通スタイルの差分を見やすくする。
+- **クラス順序はPrettierで整える** (`prettier-plugin-tailwindcss`)
+  - `tailwindcss/classnames-order` は無効にし、クラス順の整形をPrettierに集約している。
 - **任意値 (`w-[317px]` 等) は warn** (`tailwindcss/no-arbitrary-value`)
-  - 任意値はデザインシステム外の値が紛れ込んだサイン。やむを得ず使う場合は許容するが、まずは `UI/src/assets/main.css` の `@theme` にあるトークンを使えないか確認する。
+  - `npm run lint` は `--max-warnings=0` のため、警告が残ると失敗する。まずは `UI/src/assets/main.css` の `@theme` にあるトークンを使えないか確認する。任意値が必要な場合は、対象箇所に理由付きの `eslint-disable` を置き、このルールだけを抑制する。
 
 ---
 
@@ -101,7 +101,7 @@ composablesは `problems/`、`submissions/`、`users/` に機能別の処理を�
 
 | 状態                                | 管理する場所                               |
 | ----------------------------------- | ------------------------------------------ |
-| 認証・OAuthの進行状態               | Piniaのstore                               |
+| 認証状態・本人情報                  | Piniaのstore                               |
 | 共通処理へ移行した画面のAPI取得結果 | Vue Queryと機能別composable                |
 | 一覧のページ番号・難易度条件        | URL。読み書きは `router/listConditions.ts` |
 | フォームの入力・メニューの開閉      | その状態を使うページや部品                 |
@@ -110,19 +110,21 @@ Queryの取得結果を編集するフォームでは、入力用の状態を別
 
 ### API取得と表示
 
-問題詳細・問題一覧・提出一覧・ユーザー詳細の取得は、機能別composableを使う。API呼び出し、query key、取得条件をそこで定義する。APIの型は生成型を使う。問題編集・設定画面・言語一覧取得には、生成APIを直接呼ぶ既存実装が残っている。
+問題詳細・問題一覧・提出一覧・ユーザー詳細・コンテストとその解説の取得は、機能別composableを使う。API呼び出し、query key、取得条件をそこで定義する。問題編集・設定画面・言語一覧取得には、生成APIを直接呼ぶ既存実装が残っている。
 
-対象IDや条件はrefまたはgetterで渡す。初回の値だけを渡すと、画面内で対象を切り替えたときに取得が追従しない。機能別composableでは、`useSessionQuery` が渡す `signal` をAPI呼び出しへ引き渡す。
+認証・コンテストの通信には `api/client.ts` の `apiClient` と、`api/generated/schema.ts` の生成型を使う。HTTPエラーは共通クライアントで `ApiError` にし、本文が必須の応答には `requireData` を使う。通常問題などの旧APIは、既存の生成クライアントを使う。
+
+対象IDや条件はrefまたはgetterで渡す。初回の値だけを渡すと、画面内で対象を切り替えたときに取得が追従しない。機能別composableでは、共通Queryが渡す `signal` をAPI呼び出しへ引き渡す。
 
 画面は返された `view` を表示し、再取得には `refresh` を使う。共通の読み込み・エラー表示には `QueryState` を使う。401ではセッションを破棄し、403・404では古いデータを隠す。同じ対象の再取得が通信障害などで失敗した場合は、取得済みデータに警告を添えて表示する。
 
-`useSessionQuery` は旧APIの認証必須画面向けで、ログイン済みのときに取得する。公開コンテストの取得は[コンテストトップ](contest-top.md)の実装を参照する。
+`useApiQuery` は公開取得と認証必須取得を扱う。認証必須の取得では `requiresAuth: true` を指定する。`useSessionQuery` は旧API向けに認証必須の設定とquery keyの接頭辞を固定したもの。公開APIは未ログイン時に `credentials: 'omit'` で取得する。[useContestQuery](../../UI/src/composables/contests/useContestQuery.ts) を参照。
 
 ### 認証と画面遷移
 
-認証は `stores/user.ts`、認証に応じた画面遷移はrouterが扱う。初期化ではCookieのセッションを確認し、通信失敗後は再試行できる。セッション切り替え時には進行中の取得を中断し、Queryのキャッシュを破棄する。
+認証は `stores/user.ts`、認証に応じた画面遷移はrouterが扱う。ストアは新APIの `CurrentUser` を保持する。初期化ではCookieのセッションを確認し、通信失敗後は再試行できる。セッション切り替え時には進行中の取得を中断し、Queryのキャッシュを破棄する。前のセッションから遅れて届いた応答は反映しない。
 
-認証必須ページは、ログイン状態とルートの権限を確認してから表示する。公開ページと認証フォームは、認証確認中も表示を維持する。
+認証必須ページは、ログイン状態とルートの権限を確認してから表示する。公開ページは認証確認の完了を待たずに表示し、閲覧者が変わったらデータを取得し直す。通常問題の開発用の操作許可には `composables/problems/useMockAuthGuard.ts` を使う。操作方法と制約は[モックを使った仮ログイン](mock-login.md)を参照。
 
 ### 一覧と提出
 
@@ -134,7 +136,9 @@ Queryの取得結果を編集するフォームでは、入力用の状態を別
 
 実装例は[問題一覧](../../UI/src/views/ProblemsView.vue)、[ユーザーの提出一覧](../../UI/src/views/user/UserSubmissions.vue)、[提出フォーム](../../UI/src/components/submissions/ProblemSubmitForm.vue)を参照。
 
-認証処理が未実装の間に画面を確認する方法は，[モックを使った仮ログイン](./mock-login.md)を参照する．
+### Markdown
+
+問題文・コンテスト概要・解説・編集プレビューには `MarkdownContent` を使う。`useMarkdownRenderer` で数式とコードの色分けを扱い、本文中のHTMLは無効にしている。生成したHTMLはDOMPurifyでサニタイズする。コードの色分けを初期化できなくても本文を表示し、次に開いたときに再試行する。
 
 ### 型の書き方バランス
 
