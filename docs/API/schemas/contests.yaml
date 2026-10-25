@@ -42,10 +42,7 @@ ContestCreate:
     rules:
       $ref: './contests.yaml#/ContestRules'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
       description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
   required:
@@ -91,10 +88,7 @@ Contest:
       maxLength: 200000
       description: 'コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -256,10 +250,7 @@ VirtualContestCreate:
     rules:
       $ref: './contests.yaml#/ContestRules'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
       description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
   required:
@@ -290,10 +281,7 @@ VirtualContest:
     title:
       type: 'string'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     startsAt:
       type: 'string'
       format: 'date-time'

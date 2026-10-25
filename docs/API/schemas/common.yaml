@@ -27,20 +27,22 @@ Error:
     details:
       type: 'array'
       items:
-        type: 'object'
-        additionalProperties: false
-        properties:
-          field:
-            type: 'string'
-          reason:
-            type: 'string'
-        required:
-          - 'field'
-          - 'reason'
+        $ref: './common.yaml#/ErrorDetail'
   required:
     - 'code'
     - 'message'
     - 'requestId'
+ErrorDetail:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    field:
+      type: 'string'
+    reason:
+      type: 'string'
+  required:
+    - 'field'
+    - 'reason'
 Accepted:
   type: 'object'
   additionalProperties: false
