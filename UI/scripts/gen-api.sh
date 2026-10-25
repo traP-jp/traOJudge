@@ -14,4 +14,4 @@ npx --no-install openapi-generator-cli generate \
   -g typescript-fetch \
   -o src/api/generated
 
-bash "$SCRIPT_DIR/gen-contest-api.sh"
+bash "$SCRIPT_DIR/gen-api-types.sh"

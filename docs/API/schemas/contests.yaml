@@ -27,6 +27,12 @@ ContestCreate:
       maxLength: 200000
       default: ''
       description: 'コンテストtopに表示するMarkdown形式の概要．HTMLは許可しない．'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '大会主催側が選ぶ参加方式。個人戦またはチーム戦。'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -36,14 +42,12 @@ ContestCreate:
     rules:
       $ref: './contests.yaml#/ContestRules'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
       description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
   required:
     - 'title'
+    - 'participationMode'
     - 'startsAt'
     - 'endsAt'
     - 'rules'
@@ -55,6 +59,12 @@ ContestUpdate:
       type: 'string'
       maxLength: 200000
       description: 'コンテストtopの概要．Markdown形式で記述し，空文字列で消去する．'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '変更要求時点が更新前のstartsAtより前なら現在の方式と異なる値へ変更できる。変更すると既存の参加登録と大会内チームをすべて削除する。'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -78,13 +88,16 @@ Contest:
       maxLength: 200000
       description: 'コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     startsAt:
       type: 'string'
       format: 'date-time'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '個人戦またはチーム戦。'
     endsAt:
       type: 'string'
       format: 'date-time'
@@ -96,6 +109,7 @@ Contest:
     - 'id'
     - 'title'
     - 'visibility'
+    - 'participationMode'
     - 'startsAt'
     - 'endsAt'
     - 'rules'
@@ -164,6 +178,61 @@ Participation:
   required:
     - 'userId'
     - 'joinedAt'
+ContestTeamJoinRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      $ref: './common.yaml#/DisplayName'
+    password:
+      type: 'string'
+      minLength: 1
+      maxLength: 128
+      writeOnly: true
+      description: 'チーム作成・参加に使う秘密情報。応答には含めない。'
+  required:
+    - 'name'
+    - 'password'
+ContestTeamMember:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+  required:
+    - 'userId'
+    - 'displayName'
+ContestTeam:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    members:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestTeamMember'
+  required:
+    - 'id'
+    - 'name'
+    - 'members'
+ContestTeamParticipation:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    team:
+      $ref: './contests.yaml#/ContestTeam'
+    joinedAt:
+      type: 'string'
+      format: 'date-time'
+      description: 'ログイン中の本人がこのチームに参加した時刻。'
+  required:
+    - 'team'
+    - 'joinedAt'
 VirtualContestCreate:
   type: 'object'
   additionalProperties: false
@@ -181,10 +250,7 @@ VirtualContestCreate:
     rules:
       $ref: './contests.yaml#/ContestRules'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
       description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
   required:
@@ -215,10 +281,7 @@ VirtualContest:
     title:
       type: 'string'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     startsAt:
       type: 'string'
       format: 'date-time'
@@ -272,8 +335,12 @@ ClarificationAnswer:
       type: 'string'
       minLength: 1
       maxLength: 10000
+    isPublic:
+      type: 'boolean'
+      description: 'trueなら質問と回答を公開する。コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。falseなら質問者本人と質問を受け付けた大会の運営担当だけが閲覧できる。'
   required:
     - 'body'
+    - 'isPublic'
 Clarification:
   type: 'object'
   additionalProperties: false
@@ -292,6 +359,9 @@ Clarification:
       anyOf:
         - type: 'string'
         - type: 'null'
+    isPublic:
+      type: 'boolean'
+      description: '質問と回答の公開範囲。回答前はfalse。trueなら、コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。'
     answeredBy:
       anyOf:
         - $ref: './common.yaml#/ResourceId'
@@ -307,6 +377,7 @@ Clarification:
     - 'body'
     - 'problemId'
     - 'answer'
+    - 'isPublic'
     - 'answeredBy'
     - 'revision'
     - 'createdAt'
@@ -331,6 +402,11 @@ Standing:
   properties:
     userId:
       $ref: './common.yaml#/ResourceId'
+    problemScores:
+      type: 'array'
+      description: '大会の全出題を出題順に返す。提出得点がない問題のscoreは0。'
+      items:
+        $ref: './contests.yaml#/ContestProblemScore'
     rank:
       type: 'integer'
       minimum: 1
@@ -343,10 +419,62 @@ Standing:
       format: 'date-time'
   required:
     - 'userId'
+    - 'problemScores'
     - 'rank'
     - 'score'
     - 'tieBreakValue'
     - 'updatedAt'
+TeamStanding:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    teamId:
+      $ref: './common.yaml#/ResourceId'
+    teamName:
+      type: 'string'
+    members:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestTeamMember'
+    problemScores:
+      type: 'array'
+      description: '大会の全出題を出題順に返す。各問題でチームメンバー全員の最高得点を採用し、得点がない問題のscoreは0。'
+      items:
+        $ref: './contests.yaml#/ContestProblemScore'
+    rank:
+      type: 'integer'
+      minimum: 1
+    score:
+      type: 'number'
+    tieBreakValue:
+      type: 'number'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'teamId'
+    - 'teamName'
+    - 'members'
+    - 'problemScores'
+    - 'rank'
+    - 'score'
+    - 'tieBreakValue'
+    - 'updatedAt'
+ContestProblemScore:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    label:
+      type: 'string'
+    score:
+      type: 'number'
+      minimum: 0
+  required:
+    - 'problemId'
+    - 'label'
+    - 'score'
 Standings:
   type: 'object'
   additionalProperties: false
@@ -355,6 +483,20 @@ Standings:
       type: 'array'
       items:
         $ref: './contests.yaml#/Standing'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'items'
+    - 'updatedAt'
+TeamStandings:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/TeamStanding'
     updatedAt:
       type: 'string'
       format: 'date-time'

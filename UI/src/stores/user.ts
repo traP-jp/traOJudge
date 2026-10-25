@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import type { Me, UserEmailAndPassword } from '@/api/generated'
-import { AuthenticationApi, MeApi, ResponseError } from '@/api/generated'
+import { apiClient, type CurrentUser, requireData } from '@/api/client'
+import { ApiError } from '@/api/errors'
 import { queryClient } from '@/api/queryClient'
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<Me | null>(null)
+  const user = ref<CurrentUser | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const isInitialized = ref(false)
@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', () => {
 
   const isAuthenticated = computed(() => !!user.value)
   const userId = computed(() => user.value?.id ?? '')
-  const username = computed(() => user.value?.name ?? '')
+  const username = computed(() => user.value?.displayName ?? '')
 
   const beginSession = () => {
     controller?.abort()
@@ -35,8 +35,12 @@ export const useUserStore = defineStore('user', () => {
     if (operation.epoch !== epoch.value) throw new DOMException('Session changed', 'AbortError')
   }
 
-  const readUser = async (operation: { epoch: number; signal: AbortSignal }): Promise<Me> => {
-    const response = await new MeApi().getMe({ signal: operation.signal })
+  const readUser = async (operation: {
+    epoch: number
+    signal: AbortSignal
+  }): Promise<CurrentUser> => {
+    const { data } = await apiClient.GET('/me', { signal: operation.signal })
+    const response = requireData(data)
     assertCurrent(operation)
     user.value = response
     isInitialized.value = true
@@ -45,14 +49,14 @@ export const useUserStore = defineStore('user', () => {
 
   const recordFailure = (err: unknown, operation: { epoch: number }): void => {
     if (operation.epoch !== epoch.value) return
-    const unauthorized = err instanceof ResponseError && err.response.status === 401
+    const unauthorized = err instanceof ApiError && err.response.status === 401
     isInitialized.value = unauthorized
     error.value = unauthorized
       ? null
       : 'ログイン状態を確認できませんでした。もう一度お試しください。'
   }
 
-  const fetchCurrentUser = async (): Promise<Me> => {
+  const fetchCurrentUser = async (): Promise<CurrentUser> => {
     const operation = beginSession()
     try {
       return await readUser(operation)
@@ -67,7 +71,6 @@ export const useUserStore = defineStore('user', () => {
   const initialize = (): Promise<void> => {
     if (initPromise) return initPromise
     if (isInitialized.value) return Promise.resolve()
-    // localStorageに記録がなくてもCookieのセッションは有効な場合がある。
     const pending = fetchCurrentUser().then(
       () => undefined,
       () => undefined
@@ -79,14 +82,18 @@ export const useUserStore = defineStore('user', () => {
     return pending
   }
 
-  const login = async (credentials: UserEmailAndPassword): Promise<void> => {
+  const loginWithMock = async (): Promise<void> => {
+    if (!import.meta.env.DEV) throw new Error('モックログインは開発環境でのみ利用できます。')
     const operation = beginSession()
     try {
-      await new AuthenticationApi().postLogin(
-        { userEmailAndPassword: credentials },
-        { signal: operation.signal }
-      )
+      const { data } = await apiClient.POST('/auth/email/verifications', {
+        params: { header: { Origin: window.location.origin } },
+        body: { token: 'mock-login' },
+        signal: operation.signal
+      })
       assertCurrent(operation)
+      if (requireData(data).status !== 'signed-in')
+        throw new Error('モックログインに失敗しました。')
       await readUser(operation)
     } catch (err) {
       recordFailure(err, operation)
@@ -99,12 +106,15 @@ export const useUserStore = defineStore('user', () => {
   const logout = async (): Promise<void> => {
     const operation = beginSession()
     try {
-      await new AuthenticationApi().postLogout({ signal: operation.signal })
+      await apiClient.DELETE('/auth/session', {
+        params: { header: { Origin: window.location.origin } },
+        signal: operation.signal
+      })
       assertCurrent(operation)
       isInitialized.value = true
     } catch (err) {
       recordFailure(err, operation)
-      if (!(err instanceof ResponseError && err.response.status === 401)) throw err
+      if (!(err instanceof ApiError && err.response.status === 401)) throw err
     } finally {
       if (operation.epoch === epoch.value) isLoading.value = false
     }
@@ -127,7 +137,7 @@ export const useUserStore = defineStore('user', () => {
     username,
     initialize,
     fetchCurrentUser,
-    login,
+    loginWithMock,
     logout,
     reset
   }

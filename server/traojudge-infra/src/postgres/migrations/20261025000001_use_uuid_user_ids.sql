@@ -1,0 +1,2 @@
+ALTER TABLE users DROP CONSTRAINT users_id_check;
+ALTER TABLE users ALTER COLUMN id TYPE UUID USING id::uuid;

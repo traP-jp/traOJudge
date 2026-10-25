@@ -10,10 +10,10 @@ import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import TextLink from '@/components/TextLink.vue'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 import router from '@/router'
 
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const title = ref<string>('')
 const body = ref<string>('')
@@ -105,7 +105,7 @@ async function saveEditorial() {
 
   try {
     if (editorialId.value === 'new') {
-      const response = await requireTraqAuth(() =>
+      const response = await requireMockLogin(() =>
         editorialApi.postEditorial({
           problemId: problemId.value,
           postEditorialRequest: editorialPayload as PostEditorialRequest
@@ -114,7 +114,7 @@ async function saveEditorial() {
 
       await router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
     } else {
-      await requireTraqAuth(() =>
+      await requireMockLogin(() =>
         editorialApi.putEditorial({
           editorialId: editorialId.value,
           putEditorialRequest: editorialPayload

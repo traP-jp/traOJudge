@@ -25,6 +25,7 @@ thiserror = "2"
 tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tower = { version = "0.5", features = ["util"] }
 traojudge-backend_app = { path = "server/traojudge-backend_app" }
 traojudge-core = { path = "server/traojudge-core" }
 traojudge-infra = { path = "server/traojudge-infra" }
@@ -33,3 +34,4 @@ traojudge-workflow = { path = "server/traojudge-workflow" }
 uuid = { version = "1", features = ["serde", "v4"] }
 workspace-hack = { path = "server/workspace-hack" }
 futures = "0.3.34"
+sha2 = "0.10.8"

@@ -25,6 +25,8 @@ tags:
     description: 'メール・外部サービスによる本人確認とセッション。'
   - name: 'me'
     description: '本人のプロフィール・認証手段・開発者トークン。'
+  - name: 'users'
+    description: '公開プロフィールと、利用者が作成し閲覧者が閲覧できる問題。'
   - name: 'permissions'
     description: '役割と対象を固定した付与・剥奪。'
   - name: 'problems'
@@ -38,7 +40,7 @@ tags:
   - name: 'virtual-contests'
     description: 'バーチャル大会の作成・出題・参加。'
   - name: 'clarifications'
-    description: '大会の質問と回答。'
+    description: '通常大会の質問と回答。'
   - name: 'editorials'
     description: '問題の解説と公開範囲。'
   - name: 'cli'
@@ -66,6 +68,8 @@ paths:
     $ref: './paths/authentication.yaml#/authExternalSessionsByAuthorizationIdComplete'
   '/me':
     $ref: './paths/me.yaml#/me'
+  '/users/{userId}':
+    $ref: './paths/users.yaml#/usersByUserId'
   '/me/email-changes':
     $ref: './paths/me.yaml#/meEmailChanges'
   '/me/email-changes/complete':
@@ -126,7 +130,7 @@ paths:
     $ref: './paths/problem-files.yaml#/problemsByProblemIdFileUploadsByUploadIdComplete'
   '/languages':
     $ref: './paths/problems.yaml#/languages'
-  '/submission-uploads':
+  '/submissions/uploads':
     $ref: './paths/submissions.yaml#/submissionUploads'
   '/submissions':
     $ref: './paths/submissions.yaml#/submissions'
@@ -134,6 +138,8 @@ paths:
     $ref: './paths/submissions.yaml#/meSubmissions'
   '/submissions/{submissionId}':
     $ref: './paths/submissions.yaml#/submissionsBySubmissionId'
+  '/submissions/{submissionId}/source':
+    $ref: './paths/submissions.yaml#/submissionsBySubmissionIdSource'
   '/submissions/{submissionId}/judge-runs':
     $ref: './paths/submissions.yaml#/submissionsBySubmissionIdJudgeRuns'
   '/submissions/{submissionId}/judge-runs/{judgeRunId}':
@@ -160,10 +166,18 @@ paths:
     $ref: './paths/contests.yaml#/contestsByContestIdProblemsByProblemId'
   '/contests/{contestId}/participation':
     $ref: './paths/contests.yaml#/contestsByContestIdParticipation'
+  '/contests/{contestId}/teams':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeams'
+  '/contests/{contestId}/teams/{teamId}':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamsByTeamId'
+  '/contests/{contestId}/teams/{teamId}/submissions':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamsByTeamIdSubmissions'
   '/contests/{contestId}/submissions':
     $ref: './paths/contests.yaml#/contestsByContestIdSubmissions'
   '/contests/{contestId}/standings':
     $ref: './paths/contests.yaml#/contestsByContestIdStandings'
+  '/contests/{contestId}/standings/team':
+    $ref: './paths/contests.yaml#/contestsByContestIdTeamStandings'
   '/contests/{contestId}/clarifications':
     $ref: './paths/clarifications.yaml#/contestsByContestIdClarifications'
   '/contests/{contestId}/clarifications/{clarificationId}/answer':
@@ -184,10 +198,6 @@ paths:
     $ref: './paths/virtual-contests.yaml#/virtualContestsByVirtualContestIdSubmissions'
   '/virtual-contests/{virtualContestId}/standings':
     $ref: './paths/virtual-contests.yaml#/virtualContestsByVirtualContestIdStandings'
-  '/virtual-contests/{virtualContestId}/clarifications':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarifications'
-  '/virtual-contests/{virtualContestId}/clarifications/{clarificationId}/answer':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarificationsByClarificationIdAnswer'
   '/editorials':
     $ref: './paths/editorials.yaml#/editorials'
   '/problems/{problemId}/editorials':
@@ -198,9 +208,308 @@ paths:
     $ref: './paths/editorials.yaml#/editorialsByEditorialIdPublication'
   '/contests/{contestId}/clarifications/{clarificationId}':
     $ref: './paths/clarifications.yaml#/contestsByContestIdClarificationsByClarificationId'
-  '/virtual-contests/{virtualContestId}/clarifications/{clarificationId}':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarificationsByClarificationId'
 components:
+  schemas:
+    ProviderId:
+      $ref: './schemas/authentication.yaml#/ProviderId'
+    EmailRegistrationRequest:
+      $ref: './schemas/authentication.yaml#/EmailRegistrationRequest'
+    EmailRegistrationCompletion:
+      $ref: './schemas/authentication.yaml#/EmailRegistrationCompletion'
+    EmailRegistrationToken:
+      $ref: './schemas/authentication.yaml#/EmailRegistrationToken'
+    EmailVerificationResult:
+      $ref: './schemas/authentication.yaml#/EmailVerificationResult'
+    EmailSignedIn:
+      $ref: './schemas/authentication.yaml#/EmailSignedIn'
+    EmailRegistrationRequired:
+      $ref: './schemas/authentication.yaml#/EmailRegistrationRequired'
+    EmailRequest:
+      $ref: './schemas/authentication.yaml#/EmailRequest'
+    TokenConfirmation:
+      $ref: './schemas/authentication.yaml#/TokenConfirmation'
+    RegistrationResult:
+      $ref: './schemas/authentication.yaml#/RegistrationResult'
+    Session:
+      $ref: './schemas/authentication.yaml#/Session'
+    ExternalAuthorizationRequest:
+      $ref: './schemas/authentication.yaml#/ExternalAuthorizationRequest'
+    ExternalRegistrationRequest:
+      $ref: './schemas/authentication.yaml#/ExternalRegistrationRequest'
+    ExternalRegistrationCompletion:
+      $ref: './schemas/authentication.yaml#/ExternalRegistrationCompletion'
+    Authorization:
+      $ref: './schemas/authentication.yaml#/Authorization'
+    AuthorizationCompletion:
+      $ref: './schemas/authentication.yaml#/AuthorizationCompletion'
+    EmailChangeRequest:
+      $ref: './schemas/authentication.yaml#/EmailChangeRequest'
+    SignInMethod:
+      $ref: './schemas/authentication.yaml#/SignInMethod'
+    SignInMethods:
+      $ref: './schemas/authentication.yaml#/SignInMethods'
+    DeveloperTokenRequest:
+      $ref: './schemas/authentication.yaml#/DeveloperTokenRequest'
+    DeveloperToken:
+      $ref: './schemas/authentication.yaml#/DeveloperToken'
+    DeveloperTokens:
+      $ref: './schemas/authentication.yaml#/DeveloperTokens'
+    IssuedDeveloperToken:
+      $ref: './schemas/authentication.yaml#/IssuedDeveloperToken'
+    RegistrationRequest:
+      $ref: './schemas/cli.yaml#/RegistrationRequest'
+    Registration:
+      $ref: './schemas/cli.yaml#/Registration'
+    RegistrationStarted:
+      $ref: './schemas/cli.yaml#/RegistrationStarted'
+    RegistrationCompleted:
+      $ref: './schemas/cli.yaml#/RegistrationCompleted'
+    ResourceId:
+      $ref: './schemas/common.yaml#/ResourceId'
+    Version:
+      $ref: './schemas/common.yaml#/Version'
+    Timestamp:
+      $ref: './schemas/common.yaml#/Timestamp'
+    Error:
+      $ref: './schemas/common.yaml#/Error'
+    ErrorDetail:
+      $ref: './schemas/common.yaml#/ErrorDetail'
+    Accepted:
+      $ref: './schemas/common.yaml#/Accepted'
+    Email:
+      $ref: './schemas/common.yaml#/Email'
+    DisplayName:
+      $ref: './schemas/common.yaml#/DisplayName'
+    PageCursor:
+      $ref: './schemas/common.yaml#/PageCursor'
+    ContestRules:
+      $ref: './schemas/contests.yaml#/ContestRules'
+    ContestCreate:
+      $ref: './schemas/contests.yaml#/ContestCreate'
+    ContestUpdate:
+      $ref: './schemas/contests.yaml#/ContestUpdate'
+    Contest:
+      $ref: './schemas/contests.yaml#/Contest'
+    Contests:
+      $ref: './schemas/contests.yaml#/Contests'
+    ContestProblem:
+      $ref: './schemas/contests.yaml#/ContestProblem'
+    ContestProblems:
+      $ref: './schemas/contests.yaml#/ContestProblems'
+    ContestProblemInput:
+      $ref: './schemas/contests.yaml#/ContestProblemInput'
+    Participation:
+      $ref: './schemas/contests.yaml#/Participation'
+    ContestTeamJoinRequest:
+      $ref: './schemas/contests.yaml#/ContestTeamJoinRequest'
+    ContestTeamMember:
+      $ref: './schemas/contests.yaml#/ContestTeamMember'
+    ContestTeam:
+      $ref: './schemas/contests.yaml#/ContestTeam'
+    ContestTeamParticipation:
+      $ref: './schemas/contests.yaml#/ContestTeamParticipation'
+    VirtualContestCreate:
+      $ref: './schemas/contests.yaml#/VirtualContestCreate'
+    VirtualContestUpdate:
+      $ref: './schemas/contests.yaml#/VirtualContestUpdate'
+    VirtualContest:
+      $ref: './schemas/contests.yaml#/VirtualContest'
+    VirtualContests:
+      $ref: './schemas/contests.yaml#/VirtualContests'
+    ClarificationCreate:
+      $ref: './schemas/contests.yaml#/ClarificationCreate'
+    ClarificationAnswer:
+      $ref: './schemas/contests.yaml#/ClarificationAnswer'
+    Clarification:
+      $ref: './schemas/contests.yaml#/Clarification'
+    Clarifications:
+      $ref: './schemas/contests.yaml#/Clarifications'
+    Standing:
+      $ref: './schemas/contests.yaml#/Standing'
+    TeamStanding:
+      $ref: './schemas/contests.yaml#/TeamStanding'
+    ContestProblemScore:
+      $ref: './schemas/contests.yaml#/ContestProblemScore'
+    Standings:
+      $ref: './schemas/contests.yaml#/Standings'
+    TeamStandings:
+      $ref: './schemas/contests.yaml#/TeamStandings'
+    EditorialCreate:
+      $ref: './schemas/editorials.yaml#/EditorialCreate'
+    EditorialUpdate:
+      $ref: './schemas/editorials.yaml#/EditorialUpdate'
+    Editorial:
+      $ref: './schemas/editorials.yaml#/Editorial'
+    Editorials:
+      $ref: './schemas/editorials.yaml#/Editorials'
+    FileManifestEntry:
+      $ref: './schemas/files.yaml#/FileManifestEntry'
+    UploadTarget:
+      $ref: './schemas/files.yaml#/UploadTarget'
+    UploadTargets:
+      $ref: './schemas/files.yaml#/UploadTargets'
+    StoredFile:
+      $ref: './schemas/files.yaml#/StoredFile'
+    RoleName:
+      $ref: './schemas/permissions.yaml#/RoleName'
+    Scope:
+      $ref: './schemas/permissions.yaml#/Scope'
+    RoleAssignment:
+      $ref: './schemas/permissions.yaml#/RoleAssignment'
+    RoleAssignments:
+      $ref: './schemas/permissions.yaml#/RoleAssignments'
+    RoleChangeResult:
+      $ref: './schemas/permissions.yaml#/RoleChangeResult'
+    VisibilityChange:
+      $ref: './schemas/permissions.yaml#/VisibilityChange'
+    Visibility:
+      $ref: './schemas/permissions.yaml#/Visibility'
+    VisibilityValue:
+      $ref: './schemas/permissions.yaml#/VisibilityValue'
+    Problem:
+      $ref: './schemas/problems.yaml#/Problem'
+    ProblemCreate:
+      $ref: './schemas/problems.yaml#/ProblemCreate'
+    ProblemUpdate:
+      $ref: './schemas/problems.yaml#/ProblemUpdate'
+    Problems:
+      $ref: './schemas/problems.yaml#/Problems'
+    JudgeDefinitionDocument:
+      $ref: './schemas/problems.yaml#/JudgeDefinitionDocument'
+    JudgeDefinitionCreate:
+      $ref: './schemas/problems.yaml#/JudgeDefinitionCreate'
+    JudgeDefinitionUpdate:
+      $ref: './schemas/problems.yaml#/JudgeDefinitionUpdate'
+    JudgeDefinition:
+      $ref: './schemas/problems.yaml#/JudgeDefinition'
+    JudgeDefinitions:
+      $ref: './schemas/problems.yaml#/JudgeDefinitions'
+    TestcaseInput:
+      $ref: './schemas/problems.yaml#/TestcaseInput'
+    Testcase:
+      $ref: './schemas/problems.yaml#/Testcase'
+    Testcases:
+      $ref: './schemas/problems.yaml#/Testcases'
+    Language:
+      $ref: './schemas/problems.yaml#/Language'
+    Languages:
+      $ref: './schemas/problems.yaml#/Languages'
+    ProblemFileUploadRequest:
+      $ref: './schemas/problems.yaml#/ProblemFileUploadRequest'
+    ProblemFileUpload:
+      $ref: './schemas/problems.yaml#/ProblemFileUpload'
+    ProblemFileUploadResult:
+      $ref: './schemas/problems.yaml#/ProblemFileUploadResult'
+    SubmissionContext:
+      $ref: './schemas/submissions.yaml#/SubmissionContext'
+    SourceUploadRequest:
+      $ref: './schemas/submissions.yaml#/SourceUploadRequest'
+    SourceUpload:
+      $ref: './schemas/submissions.yaml#/SourceUpload'
+    SubmissionCreate:
+      $ref: './schemas/submissions.yaml#/SubmissionCreate'
+    SubmissionAccepted:
+      $ref: './schemas/submissions.yaml#/SubmissionAccepted'
+    Verdict:
+      $ref: './schemas/submissions.yaml#/Verdict'
+    JudgeResult:
+      $ref: './schemas/submissions.yaml#/JudgeResult'
+    JudgeRun:
+      $ref: './schemas/submissions.yaml#/JudgeRun'
+    JudgeRuns:
+      $ref: './schemas/submissions.yaml#/JudgeRuns'
+    Submission:
+      $ref: './schemas/submissions.yaml#/Submission'
+    SubmissionSourceFileDownload:
+      $ref: './schemas/submissions.yaml#/SubmissionSourceFileDownload'
+    SubmissionSourceDownload:
+      $ref: './schemas/submissions.yaml#/SubmissionSourceDownload'
+    Submissions:
+      $ref: './schemas/submissions.yaml#/Submissions'
+    RejudgeRequest:
+      $ref: './schemas/submissions.yaml#/RejudgeRequest'
+    RejudgeAccepted:
+      $ref: './schemas/submissions.yaml#/RejudgeAccepted'
+    RejudgeBatchRequest:
+      $ref: './schemas/submissions.yaml#/RejudgeBatchRequest'
+    RejudgeBatch:
+      $ref: './schemas/submissions.yaml#/RejudgeBatch'
+    Profile:
+      $ref: './schemas/users.yaml#/Profile'
+    ProfileUpdate:
+      $ref: './schemas/users.yaml#/ProfileUpdate'
+    CurrentUser:
+      $ref: './schemas/users.yaml#/CurrentUser'
+  parameters:
+    AuthorizationId:
+      $ref: './components/parameters.yaml#/AuthorizationId'
+    SignInMethodId:
+      $ref: './components/parameters.yaml#/SignInMethodId'
+    DeveloperTokenId:
+      $ref: './components/parameters.yaml#/DeveloperTokenId'
+    UserId:
+      $ref: './components/parameters.yaml#/UserId'
+    ProblemId:
+      $ref: './components/parameters.yaml#/ProblemId'
+    ContestId:
+      $ref: './components/parameters.yaml#/ContestId'
+    TeamId:
+      $ref: './components/parameters.yaml#/TeamId'
+    VirtualContestId:
+      $ref: './components/parameters.yaml#/VirtualContestId'
+    EditorialId:
+      $ref: './components/parameters.yaml#/EditorialId'
+    JudgeDefinitionId:
+      $ref: './components/parameters.yaml#/JudgeDefinitionId'
+    TestcaseId:
+      $ref: './components/parameters.yaml#/TestcaseId'
+    UploadId:
+      $ref: './components/parameters.yaml#/UploadId'
+    SubmissionId:
+      $ref: './components/parameters.yaml#/SubmissionId'
+    JudgeRunId:
+      $ref: './components/parameters.yaml#/JudgeRunId'
+    BatchId:
+      $ref: './components/parameters.yaml#/BatchId'
+    RegistrationId:
+      $ref: './components/parameters.yaml#/RegistrationId'
+    ClarificationId:
+      $ref: './components/parameters.yaml#/ClarificationId'
+    Limit:
+      $ref: './components/parameters.yaml#/Limit'
+    Cursor:
+      $ref: './components/parameters.yaml#/Cursor'
+    ProblemSearchQuery:
+      $ref: './components/parameters.yaml#/ProblemSearchQuery'
+    ProblemCreatedByUserId:
+      $ref: './components/parameters.yaml#/ProblemCreatedByUserId'
+    WebOrigin:
+      $ref: './components/parameters.yaml#/WebOrigin'
+    IdempotencyKey:
+      $ref: './components/parameters.yaml#/IdempotencyKey'
+    IfMatch:
+      $ref: './components/parameters.yaml#/IfMatch'
+  responses:
+    BadRequest:
+      $ref: './components/responses.yaml#/BadRequest'
+    Unauthenticated:
+      $ref: './components/responses.yaml#/Unauthenticated'
+    Forbidden:
+      $ref: './components/responses.yaml#/Forbidden'
+    NotFound:
+      $ref: './components/responses.yaml#/NotFound'
+    Conflict:
+      $ref: './components/responses.yaml#/Conflict'
+    ValidationFailed:
+      $ref: './components/responses.yaml#/ValidationFailed'
+    PreconditionFailed:
+      $ref: './components/responses.yaml#/PreconditionFailed'
+    PreconditionRequired:
+      $ref: './components/responses.yaml#/PreconditionRequired'
+    RateLimited:
+      $ref: './components/responses.yaml#/RateLimited'
+    UnexpectedError:
+      $ref: './components/responses.yaml#/UnexpectedError'
   securitySchemes:
     sessionCookie:
       $ref: './components/security-schemes.yaml#/SessionCookie'

@@ -9,9 +9,9 @@ import LabeledCheckbox from '@/components/controls/LabeledCheckbox.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const problem = ref<Problem>()
 
@@ -97,7 +97,7 @@ async function saveSetting() {
     problem.value.timeLimit = timeLimit.value!
     problem.value.memoryLimit = memoryLimit.value! * 1024 // MiB to KiB
     problem.value.isPublic = isPublic.value
-    await requireTraqAuth(() =>
+    await requireMockLogin(() =>
       problemsApi.putProblem({
         problemId: problemId.value,
         putProblemRequest: problem.value!

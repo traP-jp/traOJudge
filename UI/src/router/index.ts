@@ -1,6 +1,7 @@
 import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 import { useUserStore } from '@/stores/user'
 import TopView from '@/views/TopView.vue'
 
@@ -13,23 +14,7 @@ const router = createRouter({
       component: TopView,
       meta: { requiresAuth: true }
     },
-    {
-      path: '/signup',
-      children: [
-        {
-          path: '',
-          component: () => import('@/views/SignupView.vue')
-        },
-        {
-          path: 'register',
-          component: () => import('@/views/SignupRegisterView.vue')
-        },
-        {
-          path: 'mail-send',
-          component: () => import('@/views/SignupMailSendView.vue')
-        }
-      ]
-    },
+    { path: '/signup/:pathMatch(.*)*', component: () => import('@/views/AuthTodoView.vue') },
     { path: '/login', component: () => import('@/views/LoginView.vue') },
     {
       path: '/contest/:contestId',
@@ -37,30 +22,20 @@ const router = createRouter({
       component: () => import('@/views/ContestView.vue')
     },
     {
-      path: '/reset-password',
-      children: [
-        {
-          path: '',
-          component: () => import('@/views/ResetPasswordView.vue')
-        },
-        {
-          path: 'form',
-          component: () => import('@/views/ResetPasswordFormView.vue')
-        },
-        {
-          path: 'mail-send',
-          component: () => import('@/views/ResetPasswordMailSendView.vue')
-        },
-        {
-          path: 'success',
-          component: () => import('@/views/ResetPasswordSuccessView.vue')
-        }
-      ]
+      path: '/contest/:contestId/editorials',
+      name: 'contest-editorials',
+      component: () => import('@/views/ContestEditorialsView.vue')
     },
     {
-      path: '/oauth/:provider/:action/callback',
-      component: () => import('@/views/OAuthCallbackView.vue')
+      path: '/contest/:contestId/problems/:problemId/editorials/:editorialId',
+      name: 'contest-editorial',
+      component: () => import('@/views/ContestEditorialView.vue')
     },
+    {
+      path: '/reset-password/:pathMatch(.*)*',
+      component: () => import('@/views/AuthTodoView.vue')
+    },
+    { path: '/oauth/:pathMatch(.*)*', component: () => import('@/views/AuthTodoView.vue') },
     {
       path: '/users/:id',
       component: () => import('@/views/UserView.vue'),
@@ -86,7 +61,7 @@ const router = createRouter({
     {
       path: '/problems/create',
       component: () => import('@/views/problem/create/ProblemCreateView.vue'),
-      meta: { requiresAuth: true, requiresTraqAuth: true }
+      meta: { requiresAuth: true, requiresMockAuth: true }
     },
     {
       path: '/problems/:id',
@@ -126,7 +101,7 @@ const router = createRouter({
     {
       path: '/problems/:id/edit',
       component: () => import('@/views/ProblemEditView.vue'),
-      meta: { requiresAuth: true, requiresTraqAuth: true },
+      meta: { requiresAuth: true, requiresMockAuth: true },
       children: [
         {
           path: '',
@@ -180,7 +155,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const userStore = useUserStore()
 
-  // 公開ページは旧認証APIの応答を待たず表示する。
+  // 公開ページは認証APIの応答を待たず表示する。
   if (!to.meta.requiresAuth && to.path !== '/login') {
     void userStore.initialize()
     return
@@ -196,9 +171,8 @@ router.beforeEach(async (to) => {
     }
   }
 
-  const isAdmin = userStore.user?.role === 'Admin'
-  const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
-  if (to.meta.requiresTraqAuth && !isAdmin && !isTraqAuthenticated) return '/'
+  const { canEditProblem } = useMockAuthGuard()
+  if (to.meta.requiresMockAuth && !canEditProblem.value) return '/'
 
   if (to.path === '/login' && userStore.isAuthenticated) return '/'
 })

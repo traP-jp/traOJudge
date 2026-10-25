@@ -4,17 +4,20 @@ import { createPinia, setActivePinia } from 'pinia'
 import { defineComponent, h } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import type { Me, Problem, SubmissionSummary } from '@/api/generated'
+import type { CurrentUser } from '@/api/client'
+import type { Problem, SubmissionSummary } from '@/api/generated'
 import { queryClient } from '@/api/queryClient'
 import { useUserStore } from '@/stores/user'
 
-export const me: Me = {
+export const me: CurrentUser = {
   id: 'user-a',
-  name: 'Alice',
-  role: 'CommonUser',
-  createdAt: new Date(0),
-  updatedAt: new Date(0),
-  authentication: {}
+  displayName: 'Alice',
+  bio: '',
+  githubId: '',
+  atcoderId: '',
+  xId: '',
+  revision: '1',
+  roles: []
 }
 export const problem = (id: string): Problem => ({
   id,
@@ -34,7 +37,7 @@ export const submission = (id: string): SubmissionSummary & { sourceCode: string
   id,
   title: `Problem ${id}`,
   userId: me.id,
-  userName: me.name,
+  userName: me.displayName,
   problemId: id,
   submittedAt: new Date(0),
   languageId: 'cpp',

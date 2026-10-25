@@ -6,12 +6,12 @@ import BorderedButton from '@/components/controls/BorderedButton.vue'
 import MenuButton from '@/components/controls/MenuButton.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import ListingTable from '@/components/ListingTable.vue'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 import router from '@/router'
 import type { Column } from '@/types/listingTable'
 import { dateToString } from '@/utils/date'
 
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const { problemId } = defineProps<{
   problemId: string
@@ -60,7 +60,7 @@ async function deleteEditorial() {
   if (!editorial) return
 
   try {
-    await requireTraqAuth(() => editorialsApi.deleteEditorial({ editorialId: editorial.id }))
+    await requireMockLogin(() => editorialsApi.deleteEditorial({ editorialId: editorial.id }))
     editorials.value.delete(focused.value)
     editorialIds.value = editorialIds.value.filter((id) => id !== editorial.id)
   } catch (error) {

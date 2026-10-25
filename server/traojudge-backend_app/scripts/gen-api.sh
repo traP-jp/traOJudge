@@ -17,6 +17,8 @@ OUTPUT_DIR="$APP_DIR/src/models"
 TMP_DIR="$(mktemp -d)"
 TMP_GEN_DIR="$TMP_DIR/openapi"
 TMP_MODELS_DIR="$TMP_DIR/models"
+TMP_BUNDLE_DIR="$TMP_DIR/bundler"
+BUNDLED_SCHEMA="$TMP_DIR/openapi.json"
 
 cleanup() {
   rm -rf "$TMP_DIR"
@@ -65,10 +67,17 @@ generate_mod_rs() {
 
 mkdir -p "$TMP_MODELS_DIR"
 
+# Swagger UIと同じbundlerを使い、外部参照をcomponentsへの内部参照に揃える。
+# 一時ディレクトリへ依存を入れ、生成時に作業ツリーを変更しない。
+mkdir -p "$TMP_BUNDLE_DIR"
+cp "$ROOT_DIR/deploy/swagger-ui/"{package.json,package-lock.json,bundle.mjs} "$TMP_BUNDLE_DIR/"
+npm ci --prefix "$TMP_BUNDLE_DIR" --ignore-scripts --no-audit --no-fund
+node "$TMP_BUNDLE_DIR/bundle.mjs" "$OPENAPI_SCHEMA" "$BUNDLED_SCHEMA"
+
 (
   cd "$APP_DIR"
   npx @openapitools/openapi-generator-cli generate \
-    -i "$OPENAPI_SCHEMA" \
+    -i "$BUNDLED_SCHEMA" \
     -g rust \
     -o "$TMP_GEN_DIR" \
     --global-property=models,modelDocs=false,modelTests=false,apis=false,supportingFiles=false \

@@ -60,7 +60,7 @@ S4では、読み取りAPIの一覧より先に、途中で何をいつ見せる
 | --- | --- | --- |
 | C1 | [大会を用意し、予定やルールを決める](scenarios/contests/organize-contest.md) | 大会を作り、許された範囲で予定やルールを直せた |
 | C2 | [大会で出す問題を選ぶ・外す](scenarios/contests/choose-problems.md) | 大会で出す問題の組み合わせが変わった |
-| C3 | [大会について質問し、回答する](scenarios/contests/ask-and-answer.md) | 参加者の質問が残り、運営する人の回答を確認できた |
+| C3 | [大会について質問し、回答する](scenarios/contests/ask-and-answer.md) | 参加者の質問が残り、運営する人の回答と選んだ公開範囲が反映された |
 
 ## 認証
 
@@ -120,6 +120,7 @@ R1・R2は個別シナリオへの案内である。作業を切り出すとき�
 | --- | --- | --- |
 | O1 | [解説を書き、直す・取り下げる](scenarios/others/write-editorial.md) | 解説を投稿し、許された範囲で直す・取り下げることができた |
 | O2 | [プロフィールを書き直す](scenarios/others/edit-profile.md) | 自分のプロフィールを書き換えられた |
+| O3 | [他の利用者のプロフィールと作成した問題を見る](scenarios/others/view-user-profile.md) | 公開プロフィールと、その利用者が作成し閲覧者が閲覧できる問題を確認できた |
 
 ## 分担するときにそろえること
 

@@ -9,10 +9,10 @@ import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/problems/useMockAuthGuard'
 
 const router = useRouter()
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const title = ref<string>('')
 const difficulty = ref<number>()
@@ -59,7 +59,7 @@ const problemsApi = new ProblemsApi()
 async function createProblem() {
   isLoading.value = true
   try {
-    const createdProblem = await requireTraqAuth(() =>
+    const createdProblem = await requireMockLogin(() =>
       problemsApi.postProblem({
         postProblemRequest: {
           title: title.value,

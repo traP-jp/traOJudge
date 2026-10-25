@@ -1,7 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+set -euo pipefail
 
-# スクリプトのディレクトリを基準にパスを設定
-SCRIPT_DIR=$(dirname "$0")
-
-# Dockerコンテナをバックグラウンドで起動し、指定された設定ファイルを使用してモックサーバーを立ち上げる
-docker run --rm -d --mount type=bind,source="${SCRIPT_DIR}/../src/api/mock/front-back-api-mock.json",target=/data,readonly -p 4010:4010 mockoon/cli:latest -d /data -p 4010
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+cd "$SCRIPT_DIR/.."
+exec npm run mock -- "$@"
