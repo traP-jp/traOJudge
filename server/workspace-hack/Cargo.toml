@@ -34,6 +34,7 @@ sync_wrapper = { version = "1", default-features = false, features = ["futures"]
 tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-core = { version = "0.1" }
+typenum = { version = "1", default-features = false, features = ["const-generics"] }
 
 [build-dependencies]
 proc-macro2 = { version = "1" }
