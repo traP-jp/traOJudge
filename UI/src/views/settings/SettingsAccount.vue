@@ -71,15 +71,15 @@ const unlinkGitHubGoogle = async (service: Service) => {
     const message = await responseErrorMessage(error.response)
     switch (error.response.status) {
       case 400:
-        throw new Error(`Bad Request: ${message}`)
+        throw new Error(`Bad Request: ${message}`, { cause: error })
       case 401:
-        throw new Error(`Unauthorized: ${message}`)
+        throw new Error(`Unauthorized: ${message}`, { cause: error })
       case 404:
-        throw new Error(`Not Found: ${message}`)
+        throw new Error(`Not Found: ${message}`, { cause: error })
       case 500:
-        throw new Error(`Internal Server Error: ${message}`)
+        throw new Error(`Internal Server Error: ${message}`, { cause: error })
       default:
-        throw new Error(`Unknown error: ${error.response.status}`)
+        throw new Error(`Unknown error: ${error.response.status}`, { cause: error })
     }
   }
 }
@@ -99,9 +99,9 @@ const linkGitHubGoogle = async (service: Service) => {
     }
     if (error.response.status === 500) {
       const message = await responseErrorMessage(error.response)
-      throw new Error(`Internal Server Error: ${message}`)
+      throw new Error(`Internal Server Error: ${message}`, { cause: error })
     }
-    throw new Error(`Unknown error: ${error.response.status}`)
+    throw new Error(`Unknown error: ${error.response.status}`, { cause: error })
   }
 }
 
@@ -217,36 +217,29 @@ async function changePassword() {
     return
   }
 
-  let hasError = false
   currentPasswordError.value = ''
   newPasswordError.value = ''
 
   if (!currentPassword.value) {
-    hasError = true
     currentPasswordError.value = '必須項目です。'
     return
   }
 
   if (!newPassword.value) {
-    hasError = true
     newPasswordError.value = '必須項目です。'
     return
   }
 
   if (newPassword.value !== confirmPassword.value) {
-    hasError = true
     newPasswordError.value = '新しいパスワードと確認用パスワードが一致しません。'
     return
   }
 
   const [isValid, errorMessage] = passwordValidator(newPassword.value)
   if (!isValid) {
-    hasError = true
     newPasswordError.value = errorMessage
     return
   }
-
-  if (hasError) return
 
   isLoading.value = true
   try {
@@ -331,9 +324,7 @@ async function fetchUserData() {
   }
 }
 
-onMounted(() => {
-  fetchUserData()
-})
+onMounted(fetchUserData)
 </script>
 
 <template>

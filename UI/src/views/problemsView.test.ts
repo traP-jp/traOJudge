@@ -24,7 +24,7 @@ it('keeps the filter menu mounted when changing filters starts a page request', 
   const filters = wrapper.getComponent(ProblemFilters)
   await filters.get('button').trigger('click')
   expect(filters.text()).toContain('以上')
-  filters.vm.$emit('filter', { difficultyBegin: 2, difficultyEnd: 6 })
+  await filters.get('input[type="number"]').setValue(2)
   await flushPromises()
   expect(router.currentRoute.value.query.page).toBeUndefined()
   expect(wrapper.text()).toContain('読み込み中...')

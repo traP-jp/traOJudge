@@ -25,7 +25,7 @@ const problemId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -220,8 +220,6 @@ async function handleSaveTestcase() {
 }
 
 onMounted(() => {
-  fetchTestcases()
-
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
       dropdownOpenId.value = null
@@ -232,11 +230,10 @@ onMounted(() => {
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
   })
+  return fetchTestcases()
 })
 
-watch(problemId, () => {
-  fetchTestcases()
-})
+watch(problemId, fetchTestcases)
 </script>
 
 <template>

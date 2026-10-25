@@ -8,7 +8,8 @@ import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 
 const router = useRouter()
 
-const email: string = history.state.email ?? ''
+const stateEmail = router.options.history.state.email
+const email = typeof stateEmail === 'string' ? stateEmail : ''
 const emailAddress: Email = { email: email }
 
 const closeWindow = () => {

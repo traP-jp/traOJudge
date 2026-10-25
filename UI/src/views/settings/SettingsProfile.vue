@@ -81,9 +81,7 @@ async function saveProfile() {
   }
 }
 
-onMounted(() => {
-  fetchUserData()
-})
+onMounted(fetchUserData)
 </script>
 
 <template>

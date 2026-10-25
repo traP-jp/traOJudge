@@ -8,7 +8,7 @@ export interface SelectOption {
 }
 
 const {
-  options = [],
+  options,
   error = false,
   errorMessage = '',
   label = '',

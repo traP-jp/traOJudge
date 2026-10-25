@@ -40,7 +40,7 @@ onMounted(async () => {
           console.error('traQ OAuth API error:', apiError)
 
           if (!(apiError instanceof ResponseError)) {
-            throw new Error('認証処理中に予期しないエラーが発生しました')
+            throw new Error('認証処理中に予期しないエラーが発生しました', { cause: apiError })
           }
 
           const status = apiError.response.status
@@ -50,24 +50,32 @@ onMounted(async () => {
               switch (action) {
                 case 'login':
                   throw new Error(
-                    'このtraQアカウントはまだ登録されていません。先にサインアップしてください。'
+                    'このtraQアカウントはまだ登録されていません。先にサインアップしてください。',
+                    { cause: apiError }
                   )
                 case 'signup':
-                  throw new Error('このtraQアカウントは既に別のユーザーに紐付けられています。')
+                  throw new Error('このtraQアカウントは既に別のユーザーに紐付けられています。', {
+                    cause: apiError
+                  })
                 case 'bind':
-                  throw new Error('このtraQアカウントは既に別のユーザーに紐付けられています。')
+                  throw new Error('このtraQアカウントは既に別のユーザーに紐付けられています。', {
+                    cause: apiError
+                  })
                 default:
-                  throw new Error(`認証に失敗しました: 不正なアクション (${action})`)
+                  throw new Error(`認証に失敗しました: 不正なアクション (${action})`, {
+                    cause: apiError
+                  })
               }
             case 400:
               if (action === 'signup') {
                 throw new Error(
-                  '既存ユーザーが存在するためサインアップできません。ログインを試してください。'
+                  '既存ユーザーが存在するためサインアップできません。ログインを試してください。',
+                  { cause: apiError }
                 )
               }
-              throw new Error(`認証に失敗しました (${status})`)
+              throw new Error(`認証に失敗しました (${status})`, { cause: apiError })
             default:
-              throw new Error(`認証に失敗しました (${status})`)
+              throw new Error(`認証に失敗しました (${status})`, { cause: apiError })
           }
         }
 
@@ -100,7 +108,7 @@ onMounted(async () => {
         await oauthStore.handleOAuthCallback(params.code, params.state)
       }
     }
-  } catch (err: Error | unknown) {
+  } catch (err: unknown) {
     console.error('OAuth callback error:', err)
     error.value = err instanceof Error ? err.message : '認証処理中にエラーが発生しました'
   } finally {

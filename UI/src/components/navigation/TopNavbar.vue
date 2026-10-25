@@ -7,11 +7,7 @@ import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-const {
-  isLoggedIn = false,
-  userId = '',
-  username = ''
-} = defineProps<{
+const { isLoggedIn, userId, username } = defineProps<{
   isLoggedIn: boolean
   userId: string
   username: string

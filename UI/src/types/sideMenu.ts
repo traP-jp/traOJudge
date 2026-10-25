@@ -1,4 +1,4 @@
-import type { Icon } from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
 
 export type SideMenuProps = {
   icon?: Icon

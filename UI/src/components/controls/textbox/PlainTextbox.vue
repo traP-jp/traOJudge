@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import MaterialIcon, { type Icon } from '@/components/icons/MaterialIcon.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
 import { computed, ref, useId, useTemplateRef } from 'vue'
 
 defineOptions({
@@ -43,7 +44,7 @@ const displaysUnit = computed(() => unit != null)
 
 const generatedId = useId()
 const inputId = computed(() => id || generatedId)
-const input = useTemplateRef('input')
+const input = useTemplateRef<HTMLInputElement>('input')
 const isFocused = ref<boolean>(false)
 const onFocusin = (): void => {
   isFocused.value = true

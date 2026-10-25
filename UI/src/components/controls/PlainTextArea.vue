@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import MaterialIcon, { type Icon } from '@/components/icons/MaterialIcon.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
 import { computed, ref, useId, useTemplateRef } from 'vue'
 
 defineOptions({
@@ -37,7 +38,7 @@ const displaysRightIcon = computed(() => rightIcon != null)
 const displaysSupportingText = computed(() => supportingText != null)
 const generatedId = useId()
 const inputId = computed(() => id || generatedId)
-const textarea = useTemplateRef('textarea')
+const textarea = useTemplateRef<HTMLTextAreaElement>('textarea')
 const isFocused = ref<boolean>(false)
 const onFocusin = (): void => {
   isFocused.value = true

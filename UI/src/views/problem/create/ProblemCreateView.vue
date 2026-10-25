@@ -63,8 +63,8 @@ async function createProblem() {
         postProblemRequest: {
           title: title.value,
           difficulty: difficulty.value!,
-          timeLimit: timeLimit.value!,
-          memoryLimit: memoryLimit.value! * 1024, // MiB to KiB
+          timeLimit: timeLimit.value,
+          memoryLimit: memoryLimit.value * 1024, // MiB to KiB
           statement: statement.value
         }
       })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import MaterialIcon, { type Icon } from '@/components/icons/MaterialIcon.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
 
 const { disabled = false } = defineProps<{
   disabled?: boolean

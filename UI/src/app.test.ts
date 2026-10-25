@@ -68,7 +68,7 @@ it('runs the OAuth authorize call once across a delayed /me', async () => {
   vi.spyOn(MeApi.prototype, 'getMe').mockReturnValue(pending.promise)
   const { wrapper, router } = await setup('/oauth/traq/login/callback?redirect=/problems')
   await flushPromises()
-  expect(wrapper.findComponent(OAuthCallbackView).exists()).toBe(true)
+  expect(wrapper.findComponent({ name: 'OAuthCallbackView' }).exists()).toBe(true)
   pending.resolve(me)
   await flushPromises()
   expect(authorize).toHaveBeenCalledTimes(1)

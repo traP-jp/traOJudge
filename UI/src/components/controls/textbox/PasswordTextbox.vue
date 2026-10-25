@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
-import type { Icon } from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
 import { computed, ref } from 'vue'
 
 const visible = ref<boolean>(false)

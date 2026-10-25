@@ -11,10 +11,7 @@ import TextLink from '@/components/TextLink.vue'
 import {
   EditorialsApi,
   ResponseError,
-  type PostEditorialOperationRequest,
-  type PostEditorialRequest,
-  type PutEditorialOperationRequest,
-  type PutEditorialRequest
+  type PostEditorialRequest
 } from '@/api/generated'
 import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import router from '@/router'
@@ -47,7 +44,7 @@ const editorialId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -115,7 +112,7 @@ async function saveEditorial() {
         editorialApi.postEditorial({
           problemId: problemId.value,
           postEditorialRequest: editorialPayload as PostEditorialRequest
-        } as PostEditorialOperationRequest)
+        })
       )
 
       await router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
@@ -123,8 +120,8 @@ async function saveEditorial() {
       await requireTraqAuth(() =>
         editorialApi.putEditorial({
           editorialId: editorialId.value,
-          putEditorialRequest: editorialPayload as PutEditorialRequest
-        } as PutEditorialOperationRequest)
+          putEditorialRequest: editorialPayload
+        })
       )
     }
 
@@ -158,9 +155,7 @@ async function saveEditorial() {
   }
 }
 
-onMounted(() => {
-  fetchEditorial()
-})
+onMounted(fetchEditorial)
 </script>
 
 <template>

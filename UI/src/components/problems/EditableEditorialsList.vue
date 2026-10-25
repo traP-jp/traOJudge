@@ -33,15 +33,13 @@ async function loadSubmissions() {
     editorials.value = new Map(summaries.map((editorial) => [editorial.id, editorial]))
   } catch (error) {
     console.error('API Error:', error)
-    alert(`API Error: ${error}`)
+    alert(`API Error: ${String(error)}`)
   } finally {
     isLoaded.value = true
   }
 }
 
-onMounted(() => {
-  loadSubmissions()
-})
+onMounted(loadSubmissions)
 
 const cols: (Column & { name: string })[] = [
   { id: 'title', textAlign: 'start', name: 'タイトル' },
@@ -50,7 +48,7 @@ const cols: (Column & { name: string })[] = [
 ] as const
 
 function handleAddEditorial() {
-  router.push({ path: `${router.currentRoute.value.fullPath.replace(/\/$/, '')}/new` })
+  return router.push({ path: `${router.currentRoute.value.fullPath.replace(/\/$/, '')}/new` })
 }
 
 async function deleteEditorial() {
@@ -66,7 +64,7 @@ async function deleteEditorial() {
     editorialIds.value = editorialIds.value.filter((id) => id !== editorial.id)
   } catch (error) {
     console.error('API Error:', error)
-    alert(error instanceof Error ? error.message : `API Error: ${error}`)
+    alert(error instanceof Error ? error.message : `API Error: ${String(error)}`)
   } finally {
     closeActionMenu()
   }

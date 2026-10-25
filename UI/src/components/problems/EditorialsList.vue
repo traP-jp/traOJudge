@@ -37,15 +37,13 @@ async function loadEditorials() {
     users.value = new Map(userProfiles.map((user: User) => [user.id, user]))
   } catch (error) {
     console.error('API Error:', error)
-    alert(`API Error: ${error}`)
+    alert(`API Error: ${String(error)}`)
   } finally {
     isLoaded.value = true
   }
 }
 
-onMounted(() => {
-  loadEditorials()
-})
+onMounted(loadEditorials)
 
 const cols: (Column & { name: string })[] = [
   { id: 'title', textAlign: 'start', name: 'タイトル' },
@@ -54,11 +52,11 @@ const cols: (Column & { name: string })[] = [
 ] as const
 
 function handleEditorialClick(editorialId: string) {
-  router.push(`/problems/${problemId}/editorials/${editorialId}`)
+  return router.push(`/problems/${problemId}/editorials/${editorialId}`)
 }
 
 function handleUserClick(userId: string) {
-  router.push(`/users/${userId}`)
+  return router.push(`/users/${userId}`)
 }
 </script>
 

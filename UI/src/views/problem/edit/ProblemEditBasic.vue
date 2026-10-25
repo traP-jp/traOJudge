@@ -49,7 +49,7 @@ const problemId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -112,9 +112,7 @@ async function saveSetting() {
   }
 }
 
-onMounted(() => {
-  fetchProblem()
-})
+onMounted(fetchProblem)
 </script>
 
 <template>
