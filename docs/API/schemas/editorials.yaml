@@ -45,10 +45,7 @@ Editorial:
     body:
       type: 'string'
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     revision:
       $ref: './common.yaml#/Version'
     createdAt:

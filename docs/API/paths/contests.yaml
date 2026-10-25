@@ -32,7 +32,7 @@ contests:
     tags:
       - 'contests'
     summary: '通常の大会を作る'
-    description: '作成者へのcontest-setterやcontest-adminの自動付与は未決。作成と役割の付与を同一と見なさない。'
+    description: 'participationModeで個人戦またはチーム戦を選ぶ。作成者へのcontest-setterやcontest-adminの自動付与は未決。作成と役割の付与を同一と見なさない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -120,8 +120,8 @@ contestsByContestId:
     operationId: 'updateContest'
     tags:
       - 'contests'
-    summary: '通常の大会の概要・時間・ルールを変更する'
-    description: '対象大会の運営担当だけが概要・時間・ルールを変更できる．概要はMarkdown形式で，HTMLは許可しない．開始終了時刻の前後関係を検証し，タイブレーク方式・ペナルティは開始後に変更できない．開催中・終了後のその他の変更条件はMUT-06で具体化する．'
+    summary: '通常の大会の概要・時間・ルール・参加方式を変更する'
+    description: '対象大会の運営担当だけが概要・時間・ルール・参加方式を変更できる。概要はMarkdown形式で、HTMLは許可しない。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティ・参加方式は開始時刻（更新前のstartsAt）以降に変更できない。開始時刻より前に参加方式を個人戦とチーム戦の間で変更すると、この大会の既存の参加登録と大会内チームをすべて削除する。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -159,7 +159,11 @@ contestsByContestId:
       '404':
         $ref: '../components/responses.yaml#/NotFound'
       '409':
-        $ref: '../components/responses.yaml#/Conflict'
+        description: '参加方式を大会開始後に変更しようとした、または要求が既存状態と競合した。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '412':
         $ref: '../components/responses.yaml#/PreconditionFailed'
       '422':
@@ -327,13 +331,13 @@ contestsByContestIdParticipation:
     tags:
       - 'contests'
     summary: '通常の大会へ本人が参加する'
-    description: 'ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。管理者が他の人へ参加資格を付ける操作とは分ける。'
+    description: '個人戦の大会で、ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。チーム戦ではこの操作を使わず、チームへの参加操作を使う。管理者が他の人へ参加資格を付ける操作とは分ける。'
     x-authorization:
       status: 'defined'
       anyOf:
         - role: 'standard-user'
           scope: 'service'
-          condition: '対象の通常大会が公開され、本人が参加条件を満たす'
+          condition: '対象の通常大会が個人戦で公開され、本人が参加条件を満たす'
     x-scenarios:
       - 'R3-01'
     parameters:
@@ -355,7 +359,189 @@ contestsByContestIdParticipation:
       '404':
         $ref: '../components/responses.yaml#/NotFound'
       '409':
-        $ref: '../components/responses.yaml#/Conflict'
+        description: '対象大会がチーム戦のため個人参加として登録できない、または同じキーの要求・既存の参加状態と競合した。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+  delete:
+    operationId: 'leaveContestTeam'
+    tags:
+      - 'contests'
+    summary: '通常の大会のチームから抜ける'
+    description: 'チーム戦で、ログイン中の本人を現在所属しているチームから外し、大会への参加状態を解消する。大会の現在の開始時刻より前だけ実行できる。開始時刻以降はチーム所属を固定する。対象大会がチーム戦で、本人がチームに所属していない場合は成功扱いとし、すでに抜けた後の再要求も同じ結果にする。個人戦の参加登録を取り消す用途には使わない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '対象の通常大会がチーム戦で、本人自身のチーム参加を取り消す'
+    x-scenarios:
+      - 'R3-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+    responses:
+      '204':
+        description: '参加状態を解消した。すでにチームに所属していない場合も成功。'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        description: '対象大会が個人戦、または大会の開始時刻以降にチームを抜けようとした。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdTeams:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  post:
+    operationId: 'createOrJoinContestTeam'
+    tags:
+      - 'contests'
+    summary: '通常の大会でチームを作るか、既存チームに参加する'
+    description: 'チーム戦の公開大会で、ログイン中の本人がチーム名とパスワードを送る。同じ大会内にその組み合わせがなければチームを作成して本人を所属させ、既にあれば本人をそのチームに所属させる。チーム名とパスワードの組み合わせは大会ごとに一意とする。同じ本人が同じ大会で所属できるチームは1つまで。チームへの新規参加・別チームへの切り替えは大会の現在の開始時刻より前だけ行える。開始時刻以降はチーム所属を固定する。同じチームへの再要求は現在の所属を返す。この作成・参加・切り替え処理は原子的に行い、開始後の要求などが拒否された場合は新しいチームも作成しない。メンバー名はチーム情報として返す。パスワードは応答に含めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '対象の通常大会がチーム戦で公開され、開始前のチーム参加・切り替えであり、本人が参加条件を満たす'
+    x-scenarios:
+      - 'R3-01'
+    parameters:
+      - $ref: '../components/parameters.yaml#/WebOrigin'
+      - $ref: '../components/parameters.yaml#/IdempotencyKey'
+    requestBody:
+      required: true
+      content:
+        'application/json':
+          schema:
+            $ref: '../schemas/contests.yaml#/ContestTeamJoinRequest'
+    responses:
+      '200':
+        description: '該当するチームへ本人を所属させた。本人がすでに同じチームに所属している場合も現在の結果を返す。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestTeamParticipation'
+      '201':
+        description: '該当するチームがなかったため、チームを作成して本人を所属させた。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestTeamParticipation'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        description: '対象大会が個人戦、開始時刻以降の新規参加・別チームへの切り替え、または同じIdempotency-Keyを異なる入力で再利用した。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdTeamsByTeamId:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/TeamId'
+  get:
+    operationId: 'getContestTeam'
+    tags:
+      - 'contests'
+    summary: '通常の大会のチームと所属メンバーを取得する'
+    description: '指定した大会内のチーム名と所属メンバー名を取得する。パスワードは返さない。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contestant'
+          scope: 'contestId'
+        - role: 'contest-setter'
+          scope: 'contestId'
+    x-scenarios: []
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/ContestTeam'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdTeamsByTeamIdSubmissions:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+    - $ref: '../components/parameters.yaml#/TeamId'
+  get:
+    operationId: 'listContestTeamSubmissions'
+    tags:
+      - 'contests'
+    summary: '通常の大会で自分のチームの提出を取得する'
+    description: '指定した大会・チームに対する提出を返す。閲覧者がその大会で現在所属しているチームに限る。各提出のuserIdで提出者を区別でき、提出ソースや非公開テストの情報は含めない。'
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contestant'
+          scope: 'teamId'
+          condition: '通常大会のチーム戦で、閲覧者が指定チームのメンバーである'
+    x-scenarios:
+      - 'S4'
+    parameters:
+      - $ref: '../components/parameters.yaml#/Limit'
+      - $ref: '../components/parameters.yaml#/Cursor'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/Submissions'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
@@ -367,13 +553,17 @@ contestsByContestIdSubmissions:
     operationId: 'listContestSubmissions'
     tags:
       - 'contests'
-    summary: '通常の大会の提出を運営担当が取得する'
-    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。'
+    summary: '通常の大会に紐づく提出を取得する'
+    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。運営担当は開催中も取得でき、終了時刻の到達後はログインの有無を問わず誰でも取得できる。非公開問題への提出も、この大会に紐づくものは終了後の一覧に含める。'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
         - role: 'contest-setter'
           scope: 'contestId'
+        - condition: '対象大会のendsAtに到達している。ログイン不要'
     x-scenarios: []
     parameters:
       - $ref: '../components/parameters.yaml#/Limit'
@@ -408,8 +598,8 @@ contestsByContestIdStandings:
     operationId: 'getContestStandings'
     tags:
       - 'contests'
-    summary: '通常の大会の順位を取得する'
-    description: '公開範囲と開催ルールに従う。各問題の提出の最高得点の合計で集計し、同得点時は設定されたタイブレークを使う。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。公開時点・非公開大会の閲覧条件はMUT-06で具体化する。'
+    summary: '通常の個人戦の順位を取得する'
+    description: '個人戦の順位を返す。各問題の本人の最高得点の合計で集計し、同得点時は設定されたタイブレークを使う。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。チーム戦では /standings/team を使う。公開時点・非公開大会の閲覧条件はMUT-06で具体化する。'
     security:
       - {}
       - sessionCookie: []
@@ -433,6 +623,54 @@ contestsByContestIdStandings:
         $ref: '../components/responses.yaml#/Forbidden'
       '404':
         $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        description: '対象大会がチーム戦のため個人順位表を返せない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
+contestsByContestIdTeamStandings:
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContestId'
+  get:
+    operationId: 'getContestTeamStandings'
+    tags:
+      - 'contests'
+    summary: '通常のチーム戦の順位を取得する'
+    description: 'チーム戦の順位を返す。各問題はチームメンバー全員の提出から最高得点を採用し、その合計をチーム得点とする。同点時の比較値も全メンバーの提出を一つのチームとして集計し、設定されたタイブレークを使う。メンバー名を含める。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。個人戦では使用できない。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - role: 'contestant'
+          scope: 'contestId'
+        - role: 'contest-setter'
+          scope: 'contestId'
+    x-scenarios:
+      - 'S1-02'
+    responses:
+      '200':
+        description: '操作結果。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/contests.yaml#/TeamStandings'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '409':
+        description: '対象大会が個人戦のためチーム順位表を返せない。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/common.yaml#/Error'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:

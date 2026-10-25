@@ -6,15 +6,20 @@ contestsByContestIdClarifications:
     tags:
       - 'clarifications'
     summary: '通常の大会の質問と回答を取得する'
-    description: '参加者は自分が投稿した質問、運営担当は対象大会の質問を取得できる契約案。他の参加者への公開は未決なので全員へ自動公開しない。'
+    description: '質問者本人は自分の質問、対象大会のcontest-setterは対象大会に寄せられた全ての質問を取得できる。対象大会のcontestantは自分の質問と、回答時に公開が選ばれた質問・回答を取得できる。問題への質問は、その問題を含む全ての通常大会からも取得できる。'
     x-authorization:
       status: 'defined'
       anyOf:
         - subject: 'question-author'
           scope: 'contestId'
+        - role: 'contestant'
+          scope: 'contestId'
+          condition: '質問者本人、または質問・回答の公開が選ばれている。問題への質問はその問題を含む通常大会から取得可能'
         - role: 'contest-setter'
           scope: 'contestId'
-    x-scenarios: []
+    x-scenarios:
+      - 'C3-01'
+      - 'C3-02'
     parameters:
       - $ref: '../components/parameters.yaml#/Limit'
       - $ref: '../components/parameters.yaml#/Cursor'
@@ -100,7 +105,7 @@ contestsByContestIdClarificationsByClarificationIdAnswer:
     tags:
       - 'clarifications'
     summary: '通常の大会の質問に運営担当が回答する'
-    description: 'この大会の質問にだけ回答する。初回回答を保存し、同じ内容の再送は同じ結果を返す。既存回答の訂正や一般公開を追加の許可なく行わない。'
+    description: 'この大会の質問に回答し、質問と回答を公開するか指定する。problemIdがある質問を公開すると、その問題を含む全ての通常大会の参加者が閲覧できる。problemIdがない質問は、この大会の参加者に公開する。初回回答と公開範囲を保存し、同じ内容・公開範囲の再送は同じ結果を返す。回答後の訂正や公開範囲変更はこの操作では行わない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -149,158 +154,6 @@ contestsByContestIdClarificationsByClarificationIdAnswer:
         $ref: '../components/responses.yaml#/RateLimited'
       default:
         $ref: '../components/responses.yaml#/UnexpectedError'
-virtualContestsByVirtualContestIdClarifications:
-  parameters:
-    - $ref: '../components/parameters.yaml#/VirtualContestId'
-  get:
-    operationId: 'listVirtualContestClarifications'
-    tags:
-      - 'clarifications'
-    summary: 'バーチャル大会の質問と回答を取得する'
-    description: '参加者は自分が投稿した質問、運営担当は対象大会の質問を取得できる契約案。他の参加者への公開は未決なので全員へ自動公開しない。'
-    x-authorization:
-      status: 'defined'
-      anyOf:
-        - subject: 'question-author'
-          scope: 'virtualContestId'
-        - role: 'virtual-contest-setter'
-          scope: 'virtualContestId'
-    x-scenarios: []
-    parameters:
-      - $ref: '../components/parameters.yaml#/Limit'
-      - $ref: '../components/parameters.yaml#/Cursor'
-    responses:
-      '200':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/contests.yaml#/Clarifications'
-        headers:
-          Cache-Control:
-            schema:
-              type: 'string'
-              const: 'no-store'
-            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
-      '401':
-        $ref: '../components/responses.yaml#/Unauthenticated'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
-  post:
-    operationId: 'createVirtualContestClarification'
-    tags:
-      - 'clarifications'
-    summary: 'バーチャル大会に本人が質問する'
-    description: '対象大会の参加者本人の質問として記録する。指定した問題があれば対象大会の問題か確認する。質問可能な期間はMUT-06で具体化する。'
-    x-authorization:
-      status: 'defined'
-      anyOf:
-        - role: 'virtual-contestant'
-          scope: 'virtualContestId'
-    x-scenarios:
-      - 'C3-03'
-    parameters:
-      - $ref: '../components/parameters.yaml#/WebOrigin'
-      - $ref: '../components/parameters.yaml#/IdempotencyKey'
-    requestBody:
-      required: true
-      content:
-        'application/json':
-          schema:
-            $ref: '../schemas/contests.yaml#/ClarificationCreate'
-    responses:
-      '201':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/contests.yaml#/Clarification'
-        headers:
-          ETag:
-            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
-            schema:
-              type: 'string'
-      '400':
-        $ref: '../components/responses.yaml#/BadRequest'
-      '401':
-        $ref: '../components/responses.yaml#/Unauthenticated'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '409':
-        $ref: '../components/responses.yaml#/Conflict'
-      '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
-virtualContestsByVirtualContestIdClarificationsByClarificationIdAnswer:
-  parameters:
-    - $ref: '../components/parameters.yaml#/VirtualContestId'
-    - $ref: '../components/parameters.yaml#/ClarificationId'
-  put:
-    operationId: 'answerVirtualContestClarification'
-    tags:
-      - 'clarifications'
-    summary: 'バーチャル大会の質問に運営担当が回答する'
-    description: 'この大会の質問にだけ回答する。初回回答を保存し、同じ内容の再送は同じ結果を返す。既存回答の訂正や一般公開を追加の許可なく行わない。'
-    x-authorization:
-      status: 'defined'
-      anyOf:
-        - role: 'virtual-contest-setter'
-          scope: 'virtualContestId'
-    x-scenarios:
-      - 'C3-04'
-    parameters:
-      - $ref: '../components/parameters.yaml#/WebOrigin'
-      - $ref: '../components/parameters.yaml#/IfMatch'
-    requestBody:
-      required: true
-      content:
-        'application/json':
-          schema:
-            $ref: '../schemas/contests.yaml#/ClarificationAnswer'
-    responses:
-      '200':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/contests.yaml#/Clarification'
-        headers:
-          ETag:
-            description: 'このリソースの強いETag。更新時のIf-Matchへ引用符を含めて渡す。'
-            schema:
-              type: 'string'
-      '400':
-        $ref: '../components/responses.yaml#/BadRequest'
-      '401':
-        $ref: '../components/responses.yaml#/Unauthenticated'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '409':
-        $ref: '../components/responses.yaml#/Conflict'
-      '412':
-        $ref: '../components/responses.yaml#/PreconditionFailed'
-      '422':
-        $ref: '../components/responses.yaml#/ValidationFailed'
-      '428':
-        $ref: '../components/responses.yaml#/PreconditionRequired'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
-
 contestsByContestIdClarificationsByClarificationId:
   parameters:
     - $ref: '../components/parameters.yaml#/ContestId'
@@ -310,61 +163,20 @@ contestsByContestIdClarificationsByClarificationId:
     tags:
       - 'clarifications'
     summary: '大会の質問と回答を取得する'
-    description: '質問した本人と、その大会の運営担当だけに返す契約案。取得したETagで回答の競合を防ぐ。ほかの参加者への公開は未決。'
+    description: '質問者本人は自分の質問、対象大会のcontest-setterは対象大会に寄せられた全ての質問を取得できる。対象大会のcontestantは自分の質問と、回答時に公開が選ばれた質問・回答を取得できる。問題への質問は、その問題を含む全ての通常大会からも取得できる。ETagで回答時の競合を防ぐ。'
     x-authorization:
       status: 'defined'
       anyOf:
         - subject: 'question-author'
           scope: 'contestId'
+        - role: 'contestant'
+          scope: 'contestId'
+          condition: '質問者本人、または質問・回答の公開が選ばれている。問題への質問はその問題を含む通常大会から取得可能'
         - role: 'contest-setter'
           scope: 'contestId'
-    x-scenarios: []
-    responses:
-      '200':
-        description: '操作結果。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/contests.yaml#/Clarification'
-        headers:
-          Cache-Control:
-            schema:
-              type: 'string'
-              const: 'no-store'
-            description: '認証情報・署名付きURL・途中結果をキャッシュしない。'
-          ETag:
-            description: '回答時のIf-Matchへ渡す強いETag。'
-            schema:
-              type: 'string'
-      '401':
-        $ref: '../components/responses.yaml#/Unauthenticated'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
-
-virtualContestsByVirtualContestIdClarificationsByClarificationId:
-  parameters:
-    - $ref: '../components/parameters.yaml#/VirtualContestId'
-    - $ref: '../components/parameters.yaml#/ClarificationId'
-  get:
-    operationId: 'getVirtualContestClarification'
-    tags:
-      - 'clarifications'
-    summary: '大会の質問と回答を取得する'
-    description: '質問した本人と、その大会の運営担当だけに返す契約案。取得したETagで回答の競合を防ぐ。ほかの参加者への公開は未決。'
-    x-authorization:
-      status: 'defined'
-      anyOf:
-        - subject: 'question-author'
-          scope: 'virtualContestId'
-        - role: 'virtual-contest-setter'
-          scope: 'virtualContestId'
-    x-scenarios: []
+    x-scenarios:
+      - 'C3-01'
+      - 'C3-02'
     responses:
       '200':
         description: '操作結果。'

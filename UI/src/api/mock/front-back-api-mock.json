@@ -993,459 +993,6 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "1bef1906-3009-466f-9bef-d31bd57cea0d",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "logout",
-      "responses": [
-        {
-          "uuid": "33618960-b14d-4087-961c-97cc38b8f237",
-          "body": "\"\"",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "bbcedc51-2454-4b68-ab68-cb98ede35fdb",
-      "type": "http",
-      "documentation": "",
-      "method": "put",
-      "endpoint": "users/me/email",
-      "responses": [
-        {
-          "uuid": "3cd86515-402c-48fe-a9b7-247f5f7e1a19",
-          "body": "{\n  \"status\": 204,\n  \"body\": {\n    \"message\": \"正常に更新されました　メール認証を行なってください\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "4xdo",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "a53613d3-c8a6-4443-97f9-e4326f5fb177",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "cmm7",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "0966a15a-336e-4726-9c44-71fa467c304d",
-      "type": "http",
-      "documentation": "",
-      "method": "put",
-      "endpoint": "users/me/password",
-      "responses": [
-        {
-          "uuid": "aac33300-96ca-4004-a011-fb48d732a90f",
-          "body": "\"\"",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "dl11",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "912702e9-8be7-48d3-b73b-09099eee6757",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "cmm7",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "fe01c7bb-1fb9-43ae-ab7b-40744a98d8ea",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "signup/request",
-      "responses": [
-        {
-          "uuid": "32fff6ff-4699-4d70-893f-e03074eb8cd2",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "0246b3b8-2335-48dd-8c14-fee623567178",
-          "body": "{\n  \"status\": 201,\n  \"body\": {\n    \"message\": \"認証用のURLを送信しました　メール認証を行なってください\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 201,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "6ab6",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "37c03570-3e46-4a9b-b1c0-643eb2ad3d3f",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "signup",
-      "responses": [
-        {
-          "uuid": "e6afe6b9-da6b-461c-9fdc-26062543ffa3",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "6fd0a361-f018-4281-b43b-9a023c44f6dc",
-          "body": "{\n  \"status\": 201,\n  \"body\": {\n    \"message\": \"正常にユーザーを作成できました\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 201,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "x8be",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "2b3eb772-4057-4810-8b63-be1f3b67d806",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "login",
-      "responses": [
-        {
-          "uuid": "f32bfe46-58e1-47f6-8d0e-03759dc33073",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "7b6b49b7-7a47-4b12-aca9-f58f689b3306",
-          "body": "\"\"",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "w7nf",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "344ed765-4fd5-4553-bc6b-db20da5b09ce",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "reset-password/request",
-      "responses": [
-        {
-          "uuid": "90f1bd63-824d-4617-a7fd-5eb1e445e11d",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "6c579066-037e-4967-89fe-6b0428298887",
-          "body": "\"\"",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "4xdo",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "45a2e1c0-b083-4707-b8b8-f226d3747201",
-      "type": "http",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "reset-password",
-      "responses": [
-        {
-          "uuid": "031b0b8c-fcae-4cc5-8999-f2f3e15cdbc2",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "db24f8d0-7268-4845-a5d0-5e9579b1a171",
-          "body": "\"\"",
-          "latency": 0,
-          "statusCode": 204,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "lrxq",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
       "uuid": "e08a55fb-d08b-435a-b04a-75d1e54370aa",
       "type": "http",
       "documentation": "コンテストtopの開発用サンプル．/contest/1で確認する．",
@@ -1922,7 +1469,7 @@
       "responses": [
         {
           "uuid": "409a7c59-c982-54ec-b88f-47ac80cc2b99",
-          "body": "{\n  \"items\": []\n}",
+          "body": "{\n  \"items\": [\n    {\n      \"role\": \"standard-user\",\n      \"scope\": {\n        \"kind\": \"service\"\n      },\n      \"userId\": \"00000000-0000-4000-8000-000000000001\",\n      \"grantedAt\": \"2026-10-25T00:00:00Z\"\n    },\n    {\n      \"role\": \"writer\",\n      \"scope\": {\n        \"kind\": \"service\"\n      },\n      \"userId\": \"00000000-0000-4000-8000-000000000001\",\n      \"grantedAt\": \"2026-10-25T00:00:00Z\"\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -1930,6 +1477,130 @@
             {
               "key": "Content-Type",
               "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "d921d8c0-3289-403b-bea4-1de47555edaf",
+      "type": "http",
+      "documentation": "開発用の仮ログイン。認証・認可は検証しない。",
+      "method": "post",
+      "endpoint": "api/v1/auth/email/verifications",
+      "responses": [
+        {
+          "uuid": "bea9b31e-806c-4d05-b2d5-15e7f62aa5d8",
+          "body": "{\n  \"status\": \"signed-in\",\n  \"session\": {\n    \"userId\": \"00000000-0000-4000-8000-000000000001\",\n    \"expiresAt\": \"2099-12-31T23:59:59Z\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "traojudge_session=mock; Path=/; HttpOnly; SameSite=Lax"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "a50ebd77-0b82-45b7-bc8b-e3c303e434fd",
+      "type": "http",
+      "documentation": "開発用の仮ログイン。認証・認可は検証しない。",
+      "method": "get",
+      "endpoint": "api/v1/me",
+      "responses": [
+        {
+          "uuid": "2082f7b5-db7e-4681-ab6b-a0ffc8df2ba5",
+          "body": "{\n  \"id\": \"00000000-0000-4000-8000-000000000001\",\n  \"displayName\": \"モックユーザー\",\n  \"bio\": \"\",\n  \"revision\": \"mock-1\",\n  \"roles\": [\n    {\n      \"role\": \"standard-user\",\n      \"scope\": {\n        \"kind\": \"service\"\n      },\n      \"userId\": \"00000000-0000-4000-8000-000000000001\",\n      \"grantedAt\": \"2026-10-25T00:00:00Z\"\n    },\n    {\n      \"role\": \"writer\",\n      \"scope\": {\n        \"kind\": \"service\"\n      },\n      \"userId\": \"00000000-0000-4000-8000-000000000001\",\n      \"grantedAt\": \"2026-10-25T00:00:00Z\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "5ae37779-4ad9-46a3-b00a-921a361fd0cc",
+      "type": "http",
+      "documentation": "開発用の仮ログイン。認証・認可は検証しない。",
+      "method": "delete",
+      "endpoint": "api/v1/auth/session",
+      "responses": [
+        {
+          "uuid": "900edd6b-f8ef-40ca-a358-851c1682cdf8",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "公開コンテスト",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "traojudge_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"
             }
           ],
           "bodyType": "INLINE",

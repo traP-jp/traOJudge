@@ -40,6 +40,13 @@ ContestId:
   description: '対象のcontestId。URLに含まれる親子リソースの所属関係も検証する。'
   schema:
     $ref: '../schemas/common.yaml#/ResourceId'
+TeamId:
+  name: 'teamId'
+  in: 'path'
+  required: true
+  description: '対象大会内のteamId。URLに含まれる親子リソースの所属関係も検証する。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
 VirtualContestId:
   name: 'virtualContestId'
   in: 'path'
@@ -125,6 +132,20 @@ Cursor:
   description: '前ページのnextCursor。任意の内部IDへ読み替えない。'
   schema:
     $ref: '../schemas/common.yaml#/PageCursor'
+ProblemSearchQuery:
+  name: 'query'
+  in: 'query'
+  description: '問題タイトルに対する部分一致検索。'
+  schema:
+    type: 'string'
+    minLength: 1
+    maxLength: 200
+ProblemCreatedByUserId:
+  name: 'createdByUserId'
+  in: 'query'
+  description: '問題の作成者で絞り込む。指定しても閲覧者の権限確認は省略せず、閲覧できない問題は返さない。該当する問題がなければ空のページを返す。'
+  schema:
+    $ref: '../schemas/common.yaml#/ResourceId'
 WebOrigin:
   name: 'Origin'
   in: 'header'

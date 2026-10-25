@@ -27,3 +27,7 @@ The credentials above are for local development only. Use this URL from the back
 ```sh
 TRAOJUDGE_DATABASE_URL=postgresql://traojudge:traojudge@127.0.0.1:5433/traojudge
 ```
+
+The backend requires `TRAOJUDGE_DATABASE_URL` and applies embedded SQLx migrations
+before accepting HTTP requests. See [public user profile development](../../docs/backend/users.md)
+for startup, sample data, and integration test commands.

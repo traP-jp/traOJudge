@@ -21,11 +21,7 @@ const isMenuOpen = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
-const canCreateProblem = computed(
-  () =>
-    userStore.user?.globalAuthorityAttribute.isSystemAdmin === true ||
-    !!userStore.user?.authentication?.traqAuth
-)
+const canCreateProblem = computed(() => userStore.isAuthenticated)
 
 const modalHandler = (e: MouseEvent) => {
   if (!(e.target instanceof HTMLElement) || e.target.closest('#top-navbar-menu')) return
@@ -45,6 +41,7 @@ const setMenuState = (state: boolean) => {
 const handleLogout = async () => {
   try {
     await userStore.logout()
+    setMenuState(false)
     router.push('/login')
   } catch (error) {
     console.error('ログアウトエラー:', error)
@@ -88,8 +85,8 @@ const handleSettings = () => {
       <PrimaryButton v-if="!isLoggedIn" padding="1rem" class="h-10 px-3 py-2" @click="handleLogin">
         ログイン
       </PrimaryButton>
-      <div id="top-navbar-menu" class="relative">
-        <button v-if="isLoggedIn" class="flex items-center gap-1" @click="toggleMenu">
+      <div v-if="isLoggedIn" id="top-navbar-menu" class="relative">
+        <button class="flex items-center gap-1" @click="toggleMenu">
           <span class="inline-block max-w-24 truncate sm:max-w-none">{{ username }}</span>
           <IconDropdownTriangle
             class="inline-block h-1.625"

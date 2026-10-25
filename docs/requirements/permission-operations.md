@@ -47,7 +47,7 @@
 | 操作 | 何をするか | 誰がしてよいか | 誰に／何に・範囲 | 成立する事実 |
 | --- | --- | --- | --- | --- |
 | C1-01 | [通常の大会を作る](scenarios/contests/organize-contest.md) | サービス管理者（service-admin） | 新規の通常大会 | 通常の大会ができた |
-| C1-02 | [通常の大会のルール・開始終了時刻を変更する](scenarios/contests/organize-contest.md) | 通常大会Cの contest-setter | その大会C | 大会Cの設定が変わった |
+| C1-02 | [通常の大会のルール・開始終了時刻・参加方式を変更する](scenarios/contests/organize-contest.md) | 通常大会Cの contest-setter | その大会C。参加方式は開始時刻より前に限る | 大会Cの設定が変わった。方式変更時は既存の参加登録と大会内チームが削除された |
 | C1-03 | [通常の大会を削除する](scenarios/contests/organize-contest.md) | サービス管理者（service-admin） | 指定した通常大会C | 大会Cを取り下げ、記録を残した |
 | C1-04 | [バーチャル大会を作る](scenarios/contests/organize-contest.md) | 基本的な利用資格を持つ人（standard-user） | 新規のバーチャル大会 | バーチャル大会ができた |
 | C1-05 | [バーチャル大会のルール・開始終了時刻を変更する](scenarios/contests/organize-contest.md) | バーチャル大会Vの virtual-contest-setter | その大会V | 大会Vの設定が変わった |
@@ -57,9 +57,7 @@
 | C2-03 | [バーチャル大会に問題を追加する](scenarios/contests/choose-problems.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに、公開された問題Pを追加。自分の問題に限らない | 問題Pが大会Vの出題に加わった |
 | C2-04 | [バーチャル大会から問題を外す](scenarios/contests/choose-problems.md) | 未決。virtual-contest-setter に明示された操作ではない | 大会Vに含まれる問題P | 大会Vとの結び付きだけが外れた |
 | C3-01 | [通常の大会に質問する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contestant | その大会Cに、自分の質問を投稿 | 大会Cへの質問が残った |
-| C3-02 | [通常の大会の質問に回答する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contest-setter | 大会Cに寄せられた参加者の質問 | その質問への回答が残った |
-| C3-03 | [バーチャル大会に質問する](scenarios/contests/ask-and-answer.md) | バーチャル大会Vの virtual-contestant | その大会Vに、自分の質問を投稿 | 大会Vへの質問が残った |
-| C3-04 | [バーチャル大会の質問に回答する](scenarios/contests/ask-and-answer.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに寄せられた参加者の質問 | その質問への回答が残った |
+| C3-02 | [通常の大会の質問に回答する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contest-setter | 大会Cに寄せられた参加者の質問。回答とともに大会参加者への公開可否を指定 | 回答と選んだ公開範囲が保存された |
 
 ## 認証
 
@@ -109,7 +107,7 @@
 | R2-02 | [問題を非公開にする](scenarios/permissions/hide-problem.md) | サービス管理者（service-admin）。他の役割は未決 | 担当を問わず、指定した問題P | 問題Pが非公開になった |
 | R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 未決 | 解説E | 解説Eが公開された |
 | R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 未決 | 解説E | 解説Eが非公開になった |
-| R3-01 | [公開された通常の大会に参加を申し込む](scenarios/permissions/join-contest.md) | standard-user 本人 | 自分自身、公開された通常大会C | 本人が大会Cの contestant になった |
+| R3-01 | [公開された通常の大会に参加を申し込む](scenarios/permissions/join-contest.md) | standard-user 本人 | 自分自身、公開された通常大会C | 個人戦では本人が大会Cの contestant になり、チーム戦では本人が大会C内の1チームに所属する。チームの移動・脱退は大会開始前まで可能 |
 | R4-01 | [バーチャル大会に参加を申し込む](scenarios/permissions/join-virtual-contest.md) | 未決。通常の大会への自己参加と同じ許可は明記されていない | 自分自身、バーチャル大会V | 本人が大会Vの virtual-contestant になった |
 
 ## それ以外
@@ -120,6 +118,8 @@
 | O1-02 | [解説を編集する](scenarios/others/write-editorial.md) | 解説Eの編集担当（参照元の表記は editiorial-author） | その解説E | 解説Eの内容が変わった |
 | O1-03 | [解説を削除する](scenarios/others/write-editorial.md) | 未決。編集の許可に削除を含めない | 解説E | 解説Eを取り下げた |
 | O2-01 | [プロフィールを書き換える](scenarios/others/edit-profile.md) | ログインしている本人 | 自分のプロフィール。ほかの人のプロフィールは対象外 | 自分のプロフィールが変わった |
+| O3-01 | [公開プロフィールを取得する](scenarios/others/view-user-profile.md) | 誰でも | 指定利用者の公開プロフィール | 表示名と自己紹介を確認できた |
+| O3-02 | [作成した閲覧可能な問題を取得する](scenarios/others/view-user-profile.md) | 誰でも。ログイン時は権限のある非公開問題も含む | 指定利用者が作成者として記録され、閲覧者が閲覧できる問題 | 閲覧可能な問題の一覧を確認できた |
 
 ## 読み取りについて、既に分かっている許可
 
@@ -127,14 +127,17 @@
 
 | 誰が | 誰の何を見てよいか | 範囲 |
 | --- | --- | --- |
-| ログインしていない人も含む利用者 | 公開された情報 | 公開されているものだけ。提出ソース・非公開テスト等まで公開するとは決めていない |
+| ログインしていない人も含む利用者 | 公開された情報 | 公開されているもの。通常大会・バーチャル大会の終了時刻に到達した後は、その大会に紐づく提出ソースも公開情報となる |
 | 提出者本人（今回の進捗表示の対象） | 自分の提出の、今回の採点で完了したテストケース数 | [結果を待つシナリオ](scenarios/submissions/watch-judging.md)。総数・ケース名・判定の詳細や他人の提出の進捗の公開範囲は別に決める |
+| 提出者本人 | 自分の提出ソース | いつでも `/submissions/{submissionId}/source` から取得できる。APIはS3のファイルごとの署名付きURLを発行する |
+| 通常大会のチーム戦の contestant | 同じチームの全メンバーの提出情報・採点結果・提出ソース | 提出一覧は `/contests/{contestId}/teams/{teamId}/submissions`、提出ソースは `/submissions/{submissionId}/source` から取得する。非公開テストは含めない |
+| ログイン有無を問わない全利用者 | 終了時刻に到達した通常大会・バーチャル大会の提出情報と提出ソース | 大会別提出一覧と `/submissions/{submissionId}/source` から取得する。非公開問題への提出も大会に紐づくものは対象に含める。非公開テストは含めない |
 | 問題Pの problem-owner / tester | 問題P | その問題のみ |
 | 通常大会Cの contest-setter | 大会Cに含まれる問題P | tester と同じ。大会外の問題には及ばない |
 | 通常大会Cの contest-setter | 大会Cでの、他の参加者を含む提出 | 大会中の提出の閲覧。大会外の提出には及ばない |
 | バーチャル大会Vの virtual-contest-setter | 大会Vでの、他の参加者を含む提出 | 大会中の提出の閲覧。出題した問題そのものへの tester 相当の許可はない |
 
-非公開問題を参加者にどう見せるか、提出者本人が提出ソースをどこまで見られるか、Clarやテストの見せ方の詳細は未決。読み取りの権限から更新の権限もあるとは扱わない。
+Clarやテストの見せ方の詳細は未決。読み取りの権限から更新の権限もあるとは扱わない。
 
 ## 単独で確認する例
 

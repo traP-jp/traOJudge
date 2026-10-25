@@ -123,10 +123,7 @@ VisibilityChange:
   additionalProperties: false
   properties:
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
   required:
     - 'visibility'
 Visibility:
@@ -134,12 +131,14 @@ Visibility:
   additionalProperties: false
   properties:
     visibility:
-      type: 'string'
-      enum:
-        - 'public'
-        - 'private'
+      $ref: './permissions.yaml#/VisibilityValue'
     revision:
       $ref: './common.yaml#/Version'
   required:
     - 'visibility'
     - 'revision'
+VisibilityValue:
+  type: 'string'
+  enum:
+    - 'public'
+    - 'private'
