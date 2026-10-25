@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 
 export interface SelectOption {
   id: string
@@ -29,6 +29,7 @@ const {
 
 const emit = defineEmits<{ (e: 'change', option: SelectOption): void }>()
 const value = defineModel<SelectOption>()
+const inputId = useId()
 
 const displaysError = computed(() => error || errorMessage !== '')
 const displaysLabel = computed(() => label !== '')
@@ -46,11 +47,13 @@ const onChange = (event: Event) => {
 <template>
   <div :class="containerClass">
     <div v-if="displaysLabel" class="flex items-center gap-2 pb-1">
-      <label class="fontstyle-ui-body-2 text-text-primary">{{ label }}</label>
+      <label :for="inputId" class="fontstyle-ui-body-2 text-text-primary">{{ label }}</label>
       <span v-if="required" class="fontstyle-ui-caption-strong text-status-error">必須</span>
     </div>
     <div class="relative">
       <select
+        :id="inputId"
+        :aria-label="label || placeholder"
         :value="value?.id"
         :disabled="disabled"
         class="w-full appearance-none rounded-sm border bg-white px-3 py-2 pr-10 fontstyle-ui-body text-text-primary focus:outline-hidden"

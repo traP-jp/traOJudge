@@ -438,9 +438,9 @@ onMounted(() => {
               <div class="flex items-center gap-4">
                 <div class="flex w-24 items-center gap-2">
                   <img :src="service.icon" alt="" width="20" height="20" />
-                  <label>
+                  <span>
                     {{ service.name }}
-                  </label>
+                  </span>
                 </div>
                 <span class="h-12 content-around text-base font-normal text-text-secondary">
                   {{ '@' + service.ID }}

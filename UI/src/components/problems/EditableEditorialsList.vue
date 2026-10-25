@@ -119,7 +119,12 @@ function closeActionMenu() {
       </template>
       <template v-else-if="colId === 'actions'">
         <div class="relative flex flex-row justify-end gap-4 px-2">
-          <a :href="`editorials/${editorials.get(rowId)?.id}`" class="hover:scale-110" small>
+          <a
+            :href="`editorials/${editorials.get(rowId)?.id}`"
+            class="hover:scale-110"
+            aria-label="解説を編集"
+            small
+          >
             <span class="inline-flex items-center gap-1">
               <MaterialIcon icon="edit" size="20px" class="py-2" />
             </span>

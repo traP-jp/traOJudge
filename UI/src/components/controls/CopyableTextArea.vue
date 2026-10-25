@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 
@@ -38,6 +38,8 @@ const emit = defineEmits<{
   blur: []
 }>()
 
+const generatedId = useId()
+const inputId = computed(() => props.id || generatedId)
 const showCopied = ref(false)
 
 const handleCopy = async () => {
@@ -63,7 +65,7 @@ const updateValue = (value: string | undefined) => {
   <div class="flex flex-col gap-2">
     <div v-if="label" class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <label class="fontstyle-ui-control text-text-primary" :for="id">{{ label }}</label>
+        <label class="fontstyle-ui-control text-text-primary" :for="inputId">{{ label }}</label>
         <span v-if="required" class="fontstyle-ui-caption-strong text-status-error">必須</span>
       </div>
       <button
@@ -83,7 +85,7 @@ const updateValue = (value: string | undefined) => {
     </div>
 
     <PlainTextArea
-      :id="id"
+      :id="inputId"
       :model-value="modelValue"
       :label="''"
       :required="false"

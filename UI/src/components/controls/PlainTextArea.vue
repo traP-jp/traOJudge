@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MaterialIcon, { type Icon } from '@/components/icons/MaterialIcon.vue'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useId, useTemplateRef } from 'vue'
 
 defineOptions({
   inheritAttrs: false
@@ -9,6 +9,7 @@ const {
   error = false,
   errorMessage = '',
   label = '',
+  id,
   leftIcon,
   rightIcon,
   supportingText
@@ -34,6 +35,8 @@ const displaysError = computed(() => error || errorMessage != '')
 const displaysLeftIcon = computed(() => leftIcon != null)
 const displaysRightIcon = computed(() => rightIcon != null)
 const displaysSupportingText = computed(() => supportingText != null)
+const generatedId = useId()
+const inputId = computed(() => id || generatedId)
 const textarea = useTemplateRef('textarea')
 const isFocused = ref<boolean>(false)
 const onFocusin = (): void => {
@@ -55,7 +58,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
   <div>
     <div class="flex flex-col gap-1">
       <span v-if="label != ''" class="flex items-center gap-2">
-        <label class="fontstyle-ui-control text-text-primary" :for="id">{{ label }}</label>
+        <label class="fontstyle-ui-control text-text-primary" :for="inputId">{{ label }}</label>
         <span v-if="required" class="fontstyle-ui-caption-strong text-status-error">必須</span>
       </span>
       <span
@@ -67,6 +70,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
           { 'border-text-primary': isFocused && !displaysError },
           { 'bg-background-secondary': disabled }
         ]"
+        role="presentation"
         @mousedown="onClickInnerBorder"
       >
         <div class="flex w-full flex-col">
@@ -74,7 +78,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
             <MaterialIcon v-if="displaysLeftIcon" :icon="leftIcon!" size="1.25rem" />
             <textarea
               v-bind="$attrs"
-              :id="id"
+              :id="inputId"
               ref="textarea"
               v-model="value"
               :disabled="disabled"

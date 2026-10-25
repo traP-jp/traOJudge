@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MaterialIcon, { type Icon } from '@/components/icons/MaterialIcon.vue'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useId, useTemplateRef } from 'vue'
 
 defineOptions({
   inheritAttrs: false
@@ -9,6 +9,7 @@ const {
   error = false,
   errorMessage = '',
   label = '',
+  id,
   leftIcon,
   rightIcon,
   supportingText,
@@ -40,6 +41,8 @@ const displaysRightIcon = computed(() => rightIcon != null)
 const displaysSupportingText = computed(() => supportingText != null)
 const displaysUnit = computed(() => unit != null)
 
+const generatedId = useId()
+const inputId = computed(() => id || generatedId)
 const input = useTemplateRef('input')
 const isFocused = ref<boolean>(false)
 const onFocusin = (): void => {
@@ -61,7 +64,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
   <div class="w-full">
     <div class="flex flex-col gap-1">
       <span v-if="label != ''" class="flex items-center gap-2">
-        <label class="fontstyle-ui-control text-text-primary" :for="id">{{ label }}</label>
+        <label class="fontstyle-ui-control text-text-primary" :for="inputId">{{ label }}</label>
         <span v-if="required" class="fontstyle-ui-caption-strong text-status-error">必須</span>
       </span>
       <div class="flex items-center gap-2">
@@ -76,12 +79,13 @@ const onClickInnerBorder = (e: MouseEvent) => {
             containerClass,
             'w-full'
           ]"
+          role="presentation"
           @mousedown="onClickInnerBorder"
         >
           <MaterialIcon v-if="displaysLeftIcon" :icon="leftIcon!" size="1.25rem" />
           <input
             v-bind="$attrs"
-            :id="id"
+            :id="inputId"
             ref="input"
             v-model="value"
             :disabled="disabled"
