@@ -34,3 +34,4 @@ traojudge-workflow = { path = "server/traojudge-workflow" }
 uuid = { version = "1", features = ["serde", "v4"] }
 workspace-hack = { path = "server/workspace-hack" }
 futures = "0.3.34"
+sha2 = "0.10.8"
