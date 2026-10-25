@@ -347,8 +347,12 @@ ClarificationAnswer:
       type: 'string'
       minLength: 1
       maxLength: 10000
+    isPublic:
+      type: 'boolean'
+      description: 'trueなら質問と回答を公開する。コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。falseなら質問者本人と質問を受け付けた大会の運営担当だけが閲覧できる。'
   required:
     - 'body'
+    - 'isPublic'
 Clarification:
   type: 'object'
   additionalProperties: false
@@ -367,6 +371,9 @@ Clarification:
       anyOf:
         - type: 'string'
         - type: 'null'
+    isPublic:
+      type: 'boolean'
+      description: '質問と回答の公開範囲。回答前はfalse。trueなら、コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。'
     answeredBy:
       anyOf:
         - $ref: './common.yaml#/ResourceId'
@@ -382,6 +389,7 @@ Clarification:
     - 'body'
     - 'problemId'
     - 'answer'
+    - 'isPublic'
     - 'answeredBy'
     - 'revision'
     - 'createdAt'

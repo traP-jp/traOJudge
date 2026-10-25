@@ -40,7 +40,7 @@ tags:
   - name: 'virtual-contests'
     description: 'バーチャル大会の作成・出題・参加。'
   - name: 'clarifications'
-    description: '大会の質問と回答。'
+    description: '通常大会の質問と回答。'
   - name: 'editorials'
     description: '問題の解説と公開範囲。'
   - name: 'cli'
@@ -198,10 +198,6 @@ paths:
     $ref: './paths/virtual-contests.yaml#/virtualContestsByVirtualContestIdSubmissions'
   '/virtual-contests/{virtualContestId}/standings':
     $ref: './paths/virtual-contests.yaml#/virtualContestsByVirtualContestIdStandings'
-  '/virtual-contests/{virtualContestId}/clarifications':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarifications'
-  '/virtual-contests/{virtualContestId}/clarifications/{clarificationId}/answer':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarificationsByClarificationIdAnswer'
   '/editorials':
     $ref: './paths/editorials.yaml#/editorials'
   '/problems/{problemId}/editorials':
@@ -212,8 +208,6 @@ paths:
     $ref: './paths/editorials.yaml#/editorialsByEditorialIdPublication'
   '/contests/{contestId}/clarifications/{clarificationId}':
     $ref: './paths/clarifications.yaml#/contestsByContestIdClarificationsByClarificationId'
-  '/virtual-contests/{virtualContestId}/clarifications/{clarificationId}':
-    $ref: './paths/clarifications.yaml#/virtualContestsByVirtualContestIdClarificationsByClarificationId'
 components:
   securitySchemes:
     sessionCookie:

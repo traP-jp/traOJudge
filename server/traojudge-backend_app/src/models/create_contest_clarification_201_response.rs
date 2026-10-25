@@ -25,6 +25,9 @@ pub struct CreateContestClarification201Response {
     pub problem_id: models::CreateProblem201ResponseCurrentVersionId,
     #[serde(rename = "answer", deserialize_with = "Option::deserialize")]
     pub answer: Option<models::ListMySubmissions200ResponseNextCursor>,
+    /// 質問と回答の公開範囲。回答前はfalse。trueならこの通常大会の参加者全員が閲覧できる。
+    #[serde(rename = "isPublic")]
+    pub is_public: bool,
     #[serde(rename = "answeredBy")]
     pub answered_by: models::CreateProblem201ResponseCurrentVersionId,
     /// 対象の版を識別する不透明な文字列。
@@ -41,6 +44,7 @@ impl CreateContestClarification201Response {
         body: String,
         problem_id: models::CreateProblem201ResponseCurrentVersionId,
         answer: Option<models::ListMySubmissions200ResponseNextCursor>,
+        is_public: bool,
         answered_by: models::CreateProblem201ResponseCurrentVersionId,
         revision: String,
         created_at: String,
@@ -51,6 +55,7 @@ impl CreateContestClarification201Response {
             body,
             problem_id,
             answer,
+            is_public,
             answered_by,
             revision,
             created_at,

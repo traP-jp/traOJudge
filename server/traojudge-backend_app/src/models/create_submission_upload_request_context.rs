@@ -11,6 +11,8 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// CreateSubmissionUploadRequestContext : 1件の提出が属する提出先を1つ指定する。practiceは大会に紐づかない問題単体への練習提出。 contestまたはvirtual-contestは指定した1大会への提出。同じ問題が複数の大会に登録されていても、1件の提出を複数大会の得点・順位に同時に反映しない。 複数大会で採点・集計する場合は大会ごとに別の提出を作成する。
+/// 1件の提出が属する提出先を1つ指定する。practiceは大会に紐づかない問題単体への練習提出。 contestまたはvirtual-contestは指定した1大会への提出。同じ問題が複数の大会に登録されていても、1件の提出を複数大会の得点・順位に同時に反映しない。 複数大会で採点・集計する場合は大会ごとに別の提出を作成する。
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateSubmissionUploadRequestContext {

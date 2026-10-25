@@ -26,6 +26,9 @@ pub struct AnswerContestClarification200Response {
     pub problem_id: Option<String>,
     #[serde(rename = "answer", deserialize_with = "Option::deserialize")]
     pub answer: Option<String>,
+    /// 質問と回答の公開範囲。回答前はfalse。trueならこの通常大会の参加者全員が閲覧できる。
+    #[serde(rename = "isPublic")]
+    pub is_public: bool,
     /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
     #[serde(rename = "answeredBy", deserialize_with = "Option::deserialize")]
     pub answered_by: Option<String>,
@@ -43,6 +46,7 @@ impl AnswerContestClarification200Response {
         body: String,
         problem_id: Option<String>,
         answer: Option<String>,
+        is_public: bool,
         answered_by: Option<String>,
         revision: String,
         created_at: String,
@@ -53,6 +57,7 @@ impl AnswerContestClarification200Response {
             body,
             problem_id,
             answer,
+            is_public,
             answered_by,
             revision,
             created_at,

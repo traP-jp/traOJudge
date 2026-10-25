@@ -57,9 +57,7 @@
 | C2-03 | [バーチャル大会に問題を追加する](scenarios/contests/choose-problems.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに、公開された問題Pを追加。自分の問題に限らない | 問題Pが大会Vの出題に加わった |
 | C2-04 | [バーチャル大会から問題を外す](scenarios/contests/choose-problems.md) | 未決。virtual-contest-setter に明示された操作ではない | 大会Vに含まれる問題P | 大会Vとの結び付きだけが外れた |
 | C3-01 | [通常の大会に質問する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contestant | その大会Cに、自分の質問を投稿 | 大会Cへの質問が残った |
-| C3-02 | [通常の大会の質問に回答する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contest-setter | 大会Cに寄せられた参加者の質問 | その質問への回答が残った |
-| C3-03 | [バーチャル大会に質問する](scenarios/contests/ask-and-answer.md) | バーチャル大会Vの virtual-contestant | その大会Vに、自分の質問を投稿 | 大会Vへの質問が残った |
-| C3-04 | [バーチャル大会の質問に回答する](scenarios/contests/ask-and-answer.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに寄せられた参加者の質問 | その質問への回答が残った |
+| C3-02 | [通常の大会の質問に回答する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contest-setter | 大会Cに寄せられた参加者の質問。回答とともに大会参加者への公開可否を指定 | 回答と選んだ公開範囲が保存された |
 
 ## 認証
 

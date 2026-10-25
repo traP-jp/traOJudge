@@ -15,10 +15,13 @@ use serde::{Deserialize, Serialize};
 pub struct AnswerContestClarificationRequest {
     #[serde(rename = "body")]
     pub body: String,
+    /// trueなら質問と回答をこの通常大会の参加者全員に公開する。falseなら質問者本人と大会運営担当だけが閲覧できる。
+    #[serde(rename = "isPublic")]
+    pub is_public: bool,
 }
 
 impl AnswerContestClarificationRequest {
-    pub fn new(body: String) -> AnswerContestClarificationRequest {
-        AnswerContestClarificationRequest { body }
+    pub fn new(body: String, is_public: bool) -> AnswerContestClarificationRequest {
+        AnswerContestClarificationRequest { body, is_public }
     }
 }
