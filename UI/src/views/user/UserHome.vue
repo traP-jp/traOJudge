@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue'
 import { computed } from 'vue'
+
 import type { User } from '@/api/generated'
+import TextLink from '@/components/TextLink.vue'
 
 const { user } = defineProps<{ userId: string; user: User | null }>()
 
@@ -47,12 +48,12 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
   <div>
     <h2 class="fontstyle-ui-subtitle">自己紹介</h2>
   </div>
-  <div class="fontstyle-ui-body self-stretch py-4">{{ selfIntroduction }}</div>
+  <div class="self-stretch py-4 fontstyle-ui-body">{{ selfIntroduction }}</div>
   <hr class="w-full border-border-primary" />
-  <div class="fontstyle-ui-body flex flex-col items-start gap-2 py-4 text-text-primary">
+  <div class="flex flex-col items-start gap-2 py-4 fontstyle-ui-body text-text-primary">
     <div v-if="githubId" class="flex items-center">
       <span>
-        <img src="/src/assets/service_icons/github.svg" class="size-5" />
+        <img src="/src/assets/service_icons/github.svg" alt="GitHub" class="size-5" />
       </span>
       <span class="px-2">
         <TextLink v-if="isGithubIdValid" :href="`https://github.com/${githubId}`" new-tab
@@ -63,7 +64,7 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
     </div>
     <div v-if="xId" class="flex items-center">
       <span>
-        <img src="/src/assets/service_icons/x.svg" class="size-5" />
+        <img src="/src/assets/service_icons/x.svg" alt="X" class="size-5" />
       </span>
       <span class="px-2">
         <TextLink v-if="isXIdValid" :href="`https://x.com/intent/user?screen_name=${xId}`" new-tab
@@ -74,7 +75,7 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
     </div>
     <div v-if="traqId" class="flex items-center">
       <span>
-        <img src="/src/assets/service_icons/traq.svg" class="size-5" />
+        <img src="/src/assets/service_icons/traq.svg" alt="traQ" class="size-5" />
       </span>
       <span class="px-2"> @{{ traqId }} </span>
     </div>

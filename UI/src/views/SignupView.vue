@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { AuthenticationApi } from '@/api/generated'
-import { ResponseError } from '@/api/generated/runtime'
-import OAuthButton from '@/components/Controls/OAuthButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import { useSignupStore } from '@/stores/signup'
 import isEmail from 'validator/lib/isEmail'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { AuthenticationApi } from '@/api/generated'
+import { ResponseError } from '@/api/generated/runtime'
+import OAuthButton from '@/components/auth/OAuthButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
+import { useSignupStore } from '@/stores/signup'
 
 const email = ref('')
 const emailErrorMessage = ref<string | undefined>()
@@ -35,7 +36,7 @@ const handleSignupRequest = async () => {
       }
     })
     signupStore.setEmail(email.value)
-    router.push('/signup/mail-send')
+    await router.push('/signup/mail-send')
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       // TODO: エラーハンドリングの文章
@@ -77,7 +78,7 @@ const handleSignupRequest = async () => {
           :error-message="emailErrorMessage"
         />
         <PrimaryButton
-          class="h-10 w-full rounded px-4 py-3"
+          class="h-10 w-full rounded-sm px-4 py-3"
           :disabled="!email"
           @click="handleSignupRequest"
         >

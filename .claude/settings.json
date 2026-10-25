@@ -9,7 +9,7 @@
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/ui-format.sh\"",
             "timeout": 60,
-            "statusMessage": "Running Prettier + ESLint on UI file"
+            "statusMessage": "Running ESLint + Prettier on UI file"
           }
         ]
       }

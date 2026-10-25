@@ -1,12 +1,13 @@
 `
 <script setup lang="ts">
-import { AuthenticationApi } from '@/api/generated'
-import { ResponseError } from '@/api/generated/runtime'
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import { useSignupStore } from '@/stores/signup'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { AuthenticationApi } from '@/api/generated'
+import { ResponseError } from '@/api/generated/runtime'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import { useSignupStore } from '@/stores/signup'
 
 const signupStore = useSignupStore()
 const router = useRouter()
@@ -14,18 +15,17 @@ const router = useRouter()
 onMounted(() => {
   // URL直打ち対策
   if (!signupStore.isValid) {
-    router.push('/signup')
+    return router.push('/signup')
   }
 })
 
 const handleClose = () => {
-  router.push('/')
+  return router.push('/')
 }
 
 const handleResendEmail = async () => {
   if (!signupStore.isValid) {
-    router.push('/signup')
-    return
+    return router.push('/signup')
   }
   const authApi = new AuthenticationApi()
   try {

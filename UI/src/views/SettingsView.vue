@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SideMenuUserSetting from '@/components/Navigations/SideMenu/SideMenuUserSetting.vue'
+import SideMenuUserSetting from '@/components/settings/SideMenuUserSetting.vue'
 </script>
 
 <template>

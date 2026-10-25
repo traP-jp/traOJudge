@@ -1,100 +1,138 @@
-import globals from 'globals'
 import pluginJs from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import pluginVue from 'eslint-plugin-vue'
-import tailwind from 'eslint-plugin-tailwindcss'
-import eslintPrettierConfig from 'eslint-config-prettier'
-import unicorn from 'eslint-plugin-unicorn'
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
+import vitest from '@vitest/eslint-plugin'
+import { vueTsConfigs, withVueTs } from '@vue/eslint-config-typescript'
+import eslintPrettierConfig from 'eslint-config-prettier/flat'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import tailwind from 'eslint-plugin-tailwindcss'
+import unicorn from 'eslint-plugin-unicorn'
+import pluginVue from 'eslint-plugin-vue'
+import accessibility from 'eslint-plugin-vuejs-accessibility'
+import globals from 'globals'
 
-export default [
-  { files: ['**/*.{js,mjs,cjs,ts,vue}'] },
+const parentImportRestriction = {
+  group: ['../*'],
+  message: "親相対パスの代わりに '@/' エイリアスを使ってください。"
+}
+
+export default withVueTs(
+  { rootDir: import.meta.dirname, allowComponentTypeUnsafety: false },
   {
-    ignores: ['node_modules', 'dist', 'build', 'coverage', 'docs', 'public', 'src/api/generated/**']
+    ignores: ['node_modules/**', 'dist/**', 'build/**', 'coverage/**', 'src/api/generated/**']
   },
-  { languageOptions: { globals: globals.browser } },
+  { files: ['**/*.{js,mjs,cjs,ts,tsx,vue}'] },
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
-  ...tailwind.configs['flat/recommended'],
-  eslintPrettierConfig,
-  { files: ['**/*.ts'], languageOptions: { parserOptions: { parser: tseslint.parser } } },
-  { files: ['**/*.vue'], languageOptions: { parserOptions: { parser: tseslint.parser } } },
+  pluginVue.configs['flat/recommended'],
+  vueTsConfigs.recommendedTypeChecked,
   {
+    files: ['src/**/*.{js,mjs,cjs,ts,tsx,vue}'],
+    languageOptions: { globals: globals.browser }
+  },
+  {
+    files: ['*.{js,mjs,cjs}', 'scripts/**/*.mjs', 'vite.config.ts', 'vitest.config.ts'],
+    languageOptions: { globals: globals.node }
+  },
+  ...accessibility.configs['flat/recommended'].map((config) => ({
+    ...config,
+    files: ['src/**/*.vue']
+  })),
+  {
+    ...tailwind.configs.recommended,
+    files: [...tailwind.configs.recommended.files, '**/*.mjs', '**/*.cjs']
+  },
+  {
+    settings: { tailwindcss: { cssConfigPath: './src/assets/main.css' } },
+    linterOptions: { reportUnusedDisableDirectives: 'error' },
     plugins: {
       unicorn,
+      'simple-import-sort': simpleImportSort,
       '@eslint-community/eslint-comments': eslintComments
     },
     rules: {
-      'tailwindcss/classnames-order': 'error',
-      // 任意値はデザインシステム外の値が紛れ込む可能性があるため警告する。
-      'tailwindcss/no-arbitrary-value': 'warn',
-
-      // CompositionAPI 形式が最新のVueで推奨されているため。
-      'vue/component-api-style': ['error', ['script-setup']],
-
-      // <script> を JS で書くと型の恩恵を失うため、全コンポーネントで TS を強制。
-      'vue/block-lang': ['error', { script: { lang: 'ts' } }],
-
-      // ランタイム宣言 ({ type: String, required: true } 形式) を使うと
-      // 型情報を JS オブジェクトでも二重管理することになり、TS 型との乖離が起きる。
-      // 型ベース宣言なら TS の型がそのまま Single Source of Truth になる。
-      'vue/define-props-declaration': ['error', 'type-based'],
-      'vue/define-emits-declaration': ['error', 'type-based'],
-
-      // スタイルは Tailwind に集約してデザイントークンを一元管理する。
-      'vue/no-restricted-block': ['error', 'style'],
-
-      // any は型システムを部分的に無効化する可能性があるため禁止する。
-      // 未知の型を扱いたいときは unknown を使い、絞り込みを強制する。
-      '@typescript-eslint/no-explicit-any': 'error',
-
-      // '../foo' 形式の親相対パスはファイル移動でリンクが切れるリスクがあるため禁止する。
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['../*'],
-              message: "Use the '@/' alias instead of parent-relative imports."
-            }
-          ]
-        }
-      ],
-
-      'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
-
-      // eslint-disable は例外運用なので、なぜ外したかが将来の読み手に必要。
-      '@eslint-community/eslint-comments/require-description': ['error', { ignore: [] }],
-
-      // ifのネストは可読性に悪影響を与えるため禁止する。
+      'simple-import-sort/imports': 'error',
+      '@eslint-community/eslint-comments/require-description': 'error',
+      'prefer-arrow-callback': ['error', { allowNamedFunctions: false, allowUnboundThis: true }],
       'no-restricted-syntax': [
         'error',
         {
           selector: 'IfStatement > BlockStatement IfStatement',
-          message:
-            'ネストした if は禁止です。早期 return / ガード節 / 関数分割で平坦化してください。'
+          message: 'ネストした if は禁止です。早期 return / ガード節で平坦化してください。'
         }
       ],
-
-      // コールバックにはアロー関数を使う。function 式は独自の this を持つため、
-      // Vue の Composition API や非同期処理で this を意図せずシャドウする事故が起きやすい。
-      // アロー関数は this を字句的に継承するためこの種のバグを構造的に防げる。
-      // また簡潔さも上がり、コールバックの本質 (引数→結果) が読み取りやすくなる。
-      // auto-fix 可能なので PostToolUse フックで自動修正される。
-      'prefer-arrow-callback': ['error', { allowNamedFunctions: false, allowUnboundThis: true }]
+      // クラス順はPrettierで整える。
+      'tailwindcss/classnames-order': 'off',
+      // デザイントークン外の値を見落とさないよう警告する。
+      'tailwindcss/no-arbitrary-value': 'warn'
+    }
+  },
+  {
+    files: ['**/*.{ts,tsx,vue}'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': 'error'
+    }
+  },
+  {
+    files: ['src/**/*.{js,mjs,cjs,ts,tsx,vue}'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [parentImportRestriction] }]
     }
   },
   {
     files: ['src/**/*.vue'],
     rules: {
+      'no-unreachable': 'error',
+      'getter-return': 'error',
+      'vue/component-api-style': ['error', ['script-setup']],
+      'vue/define-props-declaration': ['error', 'type-based'],
+      'vue/define-emits-declaration': ['error', 'type-based'],
+      'vue/no-restricted-block': ['error', 'style'],
+      'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
+      // 省略を undefined で表す prop もあるため、既定値は一律に要求しない。
+      'vue/require-default-prop': 'off',
+      'vue/no-required-prop-with-default': 'error',
+      'vuejs-accessibility/label-has-for': ['error', { required: { some: ['nesting', 'id'] } }],
       'unicorn/filename-case': ['error', { case: 'pascalCase' }]
     }
   },
   {
-    files: ['src/**/*.{ts,tsx,js,mjs,cjs}'],
+    files: ['src/**/*.{js,mjs,cjs,ts,tsx}'],
+    rules: { 'unicorn/filename-case': ['error', { case: 'camelCase' }] }
+  },
+  {
+    ...vitest.configs.recommended,
+    files: ['src/**/*.test.ts'],
     rules: {
-      'unicorn/filename-case': ['error', { case: 'camelCase' }]
+      ...vitest.configs.recommended.rules,
+      'vitest/no-disabled-tests': 'error',
+      'vitest/valid-expect': ['error', { alwaysAwait: true }]
     }
-  }
-]
+  },
+  {
+    files: [
+      'src/views/ProblemView.vue',
+      'src/views/ProblemsView.vue',
+      'src/views/UserView.vue',
+      'src/views/problem/ProblemHome.vue',
+      'src/views/problem/ProblemSubmissions.vue',
+      'src/views/user/UserProblems.vue',
+      'src/views/user/UserSubmissions.vue'
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            parentImportRestriction,
+            {
+              group: ['@/api/generated', '@/api/generated/**'],
+              allowTypeImports: true,
+              message: '取得と認証の規則を共有するため、機能別composableを使ってください。'
+            }
+          ]
+        }
+      ]
+    }
+  },
+  eslintPrettierConfig
+)

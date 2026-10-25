@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { MeApi } from '@/api/generated/apis/MeApi'
-import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
-import { ResponseError } from '@/api/generated/runtime'
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import { passwordValidator } from '@/utils/validator'
 import isEmail from 'validator/lib/isEmail'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { responseErrorMessage } from '@/api/errors'
+import { MeApi } from '@/api/generated/apis/MeApi'
+import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
+import { ResponseError } from '@/api/generated/runtime'
 import GitHubIcon from '@/assets/service_icons/github.svg'
 import GoogleIcon from '@/assets/service_icons/google.svg'
 import traQIcon from '@/assets/service_icons/traq.svg'
-
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
+import { passwordValidator } from '@/utils/validator'
 
 const email = ref<string>('')
 const username = ref<string>('')
@@ -67,18 +67,18 @@ const unlinkGitHubGoogle = async (service: Service) => {
       console.error(`Revoke ${service.name} OAuth Error:`, error)
       return
     }
-    const responseJson = await error.response.json()
+    const message = await responseErrorMessage(error.response)
     switch (error.response.status) {
       case 400:
-        throw new Error(`Bad Request: ${responseJson.message}`)
+        throw new Error(`Bad Request: ${message}`, { cause: error })
       case 401:
-        throw new Error(`Unauthorized: ${responseJson.message}`)
+        throw new Error(`Unauthorized: ${message}`, { cause: error })
       case 404:
-        throw new Error(`Not Found: ${responseJson.message}`)
+        throw new Error(`Not Found: ${message}`, { cause: error })
       case 500:
-        throw new Error(`Internal Server Error: ${responseJson.message}`)
+        throw new Error(`Internal Server Error: ${message}`, { cause: error })
       default:
-        throw new Error(`Unknown error: ${error.response.status}`)
+        throw new Error(`Unknown error: ${error.response.status}`, { cause: error })
     }
   }
 }
@@ -90,17 +90,17 @@ const linkGitHubGoogle = async (service: Service) => {
       service.name === 'GitHub'
         ? await oauth2Api.getgithubAuthParams({ oauthAction: 'bind' })
         : await oauth2Api.getGoogleAuthParams({ oauthAction: 'bind' })
-    router.push(response.url)
+    await router.push(response.url)
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       console.error(`Bind ${service.name} OAuth Error:`, error)
       return
     }
     if (error.response.status === 500) {
-      const responseJson = await error.response.json()
-      throw new Error(`Internal Server Error: ${responseJson.message}`)
+      const message = await responseErrorMessage(error.response)
+      throw new Error(`Internal Server Error: ${message}`, { cause: error })
     }
-    throw new Error(`Unknown error: ${error.response.status}`)
+    throw new Error(`Unknown error: ${error.response.status}`, { cause: error })
   }
 }
 
@@ -216,36 +216,29 @@ async function changePassword() {
     return
   }
 
-  let hasError = false
   currentPasswordError.value = ''
   newPasswordError.value = ''
 
   if (!currentPassword.value) {
-    hasError = true
     currentPasswordError.value = '必須項目です。'
     return
   }
 
   if (!newPassword.value) {
-    hasError = true
     newPasswordError.value = '必須項目です。'
     return
   }
 
   if (newPassword.value !== confirmPassword.value) {
-    hasError = true
     newPasswordError.value = '新しいパスワードと確認用パスワードが一致しません。'
     return
   }
 
   const [isValid, errorMessage] = passwordValidator(newPassword.value)
   if (!isValid) {
-    hasError = true
     newPasswordError.value = errorMessage
     return
   }
-
-  if (hasError) return
 
   isLoading.value = true
   try {
@@ -330,9 +323,7 @@ async function fetchUserData() {
   }
 }
 
-onMounted(() => {
-  fetchUserData()
-})
+onMounted(fetchUserData)
 </script>
 
 <template>
@@ -437,16 +428,16 @@ onMounted(() => {
               <div class="flex items-center gap-4">
                 <div class="flex w-24 items-center gap-2">
                   <img :src="service.icon" alt="" width="20" height="20" />
-                  <label>
+                  <span>
                     {{ service.name }}
-                  </label>
+                  </span>
                 </div>
                 <span class="h-12 content-around text-base font-normal text-text-secondary">
                   {{ '@' + service.ID }}
                 </span>
               </div>
               <button
-                class="h-8 rounded border border-border-secondary px-4 py-1 text-sm text-text-secondary"
+                class="h-8 rounded-sm border border-border-secondary px-4 py-1 text-sm text-text-secondary"
                 @click="toggleLink(service)"
               >
                 {{ service.linked ? '連携解除' : '連携' }}

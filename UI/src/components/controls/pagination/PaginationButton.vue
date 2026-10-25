@@ -1,0 +1,28 @@
+<script setup lang="ts">
+const { disabled = false, current = false } = defineProps<{
+  disabled?: boolean
+  padding?: string
+  current?: boolean
+}>()
+const emit = defineEmits<{ (e: 'click'): void }>()
+
+function onClick() {
+  emit('click')
+}
+</script>
+
+<template>
+  <button
+    :disabled="disabled"
+    class="inline-block size-8 rounded-sm fontstyle-ui-control-strong disabled:opacity-50"
+    :class="
+      current
+        ? 'bg-brand-primary text-text-inv-primary'
+        : 'border border-border-primary text-text-primary enabled:hover:bg-background-secondary'
+    "
+    :style="{ paddingLeft: padding, paddingRight: padding }"
+    @click="onClick"
+  >
+    <slot />
+  </button>
+</template>

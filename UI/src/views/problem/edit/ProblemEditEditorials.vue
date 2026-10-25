@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
-import EditableEditorialsList from '@/components/EditableEditorialsList.vue'
+import { useRoute } from 'vue-router'
+
+import EditableEditorialsList from '@/components/problems/EditableEditorialsList.vue'
 
 const route = useRoute()
 
@@ -10,7 +11,7 @@ const problemId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )

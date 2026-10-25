@@ -1,49 +1,32 @@
 <script setup lang="ts">
-import SideMenuProblem from '@/components/Navigations/SideMenu/SideMenuProblem.vue'
-import { ProblemsApi } from '@/api/generated/apis/ProblemsApi.ts'
-import { ResponseError } from '@/api/generated/runtime'
-import { computed, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+import SideMenuProblem from '@/components/problems/SideMenuProblem.vue'
+import QueryState from '@/components/QueryState.vue'
+import { useProblemQuery } from '@/composables/problems/useProblemQuery'
+import { useRouteId } from '@/router/locations'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-
-const problemName = ref('')
-const problemAuthorId = ref('')
-
-const isAuthor = computed(() => {
-  return !!(userStore.userId && problemAuthorId.value && userStore.userId === problemAuthorId.value)
-})
-
-onMounted(async () => {
-  try {
-    const problemsApi = new ProblemsApi()
-    const response = await problemsApi.getProblem({
-      problemId: useRoute().params.id as string
-    })
-    problemName.value = response.title
-    problemAuthorId.value = response.authorId
-  } catch (error: unknown) {
-    if (!(error instanceof ResponseError)) {
-      console.error('Get Problem Info Error', error)
-      return
-    }
-    if (error.response.status === 404) {
-      console.error('Not Found 問題が存在しません. (または問題の閲覧権限がありません.)')
-    } else {
-      console.error('Unknown error: ' + error.response.status)
-    }
-  }
-})
+const problemId = useRouteId()
+const { view, refresh } = useProblemQuery(problemId)
+const isAuthor = computed(
+  () => view.value.status === 'success' && userStore.userId === view.value.data.authorId
+)
 </script>
 
 <template>
   <div class="flex items-start gap-8 px-container-x">
     <SideMenuProblem
-      :problem-name="problemName"
+      :problem-id="problemId"
+      :problem-name="view.status === 'success' ? view.data.title : ''"
       :is-editorial-available="true"
       :is-admin="isAuthor"
     />
-    <RouterView />
+    <div class="min-w-0 flex-1">
+      <QueryState :view="view" @retry="refresh">
+        <RouterView />
+      </QueryState>
+    </div>
   </div>
 </template>

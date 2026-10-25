@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, watch, computed, onMounted } from 'vue'
-import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import NumberTextbox from '@/components/Controls/Textbox/NumberTextbox.vue'
-import LabeledCheckbox from '@/components/Controls/LabeledCheckbox.vue'
-import { ProblemsApi, type Problem } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { computed, onMounted, ref, watch } from 'vue'
 import { type Ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { type Problem, ProblemsApi } from '@/api/generated'
+import AlertBox from '@/components/AlertBox.vue'
+import LabeledCheckbox from '@/components/controls/LabeledCheckbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 
 const { requireTraqAuth } = useTraqAuthGuard()
 
@@ -49,7 +50,7 @@ const problemId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -112,9 +113,7 @@ async function saveSetting() {
   }
 }
 
-onMounted(() => {
-  fetchProblem()
-})
+onMounted(fetchProblem)
 </script>
 
 <template>
@@ -141,7 +140,7 @@ onMounted(() => {
             id="difficulty"
             v-model="difficulty"
             class="h-5.5"
-            container-class="!w-24"
+            container-class="w-24!"
             label="難易度"
             supporting-text="1以上10以下の整数で入力してください。"
             required
@@ -158,7 +157,7 @@ onMounted(() => {
               id="time-limit"
               v-model="timeLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="実行時間制限"
               required
               unit="ms"
@@ -175,7 +174,7 @@ onMounted(() => {
               id="memory-limit"
               v-model="memoryLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="メモリ制限"
               required
               unit="MiB"

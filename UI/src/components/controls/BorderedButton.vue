@@ -1,0 +1,26 @@
+<script setup lang="ts">
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+import type { Icon } from '@/types/icon'
+
+const { disabled = false } = defineProps<{
+  disabled?: boolean
+  padding?: string
+  icon?: Icon
+}>()
+const emit = defineEmits<{ (e: 'click'): void }>()
+function onClick() {
+  emit('click')
+}
+</script>
+
+<template>
+  <button
+    :disabled="disabled"
+    class="inline-flex h-10 items-center justify-center rounded-sm border border-brand-primary px-6 fontstyle-ui-control-strong text-brand-primary enabled:hover:bg-brand-light-primary disabled:opacity-50"
+    :style="{ paddingLeft: padding, paddingRight: padding }"
+    @click="onClick"
+  >
+    <slot />
+    <MaterialIcon v-if="icon" :icon="icon" size="24px" class="ml-2" />
+  </button>
+</template>

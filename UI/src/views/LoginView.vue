@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import isEmail from 'validator/lib/isEmail'
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useRoute, useRouter } from 'vue-router'
 
-import OAuthButton from '@/components/Controls/OAuthButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import OAuthButton from '@/components/auth/OAuthButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
+import { useUserStore } from '@/stores/user'
 
 const email = ref<string>('')
 const emailErrorMessage = ref<string | undefined>()
@@ -18,6 +18,7 @@ const route = useRoute()
 const userStore = useUserStore()
 
 const handleLogin = async () => {
+  if (userStore.isLoading) return
   if (!email.value || !password.value) {
     emailErrorMessage.value = !email.value ? 'メールアドレスが入力されていません。' : ''
     passwordErrorMessage.value = !password.value ? 'パスワードが入力されていません。' : ''
@@ -37,7 +38,7 @@ const handleLogin = async () => {
     })
     // リダイレクト先がある場合はそこへ、なければホームへ
     const redirectTo = route.query.redirect as string
-    router.push(redirectTo || '/')
+    await router.push(redirectTo || '/')
   } catch (error) {
     emailErrorMessage.value = 'メールアドレスまたはパスワードが正しくありません。'
     passwordErrorMessage.value = 'メールアドレスまたはパスワードが正しくありません。'
@@ -78,7 +79,11 @@ const handleLogin = async () => {
           :error-message="passwordErrorMessage"
         />
 
-        <PrimaryButton class="h-10 w-full rounded px-4 py-3" @click="handleLogin">
+        <PrimaryButton
+          :disabled="userStore.isLoading"
+          class="h-10 w-full rounded-sm px-4 py-3"
+          @click="handleLogin"
+        >
           ログイン
         </PrimaryButton>
       </div>

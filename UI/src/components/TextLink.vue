@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MaterialIcon from '@/components/MaterialIcon.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 
 const { href, newTab = false } = defineProps<{
   href: string

@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ref, watch, onMounted } from 'vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import { ProblemsApi, type Problem } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+
+import { type Problem, ProblemsApi } from '@/api/generated'
 import AlertBox from '@/components/AlertBox.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 
 const route = useRoute()
 const { requireTraqAuth } = useTraqAuthGuard()
@@ -23,7 +24,7 @@ const problemId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -65,9 +66,7 @@ async function saveStatement() {
   }
 }
 
-onMounted(() => {
-  fetchProblem()
-})
+onMounted(fetchProblem)
 </script>
 
 <template>

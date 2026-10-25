@@ -9,7 +9,7 @@ target
 result
 
 # generated
-UI/src/api/
+UI/src/api/generated/
 
 # tooling artifacts
 treefmt.toml

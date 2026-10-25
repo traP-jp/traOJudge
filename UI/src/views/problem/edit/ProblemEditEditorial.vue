@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
+import { useRoute } from 'vue-router'
+
+import { responseErrorMessage } from '@/api/errors'
+import { EditorialsApi, type PostEditorialRequest, ResponseError } from '@/api/generated'
 import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import MaterialIcon from '@/components/MaterialIcon.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import TextLink from '@/components/TextLink.vue'
-import {
-  EditorialsApi,
-  ResponseError,
-  type PostEditorialOperationRequest,
-  type PostEditorialRequest,
-  type PutEditorialOperationRequest,
-  type PutEditorialRequest
-} from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import router from '@/router'
 
 const { requireTraqAuth } = useTraqAuthGuard()
@@ -46,7 +41,7 @@ const editorialId = ref<string>('')
 watch(
   () => route.params.id,
   (id) => {
-    problemId.value = `${id}`
+    problemId.value = String(id)
   },
   { immediate: true }
 )
@@ -83,8 +78,8 @@ async function fetchEditorial() {
     console.error('解説取得エラー:', error)
 
     if (error instanceof ResponseError) {
-      const response = await error.response.json()
-      saveError.value = `解説の取得に失敗しました: ${response.body.message} (${response.status})`
+      const message = await responseErrorMessage(error.response)
+      saveError.value = `解説の取得に失敗しました: ${message} (${error.response.status})`
     } else {
       saveError.value = '解説の取得に失敗しました。もう一度お試しください。'
     }
@@ -114,16 +109,16 @@ async function saveEditorial() {
         editorialApi.postEditorial({
           problemId: problemId.value,
           postEditorialRequest: editorialPayload as PostEditorialRequest
-        } as PostEditorialOperationRequest)
+        })
       )
 
-      router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
+      await router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
     } else {
       await requireTraqAuth(() =>
         editorialApi.putEditorial({
           editorialId: editorialId.value,
-          putEditorialRequest: editorialPayload as PutEditorialRequest
-        } as PutEditorialOperationRequest)
+          putEditorialRequest: editorialPayload
+        })
       )
     }
 
@@ -157,9 +152,7 @@ async function saveEditorial() {
   }
 }
 
-onMounted(() => {
-  fetchEditorial()
-})
+onMounted(fetchEditorial)
 </script>
 
 <template>

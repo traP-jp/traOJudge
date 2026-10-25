@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { AuthenticationApi } from '@/api/generated'
-import { ResponseError } from '@/api/generated/runtime'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import { passwordValidator, usernameValidator } from '@/utils/validator'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+import { AuthenticationApi } from '@/api/generated'
+import { ResponseError } from '@/api/generated/runtime'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import { useUserStore } from '@/stores/user'
+import { passwordValidator, usernameValidator } from '@/utils/validator'
 
 const oauth = ref(false)
 const username = ref('')
@@ -93,7 +94,7 @@ async function onSignupRegister() {
       }
     })
     await userStore.fetchCurrentUser()
-    router.push('/')
+    await router.push('/')
   } catch (error: unknown) {
     if (!(error instanceof ResponseError)) {
       formError.value = '予期せぬエラーが発生しました。もう一度お試しください。'

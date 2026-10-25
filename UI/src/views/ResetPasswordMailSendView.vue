@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import type { Email } from '@/api/generated'
-import { AuthenticationApi } from '@/api/generated'
 import { useRouter } from 'vue-router'
 
-import BorderedButton from '@/components/Controls/BorderedButton.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
+import type { Email } from '@/api/generated'
+import { AuthenticationApi } from '@/api/generated'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 
 const router = useRouter()
 
-const email: string = history.state.email ?? ''
+const stateEmail = router.options.history.state.email
+const email = typeof stateEmail === 'string' ? stateEmail : ''
 const emailAddress: Email = { email: email }
 
 const closeWindow = () => {
-  router.push('/')
+  return router.push('/')
 }
 
 const requestResetPassword = async () => {

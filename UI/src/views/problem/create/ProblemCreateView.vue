@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
-import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import NumberTextbox from '@/components/Controls/Textbox/NumberTextbox.vue'
-import PlainTextArea from '@/components/PlainTextArea.vue'
-import { ProblemsApi } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { computed, ref } from 'vue'
 import { type Ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { ProblemsApi } from '@/api/generated'
+import AlertBox from '@/components/AlertBox.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 
 const router = useRouter()
 const { requireTraqAuth } = useTraqAuthGuard()
@@ -63,13 +64,13 @@ async function createProblem() {
         postProblemRequest: {
           title: title.value,
           difficulty: difficulty.value!,
-          timeLimit: timeLimit.value!,
-          memoryLimit: memoryLimit.value! * 1024, // MiB to KiB
+          timeLimit: timeLimit.value,
+          memoryLimit: memoryLimit.value * 1024, // MiB to KiB
           statement: statement.value
         }
       })
     )
-    router.push(`/problems/${createdProblem.id}/edit`)
+    await router.push(`/problems/${createdProblem.id}/edit`)
   } catch (error) {
     console.error('問題の作成に失敗しました:', error)
     saveError.value = error instanceof Error ? error.message : '問題の作成に失敗しました。'
@@ -104,7 +105,7 @@ async function createProblem() {
             id="difficulty"
             v-model="difficulty"
             class="h-5.5"
-            container-class="!w-24"
+            container-class="w-24!"
             label="難易度"
             supporting-text="1以上10以下の整数で入力してください。"
             required
@@ -121,7 +122,7 @@ async function createProblem() {
               id="time-limit"
               v-model="timeLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="実行時間制限"
               required
               unit="ms"
@@ -138,7 +139,7 @@ async function createProblem() {
               id="memory-limit"
               v-model="memoryLimit"
               class="h-5.5"
-              container-class="!w-36"
+              container-class="w-36!"
               label="メモリ制限"
               required
               unit="MiB"
@@ -150,7 +151,7 @@ async function createProblem() {
         </div>
 
         <div class="w-full">
-          <label class="fontstyle-ui-control mb-1 block text-text-primary" for="problem-statement">
+          <label class="mb-1 block fontstyle-ui-control text-text-primary" for="problem-statement">
             問題文
           </label>
           <PlainTextArea id="problem-statement" v-model="statement" class="h-64 w-full" />
