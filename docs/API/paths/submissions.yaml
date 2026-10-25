@@ -4,7 +4,7 @@ submissionUploads:
     tags:
       - 'submissions'
     summary: '提出ソースの転送先を発行する'
-    description: '問題・言語・提出先の文脈・本人に結び付けた転送先を発行する。ソース本体はS3へ直接転送する。この操作では提出はまだ確定しない。'
+    description: '問題・言語・提出先の文脈・本人に結び付けた転送先を発行する。ソース本体はS3へ直接転送する。この操作では提出はまだ確定しない。通常大会のチーム戦ではteamIdを要求せず、ログイン中の本人の所属チームをサーバー側で特定する。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -13,7 +13,7 @@ submissionUploads:
           condition: '公開問題へのpractice提出'
         - role: 'contestant'
           scope: 'context.contestId'
-          condition: '対象大会の問題かつ開催時間中'
+          condition: '対象大会の問題かつ開催時間中。チーム戦では本人が所属するチームをサーバー側で特定する'
         - role: 'virtual-contestant'
           scope: 'context.virtualContestId'
           condition: '対象大会の問題かつ開催時間中'
@@ -63,7 +63,7 @@ submissions:
     tags:
       - 'submissions'
     summary: '転送済みソースから提出を確定する'
-    description: 'uploadIdに保存した本人・問題・言語・文脈・ファイルを検証し、現在の認可・提出期間も再検査する。採用版と今回の実行IDを固定して提出を受理する。同じuploadIdで異なる提出を重複作成しない。'
+    description: 'uploadIdに保存した本人・問題・言語・文脈・ファイルを検証し、現在の認可・提出期間も再検査する。採用版と今回の実行IDを固定して提出を受理する。通常大会のチーム戦ではteamIdを要求せず、受理時点の本人の所属チームを記録し、その提出をチームの得点集計に含める。提出者本人のuserIdも記録する。同じuploadIdで異なる提出を重複作成しない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -72,7 +72,7 @@ submissions:
           condition: '公開問題へのpractice提出'
         - role: 'contestant'
           scope: 'context.contestId'
-          condition: '対象大会の問題かつ開催時間中'
+          condition: '対象大会の問題かつ開催時間中。チーム戦では本人が所属するチームの得点として受理する'
         - role: 'virtual-contestant'
           scope: 'context.virtualContestId'
           condition: '対象大会の問題かつ開催時間中'
@@ -166,12 +166,15 @@ submissionsBySubmissionId:
     tags:
       - 'submissions'
     summary: '提出の受付内容と現在の採点の識別子を取得する'
-    description: '提出者本人、またはその提出先の大会の運営担当に返す。運営担当の閲覧は対象大会の提出に限る。提出ソースや非公開テストはこの応答に含めない。'
+    description: '提出者本人、その提出先の大会の運営担当、または通常大会のチーム戦で同じチームに所属するメンバーに返す。運営担当の閲覧は対象大会の提出に限る。チーム戦では、提出者本人のuserIdと得点集計先のteamIdを返す。提出ソースや非公開テストはこの応答に含めない。'
     x-authorization:
       status: 'defined'
       anyOf:
         - subject: 'submission-owner'
           scope: 'submissionId'
+        - role: 'contestant'
+          scope: 'submission.teamId'
+          condition: '通常大会のチーム戦で、閲覧者が提出のteamIdと同じチームに所属する'
         - role: 'contest-setter'
           scope: 'submission.contestId'
         - role: 'virtual-contest-setter'
@@ -201,6 +204,52 @@ submissionsBySubmissionId:
         $ref: '../components/responses.yaml#/RateLimited'
       default:
         $ref: '../components/responses.yaml#/UnexpectedError'
+submissionsBySubmissionIdSource:
+  parameters:
+    - $ref: '../components/parameters.yaml#/SubmissionId'
+  get:
+    operationId: 'getSubmissionSource'
+    tags:
+      - 'submissions'
+    summary: '提出ソースのダウンロード先を発行する'
+    description: 'ソース本体はS3から直接取得する。提出者本人はいつでも、通常大会のチーム戦では同じチームのメンバーも取得できる。提出が通常大会またはバーチャル大会に紐づく場合、その大会のendsAt到達後はログインの有無を問わず誰でも取得できる。非公開問題への提出でも、大会に紐づく提出なら同じ公開条件を適用する。'
+    security:
+      - {}
+      - sessionCookie: []
+    x-authorization:
+      status: 'defined'
+      anyOf:
+        - subject: 'submission-owner'
+          scope: 'submissionId'
+        - role: 'contestant'
+          scope: 'submission.teamId'
+          condition: '通常大会のチーム戦で、閲覧者が提出のteamIdと同じチームに所属する'
+        - condition: '提出が通常大会またはバーチャル大会に紐づき、その大会のendsAtに到達している。ログイン不要'
+    x-scenarios:
+      - 'S1'
+    responses:
+      '200':
+        description: '提出に含まれるファイルごとの署名付きダウンロードURL。'
+        content:
+          'application/json':
+            schema:
+              $ref: '../schemas/submissions.yaml#/SubmissionSourceDownload'
+        headers:
+          Cache-Control:
+            schema:
+              type: 'string'
+              const: 'no-store'
+            description: '署名付きURLをキャッシュしない。'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
+      '403':
+        $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+      default:
+        $ref: '../components/responses.yaml#/UnexpectedError'
 submissionsBySubmissionIdJudgeRuns:
   parameters:
     - $ref: '../components/parameters.yaml#/SubmissionId'
@@ -209,12 +258,15 @@ submissionsBySubmissionIdJudgeRuns:
     tags:
       - 'submissions'
     summary: '提出の採点履歴を取得する'
-    description: '初回採点と再採点を別の実行として返す。どの実行を代表表示するかはcurrentJudgeRunIdで判断する。'
+    description: '初回採点と再採点を別の実行として返す。どの実行を代表表示するかはcurrentJudgeRunIdで判断する。提出者本人、運営担当、または通常大会のチーム戦で同じチームに所属するメンバーが取得できる。'
     x-authorization:
       status: 'defined'
       anyOf:
         - subject: 'submission-owner'
           scope: 'submissionId'
+        - role: 'contestant'
+          scope: 'submission.teamId'
+          condition: '通常大会のチーム戦で、閲覧者が提出のteamIdと同じチームに所属する'
         - role: 'contest-setter'
           scope: 'submission.contestId'
         - role: 'virtual-contest-setter'
@@ -254,12 +306,15 @@ submissionsBySubmissionIdJudgeRunsByJudgeRunId:
     tags:
       - 'submissions'
     summary: '今回の採点の進捗と確定結果を取得する'
-    description: '完了したテストケース数を、最終結果を待たずに取得できる。ケースの不正解・時間切れも完了に数え、残りをすべて実行する。同じrun内のrevisionで新旧を判断し、再接続時もこの最新状態から復帰できる。ケースの名前・入出力・各判定は含めない。HTTPでの最新状態取得を先に定義し、更新の通知手段や間隔はMUT-10で決める。'
+    description: '完了したテストケース数を、最終結果を待たずに取得できる。ケースの不正解・時間切れも完了に数え、残りをすべて実行する。同じrun内のrevisionで新旧を判断し、再接続時もこの最新状態から復帰できる。提出者本人、運営担当、または通常大会のチーム戦で同じチームに所属するメンバーが取得できる。ケースの名前・入出力・各判定は含めない。HTTPでの最新状態取得を先に定義し、更新の通知手段や間隔はMUT-10で決める。'
     x-authorization:
       status: 'defined'
       anyOf:
         - subject: 'submission-owner'
           scope: 'submissionId'
+        - role: 'contestant'
+          scope: 'submission.teamId'
+          condition: '通常大会のチーム戦で、閲覧者が提出のteamIdと同じチームに所属する'
         - role: 'contest-setter'
           scope: 'submission.contestId'
         - role: 'virtual-contest-setter'

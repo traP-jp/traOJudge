@@ -367,13 +367,17 @@ virtualContestsByVirtualContestIdSubmissions:
     operationId: 'listVirtualContestSubmissions'
     tags:
       - 'virtual-contests'
-    summary: 'バーチャル大会の提出を運営担当が取得する'
-    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。'
+    summary: 'バーチャル大会に紐づく提出を取得する'
+    description: 'この大会に対する提出だけを返す。大会外の提出や、別の大会の提出は含めない。運営担当は開催中も取得でき、終了時刻の到達後はログインの有無を問わず誰でも取得できる。非公開問題への提出も、この大会に紐づくものは終了後の一覧に含める。'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
         - role: 'virtual-contest-setter'
           scope: 'virtualContestId'
+        - condition: '対象大会のendsAtに到達している。ログイン不要'
     x-scenarios: []
     parameters:
       - $ref: '../components/parameters.yaml#/Limit'

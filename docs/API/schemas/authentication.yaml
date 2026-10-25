@@ -206,16 +206,12 @@ SignInMethod:
         - 'google'
         - 'github'
         - 'traq'
-    label:
-      type: 'string'
-      description: '本人にだけ返す表示用情報。'
     createdAt:
       type: 'string'
       format: 'date-time'
   required:
     - 'id'
     - 'kind'
-    - 'label'
     - 'createdAt'
 SignInMethods:
   type: 'object'
