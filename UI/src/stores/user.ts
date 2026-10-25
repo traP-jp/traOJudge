@@ -1,133 +1,103 @@
+import { AuthenticationApi } from '@/api/generated/auth/apis/AuthenticationApi'
+import { MeApi } from '@/api/generated/auth/apis/MeApi'
+import type { GetMe200Response } from '@/api/generated/auth/models/GetMe200Response'
+import { Configuration, ResponseError } from '@/api/generated/auth/runtime'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { MeApi, AuthenticationApi } from '@/api/generated'
-import { ResponseError } from '@/api/generated/runtime'
-import type { Me, UserEmailAndPassword } from '@/api/generated'
-import router from '@/router'
+
+const MOCK_SESSION_KEY = 'traOJudge_mockSession'
+const apiConfig = new Configuration({ basePath: '/api/v1', credentials: 'include' })
+const authApi = new AuthenticationApi(apiConfig)
+const meApi = new MeApi(apiConfig)
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<Me | null>(null)
+  const user = ref<GetMe200Response | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const isInitialized = ref(false)
   let initPromise: Promise<void> | null = null
 
-  const isAuthenticated = computed(() => !!user.value)
+  const isAuthenticated = computed(() => user.value !== null)
   const userId = computed(() => user.value?.id ?? '')
-  const username = computed(() => user.value?.name ?? '')
+  const username = computed(() => user.value?.displayName ?? '')
 
-  const SESSION_FLAG_KEY = 'traOJudge_hasSession'
+  const hasSessionFlag = (): boolean =>
+    import.meta.env.DEV && sessionStorage.getItem(MOCK_SESSION_KEY) === 'true'
 
-  const setSessionFlag = (value: boolean) => {
-    if (value) {
-      localStorage.setItem(SESSION_FLAG_KEY, 'true')
-    } else {
-      localStorage.removeItem(SESSION_FLAG_KEY)
+  const reset = () => {
+    user.value = null
+    error.value = null
+    sessionStorage.removeItem(MOCK_SESSION_KEY)
+  }
+
+  const fetchCurrentUser = async (): Promise<GetMe200Response> => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const profile = await meApi.getMe()
+      user.value = profile
+      return profile
+    } catch (cause) {
+      if (cause instanceof ResponseError && cause.response.status === 401) reset()
+      error.value = cause instanceof Error ? cause.message : '利用者を取得できませんでした．'
+      throw cause
+    } finally {
+      isLoading.value = false
     }
   }
 
-  const hasSessionFlag = (): boolean => {
-    return localStorage.getItem(SESSION_FLAG_KEY) === 'true'
-  }
-
-  const initialize = async () => {
-    if (initPromise) {
-      return initPromise
-    }
+  const initialize = async (): Promise<void> => {
+    if (initPromise) return initPromise
 
     initPromise = (async () => {
       if (hasSessionFlag()) {
         try {
           await fetchCurrentUser()
         } catch {
-          // ignore
+          reset()
         }
       }
       isInitialized.value = true
     })()
-
     return initPromise
   }
 
-  const fetchCurrentUser = async () => {
+  // TODO: 本物のメール・外部認証が実装されたら，モック専用トークンを使う処理を置き換える．
+  const loginWithMock = async (): Promise<void> => {
+    if (!import.meta.env.DEV) throw new Error('モックログインは開発環境でのみ利用できます．')
     isLoading.value = true
     error.value = null
 
     try {
-      const meApi = new MeApi()
-      const response = await meApi.getMe()
-      user.value = response
-      setSessionFlag(true)
-      return response
-    } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Unknown error'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const login = async (credentials: UserEmailAndPassword) => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const authApi = new AuthenticationApi()
-      await authApi.postLogin({ userEmailAndPassword: credentials })
-      await fetchCurrentUser()
-    } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Login failed'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const logout = async () => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const authApi = new AuthenticationApi()
-      await authApi.postLogout()
-      user.value = null
-      setSessionFlag(false)
-    } catch (err) {
-      if (err instanceof ResponseError && err.response.status === 401) {
-        handleUnauthorized()
-      }
-      error.value = err instanceof Error ? err.message : 'Logout failed'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const handleUnauthorized = () => {
-    user.value = null
-    setSessionFlag(false)
-
-    // ログインページ以外から401が発生した場合はリダイレクト
-    const currentPath = router.currentRoute.value.fullPath
-    if (currentPath !== '/login' && !currentPath.startsWith('/signup')) {
-      router.push({
-        path: '/login',
-        query: { redirect: currentPath }
+      const result = await authApi.verifyEmailAuthentication({
+        origin: window.location.origin,
+        verifyEmailAuthenticationRequest: { token: 'mock-login' }
       })
+      if (result.status !== 'signed-in') throw new Error('モックログインに失敗しました．')
+      await fetchCurrentUser()
+      sessionStorage.setItem(MOCK_SESSION_KEY, 'true')
+    } catch (cause) {
+      reset()
+      error.value = cause instanceof Error ? cause.message : 'モックログインに失敗しました．'
+      throw cause
+    } finally {
+      isLoading.value = false
     }
   }
 
-  const reset = () => {
-    user.value = null
-    error.value = null
-    isLoading.value = false
-    setSessionFlag(false)
+  const logout = async (): Promise<void> => {
+    isLoading.value = true
+    try {
+      if (import.meta.env.DEV) {
+        await authApi.deleteSession({ origin: window.location.origin })
+      }
+    } catch {
+      // モックサーバー停止後も，画面上の仮ログインは解除する．
+    } finally {
+      reset()
+      isLoading.value = false
+    }
   }
 
   return {
@@ -141,7 +111,7 @@ export const useUserStore = defineStore('user', () => {
     initialize,
     hasSessionFlag,
     fetchCurrentUser,
-    login,
+    loginWithMock,
     logout,
     reset
   }

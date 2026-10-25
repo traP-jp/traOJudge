@@ -5,11 +5,11 @@ import PlainTextArea from '@/components/PlainTextArea.vue'
 import MarkdownView from '@/components/MarkdownView.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import { ProblemsApi, type Problem } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 import AlertBox from '@/components/AlertBox.vue'
 
 const route = useRoute()
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const problem = ref<Problem>()
 const body = ref<string>('')
@@ -50,7 +50,7 @@ async function saveStatement() {
   isLoading.value = true
   try {
     problem.value.statement = body.value
-    await requireTraqAuth(() =>
+    await requireMockLogin(() =>
       problemsApi.putProblem({
         problemId: problemId.value,
         putProblemRequest: problem.value!
