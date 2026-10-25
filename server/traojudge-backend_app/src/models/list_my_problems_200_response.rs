@@ -12,31 +12,18 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GrantProblemOwner200ResponseAssignmentScopeOneOf3 {
-    #[serde(rename = "kind")]
-    pub kind: Kind,
-    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
-    #[serde(rename = "editorialId")]
-    pub editorial_id: String,
+pub struct ListMyProblems200Response {
+    #[serde(rename = "items")]
+    pub items: Vec<models::ListMyProblems200ResponseItemsInner>,
+    #[serde(rename = "nextCursor", deserialize_with = "Option::deserialize")]
+    pub next_cursor: Option<String>,
 }
 
-impl GrantProblemOwner200ResponseAssignmentScopeOneOf3 {
+impl ListMyProblems200Response {
     pub fn new(
-        kind: Kind,
-        editorial_id: String,
-    ) -> GrantProblemOwner200ResponseAssignmentScopeOneOf3 {
-        GrantProblemOwner200ResponseAssignmentScopeOneOf3 { kind, editorial_id }
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Kind {
-    #[serde(rename = "editorial")]
-    Editorial,
-}
-
-impl Default for Kind {
-    fn default() -> Kind {
-        Self::Editorial
+        items: Vec<models::ListMyProblems200ResponseItemsInner>,
+        next_cursor: Option<String>,
+    ) -> ListMyProblems200Response {
+        ListMyProblems200Response { items, next_cursor }
     }
 }

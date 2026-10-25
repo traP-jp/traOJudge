@@ -12,7 +12,7 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ListUserCreatedProblems200ResponseItemsInner {
+pub struct ListMyProblems200ResponseItemsInner {
     /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
     #[serde(rename = "id")]
     pub id: String,
@@ -28,15 +28,16 @@ pub struct ListUserCreatedProblems200ResponseItemsInner {
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
-    #[serde(rename = "currentVersionId")]
-    pub current_version_id: models::ListUserCreatedProblems200ResponseItemsInnerCurrentVersionId,
+    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    #[serde(rename = "currentVersionId", deserialize_with = "Option::deserialize")]
+    pub current_version_id: Option<String>,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
 }
 
-impl ListUserCreatedProblems200ResponseItemsInner {
+impl ListMyProblems200ResponseItemsInner {
     pub fn new(
         id: String,
         created_by_user_id: String,
@@ -44,11 +45,11 @@ impl ListUserCreatedProblems200ResponseItemsInner {
         statement: String,
         visibility: Visibility,
         revision: String,
-        current_version_id: models::ListUserCreatedProblems200ResponseItemsInnerCurrentVersionId,
+        current_version_id: Option<String>,
         created_at: String,
         updated_at: String,
-    ) -> ListUserCreatedProblems200ResponseItemsInner {
-        ListUserCreatedProblems200ResponseItemsInner {
+    ) -> ListMyProblems200ResponseItemsInner {
+        ListMyProblems200ResponseItemsInner {
             id,
             created_by_user_id,
             title,

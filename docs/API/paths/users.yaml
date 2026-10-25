@@ -6,7 +6,7 @@ usersByUserId:
     tags:
       - 'users'
     summary: '利用者の公開プロフィールを取得する'
-    description: '指定した利用者の公開プロフィールを返す。メールアドレスや役割などの非公開情報は含めない。'
+    description: '指定した利用者の公開プロフィールを返す。本人が申告したgithubId・atcoderId・xIdを含む。これらは外部サービスとの認証・連携を示さない。メールアドレスや役割などの非公開情報は含めない。'
     security: []
     x-authorization:
       status: 'defined'
@@ -21,39 +21,6 @@ usersByUserId:
           'application/json':
             schema:
               $ref: '../schemas/users.yaml#/Profile'
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
-      default:
-        $ref: '../components/responses.yaml#/UnexpectedError'
-
-usersByUserIdProblems:
-  parameters:
-    - $ref: '../components/parameters.yaml#/UserId'
-  get:
-    operationId: 'listUserCreatedProblems'
-    tags:
-      - 'users'
-    summary: '利用者が作成した公開問題を取得する'
-    description: 'createdByUserIdが指定利用者と一致し、公開済みの問題だけを返す。非公開問題は作成者本人のプロフィールからも返さない。本人が編集できる問題一覧はGET /me/problemsを使う。作成者IDは問題作成時にAPIが記録し、クライアントから指定できない。'
-    security: []
-    x-authorization:
-      status: 'defined'
-      subject: 'anyone'
-      target: 'public-resources'
-    x-scenarios:
-      - 'O3'
-    parameters:
-      - $ref: '../components/parameters.yaml#/Limit'
-      - $ref: '../components/parameters.yaml#/Cursor'
-    responses:
-      '200':
-        description: '作成者が公開した問題のページ。対象がない場合は空のitemsを返す。'
-        content:
-          'application/json':
-            schema:
-              $ref: '../schemas/problems.yaml#/Problems'
       '404':
         $ref: '../components/responses.yaml#/NotFound'
       '429':

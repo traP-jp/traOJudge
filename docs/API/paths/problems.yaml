@@ -3,26 +3,39 @@ problems:
     operationId: 'listProblems'
     tags:
       - 'problems'
-    summary: '公開問題の一覧を取得する'
-    description: '一般公開された問題だけを返す。非公開の作業対象はGET /me/problemsで取得する。'
-    security: []
+    summary: '閲覧可能な問題を検索・一覧取得する'
+    description: '閲覧者がアクセスできる問題をページ単位で返す。未ログインでは公開問題だけを返し、有効なセッションがあれば公開問題に加えてproblem-owner / tester / contest-setterとして閲覧を許可された非公開問題も返す。各問題の閲覧権限で結果を絞り、権限のない非公開問題は検索条件に一致しても返さない。queryはタイトルの部分一致、createdByUserIdは作成者による絞り込みに使う。どちらも省略できる。GET /me/problemsは本人が作業できる問題に絞った一覧として引き続き使う。'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
-      subject: 'anyone'
-      target: 'public-resources'
-    x-scenarios: []
+      anyOf:
+        - condition: '公開されている'
+        - role: 'problem-owner'
+          scope: 'problemId'
+        - role: 'tester'
+          scope: 'problemId'
+        - role: 'contest-setter'
+          scope: 'contest-containing-problem'
+    x-scenarios:
+      - 'O3-02'
     parameters:
+      - $ref: '../components/parameters.yaml#/ProblemSearchQuery'
+      - $ref: '../components/parameters.yaml#/ProblemCreatedByUserId'
       - $ref: '../components/parameters.yaml#/Limit'
       - $ref: '../components/parameters.yaml#/Cursor'
     responses:
       '200':
-        description: '操作結果。'
+        description: '閲覧権限で絞り込んだ問題のページ。条件に合う問題がなければ空のitemsを返す。'
         content:
           'application/json':
             schema:
               $ref: '../schemas/problems.yaml#/Problems'
-      '403':
-        $ref: '../components/responses.yaml#/Forbidden'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses.yaml#/Unauthenticated'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:

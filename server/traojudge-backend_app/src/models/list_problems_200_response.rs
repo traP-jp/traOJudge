@@ -15,14 +15,14 @@ use serde::{Deserialize, Serialize};
 pub struct ListProblems200Response {
     #[serde(rename = "items")]
     pub items: Vec<models::ListProblems200ResponseItemsInner>,
-    #[serde(rename = "nextCursor", deserialize_with = "Option::deserialize")]
-    pub next_cursor: Option<String>,
+    #[serde(rename = "nextCursor")]
+    pub next_cursor: models::ListProblems200ResponseNextCursor,
 }
 
 impl ListProblems200Response {
     pub fn new(
         items: Vec<models::ListProblems200ResponseItemsInner>,
-        next_cursor: Option<String>,
+        next_cursor: models::ListProblems200ResponseNextCursor,
     ) -> ListProblems200Response {
         ListProblems200Response { items, next_cursor }
     }

@@ -12,62 +12,10 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GrantWriter200ResponseAssignment {
-    #[serde(rename = "role")]
-    pub role: Role,
-    #[serde(rename = "scope")]
-    pub scope: models::GrantWriter200ResponseAssignmentScope,
-    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
-    #[serde(rename = "userId")]
-    pub user_id: String,
-    #[serde(rename = "grantedAt")]
-    pub granted_at: String,
-}
+pub struct ListProblems200ResponseNextCursor {}
 
-impl GrantWriter200ResponseAssignment {
-    pub fn new(
-        role: Role,
-        scope: models::GrantWriter200ResponseAssignmentScope,
-        user_id: String,
-        granted_at: String,
-    ) -> GrantWriter200ResponseAssignment {
-        GrantWriter200ResponseAssignment {
-            role,
-            scope,
-            user_id,
-            granted_at,
-        }
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Role {
-    #[serde(rename = "service-admin")]
-    ServiceAdmin,
-    #[serde(rename = "writer")]
-    Writer,
-    #[serde(rename = "standard-user")]
-    StandardUser,
-    #[serde(rename = "problem-owner")]
-    ProblemOwner,
-    #[serde(rename = "tester")]
-    Tester,
-    #[serde(rename = "contest-admin")]
-    ContestAdmin,
-    #[serde(rename = "contest-setter")]
-    ContestSetter,
-    #[serde(rename = "virtual-contest-setter")]
-    VirtualContestSetter,
-    #[serde(rename = "contestant")]
-    Contestant,
-    #[serde(rename = "virtual-contestant")]
-    VirtualContestant,
-    #[serde(rename = "editiorial-author")]
-    EditiorialAuthor,
-}
-
-impl Default for Role {
-    fn default() -> Role {
-        Self::ServiceAdmin
+impl ListProblems200ResponseNextCursor {
+    pub fn new() -> ListProblems200ResponseNextCursor {
+        ListProblems200ResponseNextCursor {}
     }
 }

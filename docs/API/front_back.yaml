@@ -26,7 +26,7 @@ tags:
   - name: 'me'
     description: '本人のプロフィール・認証手段・開発者トークン。'
   - name: 'users'
-    description: '公開プロフィールと、利用者が作成した公開問題。'
+    description: '公開プロフィールと、利用者が作成し閲覧者が閲覧できる問題。'
   - name: 'permissions'
     description: '役割と対象を固定した付与・剥奪。'
   - name: 'problems'
@@ -70,8 +70,6 @@ paths:
     $ref: './paths/me.yaml#/me'
   '/users/{userId}':
     $ref: './paths/users.yaml#/usersByUserId'
-  '/users/{userId}/problems':
-    $ref: './paths/users.yaml#/usersByUserIdProblems'
   '/me/email-changes':
     $ref: './paths/me.yaml#/meEmailChanges'
   '/me/email-changes/complete':
@@ -132,7 +130,7 @@ paths:
     $ref: './paths/problem-files.yaml#/problemsByProblemIdFileUploadsByUploadIdComplete'
   '/languages':
     $ref: './paths/problems.yaml#/languages'
-  '/submission-uploads':
+  '/submissions/uploads':
     $ref: './paths/submissions.yaml#/submissionUploads'
   '/submissions':
     $ref: './paths/submissions.yaml#/submissions'

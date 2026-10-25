@@ -47,7 +47,7 @@ me:
     tags:
       - 'me'
     summary: '本人のプロフィールを変更する'
-    description: '本人のプロフィールを変更する'
+    description: '本人のプロフィールを変更する。githubId・atcoderId・xIdは本人が申告するユーザー名で、外部サービスとの認証・連携には使わない。変更項目を省略すると維持し、空文字を指定すると未設定にする。'
     x-authorization:
       status: 'defined'
       subject: 'authenticated-user'
@@ -215,11 +215,9 @@ meSignInMethods:
               items:
                 - id: 'sign_in_method_email_1'
                   kind: 'email'
-                  label: 'a***@example.com'
                   createdAt: '2026-10-18T13:00:00Z'
                 - id: 'sign_in_method_google_1'
                   kind: 'google'
-                  label: 'alice@example.com'
                   createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:
@@ -337,7 +335,6 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             example:
               id: 'sign_in_method_google_2'
               kind: 'google'
-              label: 'alice@example.com'
               createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:
@@ -358,7 +355,6 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             example:
               id: 'sign_in_method_google_2'
               kind: 'google'
-              label: 'alice@example.com'
               createdAt: '2026-10-19T13:05:00Z'
         headers:
           Cache-Control:

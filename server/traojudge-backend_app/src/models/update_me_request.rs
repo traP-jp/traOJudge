@@ -17,6 +17,15 @@ pub struct UpdateMeRequest {
     pub display_name: Option<String>,
     #[serde(rename = "bio", skip_serializing_if = "Option::is_none")]
     pub bio: Option<String>,
+    /// 本人が申告するGitHubのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。
+    #[serde(rename = "githubId", skip_serializing_if = "Option::is_none")]
+    pub github_id: Option<String>,
+    /// 本人が申告するAtCoderのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。
+    #[serde(rename = "atcoderId", skip_serializing_if = "Option::is_none")]
+    pub atcoder_id: Option<String>,
+    /// 本人が申告するXのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。
+    #[serde(rename = "xId", skip_serializing_if = "Option::is_none")]
+    pub x_id: Option<String>,
 }
 
 impl UpdateMeRequest {
@@ -24,6 +33,9 @@ impl UpdateMeRequest {
         UpdateMeRequest {
             display_name: None,
             bio: None,
+            github_id: None,
+            atcoder_id: None,
+            x_id: None,
         }
     }
 }

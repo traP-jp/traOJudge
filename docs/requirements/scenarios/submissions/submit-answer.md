@@ -22,6 +22,8 @@
 
 ## 流れ
 
+`context` は1件の提出が属する提出先を1つ選ぶ。`practice` はどの大会にも紐づかない問題単体への練習提出であり、大会の得点・順位には反映しない。同じ問題が複数の大会に登録されている場合も、1件の提出は指定した大会だけに属する。複数大会で採点・集計する場合は大会ごとに別の提出を作成する。
+
 1. `POST /api/v1/submissions/uploads` に問題ID、言語ID、提出先の文脈、ファイル一覧を送り、アップロード先を受け取る。通常大会のチーム戦でもteamIdは送らない。
 2. 返された署名付きURLを使って、ソースをS3へ直接アップロードする。
 3. `POST /api/v1/submissions` にuploadIdを送り、提出を確定する。APIはログイン中のuserIdを記録し、チーム戦なら受理時点の所属からteamIdを決める。受付応答にはsubmissionId、judgeRunId、problemVersionId、acceptedAtが入り、チーム戦ではteamIdも返す。

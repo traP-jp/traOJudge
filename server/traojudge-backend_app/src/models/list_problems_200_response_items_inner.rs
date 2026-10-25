@@ -28,9 +28,8 @@ pub struct ListProblems200ResponseItemsInner {
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
-    #[serde(rename = "currentVersionId", deserialize_with = "Option::deserialize")]
-    pub current_version_id: Option<String>,
+    #[serde(rename = "currentVersionId")]
+    pub current_version_id: models::ListProblems200ResponseItemsInnerCurrentVersionId,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
@@ -45,7 +44,7 @@ impl ListProblems200ResponseItemsInner {
         statement: String,
         visibility: Visibility,
         revision: String,
-        current_version_id: Option<String>,
+        current_version_id: models::ListProblems200ResponseItemsInnerCurrentVersionId,
         created_at: String,
         updated_at: String,
     ) -> ListProblems200ResponseItemsInner {

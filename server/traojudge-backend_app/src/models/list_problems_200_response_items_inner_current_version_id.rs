@@ -11,38 +11,11 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum GrantProblemOwner200ResponseAssignmentScope {
-    UpdateMe200ResponseRolesInnerScopeOneOf(models::UpdateMe200ResponseRolesInnerScopeOneOf),
-    GrantProblemOwner200ResponseAssignmentScopeOneOf(
-        models::GrantProblemOwner200ResponseAssignmentScopeOneOf,
-    ),
-    GrantProblemOwner200ResponseAssignmentScopeOneOf1(
-        models::GrantProblemOwner200ResponseAssignmentScopeOneOf1,
-    ),
-    GrantProblemOwner200ResponseAssignmentScopeOneOf2(
-        models::GrantProblemOwner200ResponseAssignmentScopeOneOf2,
-    ),
-    GrantProblemOwner200ResponseAssignmentScopeOneOf3(
-        models::GrantProblemOwner200ResponseAssignmentScopeOneOf3,
-    ),
-}
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ListProblems200ResponseItemsInnerCurrentVersionId {}
 
-impl Default for GrantProblemOwner200ResponseAssignmentScope {
-    fn default() -> Self {
-        Self::UpdateMe200ResponseRolesInnerScopeOneOf(Default::default())
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Kind {
-    #[serde(rename = "editorial")]
-    Editorial,
-}
-
-impl Default for Kind {
-    fn default() -> Kind {
-        Self::Editorial
+impl ListProblems200ResponseItemsInnerCurrentVersionId {
+    pub fn new() -> ListProblems200ResponseItemsInnerCurrentVersionId {
+        ListProblems200ResponseItemsInnerCurrentVersionId {}
     }
 }

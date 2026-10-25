@@ -13,14 +13,11 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CompleteSignInMethodAuthorization200Response {
-    /// 作成時のログイン中利用者。APIが記録し、作成後は変更しない。
+    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
     #[serde(rename = "id")]
     pub id: String,
     #[serde(rename = "kind")]
     pub kind: Kind,
-    /// 本人にだけ返す表示用情報。
-    #[serde(rename = "label")]
-    pub label: String,
     #[serde(rename = "createdAt")]
     pub created_at: String,
 }
@@ -29,13 +26,11 @@ impl CompleteSignInMethodAuthorization200Response {
     pub fn new(
         id: String,
         kind: Kind,
-        label: String,
         created_at: String,
     ) -> CompleteSignInMethodAuthorization200Response {
         CompleteSignInMethodAuthorization200Response {
             id,
             kind,
-            label,
             created_at,
         }
     }

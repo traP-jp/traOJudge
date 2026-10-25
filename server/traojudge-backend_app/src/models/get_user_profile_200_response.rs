@@ -20,6 +20,15 @@ pub struct GetUserProfile200Response {
     pub display_name: String,
     #[serde(rename = "bio")]
     pub bio: String,
+    /// 本人が申告したGitHubのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。
+    #[serde(rename = "githubId")]
+    pub github_id: String,
+    /// 本人が申告したAtCoderのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。
+    #[serde(rename = "atcoderId")]
+    pub atcoder_id: String,
+    /// 本人が申告したXのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。
+    #[serde(rename = "xId")]
+    pub x_id: String,
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
@@ -30,12 +39,18 @@ impl GetUserProfile200Response {
         id: String,
         display_name: String,
         bio: String,
+        github_id: String,
+        atcoder_id: String,
+        x_id: String,
         revision: String,
     ) -> GetUserProfile200Response {
         GetUserProfile200Response {
             id,
             display_name,
             bio,
+            github_id,
+            atcoder_id,
+            x_id,
             revision,
         }
     }

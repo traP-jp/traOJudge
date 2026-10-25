@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GrantWriter200Response {
     #[serde(rename = "assignment")]
-    pub assignment: models::GrantWriter200ResponseAssignment,
+    pub assignment: models::UpdateMe200ResponseRolesInner,
     /// 同じ役割が既にある場合はfalse。既存の割り当てを返す。
     #[serde(rename = "changed")]
     pub changed: bool,
@@ -22,7 +22,7 @@ pub struct GrantWriter200Response {
 
 impl GrantWriter200Response {
     pub fn new(
-        assignment: models::GrantWriter200ResponseAssignment,
+        assignment: models::UpdateMe200ResponseRolesInner,
         changed: bool,
     ) -> GrantWriter200Response {
         GrantWriter200Response {
