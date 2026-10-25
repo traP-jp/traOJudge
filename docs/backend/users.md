@@ -11,7 +11,7 @@
 - Infraの `postgres/users.rs` がPostgreSQLから公開項目だけを読み出す。
 - HTTPは生成済みOpenAPIモデルへ変換する。生成型をCore・Infraへ渡さない。
 
-`users` テーブルは公開プロフィールを保存する。IDはAPIの不透明な識別子に対応するTEXTで、UUIDへの変換は要求しない。`revision` も不透明な文字列で、作成・更新する側が値を指定する。表示名・自己紹介の長さや必須項目はDB制約でも保護する。
+`users` テーブルは公開プロフィールを保存する。IDはAPIの `ResourceId` に対応するUUID型で、Coreも `UserId` の内部にUUIDを保持する。`revision` は不透明な文字列で、作成・更新する側が値を指定する。表示名・自己紹介の長さや必須項目はDB制約でも保護する。
 
 この段階では利用者登録・認証・本人プロフィール更新・問題検索・レート制限は実装していない。登録のHTTPエンドポイントや認証情報を仮に追加することはせず、動作確認には以下のSQLでプロフィールを作成する。
 
@@ -28,14 +28,16 @@ TRAOJUDGE_DATABASE_URL=postgresql://traojudge:traojudge@127.0.0.1:5433/traojudge
 
 マイグレーションは `server/traojudge-infra/src/postgres/migrations/` に置く。SQLxが適用履歴とチェックサムを管理するため、適用済みファイルを書き換えず新しいファイルを追加する。
 
+UUID移行では既存のUUID文字列を保持して列の型を変更する。旧サンプルの `user_example` などUUID以外のIDが残っているDBでは移行に失敗し、トランザクションがロールバックされる。既存IDを自動で振り直すことはしない。検証用DBはUUIDのサンプルで作り直すか、既存データのID移行を行ってから起動する。
+
 ```sh
 docker exec -i traojudge-postgres psql -U traojudge -d traojudge <<'SQL'
 INSERT INTO users (id, display_name, revision)
-VALUES ('user_example', 'サンプル利用者', 'revision_1');
+VALUES ('a8098c1a-f86e-4f70-917b-72f7c091480c', 'サンプル利用者', 'revision_1');
 SQL
 
-curl http://127.0.0.1:3000/api/v1/users/user_example
-curl http://127.0.0.1:3000/api/v1/users/missing
+curl http://127.0.0.1:3000/api/v1/users/a8098c1a-f86e-4f70-917b-72f7c091480c
+curl http://127.0.0.1:3000/api/v1/users/e9c3d4ab-27e5-43fc-9289-b5d81c327027
 ```
 
 ## テスト
@@ -53,4 +55,4 @@ DATABASE_URL=postgresql://traojudge:traojudge@127.0.0.1:5433/traojudge \
   cargo test -p traojudge-test --test users -- --include-ignored
 ```
 
-空DBへのマイグレーションと再適用、公開プロフィールの取得・未設定値・不存在、DB制約を確認する。
+空DBへのマイグレーションと再適用、既存UUID文字列の型移行、公開プロフィールの取得・未設定値・不存在、DB制約を確認する。

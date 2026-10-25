@@ -13,25 +13,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Clarification {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "authorId")]
-    pub author_id: String,
+    pub author_id: uuid::Uuid,
     #[serde(rename = "body")]
     pub body: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
+    pub problem_id: uuid::Uuid,
     #[serde(rename = "answer", deserialize_with = "Option::deserialize")]
     pub answer: Option<String>,
     /// 質問と回答の公開範囲。回答前はfalse。trueなら、コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。
     #[serde(rename = "isPublic")]
     pub is_public: bool,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "answeredBy")]
-    pub answered_by: String,
+    pub answered_by: uuid::Uuid,
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
@@ -41,13 +41,13 @@ pub struct Clarification {
 
 impl Clarification {
     pub fn new(
-        id: String,
-        author_id: String,
+        id: uuid::Uuid,
+        author_id: uuid::Uuid,
         body: String,
-        problem_id: String,
+        problem_id: uuid::Uuid,
         answer: Option<String>,
         is_public: bool,
-        answered_by: String,
+        answered_by: uuid::Uuid,
         revision: String,
         created_at: String,
     ) -> Clarification {

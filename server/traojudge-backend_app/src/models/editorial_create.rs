@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct EditorialCreate {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
+    pub problem_id: uuid::Uuid,
     #[serde(rename = "title")]
     pub title: String,
     #[serde(rename = "body")]
@@ -23,7 +23,7 @@ pub struct EditorialCreate {
 }
 
 impl EditorialCreate {
-    pub fn new(problem_id: String, title: String, body: String) -> EditorialCreate {
+    pub fn new(problem_id: uuid::Uuid, title: String, body: String) -> EditorialCreate {
         EditorialCreate {
             problem_id,
             title,

@@ -19,15 +19,15 @@ pub struct JudgeRunFailure {
     /// 利用者に説明可能なエラー。秘密や非公開リソースの詳細を含めない。
     #[serde(rename = "message")]
     pub message: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "requestId")]
-    pub request_id: String,
+    pub request_id: uuid::Uuid,
     #[serde(rename = "details", skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<models::ErrorDetail>>,
 }
 
 impl JudgeRunFailure {
-    pub fn new(code: String, message: String, request_id: String) -> JudgeRunFailure {
+    pub fn new(code: String, message: String, request_id: uuid::Uuid) -> JudgeRunFailure {
         JudgeRunFailure {
             code,
             message,

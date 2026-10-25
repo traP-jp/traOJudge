@@ -14,9 +14,9 @@ use serde::{Deserialize, Serialize};
 /// RegistrationResult : 利用登録と本人のログインが完了した結果。セッションCookieを発行し、有効期限を返す。
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegistrationResult {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: uuid::Uuid,
     #[serde(rename = "registeredAt")]
     pub registered_at: String,
     /// 登録完了時に作成したセッションの有効期限。発行時刻から90日（3か月相当）後とし、その後も有効なセッションでWebAPIへアクセスするたびに延長する。
@@ -26,7 +26,11 @@ pub struct RegistrationResult {
 
 impl RegistrationResult {
     /// 利用登録と本人のログインが完了した結果。セッションCookieを発行し、有効期限を返す。
-    pub fn new(user_id: String, registered_at: String, expires_at: String) -> RegistrationResult {
+    pub fn new(
+        user_id: uuid::Uuid,
+        registered_at: String,
+        expires_at: String,
+    ) -> RegistrationResult {
         RegistrationResult {
             user_id,
             registered_at,

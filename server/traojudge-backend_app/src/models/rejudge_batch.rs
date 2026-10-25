@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RejudgeBatch {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "state")]
     pub state: State,
     #[serde(rename = "totalSubmissionCount")]
@@ -32,7 +32,7 @@ pub struct RejudgeBatch {
 
 impl RejudgeBatch {
     pub fn new(
-        id: String,
+        id: uuid::Uuid,
         state: State,
         total_submission_count: i32,
         completed_submission_count: i32,

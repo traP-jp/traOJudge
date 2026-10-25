@@ -13,12 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SourceUploadRequest {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub problem_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "languageId")]
-    pub language_id: String,
+    pub language_id: uuid::Uuid,
     #[serde(rename = "context")]
     pub context: models::SubmissionContext,
     #[serde(rename = "files")]
@@ -27,8 +27,8 @@ pub struct SourceUploadRequest {
 
 impl SourceUploadRequest {
     pub fn new(
-        problem_id: String,
-        language_id: String,
+        problem_id: uuid::Uuid,
+        language_id: uuid::Uuid,
         context: models::SubmissionContext,
         files: Vec<models::FileManifestEntry>,
     ) -> SourceUploadRequest {

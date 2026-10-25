@@ -8,6 +8,8 @@ HTTP入出力の型は `docs/API/front_back.yaml` から生成する。型の名
 
 共通エラーの詳細は `ErrorDetail` として定義し、`Error.details` から参照する。異なる意味を持つデータを、形が同じという理由だけで同じスキーマにはしない。名前付きスキーマを追加するときは `components.schemas` への登録も追加する。parameters・responsesも、それぞれルートのcomponentsに登録する。
 
+リソースのIDは共通の `ResourceId`（`type: string`・`format: uuid`）を参照する。Rustでは `uuid::Uuid` として生成される。`requestId` もUUIDに揃える。外部サービスのユーザー名やproviderの固定識別子、認証トークン、ページカーソル、リソースの `revision` は、それぞれの用途に沿った文字列として扱う。
+
 匿名のネストしたオブジェクトや `oneOf` の選択肢には、生成器が `ScopeOneOf1` などの補助型名を付ける。業務上の名前が必要な場合や複数箇所で使う場合は、独立した名前付きスキーマに切り出す。
 
 ## 生成と検証

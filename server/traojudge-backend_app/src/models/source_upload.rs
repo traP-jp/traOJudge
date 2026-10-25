@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SourceUpload {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "uploadId")]
-    pub upload_id: String,
+    pub upload_id: uuid::Uuid,
     #[serde(rename = "targets")]
     pub targets: Vec<models::UploadTarget>,
     #[serde(rename = "expiresAt")]
@@ -24,7 +24,7 @@ pub struct SourceUpload {
 
 impl SourceUpload {
     pub fn new(
-        upload_id: String,
+        upload_id: uuid::Uuid,
         targets: Vec<models::UploadTarget>,
         expires_at: String,
     ) -> SourceUpload {

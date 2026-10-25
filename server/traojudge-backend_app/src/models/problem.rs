@@ -13,12 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Problem {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "createdByUserId")]
-    pub created_by_user_id: String,
+    pub created_by_user_id: uuid::Uuid,
     #[serde(rename = "title")]
     pub title: String,
     #[serde(rename = "statement")]
@@ -28,9 +28,9 @@ pub struct Problem {
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "currentVersionId")]
-    pub current_version_id: String,
+    pub current_version_id: uuid::Uuid,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
@@ -39,13 +39,13 @@ pub struct Problem {
 
 impl Problem {
     pub fn new(
-        id: String,
-        created_by_user_id: String,
+        id: uuid::Uuid,
+        created_by_user_id: uuid::Uuid,
         title: String,
         statement: String,
         visibility: models::VisibilityValue,
         revision: String,
-        current_version_id: String,
+        current_version_id: uuid::Uuid,
         created_at: String,
         updated_at: String,
     ) -> Problem {

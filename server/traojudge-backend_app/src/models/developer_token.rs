@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeveloperToken {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "name")]
     pub name: String,
     #[serde(rename = "createdAt")]
@@ -28,7 +28,7 @@ pub struct DeveloperToken {
 
 impl DeveloperToken {
     pub fn new(
-        id: String,
+        id: uuid::Uuid,
         name: String,
         created_at: String,
         expires_at: Option<String>,

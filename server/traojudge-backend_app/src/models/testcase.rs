@@ -13,20 +13,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Testcase {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
+    pub problem_id: uuid::Uuid,
     #[serde(rename = "name")]
     pub name: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "inputFileId")]
-    pub input_file_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub input_file_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "expectedOutputFileId")]
-    pub expected_output_file_id: String,
+    pub expected_output_file_id: uuid::Uuid,
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
@@ -34,11 +34,11 @@ pub struct Testcase {
 
 impl Testcase {
     pub fn new(
-        id: String,
-        problem_id: String,
+        id: uuid::Uuid,
+        problem_id: uuid::Uuid,
         name: String,
-        input_file_id: String,
-        expected_output_file_id: String,
+        input_file_id: uuid::Uuid,
+        expected_output_file_id: uuid::Uuid,
         revision: String,
     ) -> Testcase {
         Testcase {

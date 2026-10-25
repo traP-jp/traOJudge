@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StoredFile {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "fileId")]
-    pub file_id: String,
+    pub file_id: uuid::Uuid,
     #[serde(rename = "path")]
     pub path: String,
     #[serde(rename = "byteLength")]
@@ -25,7 +25,7 @@ pub struct StoredFile {
 }
 
 impl StoredFile {
-    pub fn new(file_id: String, path: String, byte_length: i32, sha256: String) -> StoredFile {
+    pub fn new(file_id: uuid::Uuid, path: String, byte_length: i32, sha256: String) -> StoredFile {
         StoredFile {
             file_id,
             path,

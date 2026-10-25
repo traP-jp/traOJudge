@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Standing {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: uuid::Uuid,
     /// 大会の全出題を出題順に返す。提出得点がない問題のscoreは0。
     #[serde(rename = "problemScores")]
     pub problem_scores: Vec<models::ContestProblemScore>,
@@ -31,7 +31,7 @@ pub struct Standing {
 
 impl Standing {
     pub fn new(
-        user_id: String,
+        user_id: uuid::Uuid,
         problem_scores: Vec<models::ContestProblemScore>,
         rank: i32,
         score: f64,

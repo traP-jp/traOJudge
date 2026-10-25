@@ -1,9 +1,8 @@
 ResourceId:
   type: 'string'
-  description: '外部向けの不透明な識別子。内部DBの型を仮定しない。'
-  minLength: 1
-  maxLength: 128
-  pattern: '^[A-Za-z0-9_-]+$'
+  format: 'uuid'
+  description: 'UUID形式のリソース識別子。'
+  example: 'a8098c1a-f86e-4f70-917b-72f7c091480c'
 Version:
   type: 'string'
   description: '対象の版を識別する不透明な文字列。'

@@ -213,10 +213,10 @@ meSignInMethods:
               $ref: '../schemas/authentication.yaml#/SignInMethods'
             example:
               items:
-                - id: 'sign_in_method_email_1'
+                - id: '97a8339b-086e-5593-8adf-dbde6f030941'
                   kind: 'email'
                   createdAt: '2026-10-18T13:00:00Z'
-                - id: 'sign_in_method_google_1'
+                - id: 'c94a466f-1c1f-51fa-9aa7-3fa8a960d179'
                   kind: 'google'
                   createdAt: '2026-10-19T13:05:00Z'
         headers:
@@ -268,7 +268,7 @@ meSignInMethodsExternalAuthorizations:
             schema:
               $ref: '../schemas/authentication.yaml#/Authorization'
             example:
-              authorizationId: 'authorization_example_3'
+              authorizationId: 'ca1ed093-fc24-51c6-be78-d2f608941072'
               authorizationUrl: 'https://provider.example/authorize?client_id=app_example&state=state_example_3'
               expiresAt: '2026-10-19T13:30:00Z'
         headers:
@@ -333,7 +333,7 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             schema:
               $ref: '../schemas/authentication.yaml#/SignInMethod'
             example:
-              id: 'sign_in_method_google_2'
+              id: '47e16edb-e89b-5504-a455-be6de7e60367'
               kind: 'google'
               createdAt: '2026-10-19T13:05:00Z'
         headers:
@@ -353,7 +353,7 @@ meSignInMethodsExternalAuthorizationsByAuthorizationIdComplete:
             schema:
               $ref: '../schemas/authentication.yaml#/SignInMethod'
             example:
-              id: 'sign_in_method_google_2'
+              id: '47e16edb-e89b-5504-a455-be6de7e60367'
               kind: 'google'
               createdAt: '2026-10-19T13:05:00Z'
         headers:

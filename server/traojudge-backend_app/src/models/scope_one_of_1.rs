@@ -15,13 +15,13 @@ use serde::{Deserialize, Serialize};
 pub struct ScopeOneOf1 {
     #[serde(rename = "kind")]
     pub kind: Kind,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
+    pub problem_id: uuid::Uuid,
 }
 
 impl ScopeOneOf1 {
-    pub fn new(kind: Kind, problem_id: String) -> ScopeOneOf1 {
+    pub fn new(kind: Kind, problem_id: uuid::Uuid) -> ScopeOneOf1 {
         ScopeOneOf1 { kind, problem_id }
     }
 }

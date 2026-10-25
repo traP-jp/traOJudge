@@ -15,19 +15,19 @@ use serde::{Deserialize, Serialize};
 pub struct TestcaseInput {
     #[serde(rename = "name")]
     pub name: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "inputFileId")]
-    pub input_file_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub input_file_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(
         rename = "expectedOutputFileId",
         skip_serializing_if = "Option::is_none"
     )]
-    pub expected_output_file_id: Option<String>,
+    pub expected_output_file_id: Option<uuid::Uuid>,
 }
 
 impl TestcaseInput {
-    pub fn new(name: String, input_file_id: String) -> TestcaseInput {
+    pub fn new(name: String, input_file_id: uuid::Uuid) -> TestcaseInput {
         TestcaseInput {
             name,
             input_file_id,

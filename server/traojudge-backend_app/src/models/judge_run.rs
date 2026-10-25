@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct JudgeRun {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "submissionId")]
-    pub submission_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub submission_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemVersionId")]
-    pub problem_version_id: String,
+    pub problem_version_id: uuid::Uuid,
     #[serde(rename = "state")]
     pub state: State,
     /// 判定が確定した、重複しないケース数。不正解・時間切れも数え、残りのケースを継続する。ノード数や正解数ではない。
@@ -48,9 +48,9 @@ pub struct JudgeRun {
 
 impl JudgeRun {
     pub fn new(
-        id: String,
-        submission_id: String,
-        problem_version_id: String,
+        id: uuid::Uuid,
+        submission_id: uuid::Uuid,
+        problem_version_id: uuid::Uuid,
         state: State,
         completed_case_count: i32,
         total_case_count: models::JudgeRunTotalCaseCount,

@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SignInMethod {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "kind")]
     pub kind: Kind,
     #[serde(rename = "createdAt")]
@@ -23,7 +23,7 @@ pub struct SignInMethod {
 }
 
 impl SignInMethod {
-    pub fn new(id: String, kind: Kind, created_at: String) -> SignInMethod {
+    pub fn new(id: uuid::Uuid, kind: Kind, created_at: String) -> SignInMethod {
         SignInMethod {
             id,
             kind,

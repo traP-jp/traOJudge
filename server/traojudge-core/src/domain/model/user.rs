@@ -1,29 +1,34 @@
-/// 利用者の識別子。外部APIのResourceIdと同じ文字種・長さに制限する。
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct UserId(String);
+use std::{fmt, str::FromStr};
+
+use uuid::Uuid;
+
+/// UUIDで識別する利用者。
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct UserId(Uuid);
 
 impl UserId {
-    pub fn new(value: impl Into<String>) -> Result<Self, InvalidUserId> {
-        let value = value.into();
-        if value.is_empty()
-            || value.len() > 128
-            || !value
-                .bytes()
-                .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-'))
-        {
-            return Err(InvalidUserId);
-        }
-        Ok(Self(value))
+    pub const fn new(value: Uuid) -> Self {
+        Self(value)
     }
 
-    pub fn as_str(&self) -> &str {
-        &self.0
+    pub const fn as_uuid(&self) -> Uuid {
+        self.0
     }
 }
 
-#[derive(Debug, thiserror::Error)]
-#[error("invalid user ID")]
-pub struct InvalidUserId;
+impl FromStr for UserId {
+    type Err = uuid::Error;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        Uuid::parse_str(value).map(Self::new)
+    }
+}
+
+impl fmt::Display for UserId {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
 
 /// 誰でも閲覧できる情報。認証情報や役割は含めない。
 /// 外部サービスのIDは本人申告のユーザー名で、未設定は空文字。
@@ -43,16 +48,17 @@ mod tests {
     use super::UserId;
 
     #[test]
-    fn accepts_opaque_ids_without_assuming_uuid() {
-        for id in ["user_abc-123", "a", &"a".repeat(128)] {
-            assert_eq!(UserId::new(id).unwrap().as_str(), id);
-        }
+    fn parses_uuid_and_normalizes_its_representation() {
+        let value = "A8098C1A-F86E-4F70-917B-72F7C091480C";
+        let id: UserId = value.parse().unwrap();
+        assert_eq!(id.to_string(), value.to_ascii_lowercase());
+        assert_eq!(UserId::new(id.as_uuid()), id);
     }
 
     #[test]
     fn rejects_ids_outside_resource_id_contract() {
-        for id in ["", "a b", "a/b", "利用者", &"a".repeat(129)] {
-            assert!(UserId::new(id).is_err());
+        for id in ["", "user_abc-123", "a b", "a/b", "利用者", &"a".repeat(129)] {
+            assert!(id.parse::<UserId>().is_err());
         }
     }
 }

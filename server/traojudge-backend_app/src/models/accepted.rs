@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Accepted {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "requestId")]
-    pub request_id: String,
+    pub request_id: uuid::Uuid,
     #[serde(rename = "acceptedAt")]
     pub accepted_at: String,
 }
 
 impl Accepted {
-    pub fn new(request_id: String, accepted_at: String) -> Accepted {
+    pub fn new(request_id: uuid::Uuid, accepted_at: String) -> Accepted {
         Accepted {
             request_id,
             accepted_at,

@@ -13,27 +13,27 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SubmissionAccepted {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "submissionId")]
-    pub submission_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub submission_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "judgeRunId")]
-    pub judge_run_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub judge_run_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemVersionId")]
-    pub problem_version_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub problem_version_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "teamId", skip_serializing_if = "Option::is_none")]
-    pub team_id: Option<String>,
+    pub team_id: Option<uuid::Uuid>,
     #[serde(rename = "acceptedAt")]
     pub accepted_at: String,
 }
 
 impl SubmissionAccepted {
     pub fn new(
-        submission_id: String,
-        judge_run_id: String,
-        problem_version_id: String,
+        submission_id: uuid::Uuid,
+        judge_run_id: uuid::Uuid,
+        problem_version_id: uuid::Uuid,
         accepted_at: String,
     ) -> SubmissionAccepted {
         SubmissionAccepted {

@@ -14,9 +14,9 @@ use serde::{Deserialize, Serialize};
 /// Session : 本人の現在のセッション。アクセスによる期限延長後の状態を返す。
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Session {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: uuid::Uuid,
     /// 今回のアクセスから90日（3か月相当）後の有効期限。有効なセッションでのWebAPIアクセスごとに延長し、継続利用中の固定の最長期間は設けない。
     #[serde(rename = "expiresAt")]
     pub expires_at: String,
@@ -24,7 +24,7 @@ pub struct Session {
 
 impl Session {
     /// 本人の現在のセッション。アクセスによる期限延長後の状態を返す。
-    pub fn new(user_id: String, expires_at: String) -> Session {
+    pub fn new(user_id: uuid::Uuid, expires_at: String) -> Session {
         Session {
             user_id,
             expires_at,

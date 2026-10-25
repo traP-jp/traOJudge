@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Language {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "name")]
     pub name: String,
     #[serde(rename = "versionLabel")]
@@ -25,7 +25,7 @@ pub struct Language {
 }
 
 impl Language {
-    pub fn new(id: String, name: String, version_label: String, tags: Vec<String>) -> Language {
+    pub fn new(id: uuid::Uuid, name: String, version_label: String, tags: Vec<String>) -> Language {
         Language {
             id,
             name,

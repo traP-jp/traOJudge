@@ -15,9 +15,9 @@ use serde::{Deserialize, Serialize};
 pub struct ClarificationCreate {
     #[serde(rename = "body")]
     pub body: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId", skip_serializing_if = "Option::is_none")]
-    pub problem_id: Option<String>,
+    pub problem_id: Option<uuid::Uuid>,
 }
 
 impl ClarificationCreate {

@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Contest {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
+    pub id: uuid::Uuid,
     #[serde(rename = "title")]
     pub title: String,
     /// コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．
@@ -39,7 +39,7 @@ pub struct Contest {
 
 impl Contest {
     pub fn new(
-        id: String,
+        id: uuid::Uuid,
         title: String,
         visibility: models::VisibilityValue,
         starts_at: String,

@@ -13,39 +13,39 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Submission {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub user_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub problem_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "languageId")]
-    pub language_id: String,
+    pub language_id: uuid::Uuid,
     #[serde(rename = "context")]
     pub context: models::SubmissionContext,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "teamId", skip_serializing_if = "Option::is_none")]
-    pub team_id: Option<String>,
+    pub team_id: Option<uuid::Uuid>,
     #[serde(rename = "submittedAt")]
     pub submitted_at: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "currentJudgeRunId")]
-    pub current_judge_run_id: String,
+    pub current_judge_run_id: uuid::Uuid,
 }
 
 impl Submission {
     pub fn new(
-        id: String,
-        user_id: String,
-        problem_id: String,
-        language_id: String,
+        id: uuid::Uuid,
+        user_id: uuid::Uuid,
+        problem_id: uuid::Uuid,
+        language_id: uuid::Uuid,
         context: models::SubmissionContext,
         submitted_at: String,
-        current_judge_run_id: String,
+        current_judge_run_id: uuid::Uuid,
     ) -> Submission {
         Submission {
             id,

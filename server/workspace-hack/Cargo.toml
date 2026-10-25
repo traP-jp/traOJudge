@@ -40,15 +40,16 @@ serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
 sha2 = { version = "0.10" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
-sqlx = { version = "0.9", default-features = false, features = ["macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring"] }
-sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify"] }
+sqlx = { version = "0.9", default-features = false, features = ["macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring", "uuid"] }
+sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
 sync_wrapper = { version = "1", default-features = false, features = ["futures"] }
 thiserror = { version = "2" }
 tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-core = { version = "0.1" }
 typenum = { version = "1", default-features = false, features = ["const-generics"] }
+uuid = { version = "1", features = ["serde", "v4"] }
 zeroize = { version = "1", features = ["derive"] }
 
 [build-dependencies]
@@ -75,8 +76,8 @@ serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
 sha2 = { version = "0.10" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
-sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify"] }
+sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
 syn-7b89eefb6aaa9bf3 = { package = "syn", version = "3", features = ["extra-traits", "fold", "full", "visit", "visit-mut"] }
 syn-f595c2ba2a3f28df = { package = "syn", version = "2", features = ["extra-traits", "full", "visit", "visit-mut"] }
 thiserror = { version = "2" }
@@ -84,6 +85,7 @@ tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi
 tracing = { version = "0.1", features = ["log"] }
 tracing-core = { version = "0.1" }
 typenum = { version = "1", default-features = false, features = ["const-generics"] }
+uuid = { version = "1", features = ["serde", "v4"] }
 zeroize = { version = "1", features = ["derive"] }
 
 [target.x86_64-unknown-linux-gnu.dependencies]

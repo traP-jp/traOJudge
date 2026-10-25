@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Editorial {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "id")]
-    pub id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub problem_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "authorId")]
-    pub author_id: String,
+    pub author_id: uuid::Uuid,
     #[serde(rename = "title")]
     pub title: String,
     #[serde(rename = "body")]
@@ -39,9 +39,9 @@ pub struct Editorial {
 
 impl Editorial {
     pub fn new(
-        id: String,
-        problem_id: String,
-        author_id: String,
+        id: uuid::Uuid,
+        problem_id: uuid::Uuid,
+        author_id: uuid::Uuid,
         title: String,
         body: String,
         visibility: models::VisibilityValue,

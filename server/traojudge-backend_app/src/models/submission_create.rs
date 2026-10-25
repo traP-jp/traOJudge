@@ -13,13 +13,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SubmissionCreate {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "uploadId")]
-    pub upload_id: String,
+    pub upload_id: uuid::Uuid,
 }
 
 impl SubmissionCreate {
-    pub fn new(upload_id: String) -> SubmissionCreate {
+    pub fn new(upload_id: uuid::Uuid) -> SubmissionCreate {
         SubmissionCreate { upload_id }
     }
 }

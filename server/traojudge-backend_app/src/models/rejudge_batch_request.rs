@@ -16,7 +16,7 @@ pub struct RejudgeBatchRequest {
     #[serde(rename = "versionPolicy")]
     pub version_policy: VersionPolicy,
     #[serde(rename = "problemIds", skip_serializing_if = "Option::is_none")]
-    pub problem_ids: Option<Vec<String>>,
+    pub problem_ids: Option<Vec<uuid::Uuid>>,
 }
 
 impl RejudgeBatchRequest {

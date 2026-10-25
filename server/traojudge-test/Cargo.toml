@@ -16,3 +16,4 @@ sqlx = { workspace = true, features = ["postgres", "macros", "migrate"] }
 tokio.workspace = true
 tower.workspace = true
 traojudge-backend_app.workspace = true
+uuid.workspace = true

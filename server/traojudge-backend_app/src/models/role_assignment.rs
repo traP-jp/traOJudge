@@ -17,9 +17,9 @@ pub struct RoleAssignment {
     pub role: Role,
     #[serde(rename = "scope")]
     pub scope: models::Scope,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: uuid::Uuid,
     #[serde(rename = "grantedAt")]
     pub granted_at: String,
 }
@@ -28,7 +28,7 @@ impl RoleAssignment {
     pub fn new(
         role: Role,
         scope: models::Scope,
-        user_id: String,
+        user_id: uuid::Uuid,
         granted_at: String,
     ) -> RoleAssignment {
         RoleAssignment {

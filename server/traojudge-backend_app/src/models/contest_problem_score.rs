@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContestProblemScore {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
+    pub problem_id: uuid::Uuid,
     #[serde(rename = "label")]
     pub label: String,
     #[serde(rename = "score")]
@@ -23,7 +23,7 @@ pub struct ContestProblemScore {
 }
 
 impl ContestProblemScore {
-    pub fn new(problem_id: String, label: String, score: f64) -> ContestProblemScore {
+    pub fn new(problem_id: uuid::Uuid, label: String, score: f64) -> ContestProblemScore {
         ContestProblemScore {
             problem_id,
             label,

@@ -13,9 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Authorization {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "authorizationId")]
-    pub authorization_id: String,
+    pub authorization_id: uuid::Uuid,
     /// ブラウザで開く、サービスが作成した認証先URL。
     #[serde(rename = "authorizationUrl")]
     pub authorization_url: String,
@@ -25,7 +25,7 @@ pub struct Authorization {
 
 impl Authorization {
     pub fn new(
-        authorization_id: String,
+        authorization_id: uuid::Uuid,
         authorization_url: String,
         expires_at: String,
     ) -> Authorization {

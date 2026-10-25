@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContestTeamMember {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: uuid::Uuid,
     #[serde(rename = "displayName")]
     pub display_name: String,
 }
 
 impl ContestTeamMember {
-    pub fn new(user_id: String, display_name: String) -> ContestTeamMember {
+    pub fn new(user_id: uuid::Uuid, display_name: String) -> ContestTeamMember {
         ContestTeamMember {
             user_id,
             display_name,

@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ProblemFileUploadResult {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "uploadId")]
-    pub upload_id: String,
+    pub upload_id: uuid::Uuid,
     #[serde(rename = "files")]
     pub files: Vec<models::StoredFile>,
 }
 
 impl ProblemFileUploadResult {
-    pub fn new(upload_id: String, files: Vec<models::StoredFile>) -> ProblemFileUploadResult {
+    pub fn new(upload_id: uuid::Uuid, files: Vec<models::StoredFile>) -> ProblemFileUploadResult {
         ProblemFileUploadResult { upload_id, files }
     }
 }

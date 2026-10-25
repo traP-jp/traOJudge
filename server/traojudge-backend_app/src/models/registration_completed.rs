@@ -13,15 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegistrationCompleted {
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    /// UUID形式のリソース識別子。
     #[serde(rename = "registrationId")]
-    pub registration_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub registration_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemId")]
-    pub problem_id: String,
-    /// 外部向けの不透明な識別子。内部DBの型を仮定しない。
+    pub problem_id: uuid::Uuid,
+    /// UUID形式のリソース識別子。
     #[serde(rename = "problemVersionId")]
-    pub problem_version_id: String,
+    pub problem_version_id: uuid::Uuid,
     /// 対象の版を識別する不透明な文字列。
     #[serde(rename = "revision")]
     pub revision: String,
@@ -31,9 +31,9 @@ pub struct RegistrationCompleted {
 
 impl RegistrationCompleted {
     pub fn new(
-        registration_id: String,
-        problem_id: String,
-        problem_version_id: String,
+        registration_id: uuid::Uuid,
+        problem_id: uuid::Uuid,
+        problem_version_id: uuid::Uuid,
         revision: String,
         completed_at: String,
     ) -> RegistrationCompleted {

@@ -27,13 +27,13 @@ impl UserProfileRepository for PgUserProfileRepository {
             "SELECT display_name, bio, github_id, atcoder_id, x_id, revision
              FROM users WHERE id = $1",
         )
-        .bind(user_id.as_str())
+        .bind(user_id.as_uuid())
         .fetch_optional(&self.pool)
         .await?;
 
         row.map(|row| {
             Ok(PublicUserProfile {
-                id: user_id.clone(),
+                id: *user_id,
                 display_name: row.try_get("display_name")?,
                 bio: row.try_get("bio")?,
                 github_id: row.try_get("github_id")?,
