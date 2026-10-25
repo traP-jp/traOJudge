@@ -16,7 +16,13 @@ impl S3StorageClient {
 impl StorageClient for S3StorageClient {
     async fn upload_file(&self, file: UploadableFile) -> Result<(), anyhow::Error> {
         let content = tokio::fs::read(&file.path).await?;
-        let result = self.client.put(file.url).body(content).send().await?;
+        let result = self
+            .client
+            .put(file.url)
+            .header("x-amz-checksum-sha256", format!("{:x}", file.hash))
+            .body(content)
+            .send()
+            .await?;
         if result.status().is_success() {
             Ok(())
         } else {
