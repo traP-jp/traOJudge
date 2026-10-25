@@ -23,7 +23,7 @@
 
 - `bootstrap` がRepository・外部接続・ユースケースを組み立て、`http::build_router` に渡す。
 - HTTPルートで `nest("/api/v1", ...)`、その配下で `users`・`me`、さらにログイン方法・開発者トークン・メール変更を組み立てる。各機能は相対パスだけを定義する。
-- セッションの照合とCookie更新、変更要求のOrigin検証は個別のmiddlewareで行う。`/me` のキャッシュ禁止もルーターへ適用し、パス文字列による分岐を使わない。`/ping` はAPI用middlewareの外に置く。
+- セッションの照合とCookie更新、変更要求のOrigin検証は個別のmiddlewareで行う。`/me` のキャッシュ禁止もルーターへ適用し、パス文字列による分岐を使わない。API外の未定義パスにはAPI用middlewareを掛けない。
 - handlerは `CurrentSession`・`ResourceId`・`IfMatch`・`StrictJson<T>` で入力を受け、ユースケースを呼ぶ。Repositoryへ直接アクセスしない。生成DTOとの変換は `http/mapping.rs`、エラー応答は `http/error.rs` に集約する。
 - Coreの `AccountService` が所有者・版・最後のログイン方法などの業務判断と確定の順序を担う。役割・ログイン方法はCoreのenumで表し、文字列をJSONへ再変換して判別しない。
 

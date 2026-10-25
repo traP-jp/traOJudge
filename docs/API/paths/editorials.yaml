@@ -4,7 +4,7 @@ editorials:
     tags:
       - 'editorials'
     summary: '問題に解説を投稿する'
-    description: '解説を投稿する。解答の提出やwriterは必須にしない。投稿者へのeditiorial-authorの自動付与と初期公開範囲は未決。'
+    description: '解説を投稿する。解答の提出やwriterは必須にしない。暫定仕様として非公開で作成し、投稿者に対象解説のeditiorial-authorを同じトランザクションで付与する。Idempotency-Keyは本人と作成操作ごとに識別し、保存期間内の同じキー・同じ入力には作成時の表現を返す。問題の存在・削除状態・閲覧権限も同じUoWで検査する。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -39,6 +39,8 @@ editorials:
         $ref: '../components/responses.yaml#/Unauthenticated'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
       '409':
         $ref: '../components/responses.yaml#/Conflict'
       '422':
@@ -55,7 +57,7 @@ problemsByProblemIdEditorials:
     tags:
       - 'editorials'
     summary: '問題の公開解説を取得する'
-    description: '一般公開された解説のみを返す。非公開解説を編集できることとは別の閲覧経路。'
+    description: '閲覧できる問題の一般公開された解説のみを返す。非公開解説を編集できることとは別の閲覧経路。存在しない・削除済み・閲覧できない問題は404。'
     security: []
     x-authorization:
       status: 'defined'
@@ -72,10 +74,14 @@ problemsByProblemIdEditorials:
           'application/json':
             schema:
               $ref: '../schemas/editorials.yaml#/Editorials'
+      '400':
+        $ref: '../components/responses.yaml#/BadRequest'
       '403':
         $ref: '../components/responses.yaml#/Forbidden'
       '404':
         $ref: '../components/responses.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses.yaml#/ValidationFailed'
       '429':
         $ref: '../components/responses.yaml#/RateLimited'
       default:
@@ -178,15 +184,15 @@ editorialsByEditorialId:
     tags:
       - 'editorials'
     summary: '解説を取り下げる'
-    description: |-
-      解説を取り下げる
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '投稿者本人またはservice-adminが解説を論理削除する。編集担当であることだけでは許可しない。削除後は取得・一覧・編集の対象外となり、作成要求の再送でも復活しない。'
     x-authorization:
-      status: 'pending'
-      reason: 'O1-03：解説の削除権限が未決。'
+      status: 'defined'
+      anyOf:
+        - condition: '対象解説の投稿者本人'
+        - role: 'service-admin'
+          scope: 'service'
     x-scenarios:
       - 'O1-03'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
@@ -214,15 +220,15 @@ editorialsByEditorialIdPublication:
     tags:
       - 'editorials'
     summary: '解説を公開する'
-    description: |-
-      解説を公開する
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '投稿者本人またはservice-adminが解説を公開する。編集担当であることだけでは許可しない。If-Matchの検査と公開状態の変更は同じUoWで行う。'
     x-authorization:
-      status: 'pending'
-      reason: 'R2-03：解説の公開権限が未決。'
+      status: 'defined'
+      anyOf:
+        - condition: '対象解説の投稿者本人'
+        - role: 'service-admin'
+          scope: 'service'
     x-scenarios:
       - 'R2-03'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IfMatch'
@@ -261,15 +267,15 @@ editorialsByEditorialIdPublication:
     tags:
       - 'editorials'
     summary: '解説を非公開にする'
-    description: |-
-      解説を非公開にする
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '投稿者本人またはservice-adminが解説を非公開にする。編集担当であることだけでは許可しない。既に非公開でも204を返す。'
     x-authorization:
-      status: 'pending'
-      reason: 'R2-04：解説の非公開化の権限が未決。'
+      status: 'defined'
+      anyOf:
+        - condition: '対象解説の投稿者本人'
+        - role: 'service-admin'
+          scope: 'service'
     x-scenarios:
       - 'R2-04'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:

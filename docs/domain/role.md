@@ -10,6 +10,7 @@
 - service-admin以外のroleの付与/剥奪ができる
 - 全てのproblemをprivateにできる
 - 全てのjudge-definitionを論理削除できる
+- 全てのeditorialを削除・公開・非公開化できる
 
 
 ## contest-admin (ContestId contest_id)
@@ -73,6 +74,13 @@
 
 ### 権限
 - editorialの編集をできる
+
+
+## 解説の投稿者（役割ではなく投稿者の記録で判定する）
+
+- 自分が投稿したeditorialを削除・公開・非公開化できる
+- 編集担当の付与・剥奪では投稿者の記録は変わらない
+- 編集担当であることだけを理由に、削除・公開・非公開化はできない
 
 
 ## contestant (ContestId contest_id)

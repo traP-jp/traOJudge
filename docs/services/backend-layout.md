@@ -60,3 +60,5 @@ providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする�
 [本人情報とアカウント管理](../backend/me.md)では、セッション認証・本人プロフィール更新・認証手段管理を実装している。メール配送・外部OAuthは接続契約とテスト用アダプターまでを扱う。
 
 アカウント管理では `core::ports::repository::account` の `AccountUnitOfWorkProvider` / `AccountUnitOfWork` を使う。業務判断・永続化操作の組み合わせ・commitはapplication、本人に限定したSQL・行ロック・未確定時のrollbackはinfraが担当する。メール配送やOAuth照会の間はUoWを保持しない。HTTPのmiddleware・extractor・生成DTOはHTTP層に置く。
+
+[解説](../backend/editorials.md)では、専用のUnit of Workで問題の参照検査と解説・編集担当・作成要求の再送記録を同時に確定する。[問題のDB基盤](../backend/problems.md)はUUID・公開状態・削除日時だけを保持し、本文や作成・編集APIは後続で追加する。解説の削除・公開変更は投稿者本人またはservice-adminが行う。問題削除時はDBトリガーで解説も取り下げ、親と同じトランザクションで確定する。

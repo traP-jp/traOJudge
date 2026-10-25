@@ -1,15 +1,20 @@
-use axum::{Router, middleware as axum_middleware, routing::get};
+use axum::{Router, middleware as axum_middleware};
 use std::sync::Arc;
 use traojudge_core::{
-    application::{account::AccountService, session::SessionService, users::GetUserProfile},
+    application::{
+        account::AccountService, editorial::EditorialService, session::SessionService,
+        users::GetUserProfile,
+    },
     ports::{
         account_services::AccountExternalServices,
         repository::{
             account::{AccountUnitOfWorkProvider, SessionRepository},
+            editorial::EditorialUnitOfWorkProvider,
             user::UserProfileRepository,
         },
     },
 };
+mod editorials;
 mod error;
 mod extractors;
 mod mapping;
@@ -22,10 +27,11 @@ use middleware::{
     session,
 };
 
-pub fn build_router<P, R, E, S>(
+pub fn build_router<P, R, E, S, U>(
     profiles: GetUserProfile<P>,
     accounts: AccountService<R, E>,
     sessions: SessionService<S>,
+    editorials: EditorialService<U>,
     origin: WebOrigin,
 ) -> Router
 where
@@ -33,10 +39,12 @@ where
     R: AccountUnitOfWorkProvider + 'static,
     E: AccountExternalServices + 'static,
     S: SessionRepository + 'static,
+    U: EditorialUnitOfWorkProvider + 'static,
 {
     let api = Router::new()
         .nest("/users", users::router(profiles))
         .nest("/me", me::router(accounts))
+        .merge(editorials::routes(editorials))
         .layer(axum_middleware::from_fn_with_state(
             Arc::new(sessions),
             session::authenticate::<S>,

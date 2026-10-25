@@ -105,8 +105,8 @@
 | R1-11 | [サービス管理者を任命・解任する](scenarios/permissions/change-permissions.md) | 未決。service-admin は自分と同じ役割を付与・剥奪できない | 登録済みの対象者1人 | サービス管理者の構成が変わった |
 | R2-01 | [問題を公開する](scenarios/permissions/publish-problem.md) | 未決 | 問題P | 問題Pが公開された |
 | R2-02 | [問題を非公開にする](scenarios/permissions/hide-problem.md) | サービス管理者（service-admin）。他の役割は未決 | 担当を問わず、指定した問題P | 問題Pが非公開になった |
-| R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 未決 | 解説E | 解説Eが公開された |
-| R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 未決 | 解説E | 解説Eが非公開になった |
+| R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 解説の投稿者本人またはservice-admin | 解説E | 解説Eが公開された |
+| R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 解説の投稿者本人またはservice-admin | 解説E | 解説Eが非公開になった |
 | R3-01 | [公開された通常の大会に参加を申し込む](scenarios/permissions/join-contest.md) | standard-user 本人 | 自分自身、公開された通常大会C | 個人戦では本人が大会Cの contestant になり、チーム戦では本人が大会C内の1チームに所属する。チームの移動・脱退は大会開始前まで可能 |
 | R4-01 | [バーチャル大会に参加を申し込む](scenarios/permissions/join-virtual-contest.md) | 未決。通常の大会への自己参加と同じ許可は明記されていない | 自分自身、バーチャル大会V | 本人が大会Vの virtual-contestant になった |
 
@@ -116,7 +116,7 @@
 | --- | --- | --- | --- | --- |
 | O1-01 | [解説を投稿する](scenarios/others/write-editorial.md) | 基本的な利用資格を持つ人（standard-user） | 問題Pに、新しい自分の解説 | 解説Eができた |
 | O1-02 | [解説を編集する](scenarios/others/write-editorial.md) | 解説Eの編集担当（参照元の表記は editiorial-author） | その解説E | 解説Eの内容が変わった |
-| O1-03 | [解説を削除する](scenarios/others/write-editorial.md) | 未決。編集の許可に削除を含めない | 解説E | 解説Eを取り下げた |
+| O1-03 | [解説を削除する](scenarios/others/write-editorial.md) | 解説の投稿者本人またはservice-admin。編集担当の権限とは別に判定 | 解説E | 解説Eを取り下げた |
 | O2-01 | [プロフィールを書き換える](scenarios/others/edit-profile.md) | ログインしている本人 | 自分のプロフィール。ほかの人のプロフィールは対象外 | 自分のプロフィールが変わった |
 | O3-01 | [公開プロフィールを取得する](scenarios/others/view-user-profile.md) | 誰でも | 指定利用者の公開プロフィール | 表示名と自己紹介を確認できた |
 | O3-02 | [作成した閲覧可能な問題を取得する](scenarios/others/view-user-profile.md) | 誰でも。ログイン時は権限のある非公開問題も含む | 指定利用者が作成者として記録され、閲覧者が閲覧できる問題 | 閲覧可能な問題の一覧を確認できた |

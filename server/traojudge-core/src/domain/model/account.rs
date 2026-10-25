@@ -286,6 +286,24 @@ pub enum RoleName {
     EditorialAuthor,
 }
 
+impl RoleName {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ServiceAdmin => "service-admin",
+            Self::Writer => "writer",
+            Self::StandardUser => "standard-user",
+            Self::ProblemOwner => "problem-owner",
+            Self::Tester => "tester",
+            Self::ContestAdmin => "contest-admin",
+            Self::ContestSetter => "contest-setter",
+            Self::VirtualContestSetter => "virtual-contest-setter",
+            Self::Contestant => "contestant",
+            Self::VirtualContestant => "virtual-contestant",
+            Self::EditorialAuthor => "editiorial-author",
+        }
+    }
+}
+
 impl FromStr for RoleName {
     type Err = InvalidAccountValue;
     fn from_str(value: &str) -> Result<Self, Self::Err> {

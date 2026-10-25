@@ -3,13 +3,14 @@
 use crate::http::{build_router, middleware::origin::WebOrigin};
 use std::net::SocketAddr;
 use traojudge_core::application::{
-    account::AccountService, session::SessionService, users::GetUserProfile,
+    account::AccountService, editorial::EditorialService, session::SessionService,
+    users::GetUserProfile,
 };
 use traojudge_infra::{
     account_services::UnconfiguredAccountServices,
     postgres::{
-        self, accounts::PgAccountUnitOfWorkProvider, sessions::PgSessionRepository,
-        users::PgUserProfileRepository,
+        self, accounts::PgAccountUnitOfWorkProvider, editorial::PgEditorialUnitOfWorkProvider,
+        sessions::PgSessionRepository, users::PgUserProfileRepository,
     },
 };
 
@@ -22,6 +23,13 @@ pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let database_url = std::env::var("TRAOJUDGE_DATABASE_URL")?;
     let pool = postgres::connect(&database_url).await?;
     postgres::MIGRATOR.run(&pool).await?;
+    let receipt_retention = std::env::var("TRAOJUDGE_EDITORIAL_IDEMPOTENCY_TTL_SECONDS")
+        .unwrap_or_else(|_| "86400".to_owned())
+        .parse::<u32>()?;
+    let editorials = EditorialService::new(
+        PgEditorialUnitOfWorkProvider::new(pool.clone()),
+        chrono::Duration::seconds(i64::from(receipt_retention)),
+    )?;
     let router = build_router(
         GetUserProfile::new(PgUserProfileRepository::new(pool.clone())),
         AccountService::new(
@@ -29,6 +37,7 @@ pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
             UnconfiguredAccountServices,
         ),
         SessionService::new(PgSessionRepository::new(pool)),
+        editorials,
         origin,
     );
 

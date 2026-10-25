@@ -8,7 +8,7 @@ use serde_json::Value;
 use traojudge_core::domain::model::account::AccountError;
 
 /// 生成型だけでは保証されないadditionalProperties:falseと非nullableをHTTP境界で検査する。
-/// 対象はこのモジュールに登録した、文字列フィールドからなるアカウント操作の要求型。
+/// 対象はこのモジュールに登録した、文字列フィールドからなる要求型。
 pub struct StrictJson<T>(pub T);
 trait RequestSchema: DeserializeOwned {
     const FIELDS: &'static [&'static str];
@@ -30,6 +30,13 @@ impl RequestSchema for schema::ExternalAuthorizationRequest {
 }
 impl RequestSchema for schema::AuthorizationCompletion {
     const FIELDS: &'static [&'static str] = &["code", "state"];
+}
+
+impl RequestSchema for schema::EditorialCreate {
+    const FIELDS: &'static [&'static str] = &["problemId", "title", "body"];
+}
+impl RequestSchema for schema::EditorialUpdate {
+    const FIELDS: &'static [&'static str] = &["title", "body"];
 }
 
 impl<S, T> FromRequest<S> for StrictJson<T>

@@ -15,3 +15,14 @@ impl<S: Send + Sync> FromRequestParts<S> for CurrentSession {
             .ok_or_else(|| AccountError::Unauthenticated.into())
     }
 }
+
+/// 公開取得にも有効なセッションがあれば本人の閲覧権限を渡す。
+pub struct OptionalSession(pub Option<AuthenticatedSession>);
+impl<S: Send + Sync> FromRequestParts<S> for OptionalSession {
+    type Rejection = std::convert::Infallible;
+    async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
+        Ok(Self(
+            parts.extensions.get::<AuthenticatedSession>().copied(),
+        ))
+    }
+}

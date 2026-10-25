@@ -111,8 +111,8 @@ R1・R2は個別シナリオへの案内である。作業を切り出すとき�
 | --- | --- | --- |
 | R2-01 | [問題を公開する](scenarios/permissions/publish-problem.md) | 未決 |
 | R2-02 | [問題を非公開にする](scenarios/permissions/hide-problem.md) | サービス管理者はすべての問題が対象。他の役割は未決 |
-| R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 未決 |
-| R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 未決 |
+| R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 解説の投稿者本人またはservice-admin |
+| R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 解説の投稿者本人またはservice-admin |
 
 ## それ以外
 

@@ -129,6 +129,11 @@ fn app(pool: &PgPool, external: External) -> Router {
         GetUserProfile::new(PgUserProfileRepository::new(pool.clone())),
         AccountService::new(PgAccountUnitOfWorkProvider::new(pool.clone()), external),
         SessionService::new(PgSessionRepository::new(pool.clone())),
+        traojudge_core::application::editorial::EditorialService::new(
+            traojudge_infra::postgres::editorial::PgEditorialUnitOfWorkProvider::new(pool.clone()),
+            Duration::days(1),
+        )
+        .unwrap(),
         WebOrigin::parse(ORIGIN).unwrap(),
     )
 }
@@ -1211,7 +1216,12 @@ async fn unconfigured_external_connections_fail_explicitly(pool: PgPool) {
             PgAccountUnitOfWorkProvider::new(pool.clone()),
             UnconfiguredAccountServices,
         ),
-        SessionService::new(PgSessionRepository::new(pool)),
+        SessionService::new(PgSessionRepository::new(pool.clone())),
+        traojudge_core::application::editorial::EditorialService::new(
+            traojudge_infra::postgres::editorial::PgEditorialUnitOfWorkProvider::new(pool.clone()),
+            Duration::days(1),
+        )
+        .unwrap(),
         WebOrigin::parse(ORIGIN).unwrap(),
     );
     for (path, input) in [
@@ -1307,7 +1317,7 @@ async fn unit_of_work_commits_together_and_rolls_back_unfinished_changes(pool: P
 
 #[sqlx::test(migrator = "traojudge_infra::postgres::MIGRATOR")]
 #[ignore = "requires DATABASE_URL with PostgreSQL CREATE DATABASE permission"]
-async fn nested_routes_apply_authentication_and_keep_ping_independent(pool: PgPool) {
+async fn nested_routes_apply_authentication_and_leave_unknown_paths_outside_api(pool: PgPool) {
     let router = app(&pool, External::default());
     let resource = Uuid::new_v4();
     for (verb, path) in [
@@ -1356,7 +1366,6 @@ async fn nested_routes_apply_authentication_and_keep_ping_independent(pool: PgPo
         )
         .await
         .unwrap();
-    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
     assert!(!response.headers().contains_key("set-cookie"));
-    assert_eq!(to_bytes(response.into_body(), 1024).await.unwrap(), "pong");
 }

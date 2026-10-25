@@ -117,3 +117,52 @@ impl From<schema::ProviderId> for Provider {
         }
     }
 }
+
+impl From<traojudge_core::domain::model::editorial::Editorial> for schema::Editorial {
+    fn from(p: traojudge_core::domain::model::editorial::Editorial) -> Self {
+        use traojudge_core::domain::model::editorial::EditorialVisibility;
+        let visibility = match p.visibility {
+            EditorialVisibility::Public => schema::VisibilityValue::Public,
+            EditorialVisibility::Private => schema::VisibilityValue::Private,
+        };
+        Self::new(
+            p.id,
+            p.problem_id,
+            p.author_id.as_uuid(),
+            p.title,
+            p.body,
+            visibility,
+            p.revision,
+            p.created_at.to_rfc3339(),
+            p.updated_at.to_rfc3339(),
+        )
+    }
+}
+impl From<schema::EditorialCreate> for traojudge_core::domain::model::editorial::NewEditorial {
+    fn from(p: schema::EditorialCreate) -> Self {
+        Self {
+            problem_id: p.problem_id,
+            title: p.title,
+            body: p.body,
+        }
+    }
+}
+impl From<schema::EditorialUpdate> for traojudge_core::domain::model::editorial::EditorialChanges {
+    fn from(p: schema::EditorialUpdate) -> Self {
+        Self {
+            title: p.title,
+            body: p.body,
+        }
+    }
+}
+
+impl From<traojudge_core::domain::model::editorial::Editorial> for schema::Visibility {
+    fn from(editorial: traojudge_core::domain::model::editorial::Editorial) -> Self {
+        use traojudge_core::domain::model::editorial::EditorialVisibility;
+        let visibility = match editorial.visibility {
+            EditorialVisibility::Public => schema::VisibilityValue::Public,
+            EditorialVisibility::Private => schema::VisibilityValue::Private,
+        };
+        Self::new(visibility, editorial.revision)
+    }
+}

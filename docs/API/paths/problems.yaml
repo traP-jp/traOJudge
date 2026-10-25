@@ -225,7 +225,7 @@ problemsByProblemId:
     tags:
       - 'problems'
     summary: '問題を取り下げる'
-    description: '対象問題の管理担当だけが削除できる。関連する過去の提出・解説・大会との記録を破壊せず、削除した事実を残す。service-adminだけでは許可しない。'
+    description: '対象問題の管理担当だけが削除できる。関連する過去の提出・大会との記録を破壊せず、削除した事実を残す。紐づく解説も同じトランザクションで取り下げる。service-adminだけでは許可しない。'
     x-authorization:
       status: 'defined'
       anyOf:
