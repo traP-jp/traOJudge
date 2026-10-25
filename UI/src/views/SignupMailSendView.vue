@@ -1,12 +1,13 @@
 `
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { AuthenticationApi } from '@/api/generated'
 import { ResponseError } from '@/api/generated/runtime'
 import BorderedButton from '@/components/controls/BorderedButton.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import { useSignupStore } from '@/stores/signup'
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 
 const signupStore = useSignupStore()
 const router = useRouter()

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import SideMenuProblemEdit from '@/components/problems/SideMenuProblemEdit.vue'
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+import SideMenuProblemEdit from '@/components/problems/SideMenuProblemEdit.vue'
 
 const route = useRoute()
 

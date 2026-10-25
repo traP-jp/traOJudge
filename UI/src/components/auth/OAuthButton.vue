@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { responseErrorMessage } from '@/api/errors'
+import { ResponseError } from '@/api/generated/runtime'
 import { useOAuthStore } from '@/stores/oauth'
 import type { OAuthProvider } from '@/types/oauth'
-import { ResponseError } from '@/api/generated/runtime'
 
 const {
   disabled = false,

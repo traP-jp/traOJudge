@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+
+import traOLogo from '@/assets/traO_logo.svg'
+import MenuButton from '@/components/controls/MenuButton.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import IconDropdownTriangle from '@/components/icons/IconDropdownTriangle.vue'
-import MenuButton from '@/components/controls/MenuButton.vue'
-import traOLogo from '@/assets/traO_logo.svg'
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const { isLoggedIn, userId, username } = defineProps<{

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useOAuthStore } from '@/stores/oauth'
+
 import { Oauth2Api, ResponseError } from '@/api/generated'
+import { useOAuthStore } from '@/stores/oauth'
 import { useUserStore } from '@/stores/user'
 import type { OAuthCallbackParams } from '@/types/oauth'
 

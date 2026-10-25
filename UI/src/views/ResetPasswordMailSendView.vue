@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Email } from '@/api/generated'
-import { AuthenticationApi } from '@/api/generated'
 import { useRouter } from 'vue-router'
 
+import type { Email } from '@/api/generated'
+import { AuthenticationApi } from '@/api/generated'
 import BorderedButton from '@/components/controls/BorderedButton.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs, computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 
 defineOptions({
   inheritAttrs: false

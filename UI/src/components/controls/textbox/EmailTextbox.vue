@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import isEmail from 'validator/lib/isEmail'
 import { computed, ref, watch } from 'vue'
+
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 
 const props = defineProps<{
   errorMessage?: string

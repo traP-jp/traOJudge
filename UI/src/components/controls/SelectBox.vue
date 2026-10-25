@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import { computed, useId } from 'vue'
+
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 
 export interface SelectOption {
   id: string

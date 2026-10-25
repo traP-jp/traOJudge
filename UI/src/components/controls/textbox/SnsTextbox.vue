@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import { ref, watch } from 'vue'
+
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 
 const modelValue = defineModel<string>()
 

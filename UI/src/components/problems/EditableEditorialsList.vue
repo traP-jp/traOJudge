@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import ListingTable from '@/components/ListingTable.vue'
-import type { Column } from '@/types/listingTable'
+
 import { EditorialsApi, type EditorialSummary } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
-import { dateToString } from '@/utils/date'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
 import MenuButton from '@/components/controls/MenuButton.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
-import BorderedButton from '@/components/controls/BorderedButton.vue'
+import ListingTable from '@/components/ListingTable.vue'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import router from '@/router'
+import type { Column } from '@/types/listingTable'
+import { dateToString } from '@/utils/date'
 
 const { requireTraqAuth } = useTraqAuthGuard()
 

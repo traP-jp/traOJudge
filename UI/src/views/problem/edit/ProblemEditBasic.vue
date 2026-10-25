@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, watch, computed, onMounted } from 'vue'
-import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
-import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
-import LabeledCheckbox from '@/components/controls/LabeledCheckbox.vue'
-import { ProblemsApi, type Problem } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import { computed, onMounted, ref, watch } from 'vue'
 import { type Ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { type Problem, ProblemsApi } from '@/api/generated'
+import AlertBox from '@/components/AlertBox.vue'
+import LabeledCheckbox from '@/components/controls/LabeledCheckbox.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import NumberTextbox from '@/components/controls/textbox/NumberTextbox.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 
 const { requireTraqAuth } = useTraqAuthGuard()
 

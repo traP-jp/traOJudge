@@ -15,7 +15,7 @@ function onClick() {
   <button
     :disabled="disabled"
     class="inline-block rounded-sm border fontstyle-ui-control-strong text-text-primary enabled:hover:bg-background-secondary disabled:opacity-50"
-    :class="small ? 'h-8 px-3 border-text-secondary' : 'h-10 px-6 border-text-primary'"
+    :class="small ? 'h-8 border-text-secondary px-3' : 'h-10 border-text-primary px-6'"
     :style="{ paddingLeft: padding, paddingRight: padding }"
     @click="onClick"
   >

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { JudgeStatus } from '@/api/generated'
 import { statusConfig } from '@/utils/statusConfig'
 

@@ -1,21 +1,22 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ref, watch, onMounted, onUnmounted } from 'vue'
-import BorderedButton from '@/components/controls/BorderedButton.vue'
-import PrimaryButton from '@/components/controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
-import CopyableTextArea from '@/components/controls/CopyableTextArea.vue'
-import ListingTable from '@/components/ListingTable.vue'
-import type { Column } from '@/types/listingTable'
-import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+
 import { TestcasesApi } from '@/api/generated/apis/TestcasesApi'
 import type {
-  TestcaseSummary,
-  Testcase,
   PostTestcaseRequestInner,
-  PutTestcaseRequest
+  PutTestcaseRequest,
+  Testcase,
+  TestcaseSummary
 } from '@/api/generated/models'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
+import CopyableTextArea from '@/components/controls/CopyableTextArea.vue'
+import PrimaryButton from '@/components/controls/PrimaryButton.vue'
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+import MaterialIcon from '@/components/icons/MaterialIcon.vue'
+import ListingTable from '@/components/ListingTable.vue'
 import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
+import type { Column } from '@/types/listingTable'
 
 const route = useRoute()
 const { requireTraqAuth } = useTraqAuthGuard()

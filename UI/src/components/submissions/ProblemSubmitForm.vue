@@ -4,9 +4,9 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { Language } from '@/api/generated'
 import { LanguageApi } from '@/api/generated'
-import CodeEditor from '@/components/editor/CodeEditor.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import SelectBox from '@/components/controls/SelectBox.vue'
+import CodeEditor from '@/components/editor/CodeEditor.vue'
 import { useSubmitSolution } from '@/composables/submissions/useSubmitSolution'
 import { problemLocation } from '@/router/locations'
 

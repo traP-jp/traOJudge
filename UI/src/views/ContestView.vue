@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+
 import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
 import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
 import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
-import MarkdownContent from '@/components/MarkdownContent.vue'
 import BorderedButton from '@/components/controls/BorderedButton.vue'
+import MarkdownContent from '@/components/MarkdownContent.vue'
 import { formatContestDate, formatContestDuration, getContestPhase } from '@/utils/contest'
 
 const route = useRoute()

@@ -8,6 +8,7 @@ import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 
 it('associates labels with unique controls, including generated and explicit IDs', () => {
   const wrapper = mount({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
     components: { PlainTextbox, PlainTextArea, CopyableTextArea, SelectBox },
     template: `<div>
       <PlainTextbox label="タイトル" />

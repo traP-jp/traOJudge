@@ -9,6 +9,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
       component: TopView,
       meta: { requiresAuth: true }
     },

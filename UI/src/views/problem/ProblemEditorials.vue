@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import EditorialsList from '@/components/problems/EditorialsList.vue'
 import { useRoute } from 'vue-router'
+
+import EditorialsList from '@/components/problems/EditorialsList.vue'
 
 const route = useRoute()
 const problemId = route.params.id as string

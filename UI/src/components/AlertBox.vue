@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import closeIcon from '@/assets/close.svg'
 import errorIcon from '@/assets/error.svg'
 import infoIcon from '@/assets/info.svg'
-import { computed } from 'vue'
 
 const props = defineProps<{
   text: string

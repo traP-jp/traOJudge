@@ -28,7 +28,9 @@ async function setup(path: string) {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
       { path: '/login', component: LoginView },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
       { path: '/oauth/:provider/:action/callback', component: OAuthCallbackView },
       { path: '/problems', component: { template: '<p>Problems</p>' } },
       { path: '/', component: { template: '<p>Home</p>' } },

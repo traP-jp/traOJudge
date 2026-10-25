@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { AuthenticationApi } from '@/api/generated'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import { AuthenticationApi } from '@/api/generated'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
 import { passwordValidator } from '@/utils/validator'

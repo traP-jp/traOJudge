@@ -40,6 +40,7 @@ it('captures input while syntax highlighting is still initializing', async () =>
   const highlighter = { loadLanguage: vi.fn().mockResolvedValue(undefined), dispose: vi.fn() }
   const pending = deferred<typeof highlighter>()
   mock.highlighter.mockReturnValue(pending.promise)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、動的importした.vueコンポーネントがany型になるため。
   const { default: CodeEditor } = await import('@/components/editor/CodeEditor.vue')
   const wrapper = mount(CodeEditor, { props: { language: { id: 'cpp', name: 'C++' } } })
   mock.change()
@@ -55,6 +56,7 @@ it('does not touch an unmounted editor when shared highlighting becomes ready', 
   const highlighter = { loadLanguage: vi.fn().mockResolvedValue(undefined), dispose: vi.fn() }
   const pending = deferred<typeof highlighter>()
   mock.highlighter.mockReturnValue(pending.promise)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、動的importした.vueコンポーネントがany型になるため。
   const { default: CodeEditor } = await import('@/components/editor/CodeEditor.vue')
   const wrapper = mount(CodeEditor, { props: { language: { id: 'cpp', name: 'C++' } } })
   wrapper.unmount()

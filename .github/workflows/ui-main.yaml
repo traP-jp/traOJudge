@@ -6,6 +6,10 @@ on:
       - 'UI/**'
       - 'docs/API/**'
       - 'docs/ui/**'
+      - '.prettierrc.json'
+      - '.prettierignore'
+      - '.husky/**'
+      - '.claude/hooks/ui-*.sh'
       - '.github/workflows/ui-main.yaml'
 
 permissions:
@@ -17,7 +21,7 @@ defaults:
 
 jobs:
   check:
-    name: lint, test, type and build
+    name: lint, format, test, type and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,5 +40,7 @@ jobs:
       - run: npm ci
       - run: ./scripts/gen-api.sh development
       - run: npm run lint
+      - run: npm run format:check
       - run: npm test
+      - run: npm run test:lint
       - run: npm run build

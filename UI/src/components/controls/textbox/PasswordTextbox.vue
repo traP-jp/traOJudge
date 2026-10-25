@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import type { Icon } from '@/types/icon'
-import { computed, ref } from 'vue'
 
 const visible = ref<boolean>(false)
 const rightIcon = computed<Icon>(() => (visible.value ? 'visibility_off' : 'visibility'))

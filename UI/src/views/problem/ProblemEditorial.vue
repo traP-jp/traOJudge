@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import { EditorialsApi } from '@/api/generated/apis/EditorialsApi.ts'
 import { ResponseError } from '@/api/generated/runtime'
-import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import TextLink from '@/components/TextLink.vue'
 
 const editorialId = ref<string>('')
 const editorialTitle = ref<string>('')

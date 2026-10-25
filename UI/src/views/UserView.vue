@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SideMenuUserPage from '@/components/users/SideMenuUserPage.vue'
 import QueryState from '@/components/QueryState.vue'
+import SideMenuUserPage from '@/components/users/SideMenuUserPage.vue'
 import { useUserQuery } from '@/composables/users/useUserQuery'
 import { useRouteId } from '@/router/locations'
 const userId = useRouteId()

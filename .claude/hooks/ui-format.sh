@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# PostToolUse hook: runs Prettier + ESLint --fix on UI files after Edit/Write/MultiEdit.
-# Exit 2 (with stderr) sends ESLint feedback back to the model so it can repair issues.
+# 編集直後はlint-stagedと同じ順序で修正し、失敗をモデルへ返す。
 set -uo pipefail
 
 INPUT="$(cat)"
@@ -16,7 +15,7 @@ esac
 
 case "$FILE_PATH" in
   */UI/src/api/generated/*) exit 0 ;;
-  */UI/dist/*|*/UI/node_modules/*) exit 0 ;;
+  */UI/dist/*|*/UI/build/*|*/UI/coverage/*|*/UI/node_modules/*) exit 0 ;;
 esac
 
 case "$FILE_PATH" in
@@ -30,19 +29,14 @@ touch "/tmp/claude-ui-dirty.${SESSION_ID}"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 UI_DIR="$PROJECT_DIR/UI"
 
-cd "$UI_DIR" || exit 0
+cd "$UI_DIR" || exit 2
 
-npx --no-install prettier --write --log-level=warn "$FILE_PATH" >&2 2>&1 || true
-
-ESLINT_OUT="$(npx --no-install eslint --fix "$FILE_PATH" 2>&1)"
-ESLINT_EXIT=$?
-
-if [ $ESLINT_EXIT -ne 0 ]; then
-  {
-    echo "ESLint reported unfixable issues in $FILE_PATH. Please address them:"
-    echo "$ESLINT_OUT"
-  } >&2
-  exit 2
+CHECK_EXIT=0
+if ! ./node_modules/.bin/eslint --fix --max-warnings=0 "$FILE_PATH" >&2; then
+  CHECK_EXIT=2
+fi
+if ! ./node_modules/.bin/prettier --write --log-level=warn "$FILE_PATH" >&2; then
+  CHECK_EXIT=2
 fi
 
-exit 0
+exit "$CHECK_EXIT"

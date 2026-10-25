@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+
 import MenuButton from '@/components/controls/MenuButton.vue'
 import type { SideMenuProps } from '@/types/sideMenu'
 

@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 
 import type { SubmissionSummary } from '@/api/generated'
-import JudgeResultBadge from '@/components/submissions/JudgeResultBadge.vue'
 import ListingTable from '@/components/ListingTable.vue'
+import JudgeResultBadge from '@/components/submissions/JudgeResultBadge.vue'
 import TextLink from '@/components/TextLink.vue'
 import type { Column } from '@/types/listingTable'
 import { dateToString } from '@/utils/date'

@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { responseErrorMessage } from '@/api/errors'
-import { MeApi } from '@/api/generated/apis/MeApi'
-import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
-import { ResponseError } from '@/api/generated/runtime'
-import BorderedButton from '@/components/controls/BorderedButton.vue'
-import { passwordValidator } from '@/utils/validator'
 import isEmail from 'validator/lib/isEmail'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { responseErrorMessage } from '@/api/errors'
+import { MeApi } from '@/api/generated/apis/MeApi'
+import { Oauth2Api } from '@/api/generated/apis/Oauth2Api'
+import { ResponseError } from '@/api/generated/runtime'
 import GitHubIcon from '@/assets/service_icons/github.svg'
 import GoogleIcon from '@/assets/service_icons/google.svg'
 import traQIcon from '@/assets/service_icons/traq.svg'
-
 import AlertBox from '@/components/AlertBox.vue'
+import BorderedButton from '@/components/controls/BorderedButton.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
 import PasswordTextbox from '@/components/controls/textbox/PasswordTextbox.vue'
+import { passwordValidator } from '@/utils/validator'
 
 const email = ref<string>('')
 const username = ref<string>('')

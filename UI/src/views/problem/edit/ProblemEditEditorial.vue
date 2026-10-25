@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { responseErrorMessage } from '@/api/errors'
-import { useRoute } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
-import PlainTextArea from '@/components/controls/PlainTextArea.vue'
+import { useRoute } from 'vue-router'
+
+import { responseErrorMessage } from '@/api/errors'
+import { EditorialsApi, type PostEditorialRequest, ResponseError } from '@/api/generated'
 import AlertBox from '@/components/AlertBox.vue'
+import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import TextLink from '@/components/TextLink.vue'
-import {
-  EditorialsApi,
-  ResponseError,
-  type PostEditorialRequest
-} from '@/api/generated'
 import { useTraqAuthGuard } from '@/composables/problems/useTraqAuthGuard'
 import router from '@/router'
 

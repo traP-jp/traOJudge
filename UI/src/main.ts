@@ -10,6 +10,7 @@ import { queryClient } from '@/api/queryClient'
 import App from './App.vue'
 import router, { watchSessionRouting } from './router'
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
 const app = createApp(App)
 const pinia = createPinia()
 

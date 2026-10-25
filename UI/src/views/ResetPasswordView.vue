@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Email } from '@/api/generated'
-import { AuthenticationApi } from '@/api/generated'
 import isEmail from 'validator/lib/isEmail'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { Email } from '@/api/generated'
+import { AuthenticationApi } from '@/api/generated'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
 import EmailTextbox from '@/components/controls/textbox/EmailTextbox.vue'
 

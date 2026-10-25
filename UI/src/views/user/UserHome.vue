@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue'
 import { computed } from 'vue'
+
 import type { User } from '@/api/generated'
+import TextLink from '@/components/TextLink.vue'
 
 const { user } = defineProps<{ userId: string; user: User | null }>()
 

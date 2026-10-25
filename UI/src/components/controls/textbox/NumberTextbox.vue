@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 import { computed } from 'vue'
+
+import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
 
 const { min = NaN, max = NaN } = defineProps<{
   min?: number
