@@ -1,0 +1,6 @@
+[registry]
+# 公開直後の依存クレートを取り込まず、検証される時間を確保する。
+global-min-publish-age = "7 days"
+
+[resolver]
+incompatible-publish-age = "deny"
