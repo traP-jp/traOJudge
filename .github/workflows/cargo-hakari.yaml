@@ -5,6 +5,7 @@ on:
     paths:
       - '**/Cargo.toml'
       - 'Cargo.lock'
+      - '.cargo/**'
       - '.config/hakari.toml'
       - 'rust-toolchain.toml'
       - '.github/workflows/cargo-hakari.yaml'
@@ -15,6 +16,7 @@ on:
     paths:
       - '**/Cargo.toml'
       - 'Cargo.lock'
+      - '.cargo/**'
       - '.config/hakari.toml'
       - 'rust-toolchain.toml'
       - '.github/workflows/cargo-hakari.yaml'
@@ -28,9 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Read pinned Rust version
+        id: rust-version
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import tomllib
+          with open('rust-toolchain.toml', 'rb') as file:
+              print(f"toolchain={tomllib.load(file)['toolchain']['channel']}")
+          PY
       - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
         with:
-          toolchain: '1.95.0'
+          toolchain: ${{ steps.rust-version.outputs.toolchain }}
       # cargo-hakari の公式導入手順に従う。Action 自体もコミット SHA で固定する。
       # https://docs.rs/cargo-hakari/latest/cargo_hakari/#release-binaries
       - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
