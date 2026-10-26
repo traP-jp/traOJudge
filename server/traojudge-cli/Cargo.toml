@@ -18,3 +18,4 @@ serde_json.workspace = true
 traojudge-core.workspace = true
 traojudge-workflow.workspace = true
 uuid.workspace = true
+sha2.workspace = true

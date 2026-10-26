@@ -16,3 +16,4 @@ treefmt.toml
 
 # editor
 .vscode
+.codex

@@ -1,99 +1,49 @@
 <script setup lang="ts">
-import isEmail from 'validator/lib/isEmail'
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-
-import OAuthButton from '@/components/Controls/OAuthButton.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import EmailTextbox from '@/components/Controls/Textbox/EmailTextbox.vue'
-import PasswordTextbox from '@/components/Controls/Textbox/PasswordTextbox.vue'
+import { useUserStore } from '@/stores/user'
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const email = ref<string>('')
-const emailErrorMessage = ref<string | undefined>()
-const password = ref<string>('')
-const passwordErrorMessage = ref<string | undefined>()
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
+const mockError = ref('')
+const canUseMock = import.meta.env.DEV
 
-const handleLogin = async () => {
-  if (!email.value || !password.value) {
-    emailErrorMessage.value = !email.value ? 'メールアドレスが入力されていません。' : ''
-    passwordErrorMessage.value = !password.value ? 'パスワードが入力されていません。' : ''
-    return
-  }
-
-  if (!isEmail(email.value)) {
-    emailErrorMessage.value = 'メールアドレスの形式が正しくありません。'
-    passwordErrorMessage.value = ''
-    return
-  }
-
+const loginWithMock = async () => {
+  mockError.value = ''
   try {
-    await userStore.login({
-      email: email.value,
-      password: password.value
-    })
-    // リダイレクト先がある場合はそこへ、なければホームへ
-    const redirectTo = route.query.redirect as string
-    router.push(redirectTo || '/')
-  } catch (error) {
-    emailErrorMessage.value = 'メールアドレスまたはパスワードが正しくありません。'
-    passwordErrorMessage.value = 'メールアドレスまたはパスワードが正しくありません。'
-    email.value = ''
-    password.value = ''
-    console.error('ログインエラー:', error)
+    await userStore.loginWithMock()
+    const redirect = route.query.redirect
+    await router.push(typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/')
+  } catch {
+    mockError.value = 'モックでログインできませんでした．モックサーバーと設定を確認してください．'
   }
 }
 </script>
 
 <template>
   <div class="flex h-header-offset items-start justify-center bg-background-secondary p-6">
-    <div
-      class="flex w-auth-form flex-col items-start justify-center gap-6 rounded-15 bg-background-primary px-8 py-6"
-    >
-      <h1 class="fontstyle-ui-subtitle leading-7 text-text-primary">ログイン</h1>
-
-      <div class="flex w-full flex-col items-start gap-2">
-        <OAuthButton app="GitHub" class="h-10 w-full" action="login" />
-        <OAuthButton app="Google" class="h-10 w-full" action="login" />
-        <OAuthButton app="traQ" class="h-10 w-full" action="login" />
-      </div>
-
-      <hr class="h-px w-full border-t border-border-primary" />
-
-      <div class="flex w-full flex-col gap-4">
-        <EmailTextbox
-          v-model="email"
-          class="w-full"
-          placeholder="メールアドレス"
-          :error-message="emailErrorMessage"
-        />
-
-        <PasswordTextbox
-          v-model="password"
-          class="w-full"
-          placeholder="パスワード"
-          :error-message="passwordErrorMessage"
-        />
-
-        <PrimaryButton class="h-10 w-full rounded px-4 py-3" @click="handleLogin">
-          ログイン
-        </PrimaryButton>
-      </div>
-
-      <div class="flex w-full flex-col justify-start gap-2">
-        <router-link
-          to="/reset-password"
-          class="fontstyle-ui-caption text-text-secondary underline"
+    <div class="flex w-auth-form flex-col gap-6 rounded-15 bg-background-primary px-8 py-6">
+      <h1 class="fontstyle-ui-subtitle text-text-primary">ログイン</h1>
+      <p class="fontstyle-ui-body text-text-secondary">
+        メールと外部サービスによるログインは準備中です．
+      </p>
+      <template v-if="canUseMock">
+        <p class="fontstyle-ui-body text-text-secondary">
+          開発中はモックサーバーを起動すると，仮の利用者としてログインできます．
+        </p>
+        <PrimaryButton
+          class="h-10 w-full px-4 py-3"
+          :disabled="userStore.isLoading"
+          @click="loginWithMock"
         >
-          パスワードを再設定する
-        </router-link>
-        <router-link to="/signup" class="fontstyle-ui-caption text-text-secondary underline">
-          アカウントを新規登録する
-        </router-link>
-      </div>
+          {{ userStore.isLoading ? 'ログイン中...' : 'モックでログイン' }}
+        </PrimaryButton>
+        <p v-if="mockError" role="alert" class="fontstyle-ui-caption text-status-error">
+          {{ mockError }}
+        </p>
+      </template>
     </div>
   </div>
 </template>

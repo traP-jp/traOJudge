@@ -8,12 +8,24 @@ Profile:
       $ref: './common.yaml#/DisplayName'
     bio:
       type: 'string'
+    githubId:
+      type: 'string'
+      description: '本人が申告したGitHubのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
+    atcoderId:
+      type: 'string'
+      description: '本人が申告したAtCoderのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
+    xId:
+      type: 'string'
+      description: '本人が申告したXのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
     revision:
       $ref: './common.yaml#/Version'
   required:
     - 'id'
     - 'displayName'
     - 'bio'
+    - 'githubId'
+    - 'atcoderId'
+    - 'xId'
     - 'revision'
 ProfileUpdate:
   type: 'object'
@@ -24,6 +36,15 @@ ProfileUpdate:
     bio:
       type: 'string'
       maxLength: 4000
+    githubId:
+      type: 'string'
+      description: '本人が申告するGitHubのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。'
+    atcoderId:
+      type: 'string'
+      description: '本人が申告するAtCoderのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。'
+    xId:
+      type: 'string'
+      description: '本人が申告するXのユーザー名。外部サービスとの認証・連携は行わない。空文字で未設定にできる。'
   required: []
   minProperties: 1
 CurrentUser:
@@ -36,6 +57,15 @@ CurrentUser:
       $ref: './common.yaml#/DisplayName'
     bio:
       type: 'string'
+    githubId:
+      type: 'string'
+      description: '本人が申告したGitHubのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
+    atcoderId:
+      type: 'string'
+      description: '本人が申告したAtCoderのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
+    xId:
+      type: 'string'
+      description: '本人が申告したXのユーザー名。外部サービスとの認証・連携は行っていない。未設定は空文字。'
     revision:
       $ref: './common.yaml#/Version'
     roles:
@@ -46,5 +76,8 @@ CurrentUser:
     - 'id'
     - 'displayName'
     - 'bio'
+    - 'githubId'
+    - 'atcoderId'
+    - 'xId'
     - 'revision'
     - 'roles'
