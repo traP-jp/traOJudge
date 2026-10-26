@@ -1,0 +1,39 @@
+{
+  "dags": [
+    {
+      "environment": "example-runner-v1",
+      "artifacts": [
+        {
+          "kind": "input",
+          "name": "script",
+          "realise": { "kind": "file", "path": "run.sh" }
+        },
+        {
+          "kind": "input",
+          "name": "source",
+          "realise": { "kind": "submission" }
+        },
+        { "kind": "intermediate", "name": "case_0_output" },
+        { "kind": "intermediate", "name": "case_1_output" }
+      ],
+      "executions": [
+        {
+          "name": "run_0",
+          "inputs": [
+            { "artifact": "script", "environment_variable": "TRAOJUDGE_INIT_SCRIPT" },
+            { "artifact": "source" }
+          ],
+          "outputs": ["case_0_output"]
+        },
+        {
+          "name": "run_1",
+          "inputs": [
+            { "artifact": "script", "environment_variable": "TRAOJUDGE_INIT_SCRIPT" },
+            { "artifact": "source" }
+          ],
+          "outputs": ["case_1_output"]
+        }
+      ]
+    }
+  ]
+}
