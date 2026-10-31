@@ -48,10 +48,10 @@ server/
 Unit of Workの関連型にはproviderの借用期間を持たせ、backendが保持する接続などを借用できるようにする。
 providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする。エラー型はbackendが定義し、開始・確定・破棄で共有する。
 未確定のUnit of Workが破棄された場合、backend実装は変更が確定されないことを保証する。非同期の破棄処理を明示的に待つ場合は`rollback`を呼ぶ。
-契約に加えて、テスト用のin-memory実装 (`storage::inmemory`) を提供する。PostgreSQL実装は `traojudge-infra::postgres::workflow` に置く。
+契約に加えて、テスト用のin-memory実装 (`storage::inmemory`) を提供する。PostgreSQL実装は `traojudge_infra::postgres::workflow` に置く。
 
-PostgreSQL実装のテーブルは `server/traojudge-infra/src/postgres/migrations` のmigrationで作る。`traojudge_infra::postgres::workflow::PostgresUnitOfWorkProvider::migrate` または `traojudge_infra::postgres::MIGRATOR` で適用する。
-実DBを使う契約確認は、`DATABASE_URL` を指定して `cargo test -p traojudge-infra --test workflow_postgres -- --ignored` で実行する。
+PostgreSQL実装のテーブルは `server/traojudge-infra/src/postgres/migrations` のmigrationで作り、`traojudge_infra::postgres::MIGRATOR` で適用する。
+実DBでの契約確認は `server/traojudge-infra/tests/workflow_postgres.rs` に置く。
 
 ## 状態更新の境界
 

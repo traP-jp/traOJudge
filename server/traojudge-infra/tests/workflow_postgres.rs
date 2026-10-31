@@ -1,11 +1,12 @@
 //! PostgreSQL上でworkflow storageの契約を確認する結合テスト。
 //!
-//! `DATABASE_URL` に接続可能なPostgreSQLを指定し、`--ignored` を付けて実行する。
-//! 各テストはsqlxが専用のデータベースを作成し、`postgres::MIGRATOR` を適用する。
+//! `DATABASE_URL` に接続可能なPostgreSQLを指定し、`--include-ignored` を付けて実行する。
+//! 各テストは専用のデータベースを作成し、`traojudge_infra::postgres::MIGRATOR` を適用する。
+//! 作成・削除には接続ユーザーの `CREATE DATABASE` 権限が必要で、`DATABASE_URL` はアプリの `TRAOJUDGE_DATABASE_URL` とは別。
 //!
 //! ```sh
-//! DATABASE_URL=postgres://postgres:postgres@localhost:5432/traojudge \
-//!     cargo test -p traojudge-infra --test workflow_postgres -- --ignored
+//! DATABASE_URL=postgresql://traojudge:traojudge@127.0.0.1:5433/traojudge \
+//!     cargo test -p traojudge-infra --test workflow_postgres -- --include-ignored
 //! ```
 
 use std::collections::HashSet;
