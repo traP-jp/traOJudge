@@ -2975,9 +2975,11 @@ dependencies = [
  "anyhow",
  "async-trait",
  "chrono",
+ "serde_json",
  "sqlx",
  "tokio",
  "traojudge-core",
+ "traojudge-workflow",
  "uuid",
  "workspace-hack",
 ]
