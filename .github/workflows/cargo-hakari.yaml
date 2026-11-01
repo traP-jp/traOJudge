@@ -33,7 +33,7 @@ jobs:
           toolchain: '1.95.0'
       # cargo-hakari の公式導入手順に従う。Action 自体もコミット SHA で固定する。
       # https://docs.rs/cargo-hakari/latest/cargo_hakari/#release-binaries
-      - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
         with:
           tool: cargo-hakari@0.9.36
       - run: cargo hakari generate --diff
