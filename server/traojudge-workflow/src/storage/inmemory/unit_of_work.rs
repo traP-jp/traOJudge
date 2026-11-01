@@ -15,7 +15,7 @@ use super::{InMemoryEdgeRepository, InMemoryJobRepository, InMemoryPipelineRepos
 /// 接続は1本で、先行するUnit of Workの終了まで次の`begin`は待機する。
 #[derive(Clone)]
 pub struct InMemoryUnitOfWorkProvider {
-    pool: SqlitePool,
+    pub(super) pool: SqlitePool,
 }
 
 impl InMemoryUnitOfWorkProvider {

@@ -3,3 +3,7 @@ cdk.out/
 cdk.context.json
 .env*
 *.log
+runtime/engine
+__pycache__/
+*.pyc
+pool/gvisor.tar.bz2

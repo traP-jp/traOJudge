@@ -1,0 +1,25 @@
+{
+  "scenario": "host-poweroff-before-result-and-queue-ack",
+  "checks": {
+    "host_poweroff_injected": true,
+    "different_ASG_instance_observed": true,
+    "same_submission_and_run_resumed": true,
+    "all_cases_AC_after_host_loss": true,
+    "retry_idempotent": true,
+    "idle_pool_instances_zero": true,
+    "dead_letter_queues_empty": true
+  },
+  "started_at": "2026-11-02T04:09:33.981843+09:00",
+  "pool": {
+    "runtime": "runsc version release-20261026.0",
+    "slots": 2,
+    "readiness_wait_seconds": 1.542,
+    "ec2_launch_to_ready_seconds": 69.553
+  },
+  "recovery_seconds": 252.646,
+  "idle_pool": {
+    "desired": 0,
+    "instances": 0,
+    "minimum": 0
+  }
+}

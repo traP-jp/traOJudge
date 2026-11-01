@@ -1,0 +1,1040 @@
+{
+  "scenario": "native-compile-run-check",
+  "region": "ap-northeast-1",
+  "started_at": "2026-11-02T02:56:04.862135+09:00",
+  "checks": {
+    "idempotent_acceptance": true,
+    "concurrent_ordering": true,
+    "source_overwrite_injected": true,
+    "native_execution": true,
+    "seccomp_network_denied": true,
+    "workload_identity_unprivileged": true,
+    "workload_credentials_absent": true,
+    "address_space_limit": true,
+    "read_only_rootfs": true,
+    "source_version_pinned": true,
+    "all_cases_continue_after_WA_TLE_RE": true,
+    "checkpoint_stop_recovered": true,
+    "process_count_limit": true,
+    "supervisor_environment_unreadable": true,
+    "output_size_limit": true,
+    "progress_survives_disconnected_reader": true,
+    "rejudge_separate_run": true,
+    "cpu_time_limit": true,
+    "duplicate_completion_idempotent": true,
+    "old_run_does_not_change_rejudge": true,
+    "dead_letter_queues_empty": true,
+    "deployed_task_has_no_IAM_role": true,
+    "idle_execution_jobs_zero": true,
+    "intermediate_progress_observed": true,
+    "other_runs_unblocked_by_failure": true,
+    "checkpoint_failure_observed_in_logs": true
+  },
+  "cases": {
+    "CE": {
+      "verdict": "CE",
+      "completed_cases": 0,
+      "total_cases": 3,
+      "seconds": 42.76,
+      "accept_to_checkpoint_seconds": 45.636
+    },
+    "RE": {
+      "verdict": "RE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 122.44,
+      "accept_to_checkpoint_seconds": 123.476
+    },
+    "AC": {
+      "verdict": "AC",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 128.7,
+      "accept_to_checkpoint_seconds": 125.813
+    },
+    "OLE": {
+      "verdict": "OLE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 130.89,
+      "accept_to_checkpoint_seconds": 127.701
+    },
+    "WA": {
+      "verdict": "WA",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 136.3,
+      "accept_to_checkpoint_seconds": 140.677
+    },
+    "TLE": {
+      "verdict": "TLE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 142.41,
+      "accept_to_checkpoint_seconds": 146.586
+    },
+    "durable": {
+      "verdict": "AC",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "seconds": 281.07,
+      "accept_to_checkpoint_seconds": 279.407
+    },
+    "rejudge": {
+      "verdict": "AC",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 401.52,
+      "accept_to_checkpoint_seconds": 119.579
+    }
+  },
+  "observations": [
+    {
+      "case": "AC",
+      "seconds": 0.95,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 1.77,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 2.47,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 3.18,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 3.95,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 4.26,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 9.03,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 9.77,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 10.47,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 11.16,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 11.92,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 12.21,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 16.94,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 17.64,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 18.38,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 19.09,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 19.8,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 20.53,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 25.31,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 26.02,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 26.74,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 27.47,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 28.16,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 28.86,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 33.57,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 34.27,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 34.98,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 35.67,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 36.38,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 37.07,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 41.76,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 42.06,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 42.76,
+      "status": "completed",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 43.05,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 43.75,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 44.47,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 49.18,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 49.88,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 50.58,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 51.3,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 51.58,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 56.36,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 57.11,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 57.86,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 58.65,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 59.4,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 64.18,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 64.92,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 65.65,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 66.4,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 67.19,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 71.89,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 72.63,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 73.37,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 74.1,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 74.85,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 79.55,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 80.25,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 81.0,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 81.73,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 82.44,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 87.21,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 87.94,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 88.68,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 89.45,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 90.15,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 94.88,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 95.58,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 95.91,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "RE",
+      "seconds": 96.64,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 97.41,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 98.13,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 102.97,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 103.78,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 104.58,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "RE",
+      "seconds": 105.32,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "OLE",
+      "seconds": 106.08,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 106.83,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 111.57,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 112.38,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 113.17,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "RE",
+      "seconds": 114.0,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "OLE",
+      "seconds": 114.73,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "durable",
+      "seconds": 115.53,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 120.29,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "WA",
+      "seconds": 121.04,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "TLE",
+      "seconds": 121.74,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "RE",
+      "seconds": 122.44,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "OLE",
+      "seconds": 123.18,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "durable",
+      "seconds": 123.94,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 128.7,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "WA",
+      "seconds": 129.49,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "TLE",
+      "seconds": 130.2,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 130.89,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "durable",
+      "seconds": 131.6,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 136.3,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "TLE",
+      "seconds": 136.99,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "durable",
+      "seconds": 137.7,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 142.41,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "durable",
+      "seconds": 143.18,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 147.89,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 152.62,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 157.33,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 162.03,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 166.78,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 171.55,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 176.29,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 181.04,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 185.78,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 190.52,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 195.29,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 200.03,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 204.79,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 209.55,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 214.36,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 219.11,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 223.82,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 228.62,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 233.36,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 238.11,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 242.87,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 247.17,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 251.92,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 256.64,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 262.02,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 266.78,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 271.55,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 276.31,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 281.07,
+      "status": "completed",
+      "completed_cases": 1
+    },
+    {
+      "case": "rejudge",
+      "seconds": 286.6,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 291.35,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 296.08,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 300.84,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 305.58,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 310.35,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 315.09,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 319.82,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 324.55,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 329.34,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 334.09,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 338.84,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 343.57,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 348.48,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 353.48,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 358.35,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 363.12,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 367.92,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 372.73,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "rejudge",
+      "seconds": 377.52,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "rejudge",
+      "seconds": 382.36,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "rejudge",
+      "seconds": 387.21,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "rejudge",
+      "seconds": 392.01,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "rejudge",
+      "seconds": 396.71,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "rejudge",
+      "seconds": 401.52,
+      "status": "completed",
+      "completed_cases": 3
+    }
+  ],
+  "idle_job_counts": {
+    "SUBMITTED": 0,
+    "PENDING": 0,
+    "RUNNABLE": 0,
+    "STARTING": 0,
+    "RUNNING": 0
+  },
+  "batch": {
+    "tasks": 46,
+    "failed_tasks": 0,
+    "accept_to_running_seconds": {
+      "median": 30.9,
+      "p95": 49.454,
+      "max": 55.756
+    },
+    "running_to_stopped_seconds": {
+      "median": 26.163,
+      "p95": 28.363,
+      "max": 55.238
+    },
+    "compute_minimum_USD": 0.023621
+  },
+  "duration_seconds": 436.69
+}

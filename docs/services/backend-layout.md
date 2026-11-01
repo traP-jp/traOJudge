@@ -48,7 +48,7 @@ server/
 Unit of Workの関連型にはproviderの借用期間を持たせ、backendが保持する接続などを借用できるようにする。
 providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする。エラー型はbackendが定義し、開始・確定・破棄で共有する。
 未確定のUnit of Workが破棄された場合、backend実装は変更が確定されないことを保証する。非同期の破棄処理を明示的に待つ場合は`rollback`を呼ぶ。
-現在は契約のみで、具体的なbackendやリポジトリ操作はまだ提供しない。
+`storage::inmemory` は SQLite のメモリー上の実装を提供する。インフラ実証用の `SnapshotUnitOfWorkProvider` は閉じた SQLite 作業コピーを再度開けるが、それだけで分散永続化を保証しない。外側で writer を直列化し、checkpoint と outbox を耐久確定してから配送する。[AWS 実証構成](serverless-judge.md)と[関心事の記録](serverless-judge-concerns.md)を参照する。
 
 ## 状態更新の境界
 

@@ -2971,6 +2971,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "traojudge-infra-probe"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "traojudge-workflow",
+ "uuid",
+ "workspace-hack",
+]
+
+[[package]]
 name = "traojudge-test"
 version = "0.1.0"
 dependencies = [

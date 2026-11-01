@@ -1,0 +1,462 @@
+{
+  "scenario": "native-compile-run-check",
+  "region": "ap-northeast-1",
+  "started_at": "2026-11-02T03:49:24.827531+09:00",
+  "checks": {
+    "idempotent_acceptance": true,
+    "concurrent_ordering": true,
+    "source_overwrite_injected": true,
+    "native_execution": true,
+    "seccomp_network_denied": true,
+    "workload_identity_unprivileged": true,
+    "workload_credentials_absent": true,
+    "address_space_limit": true,
+    "read_only_rootfs": true,
+    "source_version_pinned": true,
+    "all_cases_continue_after_WA_TLE_RE": true,
+    "checkpoint_stop_recovered": true,
+    "process_count_limit": true,
+    "supervisor_environment_unreadable": true,
+    "output_size_limit": true,
+    "progress_survives_disconnected_reader": true,
+    "rejudge_separate_run": true,
+    "cpu_time_limit": true,
+    "duplicate_completion_idempotent": true,
+    "old_run_does_not_change_rejudge": true,
+    "dead_letter_queues_empty": true,
+    "fresh_offline_gvisor_sandboxes": true,
+    "warm_p95_within_10_seconds": true,
+    "idle_pool_instances_zero": true,
+    "intermediate_progress_observed": true,
+    "other_runs_unblocked_by_failure": true,
+    "checkpoint_failure_observed_in_logs": true
+  },
+  "cases": {
+    "CE": {
+      "verdict": "CE",
+      "completed_cases": 0,
+      "total_cases": 3,
+      "seconds": 3.09,
+      "accept_to_checkpoint_seconds": 4.35
+    },
+    "TLE": {
+      "verdict": "TLE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 17.0,
+      "accept_to_checkpoint_seconds": 17.735
+    },
+    "OLE": {
+      "verdict": "OLE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 19.23,
+      "accept_to_checkpoint_seconds": 21.695
+    },
+    "AC": {
+      "verdict": "AC",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 24.29,
+      "accept_to_checkpoint_seconds": 22.695
+    },
+    "WA": {
+      "verdict": "WA",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 25.02,
+      "accept_to_checkpoint_seconds": 23.478
+    },
+    "RE": {
+      "verdict": "RE",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 93.51,
+      "accept_to_checkpoint_seconds": 23.546
+    },
+    "durable": {
+      "verdict": "AC",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "seconds": 188.51,
+      "accept_to_checkpoint_seconds": 185.413
+    },
+    "rejudge": {
+      "verdict": "AC",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "seconds": 198.82,
+      "accept_to_checkpoint_seconds": 6.113
+    }
+  },
+  "observations": [
+    {
+      "case": "TLE",
+      "seconds": 0.78,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 1.53,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "WA",
+      "seconds": 2.37,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "CE",
+      "seconds": 3.09,
+      "status": "completed",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 3.79,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 4.62,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 9.32,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 10.07,
+      "status": "judging",
+      "completed_cases": 1
+    },
+    {
+      "case": "WA",
+      "seconds": 10.77,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "OLE",
+      "seconds": 11.51,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 12.25,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "TLE",
+      "seconds": 17.0,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "AC",
+      "seconds": 17.73,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "WA",
+      "seconds": 18.53,
+      "status": "judging",
+      "completed_cases": 2
+    },
+    {
+      "case": "OLE",
+      "seconds": 19.23,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "durable",
+      "seconds": 19.93,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "AC",
+      "seconds": 24.29,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "WA",
+      "seconds": 25.02,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "durable",
+      "seconds": 25.71,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 30.5,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 35.25,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 40.09,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 44.89,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 49.77,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 54.59,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 59.42,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 64.88,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 69.65,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 74.44,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 79.23,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 83.95,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 88.77,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "RE",
+      "seconds": 93.51,
+      "status": "completed",
+      "completed_cases": 3
+    },
+    {
+      "case": "durable",
+      "seconds": 94.25,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 99.0,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 103.74,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 108.06,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 112.8,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 117.63,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 122.38,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 127.15,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 131.87,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 136.65,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 141.38,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 146.14,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 150.86,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 155.6,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 160.33,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 165.12,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 169.85,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 174.58,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 179.35,
+      "status": "queued",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 183.76,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "durable",
+      "seconds": 188.51,
+      "status": "completed",
+      "completed_cases": 1
+    },
+    {
+      "case": "rejudge",
+      "seconds": 194.07,
+      "status": "judging",
+      "completed_cases": 0
+    },
+    {
+      "case": "rejudge",
+      "seconds": 198.82,
+      "status": "completed",
+      "completed_cases": 3
+    }
+  ],
+  "pool": {
+    "runtime": "runsc version release-20261026.0",
+    "slots": 2,
+    "readiness_wait_seconds": 1.529,
+    "ec2_launch_to_ready_seconds": 71.446
+  },
+  "warm_latency": {
+    "samples": 10,
+    "concurrent_submissions": 2,
+    "cases_per_submission": 3,
+    "seconds": [
+      7.63119,
+      7.806211,
+      7.999804,
+      8.009297,
+      8.031221,
+      8.137521,
+      8.203225,
+      8.30162,
+      8.429239,
+      8.51075
+    ],
+    "median": 8.084,
+    "p95": 8.511,
+    "max": 8.511
+  },
+  "idle_pool": {
+    "desired": 0,
+    "instances": 0,
+    "minimum": 0
+  },
+  "duration_seconds": 322.86
+}

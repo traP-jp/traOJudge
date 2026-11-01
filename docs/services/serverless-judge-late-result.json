@@ -1,0 +1,14 @@
+{
+  "scenario": "late-sibling-after-infrastructure-failure",
+  "checks": {
+    "parallel_native_nodes_dispatched": true,
+    "infrastructure_failure_separate_from_verdict": true,
+    "native_sibling_result_arrived_after_termination": true,
+    "valid_late_result_acknowledged": true,
+    "terminal_state_unchanged": true,
+    "dead_letter_queues_empty": true,
+    "idle_execution_jobs_zero": true
+  },
+  "started_at": "2026-11-02T03:07:36.944036+09:00",
+  "duration_seconds": 95.08
+}

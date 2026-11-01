@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-11-01T19:28:22.327956+00:00",
+  "checks": {
+    "Judge_stack_absent": true,
+    "Recovery_stack_absent": true,
+    "Pool_stack_absent": true,
+    "HostLoss_stack_absent": true
+  },
+  "scope": "Dedicated test stacks only; shared CDK bootstrap and its asset storage are preserved."
+}

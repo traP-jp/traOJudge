@@ -1,0 +1,5 @@
+{
+  "source": "https://storage.googleapis.com/gvisor/releases/release/20261026.0/x86_64/gvisor.tar.bz2",
+  "sha512": "26e4a327565f5da0f73261a6387e2c20f4695a232e330095a3111b70efd604fdf09d734e8cc8f714dbb5c5607ce8c87ea80b26df549d83a146f2efd5a1af448a",
+  "version": "runsc version release-20261026.0"
+}

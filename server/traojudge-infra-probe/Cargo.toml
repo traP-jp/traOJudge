@@ -1,0 +1,16 @@
+[package]
+name = "traojudge-infra-probe"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+tokio.workspace = true
+traojudge-workflow.workspace = true
+uuid.workspace = true
+workspace-hack.workspace = true
