@@ -8,6 +8,7 @@ pub mod accounts;
 pub mod contest;
 pub mod editorial;
 pub mod problems;
+pub mod receipt_cleanup;
 pub mod sessions;
 pub mod users;
 

@@ -64,3 +64,5 @@ providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする�
 [解説](../backend/editorials.md)では、専用のUnit of Workで問題の参照検査と解説・編集担当・作成要求の再送記録を同時に確定する。[問題のDB基盤](../backend/problems.md)はUUID・作成者・公開状態・削除日時を保持し、本文や作成・編集APIは後続で追加する。解説の削除・公開変更は投稿者本人またはservice-adminが行う。問題削除時はDBトリガーで解説も取り下げ、親と同じトランザクションで確定する。
 
 [大会](../backend/contests.md)では通常大会・バーチャル大会の管理・出題・参加を実装する。`ContestService` が権限と状態遷移を判断し、`ContestUnitOfWork` で大会・役割・チーム・再送記録をまとめて確定する。HTTPは種類別のルーターと生成DTOへの変換、Infraは大会行・利用者行のロックとSQLを担当する。
+
+[期限切れの再送記録](../backend/receipt-cleanup.md)は、専用のUoWで両機能の記録だけを少量ずつ削除する。Coreが削除の境界、Infraが期限の検査と行ロック、bootstrapが定期実行とworkerの寿命を担う。

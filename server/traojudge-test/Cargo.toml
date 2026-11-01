@@ -16,7 +16,7 @@ axum.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
 sqlx = { workspace = true, features = ["postgres", "macros", "migrate"] }
-tokio.workspace = true
+tokio = { workspace = true, features = ["time"] }
 tower.workspace = true
 traojudge-backend_app.workspace = true
 uuid.workspace = true

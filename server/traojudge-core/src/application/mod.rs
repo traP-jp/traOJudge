@@ -3,5 +3,6 @@
 pub mod account;
 pub mod contest;
 pub mod editorial;
+pub mod receipt_cleanup;
 pub mod session;
 pub mod users;
