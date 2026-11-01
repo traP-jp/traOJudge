@@ -5,6 +5,9 @@ use std::time::Duration;
 use sqlx::{PgPool, migrate::Migrator, postgres::PgPoolOptions};
 
 pub mod accounts;
+pub mod contest;
+pub mod editorial;
+pub mod problems;
 pub mod sessions;
 pub mod users;
 
@@ -17,7 +20,3 @@ pub async fn connect(database_url: &str) -> Result<PgPool, sqlx::Error> {
         .connect(database_url)
         .await
 }
-
-pub mod editorial;
-
-pub mod problems;

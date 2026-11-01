@@ -20,14 +20,14 @@ pub struct ContestCreate {
     pub description: Option<String>,
     /// 大会主催側が選ぶ参加方式。個人戦またはチーム戦。
     #[serde(rename = "participationMode")]
-    pub participation_mode: ParticipationMode,
+    pub participation_mode: models::ContestParticipationMode,
     #[serde(rename = "startsAt")]
     pub starts_at: String,
     #[serde(rename = "endsAt")]
     pub ends_at: String,
     #[serde(rename = "rules")]
     pub rules: models::ContestRules,
-    /// 作成時の公開範囲。作成後の変更権限は別途具体化する。
+    /// 作成時の公開範囲。対象大会の運営担当が開始前だけ変更できる。
     #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
     pub visibility: Option<models::VisibilityValue>,
 }
@@ -35,7 +35,7 @@ pub struct ContestCreate {
 impl ContestCreate {
     pub fn new(
         title: String,
-        participation_mode: ParticipationMode,
+        participation_mode: models::ContestParticipationMode,
         starts_at: String,
         ends_at: String,
         rules: models::ContestRules,
@@ -49,19 +49,5 @@ impl ContestCreate {
             rules,
             visibility: None,
         }
-    }
-}
-/// 大会主催側が選ぶ参加方式。個人戦またはチーム戦。
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum ParticipationMode {
-    #[serde(rename = "individual")]
-    Individual,
-    #[serde(rename = "team")]
-    Team,
-}
-
-impl Default for ParticipationMode {
-    fn default() -> ParticipationMode {
-        Self::Individual
     }
 }

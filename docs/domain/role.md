@@ -23,12 +23,14 @@
 ## contest-setter (ContestId contest_id)
 
 ### 権限
-- contestに自身のproblemを追加できる
-- contest内の全ての問題をcontestから削除できる
+- contestに自身が作成者として記録されているproblemを追加できる（終了時刻より前まで）
+- contest内の全ての問題をcontestから削除できる（終了時刻より前まで）
 - contest内のすべての問題に対して、testerと同等の権限を持つ
 - contestのルールや開催時間終了時間の決定・update
 - contest中の提出の閲覧とClarへの返答
 
+
+通常大会は役割を自動付与しない。service-adminがcontest-adminを、contest-adminまたはservice-adminがcontest-setterを付与する。通常大会・バーチャル大会とも題名と公開範囲は対象大会の運営担当が開始前だけ変更できる。開始後は題名・公開範囲・開始時刻とルールを固定し、終了時刻と通常大会の概要だけを変更できる。
 
 ## writer
 
@@ -56,17 +58,21 @@
 ## virtual-contest-setter (VirtualContestId virtual_contest_id)
 
 ### 権限
-- publicな問題を紐づけることができる
+- publicな問題を紐づけることができる（終了時刻より前まで）
+- virtual-contestから問題を外せる（終了時刻より前まで）
+- 対象のvirtual-contestを論理削除できる
 - contestのルールや開催時間終了時間の決定・update
 - contest中の提出の閲覧とClarへの返答
 
+
+バーチャル大会の作成者には、その大会のvirtual-contest-setterを自動付与する。
 
 ## standard-user
 
 ### 権限
 - virtual-contestを作成できる
 - publicな問題に対して、提出をできる
-- publicなコンテストに対して、contestantになることができる
+- publicな通常大会・バーチャル大会へ自己参加できる。個人参加は終了時刻より前まで、チームの新規参加・移動・脱退は開始時刻より前まで
 - editorialを追加できる
 
 

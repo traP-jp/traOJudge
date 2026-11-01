@@ -32,7 +32,7 @@ contests:
     tags:
       - 'contests'
     summary: '通常の大会を作る'
-    description: 'participationModeで個人戦またはチーム戦を選ぶ。作成者へのcontest-setterやcontest-adminの自動付与は未決。作成と役割の付与を同一と見なさない。'
+    description: 'participationModeで個人戦またはチーム戦を選ぶ。作成者へ役割を自動付与しない。service-adminがcontest-adminを付与し、contest-adminがcontest-setterを付与する。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -120,8 +120,8 @@ contestsByContestId:
     operationId: 'updateContest'
     tags:
       - 'contests'
-    summary: '通常の大会の概要・時間・ルール・参加方式を変更する'
-    description: '対象大会の運営担当だけが概要・時間・ルール・参加方式を変更できる。概要はMarkdown形式で、HTMLは許可しない。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティ・参加方式は開始時刻（更新前のstartsAt）以降に変更できない。開始時刻より前に参加方式を個人戦とチーム戦の間で変更すると、この大会の既存の参加登録と大会内チームをすべて削除する。'
+    summary: '通常の大会の題名・公開範囲・概要・時間・ルール・参加方式を変更する'
+    description: '対象大会のcontest-setterだけが設定を変更できる。概要はMarkdown形式で、HTMLは許可しない。開始終了時刻の前後関係を検証し、題名・公開範囲・開始時刻・タイブレーク方式・ペナルティ・参加方式は開始時刻（更新前のstartsAt）以降に変更できない。開始後は終了時刻と概要だけを変更できる。開始時刻より前に参加方式を個人戦とチーム戦の間で変更すると、この大会の既存の参加登録と大会内チームをすべて削除する。題名・公開範囲の変更だけでは参加登録やチームを削除しない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -159,7 +159,7 @@ contestsByContestId:
       '404':
         $ref: '../components/responses.yaml#/NotFound'
       '409':
-        description: '参加方式を大会開始後に変更しようとした、または要求が既存状態と競合した。'
+        description: '開始後に固定する題名・公開範囲・開始時刻・ルール・参加方式を変更しようとした、または要求が既存状態と競合した。'
         content:
           'application/json':
             schema:
@@ -214,18 +214,21 @@ contestsByContestIdProblems:
     tags:
       - 'contests'
     summary: '通常の大会の出題一覧を取得する'
-    description: '対象大会の閲覧・公開範囲に従う。非公開問題の本文・テスト内容をこの操作から開示しない。'
+    description: '開始前は対象大会のcontest-admin・contest-setterだけが取得できる。開始後は公開大会なら誰でも、非公開大会なら運営担当・参加者が取得できる。非公開問題の本文・テスト内容は開示しない。'
     security:
       - {}
       - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
-        - condition: '公開された大会・公開してよい出題情報'
+        - condition: '開始時刻以降の公開大会の出題情報'
+        - role: 'contest-admin'
+          scope: 'contestId'
         - role: 'contest-setter'
           scope: 'contestId'
         - role: 'contestant'
           scope: 'contestId'
+          condition: '開始時刻以降'
     x-scenarios: []
     responses:
       '200':
@@ -251,13 +254,13 @@ contestsByContestIdProblemsByProblemId:
     tags:
       - 'contests'
     summary: '通常の大会に問題を追加する'
-    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。'
+    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。追加・取り外しは大会の終了時刻より前まで可能。'
     x-authorization:
       status: 'defined'
       anyOf:
         - role: 'contest-setter'
           scope: 'contestId'
-          condition: '自身の問題である。「自身」の判定はMUT-09で具体化する'
+          condition: '本人が作成者として記録されている問題であり、終了時刻より前である'
     x-scenarios:
       - 'C2-01'
     parameters:
@@ -296,7 +299,7 @@ contestsByContestIdProblemsByProblemId:
     tags:
       - 'contests'
     summary: '通常の大会から問題を外す'
-    description: '大会と問題の結び付きだけを外す。通常の大会では他の作問者の問題も外せる。元の問題そのものを削除する操作ではない。既に外れていれば204。'
+    description: '大会と問題の結び付きだけを外す。通常の大会では他の作問者の問題も外せる。元の問題そのものを削除する操作ではない。既に外れていれば204。追加・取り外しは大会の終了時刻より前まで可能。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -331,13 +334,13 @@ contestsByContestIdParticipation:
     tags:
       - 'contests'
     summary: '通常の大会へ本人が参加する'
-    description: '個人戦の大会で、ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。チーム戦ではこの操作を使わず、チームへの参加操作を使う。管理者が他の人へ参加資格を付ける操作とは分ける。'
+    description: '個人戦の大会で、ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。新規参加は終了時刻より前まで可能で、開催中も受け付ける。登録済みの本人の再要求は現在の参加状態を返す。チーム戦ではこの操作を使わず、チームへの参加操作を使う。管理者が他の人へ参加資格を付ける操作とは分ける。'
     x-authorization:
       status: 'defined'
       anyOf:
         - role: 'standard-user'
           scope: 'service'
-          condition: '対象の通常大会が個人戦で公開され、本人が参加条件を満たす'
+          condition: '対象の通常大会が個人戦で公開され、終了時刻より前に本人が参加条件を満たす'
     x-scenarios:
       - 'R3-01'
     parameters:

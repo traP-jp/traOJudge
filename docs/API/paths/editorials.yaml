@@ -4,7 +4,7 @@ editorials:
     tags:
       - 'editorials'
     summary: '問題に解説を投稿する'
-    description: '解説を投稿する。解答の提出やwriterは必須にしない。暫定仕様として非公開で作成し、投稿者に対象解説のeditiorial-authorを同じトランザクションで付与する。Idempotency-Keyは本人と作成操作ごとに識別し、保存期間内の同じキー・同じ入力には作成時の表現を返す。問題の存在・削除状態・閲覧権限も同じUoWで検査する。'
+    description: '解説を投稿する。解答の提出やwriterは必須にしない。非公開で作成し、投稿者に対象解説のeditiorial-authorを同じトランザクションで付与する。Idempotency-Keyは本人と作成操作ごとに識別し、保存期間内の同じキー・同じ入力には作成時の表現を返す。問題の存在・削除状態・閲覧権限も同じUoWで検査する。'
     x-authorization:
       status: 'defined'
       anyOf:

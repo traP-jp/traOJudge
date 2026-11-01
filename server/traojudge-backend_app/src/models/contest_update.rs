@@ -13,12 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContestUpdate {
+    /// 開始前だけ変更可能。
+    #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+    /// 開始前だけ変更可能。
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<models::VisibilityValue>,
     /// コンテストtopの概要．Markdown形式で記述し，空文字列で消去する．
     #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// 変更要求時点が更新前のstartsAtより前なら現在の方式と異なる値へ変更できる。変更すると既存の参加登録と大会内チームをすべて削除する。
     #[serde(rename = "participationMode", skip_serializing_if = "Option::is_none")]
-    pub participation_mode: Option<ParticipationMode>,
+    pub participation_mode: Option<models::ContestParticipationMode>,
     #[serde(rename = "startsAt", skip_serializing_if = "Option::is_none")]
     pub starts_at: Option<String>,
     #[serde(rename = "endsAt", skip_serializing_if = "Option::is_none")]
@@ -30,25 +36,13 @@ pub struct ContestUpdate {
 impl ContestUpdate {
     pub fn new() -> ContestUpdate {
         ContestUpdate {
+            title: None,
+            visibility: None,
             description: None,
             participation_mode: None,
             starts_at: None,
             ends_at: None,
             rules: None,
         }
-    }
-}
-/// 変更要求時点が更新前のstartsAtより前なら現在の方式と異なる値へ変更できる。変更すると既存の参加登録と大会内チームをすべて削除する。
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum ParticipationMode {
-    #[serde(rename = "individual")]
-    Individual,
-    #[serde(rename = "team")]
-    Team,
-}
-
-impl Default for ParticipationMode {
-    fn default() -> ParticipationMode {
-        Self::Individual
     }
 }

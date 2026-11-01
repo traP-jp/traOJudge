@@ -7,3 +7,7 @@ pub mod user;
 pub mod editorial;
 
 pub mod problem;
+
+pub mod contest;
+
+pub mod request;

@@ -7,24 +7,9 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use chrono::DateTime;
 use serde::Deserialize;
 use traojudge_core::domain::model::editorial::{
-    EditorialCreationKey, EditorialCursor, EditorialError, EditorialPageRequest,
+    EditorialCursor, EditorialError, EditorialPageRequest,
 };
 use uuid::Uuid;
-
-pub(super) struct CreationKey(pub EditorialCreationKey);
-impl<S: Send + Sync> FromRequestParts<S> for CreationKey {
-    type Rejection = ApiError;
-    async fn from_request_parts(parts: &mut Parts, _: &S) -> Result<Self, Self::Rejection> {
-        let mut values = parts.headers.get_all("idempotency-key").iter();
-        let value = values.next().ok_or(ApiError::BadRequest)?;
-        if values.next().is_some() {
-            return Err(ApiError::BadRequest);
-        }
-        EditorialCreationKey::parse(value.to_str().map_err(|_| ApiError::BadRequest)?)
-            .map(Self)
-            .map_err(|_| ApiError::BadRequest)
-    }
-}
 
 pub(super) struct AuthorIds(pub Uuid, pub Uuid);
 impl<S: Send + Sync> FromRequestParts<S> for AuthorIds {

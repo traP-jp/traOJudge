@@ -114,26 +114,6 @@ fn validate_text(field: &'static str, value: &str, max: usize) -> Result<(), Edi
     Ok(())
 }
 
-pub struct EditorialCreationKey(String);
-impl EditorialCreationKey {
-    pub fn parse(value: &str) -> Result<Self, EditorialError> {
-        if !(1..=128).contains(&value.len())
-            || !value
-                .bytes()
-                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'.' | b'_' | b':' | b'-'))
-        {
-            return Err(EditorialError::validation(
-                "Idempotency-Key",
-                "must contain 1 to 128 ASCII letters, digits, '.', '_', ':' or '-'",
-            ));
-        }
-        Ok(Self(value.to_owned()))
-    }
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
 pub struct EditorialCreationReceipt {
     pub request_digest: Vec<u8>,
     pub editorial: Editorial,

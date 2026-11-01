@@ -3,6 +3,7 @@ use crate::{
         account::{AccountRole, AuthenticatedSession, RoleName},
         editorial::*,
         problem::ProblemVisibility,
+        request::IdempotencyKey,
         user::UserId,
     },
     ports::repository::editorial::{EditorialUnitOfWork, EditorialUnitOfWorkProvider},
@@ -30,7 +31,7 @@ impl<U: EditorialUnitOfWorkProvider> EditorialService<U> {
     pub async fn create(
         &self,
         actor: AuthenticatedSession,
-        key: EditorialCreationKey,
+        key: IdempotencyKey,
         input: NewEditorial,
     ) -> Result<Editorial, EditorialError> {
         input.validate()?;
@@ -60,7 +61,6 @@ impl<U: EditorialUnitOfWorkProvider> EditorialService<U> {
             author_id: actor.user_id,
             title: input.title,
             body: input.body,
-            // TODO(editorial-policy): 非公開＋投稿者への編集権限付与は暫定合意。仕様確定時に見直す。
             visibility: EditorialVisibility::Private,
             revision: Uuid::new_v4().to_string(),
             created_at: tx.now(),
@@ -293,7 +293,9 @@ async fn require_readable_problem<T: EditorialUnitOfWork>(
                 return Ok(());
             }
         }
-        // TODO(contests): 通常大会と問題の関連付けができたら、その大会のcontest-setterも検査する。
+        if tx.has_contest_problem_role(viewer, id).await? {
+            return Ok(());
+        }
     }
     Err(EditorialError::NotFound)
 }

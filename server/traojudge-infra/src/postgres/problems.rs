@@ -6,6 +6,7 @@ use uuid::Uuid;
 #[derive(sqlx::FromRow)]
 struct ProblemReferenceRow {
     visibility: String,
+    created_by_user_id: Option<Uuid>,
     deleted_at: Option<DateTime<Utc>>,
 }
 
@@ -15,7 +16,7 @@ pub(super) async fn lock_reference(
     id: Uuid,
 ) -> Result<Option<ProblemReference>, sqlx::Error> {
     let row = sqlx::query_as::<_, ProblemReferenceRow>(
-        "SELECT visibility, deleted_at FROM problems WHERE id = $1 FOR SHARE",
+        "SELECT visibility, deleted_at, created_by_user_id FROM problems WHERE id = $1 FOR SHARE",
     )
     .bind(id)
     .fetch_optional(&mut **tx)
@@ -27,6 +28,9 @@ pub(super) async fn lock_reference(
             _ => return Err(sqlx::Error::Decode("invalid problem visibility".into())),
         };
         Ok(ProblemReference {
+            created_by_user_id: row
+                .created_by_user_id
+                .map(traojudge_core::domain::model::user::UserId::new),
             visibility,
             deleted_at: row.deleted_at,
         })

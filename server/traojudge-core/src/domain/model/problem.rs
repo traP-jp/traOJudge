@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 
 /// 解説から参照する問題の最小情報。問題本文や採点設定とは独立する。
 pub struct ProblemReference {
+    pub created_by_user_id: Option<super::user::UserId>,
     pub visibility: ProblemVisibility,
     pub deleted_at: Option<DateTime<Utc>>,
 }

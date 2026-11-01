@@ -27,7 +27,7 @@ pub struct Contest {
     pub starts_at: String,
     /// 個人戦またはチーム戦。
     #[serde(rename = "participationMode")]
-    pub participation_mode: ParticipationMode,
+    pub participation_mode: models::ContestParticipationMode,
     #[serde(rename = "endsAt")]
     pub ends_at: String,
     #[serde(rename = "rules")]
@@ -43,7 +43,7 @@ impl Contest {
         title: String,
         visibility: models::VisibilityValue,
         starts_at: String,
-        participation_mode: ParticipationMode,
+        participation_mode: models::ContestParticipationMode,
         ends_at: String,
         rules: models::ContestRules,
         revision: String,
@@ -59,19 +59,5 @@ impl Contest {
             rules,
             revision,
         }
-    }
-}
-/// 個人戦またはチーム戦。
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum ParticipationMode {
-    #[serde(rename = "individual")]
-    Individual,
-    #[serde(rename = "team")]
-    Team,
-}
-
-impl Default for ParticipationMode {
-    fn default() -> ParticipationMode {
-        Self::Individual
     }
 }

@@ -134,6 +134,11 @@ fn app(pool: &PgPool, external: External) -> Router {
             Duration::days(1),
         )
         .unwrap(),
+        traojudge_core::application::contest::ContestService::new(
+            traojudge_infra::postgres::contest::PgContestUnitOfWorkProvider::new(pool.clone()),
+            Duration::days(1),
+        )
+        .unwrap(),
         WebOrigin::parse(ORIGIN).unwrap(),
     )
 }
@@ -1219,6 +1224,11 @@ async fn unconfigured_external_connections_fail_explicitly(pool: PgPool) {
         SessionService::new(PgSessionRepository::new(pool.clone())),
         traojudge_core::application::editorial::EditorialService::new(
             traojudge_infra::postgres::editorial::PgEditorialUnitOfWorkProvider::new(pool.clone()),
+            Duration::days(1),
+        )
+        .unwrap(),
+        traojudge_core::application::contest::ContestService::new(
+            traojudge_infra::postgres::contest::PgContestUnitOfWorkProvider::new(pool.clone()),
             Duration::days(1),
         )
         .unwrap(),

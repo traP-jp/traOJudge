@@ -13,6 +13,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct VirtualContestUpdate {
+    /// 開始前だけ変更可能。
+    #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+    /// 開始前だけ変更可能。
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<models::VisibilityValue>,
     #[serde(rename = "startsAt", skip_serializing_if = "Option::is_none")]
     pub starts_at: Option<String>,
     #[serde(rename = "endsAt", skip_serializing_if = "Option::is_none")]
@@ -24,6 +30,8 @@ pub struct VirtualContestUpdate {
 impl VirtualContestUpdate {
     pub fn new() -> VirtualContestUpdate {
         VirtualContestUpdate {
+            title: None,
+            visibility: None,
             starts_at: None,
             ends_at: None,
             rules: None,

@@ -8,6 +8,7 @@ use serde_json::{Value, json};
 use sqlx::PgPool;
 use tower::ServiceExt;
 use traojudge_backend_app::http::{build_router, middleware::origin::WebOrigin};
+use traojudge_core::domain::model::request::IdempotencyKey;
 use traojudge_core::{
     application::{
         account::AccountService, editorial::EditorialService, session::SessionService,
@@ -15,7 +16,7 @@ use traojudge_core::{
     },
     domain::model::{
         account::{AuthenticatedSession, Secret},
-        editorial::{EditorialChanges, EditorialCreationKey, EditorialError, NewEditorial},
+        editorial::{EditorialChanges, EditorialError, NewEditorial},
         user::UserId,
     },
     ports::repository::editorial::{EditorialUnitOfWork, EditorialUnitOfWorkProvider},
@@ -99,6 +100,11 @@ fn app(pool: &PgPool) -> Router {
         SessionService::new(PgSessionRepository::new(pool.clone())),
         EditorialService::new(
             PgEditorialUnitOfWorkProvider::new(pool.clone()),
+            Duration::days(1),
+        )
+        .unwrap(),
+        traojudge_core::application::contest::ContestService::new(
+            traojudge_infra::postgres::contest::PgContestUnitOfWorkProvider::new(pool.clone()),
             Duration::days(1),
         )
         .unwrap(),
@@ -780,7 +786,7 @@ fn editorial_validation_uses_character_lengths_and_unambiguous_input_digests() {
     };
     assert_ne!(a.digest(), b.digest());
     for key in ["", "bad key", "あ", &"a".repeat(129)] {
-        assert!(EditorialCreationKey::parse(key).is_err());
+        assert!(IdempotencyKey::parse(key).is_err());
     }
 }
 

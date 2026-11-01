@@ -282,6 +282,8 @@ components:
       $ref: './schemas/common.yaml#/DisplayName'
     PageCursor:
       $ref: './schemas/common.yaml#/PageCursor'
+    ContestParticipationMode:
+      $ref: './schemas/contests.yaml#/ContestParticipationMode'
     ContestRules:
       $ref: './schemas/contests.yaml#/ContestRules'
     ContestCreate:

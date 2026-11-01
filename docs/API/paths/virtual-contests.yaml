@@ -32,7 +32,7 @@ virtualContests:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会を作る'
-    description: '作成者へのvirtual-contest-setterの自動付与は未決。作成と役割の付与を同一と見なさない。バーチャル大会での個人ごとの開始と大会の開始終了時刻との関係はMUT-06で具体化する。'
+    description: '作成者に対象大会のvirtual-contest-setterを同じトランザクションで自動付与する。参加者全員が大会共通の開始・終了時刻を使い、個人別開始・再挑戦は設けない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -118,8 +118,8 @@ virtualContestsByVirtualContestId:
     operationId: 'updateVirtualContest'
     tags:
       - 'virtual-contests'
-    summary: 'バーチャル大会の時間・ルールを変更する'
-    description: '対象大会の運営担当だけが変更できる。開始終了時刻の前後関係を検証し、タイブレーク方式・ペナルティは開始後に変更できない。開催中・終了後のその他の変更条件はMUT-06で具体化する。'
+    summary: 'バーチャル大会の題名・公開範囲・時間・ルールを変更する'
+    description: '対象大会のvirtual-contest-setterが設定を変更する。更新前の開始時刻以降は題名・公開範囲・開始時刻・ルールを固定し、終了時刻だけを変更できる。題名・公開範囲の変更では既存の参加資格を削除しない。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -173,15 +173,14 @@ virtualContestsByVirtualContestId:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会を取り下げる'
-    description: |-
-      大会を論理削除し、過去の出題・参加・提出・得点の記録を残す。
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '対象大会のvirtual-contest-setterが論理削除する。過去の出題・参加の記録を保持する。'
     x-authorization:
-      status: 'pending'
-      reason: 'C1-06：バーチャル大会の削除権限が未決。'
+      status: 'defined'
+      anyOf:
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
     x-scenarios:
       - 'C1-06'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
@@ -209,18 +208,19 @@ virtualContestsByVirtualContestIdProblems:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会の出題一覧を取得する'
-    description: '対象大会の閲覧・公開範囲に従う。非公開問題の本文・テスト内容をこの操作から開示しない。'
+    description: '開始前は対象大会のvirtual-contest-setterだけが取得できる。開始後は公開大会なら誰でも、非公開大会なら運営担当・参加者が取得できる。問題本文・テスト内容は開示しない。'
     security:
       - {}
       - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
-        - condition: '公開された大会・公開してよい出題情報'
+        - condition: '開始時刻以降の公開大会の出題情報'
         - role: 'virtual-contest-setter'
           scope: 'virtualContestId'
         - role: 'virtual-contestant'
           scope: 'virtualContestId'
+          condition: '開始時刻以降'
     x-scenarios: []
     responses:
       '200':
@@ -246,7 +246,7 @@ virtualContestsByVirtualContestIdProblemsByProblemId:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会に問題を追加する'
-    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。'
+    description: '同じ問題が同じ設定で既に含まれていれば同じ結果を返す。既存設定の変更や出題順の再編集は、追加の許可から暗黙に認めない。追加・取り外しは大会の終了時刻より前まで可能。'
     x-authorization:
       status: 'defined'
       anyOf:
@@ -291,15 +291,14 @@ virtualContestsByVirtualContestIdProblemsByProblemId:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会から問題を外す'
-    description: |-
-      大会と問題の結び付きだけを外す。通常の大会では他の作問者の問題も外せる。元の問題そのものを削除する操作ではない。既に外れていれば204。
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '対象大会のvirtual-contest-setterが大会と問題の関連付けだけを外す。終了時刻より前まで可能。既に外れていれば204。'
     x-authorization:
-      status: 'pending'
-      reason: 'C2-04：バーチャル大会からの問題取り外しの権限が未決。'
+      status: 'defined'
+      anyOf:
+        - role: 'virtual-contest-setter'
+          scope: 'virtualContestId'
     x-scenarios:
       - 'C2-04'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
     responses:
@@ -327,15 +326,15 @@ virtualContestsByVirtualContestIdParticipation:
     tags:
       - 'virtual-contests'
     summary: 'バーチャル大会へ本人が参加する'
-    description: |-
-      ログインしている本人だけを参加者にする。他の利用者のuserIdは受け取らない。管理者が他の人へ参加資格を付ける操作とは分ける。
-      認可条件が未決。合意・契約更新までこの操作を有効にせず、policy_not_decidedとして403を返す。成功応答は合意後の候補である。
+    description: '公開大会へログイン中の本人を参加登録する。standard-userが終了時刻より前まで新規参加でき、開催中も受け付ける。登録済みの本人の再要求は現在の参加状態を返す。他人のuserIdは受け取らない。'
     x-authorization:
-      status: 'pending'
-      reason: 'R4-01：バーチャル大会へ自己参加できる条件が未決。'
+      status: 'defined'
+      anyOf:
+        - role: 'standard-user'
+          scope: 'service'
+          condition: '対象大会が公開され、終了時刻より前の本人の参加'
     x-scenarios:
       - 'R4-01'
-    x-decision-status: 'pending-authorization'
     parameters:
       - $ref: '../components/parameters.yaml#/WebOrigin'
       - $ref: '../components/parameters.yaml#/IdempotencyKey'

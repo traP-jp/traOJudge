@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+argon2.workspace = true
+pulldown-cmark.workspace = true
 aes-gcm.workspace = true
 anyhow.workspace = true
 async-trait.workspace = true

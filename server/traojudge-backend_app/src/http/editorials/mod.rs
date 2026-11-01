@@ -1,7 +1,9 @@
-use self::extractors::{AuthorIds, CreationKey, Page, encode_cursor};
+use self::extractors::{AuthorIds, Page, encode_cursor};
 use crate::http::{
     error::ApiError,
-    extractors::{CurrentSession, IfMatch, OptionalSession, ResourceId, StrictJson, etag},
+    extractors::{
+        CurrentSession, IfMatch, OptionalSession, RequestKey, ResourceId, StrictJson, etag,
+    },
     middleware::cache,
     schema,
 };
@@ -47,7 +49,7 @@ pub(super) fn routes<U: EditorialUnitOfWorkProvider + 'static>(
 async fn create<U: EditorialUnitOfWorkProvider>(
     State(service): State<Arc<EditorialService<U>>>,
     CurrentSession(actor): CurrentSession,
-    CreationKey(key): CreationKey,
+    RequestKey(key): RequestKey,
     StrictJson(input): StrictJson<schema::EditorialCreate>,
 ) -> Result<Response, ApiError> {
     Ok(editorial_response(

@@ -61,4 +61,6 @@ providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする�
 
 アカウント管理では `core::ports::repository::account` の `AccountUnitOfWorkProvider` / `AccountUnitOfWork` を使う。業務判断・永続化操作の組み合わせ・commitはapplication、本人に限定したSQL・行ロック・未確定時のrollbackはinfraが担当する。メール配送やOAuth照会の間はUoWを保持しない。HTTPのmiddleware・extractor・生成DTOはHTTP層に置く。
 
-[解説](../backend/editorials.md)では、専用のUnit of Workで問題の参照検査と解説・編集担当・作成要求の再送記録を同時に確定する。[問題のDB基盤](../backend/problems.md)はUUID・公開状態・削除日時だけを保持し、本文や作成・編集APIは後続で追加する。解説の削除・公開変更は投稿者本人またはservice-adminが行う。問題削除時はDBトリガーで解説も取り下げ、親と同じトランザクションで確定する。
+[解説](../backend/editorials.md)では、専用のUnit of Workで問題の参照検査と解説・編集担当・作成要求の再送記録を同時に確定する。[問題のDB基盤](../backend/problems.md)はUUID・作成者・公開状態・削除日時を保持し、本文や作成・編集APIは後続で追加する。解説の削除・公開変更は投稿者本人またはservice-adminが行う。問題削除時はDBトリガーで解説も取り下げ、親と同じトランザクションで確定する。
+
+[大会](../backend/contests.md)では通常大会・バーチャル大会の管理・出題・参加を実装する。`ContestService` が権限と状態遷移を判断し、`ContestUnitOfWork` で大会・役割・チーム・再送記録をまとめて確定する。HTTPは種類別のルーターと生成DTOへの変換、Infraは大会行・利用者行のロックとSQLを担当する。

@@ -3,14 +3,15 @@
 use crate::http::{build_router, middleware::origin::WebOrigin};
 use std::net::SocketAddr;
 use traojudge_core::application::{
-    account::AccountService, editorial::EditorialService, session::SessionService,
-    users::GetUserProfile,
+    account::AccountService, contest::ContestService, editorial::EditorialService,
+    session::SessionService, users::GetUserProfile,
 };
 use traojudge_infra::{
     account_services::UnconfiguredAccountServices,
     postgres::{
-        self, accounts::PgAccountUnitOfWorkProvider, editorial::PgEditorialUnitOfWorkProvider,
-        sessions::PgSessionRepository, users::PgUserProfileRepository,
+        self, accounts::PgAccountUnitOfWorkProvider, contest::PgContestUnitOfWorkProvider,
+        editorial::PgEditorialUnitOfWorkProvider, sessions::PgSessionRepository,
+        users::PgUserProfileRepository,
     },
 };
 
@@ -30,6 +31,13 @@ pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         PgEditorialUnitOfWorkProvider::new(pool.clone()),
         chrono::Duration::seconds(i64::from(receipt_retention)),
     )?;
+    let contest_retention = std::env::var("TRAOJUDGE_CONTEST_IDEMPOTENCY_TTL_SECONDS")
+        .unwrap_or_else(|_| "86400".to_owned())
+        .parse::<u32>()?;
+    let contests = ContestService::new(
+        PgContestUnitOfWorkProvider::new(pool.clone()),
+        chrono::Duration::seconds(i64::from(contest_retention)),
+    )?;
     let router = build_router(
         GetUserProfile::new(PgUserProfileRepository::new(pool.clone())),
         AccountService::new(
@@ -38,6 +46,7 @@ pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         ),
         SessionService::new(PgSessionRepository::new(pool)),
         editorials,
+        contests,
         origin,
     );
 

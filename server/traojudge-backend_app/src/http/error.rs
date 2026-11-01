@@ -8,12 +8,20 @@ use traojudge_core::domain::model::account::AccountError;
 use traojudge_core::domain::model::editorial::EditorialError;
 use uuid::Uuid;
 
+use traojudge_core::domain::model::contest::ContestError;
+
 pub enum ApiError {
+    Contest(ContestError),
     Application(AccountError),
     Editorial(EditorialError),
     BadRequest,
     Forbidden,
     PreconditionRequired,
+}
+impl From<ContestError> for ApiError {
+    fn from(error: ContestError) -> Self {
+        Self::Contest(error)
+    }
 }
 impl From<AccountError> for ApiError {
     fn from(error: AccountError) -> Self {
@@ -49,6 +57,25 @@ impl IntoResponse for ApiError {
                 "precondition_required",
                 "If-Match is required".to_owned(),
             ),
+            Self::Contest(error) => {
+                let (status, code) = match error {
+                    ContestError::Unauthenticated => (StatusCode::UNAUTHORIZED, "unauthenticated"),
+                    ContestError::Forbidden => (StatusCode::FORBIDDEN, "forbidden"),
+                    ContestError::NotFound => (StatusCode::NOT_FOUND, "not_found"),
+                    ContestError::Conflict => (StatusCode::CONFLICT, "conflict"),
+                    ContestError::RevisionMismatch => {
+                        (StatusCode::PRECONDITION_FAILED, "precondition_failed")
+                    }
+                    ContestError::Validation { .. } => {
+                        (StatusCode::UNPROCESSABLE_ENTITY, "validation_failed")
+                    }
+                    ContestError::Storage(_) => {
+                        tracing::error!(%request_id,"contest operation failed");
+                        (StatusCode::INTERNAL_SERVER_ERROR, "unexpected_error")
+                    }
+                };
+                (status, code, error.to_string())
+            }
             Self::Editorial(error) => {
                 let (status, code) = match error {
                     EditorialError::Unauthenticated => {
@@ -95,9 +122,8 @@ impl IntoResponse for ApiError {
         let mut payload = schema::Error::new(code.to_owned(), message, request_id);
         let details = match self {
             Self::Application(AccountError::Validation { field, reason })
-            | Self::Editorial(EditorialError::Validation { field, reason }) => {
-                Some((field, reason))
-            }
+            | Self::Editorial(EditorialError::Validation { field, reason })
+            | Self::Contest(ContestError::Validation { field, reason }) => Some((field, reason)),
             _ => None,
         };
         if let Some((field, reason)) = details {

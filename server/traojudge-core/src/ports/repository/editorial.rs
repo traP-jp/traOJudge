@@ -2,6 +2,7 @@ use crate::domain::model::{
     account::{AccountRole, AuthenticatedSession, RoleName},
     editorial::*,
     problem::ProblemReference,
+    request::IdempotencyKey,
     user::UserId,
 };
 use async_trait::async_trait;
@@ -42,6 +43,11 @@ pub trait EditorialUnitOfWork: Send + Sized {
         problem_id: Uuid,
         role: RoleName,
     ) -> Result<bool, EditorialError>;
+    async fn has_contest_problem_role(
+        &mut self,
+        user_id: UserId,
+        problem_id: Uuid,
+    ) -> Result<bool, EditorialError>;
     async fn find(&mut self, id: Uuid) -> Result<Option<Editorial>, EditorialError>;
     async fn list_public(
         &mut self,
@@ -70,11 +76,11 @@ pub trait EditorialUnitOfWork: Send + Sized {
     async fn creation_receipt(
         &mut self,
         user_id: UserId,
-        key: &EditorialCreationKey,
+        key: &IdempotencyKey,
     ) -> Result<Option<EditorialCreationReceipt>, EditorialError>;
     async fn save_creation_receipt(
         &mut self,
-        key: &EditorialCreationKey,
+        key: &IdempotencyKey,
         receipt: &EditorialCreationReceipt,
         expires_at: DateTime<Utc>,
     ) -> Result<(), EditorialError>;

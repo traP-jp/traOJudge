@@ -21,7 +21,7 @@ pub struct VirtualContestCreate {
     pub ends_at: String,
     #[serde(rename = "rules")]
     pub rules: models::ContestRules,
-    /// 作成時の公開範囲。作成後の変更権限は別途具体化する。
+    /// 作成時の公開範囲。対象大会の運営担当が開始前だけ変更できる。
     #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
     pub visibility: Option<models::VisibilityValue>,
 }

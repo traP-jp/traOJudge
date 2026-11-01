@@ -6,6 +6,7 @@ use traojudge_core::{
         account::{AccountRole, AuthenticatedSession, RoleName, RoleScope},
         editorial::*,
         problem::ProblemReference,
+        request::IdempotencyKey,
         user::UserId,
     },
     ports::repository::editorial::{EditorialUnitOfWork, EditorialUnitOfWorkProvider},
@@ -162,6 +163,14 @@ impl EditorialUnitOfWork for PgEditorialUnitOfWork {
             .bind(user_id.as_uuid()).bind(problem_id).bind(role.as_str())
             .fetch_one(&mut *self.tx).await.map_err(storage)
     }
+    async fn has_contest_problem_role(
+        &mut self,
+        user_id: UserId,
+        problem_id: Uuid,
+    ) -> Result<bool, EditorialError> {
+        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM account_roles r JOIN contests c ON c.id = r.scope_id JOIN contest_problems cp ON cp.contest_id = c.id WHERE r.user_id = $1 AND r.role = 'contest-setter' AND r.scope_kind = 'contest' AND c.kind = 'regular' AND c.deleted_at IS NULL AND cp.problem_id = $2 AND cp.removed_at IS NULL)")
+            .bind(user_id.as_uuid()).bind(problem_id).fetch_one(&mut *self.tx).await.map_err(storage)
+    }
     async fn find(&mut self, id: Uuid) -> Result<Option<Editorial>, EditorialError> {
         // 親を先にロックし、問題削除（親→解説）と逆順にロックを取らない。
         let parent: Option<Uuid> = sqlx::query_scalar(
@@ -247,7 +256,7 @@ impl EditorialUnitOfWork for PgEditorialUnitOfWork {
     async fn creation_receipt(
         &mut self,
         user_id: UserId,
-        key: &EditorialCreationKey,
+        key: &IdempotencyKey,
     ) -> Result<Option<EditorialCreationReceipt>, EditorialError> {
         let row = sqlx::query_as::<_, CreationReceiptRow>(
             "SELECT request_digest, editorial_id AS id, problem_id, user_id AS author_id,
@@ -266,7 +275,7 @@ impl EditorialUnitOfWork for PgEditorialUnitOfWork {
     }
     async fn save_creation_receipt(
         &mut self,
-        key: &EditorialCreationKey,
+        key: &IdempotencyKey,
         receipt: &EditorialCreationReceipt,
         expires_at: DateTime<Utc>,
     ) -> Result<(), EditorialError> {

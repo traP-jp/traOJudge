@@ -1,3 +1,8 @@
+ContestParticipationMode:
+  type: 'string'
+  enum:
+    - 'individual'
+    - 'team'
 ContestRules:
   type: 'object'
   additionalProperties: false
@@ -28,10 +33,7 @@ ContestCreate:
       default: ''
       description: 'コンテストtopに表示するMarkdown形式の概要．HTMLは許可しない．'
     participationMode:
-      type: 'string'
-      enum:
-        - 'individual'
-        - 'team'
+      $ref: './contests.yaml#/ContestParticipationMode'
       description: '大会主催側が選ぶ参加方式。個人戦またはチーム戦。'
     startsAt:
       type: 'string'
@@ -44,7 +46,7 @@ ContestCreate:
     visibility:
       $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
-      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+      description: '作成時の公開範囲。対象大会の運営担当が開始前だけ変更できる。'
   required:
     - 'title'
     - 'participationMode'
@@ -55,15 +57,20 @@ ContestUpdate:
   type: 'object'
   additionalProperties: false
   properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+      description: '開始前だけ変更可能。'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+      description: '開始前だけ変更可能。'
     description:
       type: 'string'
       maxLength: 200000
       description: 'コンテストtopの概要．Markdown形式で記述し，空文字列で消去する．'
     participationMode:
-      type: 'string'
-      enum:
-        - 'individual'
-        - 'team'
+      $ref: './contests.yaml#/ContestParticipationMode'
       description: '変更要求時点が更新前のstartsAtより前なら現在の方式と異なる値へ変更できる。変更すると既存の参加登録と大会内チームをすべて削除する。'
     startsAt:
       type: 'string'
@@ -93,10 +100,7 @@ Contest:
       type: 'string'
       format: 'date-time'
     participationMode:
-      type: 'string'
-      enum:
-        - 'individual'
-        - 'team'
+      $ref: './contests.yaml#/ContestParticipationMode'
       description: '個人戦またはチーム戦。'
     endsAt:
       type: 'string'
@@ -252,7 +256,7 @@ VirtualContestCreate:
     visibility:
       $ref: './permissions.yaml#/VisibilityValue'
       default: 'private'
-      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+      description: '作成時の公開範囲。対象大会の運営担当が開始前だけ変更できる。'
   required:
     - 'title'
     - 'startsAt'
@@ -262,6 +266,14 @@ VirtualContestUpdate:
   type: 'object'
   additionalProperties: false
   properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+      description: '開始前だけ変更可能。'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+      description: '開始前だけ変更可能。'
     startsAt:
       type: 'string'
       format: 'date-time'

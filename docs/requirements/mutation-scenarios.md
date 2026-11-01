@@ -86,7 +86,7 @@ R1・R2は個別シナリオへの案内である。作業を切り出すとき�
 | R1 | [仕事を任せる・外す（20の個別シナリオ）](scenarios/permissions/change-permissions.md) | 指定した人の、指定した範囲の役割だけが付いた・外れた |
 | R2 | [公開範囲を変える（4つの個別シナリオ）](scenarios/permissions/share-content.md) | 指定した問題・解説が公開・非公開になった。許可する人が未決の操作は先に合意する |
 | R3 | [公開された通常の大会に参加する](scenarios/permissions/join-contest.md) | 基本的な利用資格を持つ本人が、その大会の参加者になった |
-| R4 | [好きな時間に挑戦する大会に参加する](scenarios/permissions/join-virtual-contest.md) | 許可する条件を合意した後、本人がその大会の参加者になった |
+| R4 | [バーチャル大会に参加する](scenarios/permissions/join-virtual-contest.md) | standard-userの本人が、公開された大会の終了前までに参加者になった |
 
 ### R1：任せる仕事ごとに選ぶ
 
@@ -99,11 +99,11 @@ R1・R2は個別シナリオへの案内である。作業を切り出すとき�
 | R1-03 | 問題のテスト担当 | [誰が任せてよいか](scenarios/permissions/grant-tester.md) | [誰が外してよいか](scenarios/permissions/revoke-tester.md) |
 | R1-04 | 通常の大会の責任者 | [誰が任せてよいか](scenarios/permissions/grant-contest-admin.md) | [誰が外してよいか](scenarios/permissions/revoke-contest-admin.md) |
 | R1-05 | 通常の大会の運営担当 | [誰が任せてよいか](scenarios/permissions/grant-contest-setter.md) | [誰が外してよいか](scenarios/permissions/revoke-contest-setter.md) |
-| R1-06 | 好きな時間に挑戦する大会の運営担当 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contest-setter.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contest-setter.md) |
+| R1-06 | バーチャル大会の運営担当 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contest-setter.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contest-setter.md) |
 | R1-07 | 基本的な利用資格 | [誰が任せてよいか](scenarios/permissions/grant-standard-user.md) | [誰が外してよいか](scenarios/permissions/revoke-standard-user.md) |
 | R1-08 | 解説の編集担当 | [誰が任せてよいか](scenarios/permissions/grant-editorial-author.md) | [誰が外してよいか](scenarios/permissions/revoke-editorial-author.md) |
 | R1-09 | 通常の大会の参加資格 | [誰が任せてよいか](scenarios/permissions/grant-contestant.md) | [誰が外してよいか](scenarios/permissions/revoke-contestant.md) |
-| R1-10 | 好きな時間に挑戦する大会の参加資格 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contestant.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contestant.md) |
+| R1-10 | バーチャル大会の参加資格 | [誰が任せてよいか](scenarios/permissions/grant-virtual-contestant.md) | [誰が外してよいか](scenarios/permissions/revoke-virtual-contestant.md) |
 
 ### R2：対象と、変える向きごとに選ぶ
 

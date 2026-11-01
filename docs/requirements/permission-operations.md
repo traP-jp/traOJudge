@@ -10,7 +10,7 @@
 - `contest-setter(C)` は、現在Cに含まれる問題に限り `tester(P)` と同じ操作を行える。バーチャル大会の運営担当にこの許可はない。
 - `service-admin` は「すべての操作ができる人」ではない。たとえば問題の削除をするには、その問題の `problem-owner` を持つ必要がある。役割を自分に付与できるかは別途未決であり、自動で補わない。
 - 「未決」は、担当者が任意に許可してよいという意味ではない。成功する操作の実装前に条件を決める。表中の結果も、その条件を決めた後の到達点である。
-- 複数の役割を持つ場合の評価、途中で役割を外した場合の反映時点、作成者への役割の自動付与は未決。認証方法を追加しても役割は増えない。
+- 複数の役割を持つ場合の評価、途中で役割を外した場合の反映時点、作成者への役割の自動付与は対象ごとに定める。通常大会は自動付与せず、バーチャル大会は作成者にvirtual-contest-setterを付与する。認証方法を追加しても役割は増えない。
 - ロール定義の解説編集者の綴りは `editiorial-author`。ここでは参照元に合わせ、役割を新しく増やさない。
 
 各リンク先には利用者の言葉で書いた流れとMermaidを置く。ファイルが同じでも、表の行ごとに許可を確認する。読み取りAPIとクラスタ内部の通信方式はここでは決めない。
@@ -47,15 +47,15 @@
 | 操作 | 何をするか | 誰がしてよいか | 誰に／何に・範囲 | 成立する事実 |
 | --- | --- | --- | --- | --- |
 | C1-01 | [通常の大会を作る](scenarios/contests/organize-contest.md) | サービス管理者（service-admin） | 新規の通常大会 | 通常の大会ができた |
-| C1-02 | [通常の大会のルール・開始終了時刻・参加方式を変更する](scenarios/contests/organize-contest.md) | 通常大会Cの contest-setter | その大会C。参加方式は開始時刻より前に限る | 大会Cの設定が変わった。方式変更時は既存の参加登録と大会内チームが削除された |
+| C1-02 | [通常の大会の題名・公開範囲・概要・ルール・開始終了時刻・参加方式を変更する](scenarios/contests/organize-contest.md) | 通常大会Cの contest-setter | その大会C。題名・公開範囲・開始時刻・ルール・参加方式は開始前に限る | 大会Cの設定が変わった。方式変更時は既存の参加登録と大会内チームが削除された |
 | C1-03 | [通常の大会を削除する](scenarios/contests/organize-contest.md) | サービス管理者（service-admin） | 指定した通常大会C | 大会Cを取り下げ、記録を残した |
 | C1-04 | [バーチャル大会を作る](scenarios/contests/organize-contest.md) | 基本的な利用資格を持つ人（standard-user） | 新規のバーチャル大会 | バーチャル大会ができた |
-| C1-05 | [バーチャル大会のルール・開始終了時刻を変更する](scenarios/contests/organize-contest.md) | バーチャル大会Vの virtual-contest-setter | その大会V | 大会Vの設定が変わった |
-| C1-06 | [バーチャル大会を削除する](scenarios/contests/organize-contest.md) | 未決。service-admin の contest 削除に virtual-contest も含むか明記がない | 指定したバーチャル大会V | 大会Vを取り下げた |
-| C2-01 | [通常の大会に問題を追加する](scenarios/contests/choose-problems.md) | 通常大会Cの contest-setter | 大会Cに、自身の問題Pを追加。「自身」の判定基準は未決 | 問題Pが大会Cの出題に加わった |
+| C1-05 | [バーチャル大会の題名・公開範囲・ルール・開始終了時刻を変更する](scenarios/contests/organize-contest.md) | バーチャル大会Vの virtual-contest-setter | その大会V | 大会Vの設定が変わった |
+| C1-06 | [バーチャル大会を削除する](scenarios/contests/organize-contest.md) | バーチャル大会Vの virtual-contest-setter | 指定したバーチャル大会V | 大会Vを取り下げた |
+| C2-01 | [通常の大会に問題を追加する](scenarios/contests/choose-problems.md) | 通常大会Cの contest-setter | 大会Cに、自身が作成者として記録されている問題Pを、終了時刻より前まで追加 | 問題Pが大会Cの出題に加わった |
 | C2-02 | [通常の大会から問題を外す](scenarios/contests/choose-problems.md) | 通常大会Cの contest-setter | 大会Cに含まれる任意の問題P。自分の問題に限らない | 大会Cとの結び付きだけが外れた |
 | C2-03 | [バーチャル大会に問題を追加する](scenarios/contests/choose-problems.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに、公開された問題Pを追加。自分の問題に限らない | 問題Pが大会Vの出題に加わった |
-| C2-04 | [バーチャル大会から問題を外す](scenarios/contests/choose-problems.md) | 未決。virtual-contest-setter に明示された操作ではない | 大会Vに含まれる問題P | 大会Vとの結び付きだけが外れた |
+| C2-04 | [バーチャル大会から問題を外す](scenarios/contests/choose-problems.md) | バーチャル大会Vの virtual-contest-setter | 大会Vに含まれる問題P | 大会Vとの結び付きだけが外れた |
 | C3-01 | [通常の大会に質問する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contestant | その大会Cに、自分の質問を投稿 | 大会Cへの質問が残った |
 | C3-02 | [通常の大会の質問に回答する](scenarios/contests/ask-and-answer.md) | 通常大会Cの contest-setter | 大会Cに寄せられた参加者の質問。回答とともに大会参加者への公開可否を指定 | 回答と選んだ公開範囲が保存された |
 
@@ -92,23 +92,23 @@
 | R1-04-D | [通常の大会の責任者を外す](scenarios/permissions/revoke-contest-admin.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだ通常の大会1つ | 対象者から contest-admin が外れた |
 | R1-05-G | [通常の大会の運営担当を任せる](scenarios/permissions/grant-contest-setter.md) | サービス管理者（service-admin）、またはその大会の責任者（contest-admin） | 登録済みの対象者1人、選んだ通常の大会1つ | 対象者に contest-setter が付いた |
 | R1-05-D | [通常の大会の運営担当を外す](scenarios/permissions/revoke-contest-setter.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだ通常の大会1つ | 対象者から contest-setter が外れた |
-| R1-06-G | [好きな時間に挑戦する大会の運営担当を任せる](scenarios/permissions/grant-virtual-contest-setter.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだバーチャル大会1つ | 対象者に virtual-contest-setter が付いた |
-| R1-06-D | [好きな時間に挑戦する大会の運営担当を外す](scenarios/permissions/revoke-virtual-contest-setter.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだバーチャル大会1つ | 対象者から virtual-contest-setter が外れた |
+| R1-06-G | [バーチャル大会の運営担当を任せる](scenarios/permissions/grant-virtual-contest-setter.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだバーチャル大会1つ | 対象者に virtual-contest-setter が付いた |
+| R1-06-D | [バーチャル大会の運営担当を外す](scenarios/permissions/revoke-virtual-contest-setter.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだバーチャル大会1つ | 対象者から virtual-contest-setter が外れた |
 | R1-07-G | [基本的な利用資格を任せる](scenarios/permissions/grant-standard-user.md) | サービス管理者（service-admin） | 登録済みの対象者1人、サービス全体 | 対象者に standard-user が付いた |
 | R1-07-D | [基本的な利用資格を外す](scenarios/permissions/revoke-standard-user.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、サービス全体 | 対象者から standard-user が外れた |
 | R1-08-G | [解説の編集担当を任せる](scenarios/permissions/grant-editorial-author.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだ解説1つ | 対象者に editiorial-author が付いた |
 | R1-08-D | [解説の編集担当を外す](scenarios/permissions/revoke-editorial-author.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだ解説1つ | 対象者から editiorial-author が外れた |
 | R1-09-G | [通常の大会の参加資格を任せる](scenarios/permissions/grant-contestant.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだ通常の大会1つ | 対象者に contestant が付いた |
 | R1-09-D | [通常の大会の参加資格を外す](scenarios/permissions/revoke-contestant.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだ通常の大会1つ | 対象者から contestant が外れた |
-| R1-10-G | [好きな時間に挑戦する大会の参加資格を任せる](scenarios/permissions/grant-virtual-contestant.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだバーチャル大会1つ | 対象者に virtual-contestant が付いた |
-| R1-10-D | [好きな時間に挑戦する大会の参加資格を外す](scenarios/permissions/revoke-virtual-contestant.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだバーチャル大会1つ | 対象者から virtual-contestant が外れた |
+| R1-10-G | [バーチャル大会の参加資格を任せる](scenarios/permissions/grant-virtual-contestant.md) | サービス管理者（service-admin） | 登録済みの対象者1人、選んだバーチャル大会1つ | 対象者に virtual-contestant が付いた |
+| R1-10-D | [バーチャル大会の参加資格を外す](scenarios/permissions/revoke-virtual-contestant.md) | サービス管理者（service-admin） | 役割を持つ対象者1人、選んだバーチャル大会1つ | 対象者から virtual-contestant が外れた |
 | R1-11 | [サービス管理者を任命・解任する](scenarios/permissions/change-permissions.md) | 未決。service-admin は自分と同じ役割を付与・剥奪できない | 登録済みの対象者1人 | サービス管理者の構成が変わった |
 | R2-01 | [問題を公開する](scenarios/permissions/publish-problem.md) | 未決 | 問題P | 問題Pが公開された |
 | R2-02 | [問題を非公開にする](scenarios/permissions/hide-problem.md) | サービス管理者（service-admin）。他の役割は未決 | 担当を問わず、指定した問題P | 問題Pが非公開になった |
 | R2-03 | [解説を公開する](scenarios/permissions/publish-editorial.md) | 解説の投稿者本人またはservice-admin | 解説E | 解説Eが公開された |
 | R2-04 | [解説を非公開にする](scenarios/permissions/hide-editorial.md) | 解説の投稿者本人またはservice-admin | 解説E | 解説Eが非公開になった |
 | R3-01 | [公開された通常の大会に参加を申し込む](scenarios/permissions/join-contest.md) | standard-user 本人 | 自分自身、公開された通常大会C | 個人戦では本人が大会Cの contestant になり、チーム戦では本人が大会C内の1チームに所属する。チームの移動・脱退は大会開始前まで可能 |
-| R4-01 | [バーチャル大会に参加を申し込む](scenarios/permissions/join-virtual-contest.md) | 未決。通常の大会への自己参加と同じ許可は明記されていない | 自分自身、バーチャル大会V | 本人が大会Vの virtual-contestant になった |
+| R4-01 | [バーチャル大会に参加を申し込む](scenarios/permissions/join-virtual-contest.md) | standard-user。公開された大会へ終了時刻より前まで自己参加 | 自分自身、バーチャル大会V | 本人が大会Vの virtual-contestant になった |
 
 ## それ以外
 
