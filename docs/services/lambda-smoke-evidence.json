@@ -1,0 +1,59 @@
+{
+  "branch": "codex-judge-fairness",
+  "base_branch": "develop-hayatroid",
+  "base_sha": "d2400cb752ee3354099844627eb0df390d38d7c5",
+  "at": "2026-11-02T09:29:44.616522+00:00",
+  "region": "ap-northeast-1",
+  "creation": "CREATE_COMPLETE",
+  "resource_types": [
+    "AWS::IAM::Role",
+    "AWS::Lambda::Function",
+    "AWS::Logs::LogGroup"
+  ],
+  "invocations": [
+    {
+      "request": {
+        "message": "first",
+        "number": 1
+      },
+      "response": {
+        "ok": true,
+        "received": {
+          "message": "first",
+          "number": 1
+        }
+      },
+      "status_code": 200,
+      "client_seconds": 1.2688,
+      "passed": true
+    },
+    {
+      "request": {
+        "message": "二つ目",
+        "number": 2,
+        "nested": {
+          "changed": true
+        }
+      },
+      "response": {
+        "ok": true,
+        "received": {
+          "message": "二つ目",
+          "number": 2,
+          "nested": {
+            "changed": true
+          }
+        }
+      },
+      "status_code": 200,
+      "client_seconds": 1.0548,
+      "passed": true
+    }
+  ],
+  "deletion": {
+    "stack_absent": true,
+    "function_absent": true,
+    "role_absent": true,
+    "logs_absent": true
+  }
+}

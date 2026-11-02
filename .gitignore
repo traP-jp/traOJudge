@@ -17,3 +17,5 @@ treefmt.toml
 # editor
 .vscode
 .codex
+work/
+__pycache__/
