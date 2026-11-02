@@ -1,0 +1,75 @@
+{
+  "region": "ap-northeast-1",
+  "instance_spec": {
+    "InstanceType": "c7g.large",
+    "VCpuInfo": {
+      "DefaultVCpus": 2,
+      "DefaultCores": 2,
+      "DefaultThreadsPerCore": 1,
+      "ValidCores": [
+        1,
+        2
+      ],
+      "ValidThreadsPerCore": [
+        1
+      ]
+    },
+    "ProcessorInfo": {
+      "SupportedArchitectures": [
+        "arm64"
+      ],
+      "SustainedClockSpeedInGhz": 2.6,
+      "Manufacturer": "AWS"
+    },
+    "MemoryInfo": {
+      "SizeInMiB": 4096
+    }
+  },
+  "gvisor": {
+    "source": "https://storage.googleapis.com/gvisor/releases/release/20261026.0/aarch64/gvisor.tar.bz2",
+    "sha512": "da177d9bcfd9ac23899ecfedc6fd47358e9684a1f7e3f5f8ffb8bf7c0ca65f4c08730c0c503b9231b522db28b04c132a06d04d6719e0d8c04c9f82edaf03d8ae",
+    "version": "runsc version release-20261026.0"
+  },
+  "fixture_sha256": "669bd678d86959458ed3afe9cf6226feae5cde0f0e62cedc2aea3d3f42454fc4",
+  "base_image_index_sha256": "2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb",
+  "compiler_flags": [
+    "-O2",
+    "-std=c17",
+    "-fno-tree-vectorize",
+    "-march=armv8-a"
+  ],
+  "sdk": {
+    "control": "boto3 1.43.123",
+    "ec2_host": "boto3 1.42.20 (Python 3.9)"
+  },
+  "host_manifests": [
+    {
+      "worker": "6917d8ed70b8420ba5c66e5172c96c19",
+      "ready_at": 1793616094.3069701,
+      "cpu_model": [
+        "CPU implementer\t: 0x41",
+        "CPU part\t: 0xd40",
+        "CPU revision\t: 1",
+        "CPU variant\t: 0x1"
+      ],
+      "architecture": "aarch64",
+      "cpus": 2,
+      "runtime_version": "runsc version release-20261026.0",
+      "image_id": "sha256:938495d8305cae6b6d7766f73ba06a2e650167966b9a506fc60d7400cb77f0cc"
+    },
+    {
+      "worker": "7eac25ffece54294b2a339892e2e8746",
+      "ready_at": 1793616093.6389556,
+      "cpu_model": [
+        "CPU implementer\t: 0x41",
+        "CPU part\t: 0xd40",
+        "CPU revision\t: 1",
+        "CPU variant\t: 0x1"
+      ],
+      "architecture": "aarch64",
+      "cpus": 2,
+      "runtime_version": "runsc version release-20261026.0",
+      "image_id": "sha256:6b207f6d7ea1ea6ff97191be280f7bd6151efe766041d75fcb3405047f9eb492"
+    }
+  ]
+}

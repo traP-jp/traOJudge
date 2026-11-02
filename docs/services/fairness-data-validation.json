@@ -1,0 +1,25 @@
+{
+  "normal_case_outputs_verified": 1160,
+  "total_case_measurements": 1904,
+  "case_counts": {
+    "fairness-microvm": 742,
+    "fairness-ec2": 502,
+    "fairness-ec2-native": 240,
+    "fairness-long-microvm-native": 180,
+    "fairness-long-ec2-runsc": 120,
+    "fairness-long-ec2-runc": 120
+  },
+  "compiler_versions": [
+    "gcc (Debian 14.2.0-19) 14.2.0"
+  ],
+  "prebuilt_binary_sha256": [
+    "ff263c5daa194c3fcf7964934f5f555ce18240a9aa96c959c6ca6151ac349f12"
+  ],
+  "architectures": [
+    "aarch64"
+  ],
+  "queued_submissions": 30,
+  "queued_all_under_10_seconds": true,
+  "fault_checks": true,
+  "cold_ec2_zero_confirmed": true
+}

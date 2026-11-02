@@ -1,0 +1,106 @@
+{
+  "at": "2026-11-02T11:01:42.660397+00:00",
+  "stacks": {
+    "codex-judge-fairness-FairnessQueue": {
+      "resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::Lambda::EventSourceMapping",
+        "AWS::Lambda::Function",
+        "AWS::Lambda::Function",
+        "AWS::Logs::LogGroup",
+        "AWS::S3::Bucket",
+        "AWS::S3::BucketPolicy",
+        "AWS::SQS::Queue",
+        "AWS::SQS::Queue",
+        "Custom::S3AutoDeleteObjects"
+      ]
+    },
+    "codex-judge-fairness-Fairness": {
+      "resource_types": [
+        "AWS::CloudFormation::CustomResource",
+        "AWS::CloudFormation::CustomResource",
+        "AWS::CloudFormation::CustomResource",
+        "AWS::EC2::RouteTable",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::SubnetRouteTableAssociation",
+        "AWS::EC2::VPC",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::Lambda::Function",
+        "AWS::Lambda::Function",
+        "AWS::Lambda::Function",
+        "AWS::Lambda::MicrovmImage",
+        "AWS::Lambda::NetworkConnector",
+        "AWS::Logs::LogGroup",
+        "AWS::Logs::LogGroup",
+        "AWS::Logs::LogGroup",
+        "AWS::S3::Bucket",
+        "AWS::S3::BucketPolicy",
+        "Custom::S3AutoDeleteObjects"
+      ]
+    },
+    "codex-judge-fairness-FairnessEC2": {
+      "resource_types": [
+        "AWS::AutoScaling::AutoScalingGroup",
+        "AWS::EC2::InternetGateway",
+        "AWS::EC2::LaunchTemplate",
+        "AWS::EC2::Route",
+        "AWS::EC2::RouteTable",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::SubnetRouteTableAssociation",
+        "AWS::EC2::VPC",
+        "AWS::EC2::VPCGatewayAttachment",
+        "AWS::IAM::InstanceProfile",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::Role",
+        "AWS::Lambda::Function",
+        "AWS::S3::Bucket",
+        "AWS::S3::BucketPolicy",
+        "AWS::SQS::Queue",
+        "AWS::SQS::Queue",
+        "Custom::S3AutoDeleteObjects"
+      ]
+    }
+  },
+  "managed_states_before_destroy": [
+    "SUSPENDED",
+    "SUSPENDED",
+    "SUSPENDED"
+  ],
+  "checks": {
+    "codex-judge-fairness-FairnessQueue": {
+      "stack_absent": true,
+      "functions_absent": 2,
+      "vpcs_absent": 0,
+      "microvms_off": 0
+    },
+    "codex-judge-fairness-Fairness": {
+      "stack_absent": true,
+      "functions_absent": 3,
+      "vpcs_absent": 1,
+      "microvms_off": 3,
+      "microvm_image_absent": true
+    },
+    "codex-judge-fairness-FairnessEC2": {
+      "stack_absent": true,
+      "functions_absent": 1,
+      "vpcs_absent": 1,
+      "microvms_off": 0
+    }
+  },
+  "nonterminated_ec2_instances": 0,
+  "shared_bootstrap_retained": true,
+  "verified_at": "2026-11-02T11:18:44.373097+00:00",
+  "early_failed_creation_microvms_off": 3
+}
