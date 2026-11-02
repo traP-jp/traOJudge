@@ -5,6 +5,7 @@
 休止時の EC2 0台、次の受付による再起動も確認した。cold start と障害復旧は10秒の測定から分ける。
 
 判断の根拠・未決事項は[関心事の記録](serverless-judge-concerns.md)、構成図は[HTML](diagrams/traojudge-architecture.html)／[PNG](diagrams/traojudge-architecture.png)／[dark PNG](diagrams/traojudge-architecture-dark.png)。
+[逐次フローのライブ実演](judge-flow-demo.md)に WJ → ケース進捗 → AC の動画と実現方法をまとめた。
 
 ## 選定
 

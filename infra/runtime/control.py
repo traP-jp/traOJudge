@@ -76,6 +76,15 @@ def process(message):
             history = state["view"]["history"]
             history.append({"case": task["case"], "verdict": verdict, "completed_cases": len(history) + 1})
             state["view"]["completed_cases"] = len(history)
+        elif task["phase"] == "summarize":
+            summary = result["node_output"]
+            priority = {"AC": 0, "WA": 1, "RE": 2, "MLE": 3, "OLE": 4, "TLE": 5}
+            expected = [v["verdict"] for v in sorted(state["view"]["history"], key=lambda v: v["case"])]
+            if (summary["completed_cases"] != len(receipt["tests"]) or summary["total_cases"] != len(expected)
+                    or summary["case_verdicts"] != expected
+                    or summary["verdict"] != max(expected, key=priority.__getitem__)):
+                raise ValueError("summary does not match durable case results")
+            state["view"]["summary"] = summary
     with tempfile.TemporaryDirectory() as temp:
         db = f"{temp}/workflow.sqlite"
         if state["database"]:

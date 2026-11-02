@@ -19,7 +19,7 @@
 | C12 配送・副作用 | node message は結果保存→完了通知の後に削除。再配信は保存済み結果から通知できる。visibility180秒、実行中30秒毎に延長 | delivery exactly-once ではない。重複計算の費用は残る。非冪等な外部副作用を持つ一般workflowは別設計 |
 | C13 artifact の不変性 | key/version/SHA-256を固定。同じsource keyへの上書き後もAC。別sandbox間の受渡しを実証。終了済みguestのoutput読取はrealpathをjob配下に限定し、親symlink経由のhost読取もローカル試験で拒否 | output総量・保持期間・テストデータの閲覧権限を製品側で定義。path検査中にguestが動かない終了順序を維持する |
 | C14 権限と転送 | guestにAWS credential/署名URL/Docker socketを渡さず、ホストがS3/SQSを操作。ホストroleは自stackのデータに限定 | ホストagentはtrusted境界。host compromise、管理者権限、image取得先・deploy主体の管理は別の監査 |
-| C15 ケース進捗 | check完了の集合を数え、node数で代用しない。WA/TLE/RE/OLEでも全3ケース継続、APIで途中件数を観測 | 問題定義のcase識別・動的対象・case内途中通知、全件通知か最新状態か、遅延・負荷目標を定義 |
+| C15 ケース進捗 | check完了の集合を数え、node数で代用しない。WA/TLE/RE/OLEでも全3ケース継続。逐次フローのライブ動画では2提出ともWJ→1/3→2/3→3/3→ACを全て観測・検証 | ポーリングは一般に全中間更新を保証しない。case識別・動的対象・case内途中通知、全件通知か最新状態か、遅延・負荷目標を定義 |
 | C16 閲覧と実行の寿命 | 保存済みviewを返し、閲覧中断しても実行継続。再取得で確定結果を返す | 製品の閲覧認可、隠すべきcase/score情報、event-feedやpushの選択は未実装 |
 | C17 再判定・遅着 | 同じ提出ID・別run。旧runの再配信で新runを変更しない。終端後の正当なsibling結果もACK、DLQは空 | preview/採用切替は製品側。配送ACK喪失時もengine job stateで判断することをローカル5項目で確認 |
 | C18 判定と基盤障害 | CE/WA/TLE/RE/OLEとcontainer起動失敗を分ける。基盤障害後の遅着も正常に処理 | sandbox初期化失敗とprogram終了の専用status protocol、compiler内部障害、OOM/MLEの分類は本番前に厳密化する |
@@ -33,6 +33,7 @@
 | C26 保持・削除 | sandboxはDESTROY、S3の全versionも削除、root EBSはinstance終了時削除。専用4stackの撤去は pool-judge-cleanup.json で確認、共有bootstrap/asset保管は保持 | 本番はbackup/復旧/保持規則を別に設定。sandboxの作成1時間後削除を本番の保持方針にしない |
 | C27 障害注入の権限 | checkpoint後停止とhost poweroffはIAM保護した独立のinfra fixtureだけで明示指定 | 製品の提出APIへ注入flagをそのまま公開しない。guestにはhost管理操作を渡さない |
 | C28 CCS適合範囲 | 採番・native自動判定・資源制限・進捗・再判定の実経路を確認 | fixtureはC17/加算問題。UI/認証/大会設定/scoreboard/freeze/Contest APIの完全互換性は別タスク |
+| C29 逐次/並行と集約 | `flow: sequential` はbuild→run/checkのchain→独立summarize。各verdict成果物を集約し、耐久保存済みcase結果とも照合。既定のparallelは維持 | 逐次実行は並列性を失う。デモの初回14.473秒・次9.661秒を先行P95と混ぜない。ケースの実行順序・公平性・fail-fastの契約は別に決める |
 
 ## 実装で確認した落とし穴
 

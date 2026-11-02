@@ -1,0 +1,1412 @@
+{
+  "scenario": "live-browser-sequential-compile-run-check-summarize",
+  "region": "ap-northeast-1",
+  "recording": {
+    "speed": "1x",
+    "cuts": false,
+    "source": "Playwright live Chromium capture; actual AWS API responses",
+    "native_case_delay_ms": 100,
+    "duration_seconds": 43.08,
+    "width": 1440,
+    "height": 1040,
+    "codec": "h264",
+    "frames_per_second": 25,
+    "sha256": "1963651199cc2bf42ec65c587c47b0c36be6669d9d852007a6c2c742d7ffbebc"
+  },
+  "checks": {
+    "two_ordered_submissions": true,
+    "browser_javascript_errors_absent": true,
+    "submission_1_all_display_states_observed": true,
+    "submission_1_8_isolated_nodes_and_artifact_summary_verified": true,
+    "submission_2_all_display_states_observed": true,
+    "submission_2_8_isolated_nodes_and_artifact_summary_verified": true,
+    "dedicated_demo_stack_deleted": true
+  },
+  "browser_completed": [
+    {
+      "request_id": "submission-dcd321474790",
+      "observed": [
+        "WJ",
+        "1/3",
+        "2/3",
+        "3/3",
+        "AC"
+      ],
+      "elapsed_seconds": 14.473
+    },
+    {
+      "request_id": "submission-f4cdfb3db18a",
+      "observed": [
+        "WJ",
+        "1/3",
+        "2/3",
+        "3/3",
+        "AC"
+      ],
+      "elapsed_seconds": 9.661
+    }
+  ],
+  "receipts": [
+    {
+      "accepted_at": "2026-11-02T00:39:32.053979+00:00",
+      "contest": "demo-d9ddfd9b74cb",
+      "request_id": "submission-dcd321474790",
+      "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+      "submission": 1
+    },
+    {
+      "accepted_at": "2026-11-02T00:39:52.737095+00:00",
+      "contest": "demo-d9ddfd9b74cb",
+      "request_id": "submission-f4cdfb3db18a",
+      "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+      "submission": 2
+    }
+  ],
+  "traces": {
+    "submission-dcd321474790": [
+      {
+        "observed_at": "2026-11-02T00:39:33.111386+00:00",
+        "elapsed_seconds": 1.057,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "queued",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "waiting"
+          },
+          {
+            "name": "run-0",
+            "state": "waiting"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:38.089604+00:00",
+        "elapsed_seconds": 6.036,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "waiting",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "waiting",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "waiting",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "waiting",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "waiting",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "running"
+          },
+          "revision": 1,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "queued",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "running"
+          },
+          {
+            "name": "run-0",
+            "state": "waiting"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:39.088235+00:00",
+        "elapsed_seconds": 7.034,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "waiting",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "waiting",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "running",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "waiting",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "waiting",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 2,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "running"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:39.939296+00:00",
+        "elapsed_seconds": 7.885,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "waiting",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "waiting",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "waiting",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "running",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 3,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "running"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:41.238480+00:00",
+        "elapsed_seconds": 9.185,
+        "display": "1/3",
+        "view": {
+          "completed_cases": 1,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "waiting",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "waiting",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "running",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 4,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "running"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:42.216978+00:00",
+        "elapsed_seconds": 10.163,
+        "display": "1/3",
+        "view": {
+          "completed_cases": 1,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "waiting",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "running",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "completed",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 5,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "running"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:43.053554+00:00",
+        "elapsed_seconds": 11.0,
+        "display": "2/3",
+        "view": {
+          "completed_cases": 2,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "waiting",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "running",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "completed",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "completed",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 6,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "running"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:43.891686+00:00",
+        "elapsed_seconds": 11.838,
+        "display": "2/3",
+        "view": {
+          "completed_cases": 2,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "running",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "waiting",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "completed",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "completed",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "completed",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 7,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "running"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:45.647825+00:00",
+        "elapsed_seconds": 13.594,
+        "display": "3/3",
+        "view": {
+          "completed_cases": 3,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            },
+            {
+              "case": 2,
+              "completed_cases": 3,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "completed",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "running",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "completed",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "completed",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "completed",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 8,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "judging",
+          "submission": 1,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "completed"
+          },
+          {
+            "name": "summarize",
+            "state": "running"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:46.527183+00:00",
+        "elapsed_seconds": 14.473,
+        "display": "AC",
+        "view": {
+          "completed_cases": 3,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            },
+            {
+              "case": 2,
+              "completed_cases": 3,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "079ac0ee-90f4-5848-a3c5-f3a0cf86c2fa": "completed",
+            "0fc65999-3ccd-5f24-94c6-c2096adfe03a": "completed",
+            "177bcee8-adbf-535c-b1df-a9b03db8e88a": "completed",
+            "596f7bb4-8165-5c2a-b70d-449fe270e768": "completed",
+            "5fd428ae-a0df-5916-8a31-da0f75beaf3c": "completed",
+            "7a71e3c2-cb59-5107-ad8a-ddd9e2e26e29": "completed",
+            "b98ed9b7-166f-50b2-93e7-815fe10d657d": "completed",
+            "e675fc31-88b7-5fa0-a650-93957f56426b": "completed"
+          },
+          "revision": 9,
+          "run": "25178bfd-8a27-5f1f-b6ce-e835faccdc9e",
+          "status": "completed",
+          "submission": 1,
+          "summary": {
+            "case_verdicts": [
+              "AC",
+              "AC",
+              "AC"
+            ],
+            "completed_cases": 3,
+            "total_cases": 3,
+            "verdict": "AC"
+          },
+          "total_cases": 3,
+          "verdict": "AC"
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "completed"
+          },
+          {
+            "name": "summarize",
+            "state": "completed"
+          }
+        ]
+      }
+    ],
+    "submission-f4cdfb3db18a": [
+      {
+        "observed_at": "2026-11-02T00:39:53.542804+00:00",
+        "elapsed_seconds": 0.806,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "queued",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "waiting"
+          },
+          {
+            "name": "run-0",
+            "state": "waiting"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:54.393045+00:00",
+        "elapsed_seconds": 1.656,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "waiting",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "waiting",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "waiting",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "running",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "waiting",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "waiting",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 1,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "queued",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "running"
+          },
+          {
+            "name": "run-0",
+            "state": "waiting"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:55.222961+00:00",
+        "elapsed_seconds": 2.486,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "waiting",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "waiting",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "waiting",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "running",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "waiting",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 2,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "running"
+          },
+          {
+            "name": "check-0",
+            "state": "waiting"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:56.035693+00:00",
+        "elapsed_seconds": 3.299,
+        "display": "WJ",
+        "view": {
+          "completed_cases": 0,
+          "history": [],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "waiting",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "waiting",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "running",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "waiting",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 3,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "running"
+          },
+          {
+            "name": "run-1",
+            "state": "waiting"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:56.894139+00:00",
+        "elapsed_seconds": 4.157,
+        "display": "1/3",
+        "view": {
+          "completed_cases": 1,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "running",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "waiting",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "waiting",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 4,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "running"
+          },
+          {
+            "name": "check-1",
+            "state": "waiting"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:58.130127+00:00",
+        "elapsed_seconds": 5.393,
+        "display": "1/3",
+        "view": {
+          "completed_cases": 1,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "completed",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "running",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "waiting",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 5,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "running"
+          },
+          {
+            "name": "run-2",
+            "state": "waiting"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:39:58.980641+00:00",
+        "elapsed_seconds": 6.244,
+        "display": "2/3",
+        "view": {
+          "completed_cases": 2,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "completed",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "completed",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "running",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "waiting",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 6,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "running"
+          },
+          {
+            "name": "check-2",
+            "state": "waiting"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:40:00.695998+00:00",
+        "elapsed_seconds": 7.959,
+        "display": "2/3",
+        "view": {
+          "completed_cases": 2,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "completed",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "completed",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "completed",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "running",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "waiting"
+          },
+          "revision": 7,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "running"
+          },
+          {
+            "name": "summarize",
+            "state": "waiting"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:40:01.536742+00:00",
+        "elapsed_seconds": 8.8,
+        "display": "3/3",
+        "view": {
+          "completed_cases": 3,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            },
+            {
+              "case": 2,
+              "completed_cases": 3,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "completed",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "completed",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "completed",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "completed",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "running"
+          },
+          "revision": 8,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "judging",
+          "submission": 2,
+          "total_cases": 3
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "completed"
+          },
+          {
+            "name": "summarize",
+            "state": "running"
+          }
+        ]
+      },
+      {
+        "observed_at": "2026-11-02T00:40:02.397854+00:00",
+        "elapsed_seconds": 9.661,
+        "display": "AC",
+        "view": {
+          "completed_cases": 3,
+          "history": [
+            {
+              "case": 0,
+              "completed_cases": 1,
+              "verdict": "AC"
+            },
+            {
+              "case": 1,
+              "completed_cases": 2,
+              "verdict": "AC"
+            },
+            {
+              "case": 2,
+              "completed_cases": 3,
+              "verdict": "AC"
+            }
+          ],
+          "nodes": {
+            "43dfb7b5-03d4-5cb5-8489-49931ac57159": "completed",
+            "4a22a8fe-0639-51bb-ac34-abee0f5c99c0": "completed",
+            "97fc8fbb-94b1-51ee-ac4e-19eeceeefb95": "completed",
+            "9d70cb5f-164c-5a9d-bf35-8dcc7dbe772e": "completed",
+            "cb675958-5d73-5472-95b3-b2e746bf6209": "completed",
+            "dc83eaf5-83e8-5a5c-96e8-c7e1d00662aa": "completed",
+            "de65131d-c7ed-538c-8c05-9de33199d8e0": "completed",
+            "f8097f20-e5ff-59ac-ab8d-301ee59eac28": "completed"
+          },
+          "revision": 9,
+          "run": "7c5d54a8-e9bc-5940-857f-5abfe60370cb",
+          "status": "completed",
+          "submission": 2,
+          "summary": {
+            "case_verdicts": [
+              "AC",
+              "AC",
+              "AC"
+            ],
+            "completed_cases": 3,
+            "total_cases": 3,
+            "verdict": "AC"
+          },
+          "total_cases": 3,
+          "verdict": "AC"
+        },
+        "nodes": [
+          {
+            "name": "compile",
+            "state": "completed"
+          },
+          {
+            "name": "run-0",
+            "state": "completed"
+          },
+          {
+            "name": "check-0",
+            "state": "completed"
+          },
+          {
+            "name": "run-1",
+            "state": "completed"
+          },
+          {
+            "name": "check-1",
+            "state": "completed"
+          },
+          {
+            "name": "run-2",
+            "state": "completed"
+          },
+          {
+            "name": "check-2",
+            "state": "completed"
+          },
+          {
+            "name": "summarize",
+            "state": "completed"
+          }
+        ]
+      }
+    ]
+  },
+  "audits": {
+    "submission-dcd321474790": {
+      "completed_nodes": 8,
+      "binary_sha256": "64cbc576e22f0d8842839e4da60ec643467dd7019d7241cab2c42d7ac9353bb0",
+      "binary_version": "FEbrrsEuksuRrwIFZ9JAkwoUQafYSJUI",
+      "summary": {
+        "case_verdicts": [
+          "AC",
+          "AC",
+          "AC"
+        ],
+        "completed_cases": 3,
+        "total_cases": 3,
+        "verdict": "AC"
+      },
+      "summary_sha256": "84b0b6ec5ecc026563e4b1bf4edab249cb8a53f36bb6d45343b4f77e6239a061",
+      "checks": {
+        "all_8_nodes_completed": true,
+        "all_nodes_offline_gvisor": true,
+        "same_versioned_binary_binding_for_all_runs": true,
+        "summary_reads_verified_case_artifacts": true
+      }
+    },
+    "submission-f4cdfb3db18a": {
+      "completed_nodes": 8,
+      "binary_sha256": "64cbc576e22f0d8842839e4da60ec643467dd7019d7241cab2c42d7ac9353bb0",
+      "binary_version": "VL6PsAvmmtCiejZmrj8lKlzK2V8A91MH",
+      "summary": {
+        "case_verdicts": [
+          "AC",
+          "AC",
+          "AC"
+        ],
+        "completed_cases": 3,
+        "total_cases": 3,
+        "verdict": "AC"
+      },
+      "summary_sha256": "84b0b6ec5ecc026563e4b1bf4edab249cb8a53f36bb6d45343b4f77e6239a061",
+      "checks": {
+        "all_8_nodes_completed": true,
+        "all_nodes_offline_gvisor": true,
+        "same_versioned_binary_binding_for_all_runs": true,
+        "summary_reads_verified_case_artifacts": true
+      }
+    }
+  },
+  "cleanup": {
+    "checked_at": "2026-11-02T00:45:11.560494+00:00",
+    "dedicated_stack_absent": true,
+    "shared_bootstrap_and_asset_storage": "preserved"
+  }
+}

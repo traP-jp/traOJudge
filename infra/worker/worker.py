@@ -63,11 +63,13 @@ def execute(task, identity):
                "stderr_excerpt": stderr_path.read_bytes()[:4096].decode(errors="replace")}
     if task["phase"] == "run":
         (work / "outputs" / task["outputs"][1]).write_text(json.dumps({"exit_code": proc.returncode, "timed_out": timed_out}))
-    elif task["phase"] == "check":
+    elif task["phase"] in ["check", "summarize"]:
         if proc.returncode:
             outcome["infrastructure_error"] = "validator did not finish normally"
         else:
             outcome["node_output"] = json.loads(stdout_path.read_text())
+            for output in task["outputs"]:
+                (work / "outputs" / output).write_text(json.dumps(outcome["node_output"]))
     return outcome
 
 
