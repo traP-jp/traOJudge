@@ -88,10 +88,36 @@ def build_graph(receipt):
         check = node(f"check-{i}", "check", {"actual": f"actual-{i}", "meta": f"meta-{i}", "expected": f"expected-{i}"},
                      [f"verdict-{i}"], case=i, command=["python3", "/opt/check.py"],
                      wall_seconds=5, cpu_seconds=3, memory_mb=128)
-        edges.extend([[compile_node, run], [run, check]])
+        parent = receipt.get("test_parents", [None] * len(receipt["tests"]))[i]
+        predecessor = compile_node if parent is None else str(uuid.uuid5(namespace, f"check-{parent}"))
+        edges.extend([[predecessor, run], [run, check]])
         checks.append(check)
     summarize = node("summarize", "summarize", {f"case-{i}.json": f"verdict-{i}" for i in range(len(checks))},
                      ["summary"], command=["python3", "/opt/summarize.py"],
                      wall_seconds=5, cpu_seconds=3, memory_mb=128)
     edges.extend([[check, summarize] for check in checks])
     return nodes, edges
+
+
+def notify_demand(receipt, state=None):
+    """Repairable projection; S3 checkpoint is authoritative for run progress."""
+    if not os.environ.get("CAPACITY_FUNCTION"):
+        return
+    import time
+    from planning import project
+    jobs, edges = (state["jobs"], state["edges"]) if state else build_graph(receipt)
+    revision = state["revision"] if state else 0
+    view = state["view"] if state else {}
+    projection = project(jobs, edges, view.get("nodes"))
+    if view.get("status") in ["completed", "infrastructure_error"]:
+        projection.update(ready=0, potential_slots=0)
+    projection.update(updated_at=time.time(), revision=revision, run=receipt["run"])
+    try:
+        ddb.put_item(TableName=TABLE, Item={"pk": {"S": "DEMAND#" + receipt["run"]},
+            "value": {"S": encode(projection)}, "revision": {"N": str(revision)}},
+            ConditionExpression="attribute_not_exists(revision) OR revision <= :new",
+            ExpressionAttributeValues={":new": {"N": str(revision)}})
+    except ddb.exceptions.ConditionalCheckFailedException:
+        return
+    boto3.client("lambda").invoke(FunctionName=os.environ["CAPACITY_FUNCTION"], InvocationType="Event",
+                                  Payload=b'{"action":"reconcile"}')

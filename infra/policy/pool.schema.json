@@ -1,0 +1,196 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "limits",
+    "queue",
+    "host",
+    "scaling",
+    "profiles",
+    "placement"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_instances",
+        "executions_per_instance"
+      ],
+      "properties": {
+        "max_instances": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "executions_per_instance": {
+          "const": 1
+        }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility_seconds",
+        "max_receive_count",
+        "renewal_seconds"
+      ],
+      "properties": {
+        "visibility_seconds": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 43200
+        },
+        "max_receive_count": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1000
+        },
+        "renewal_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 21600
+        }
+      }
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heartbeat_seconds",
+        "heartbeat_stale_seconds",
+        "poll_seconds",
+        "container_timeout_seconds"
+      ],
+      "properties": {
+        "heartbeat_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "heartbeat_stale_seconds": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 300
+        },
+        "poll_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "container_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        }
+      }
+    },
+    "scaling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lookahead_seconds",
+        "idle_seconds",
+        "scale_in_seconds",
+        "metric_period_seconds",
+        "demand_stale_seconds",
+        "lease_seconds"
+      ],
+      "properties": {
+        "lookahead_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "idle_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "scale_in_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600
+        },
+        "metric_period_seconds": {
+          "const": 60
+        },
+        "demand_stale_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400
+        },
+        "lease_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 300
+        }
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "strategy",
+          "operating_limit",
+          "warm_instances"
+        ],
+        "properties": {
+          "strategy": {
+            "enum": [
+              "lookahead",
+              "reactive"
+            ]
+          },
+          "operating_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "warm_instances": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9_-]{1,64}$"
+      }
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "availability_zone_count",
+        "replacement_min_healthy_percentage",
+        "replacement_max_healthy_percentage"
+      ],
+      "properties": {
+        "availability_zone_count": {
+          "type": "integer",
+          "const": 1
+        },
+        "replacement_min_healthy_percentage": {
+          "type": "integer",
+          "const": 0
+        },
+        "replacement_max_healthy_percentage": {
+          "type": "integer",
+          "const": 100
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Judge pool policy v1",
+  "description": "Structural schema; runtime/policy.py additionally enforces cross-field bounds and safety invariants."
+}

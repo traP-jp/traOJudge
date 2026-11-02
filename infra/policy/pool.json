@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "limits": {
+    "max_instances": 5,
+    "executions_per_instance": 1
+  },
+  "queue": {
+    "visibility_seconds": 180,
+    "max_receive_count": 5,
+    "renewal_seconds": 30
+  },
+  "host": {
+    "heartbeat_seconds": 3,
+    "heartbeat_stale_seconds": 20,
+    "poll_seconds": 10,
+    "container_timeout_seconds": 90
+  },
+  "scaling": {
+    "lookahead_seconds": 240,
+    "idle_seconds": 900,
+    "scale_in_seconds": 60,
+    "metric_period_seconds": 60,
+    "demand_stale_seconds": 300,
+    "lease_seconds": 90
+  },
+  "profiles": {
+    "lookahead": {
+      "strategy": "lookahead",
+      "operating_limit": 5,
+      "warm_instances": 1
+    },
+    "reactive": {
+      "strategy": "reactive",
+      "operating_limit": 5,
+      "warm_instances": 1
+    },
+    "prewarmed": {
+      "strategy": "lookahead",
+      "operating_limit": 5,
+      "warm_instances": 5
+    }
+  },
+  "placement": {
+    "availability_zone_count": 1,
+    "replacement_min_healthy_percentage": 0,
+    "replacement_max_healthy_percentage": 100
+  }
+}

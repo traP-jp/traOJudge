@@ -11,7 +11,7 @@
   - Vue 3 + TS + Tailwind のコーディング規約と設計意図。
 - **API スキーマ**: [`docs/API/front_back.yaml`](./docs/API/front_back.yaml)
 - **サービス構成**: [`docs/services/architecture-overview.puml`](./docs/services/architecture-overview.puml)
-- **インフラ (`infra/`)**: [`infra/PATTERNS.md`](./infra/PATTERNS.md)、[構成・実証結果](./docs/services/serverless-judge.md)、[関心事と未決事項](./docs/services/serverless-judge-concerns.md)
+- **インフラ (`infra/`)**: [`infra/PATTERNS.md`](./infra/PATTERNS.md)、[現行pool policy](./docs/services/judge-pool-policy.md)、[構成・実証結果](./docs/services/serverless-judge.md)、[関心事と未決事項](./docs/services/serverless-judge-concerns.md)。過去の2slot/固定0–1台の試作は `docs/services/history/` に分離し、現行設計の根拠にしない。
 
 ## 共通の作法
 

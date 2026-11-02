@@ -1,38 +1,15 @@
-"""One Fargate task per DAG node, without a task IAM role.
+"""Trusted supervisor for one offline sandbox execution on a dedicated VM.
 
-The root supervisor uses narrowly scoped presigned S3 operations. The workload
-runs as another UID under seccomp + rlimits; each task is discarded afterwards.
+Only local, hash-pinned inputs are exposed to the workload. The host owns all
+AWS transfers; this process has no online/presigned-URL fallback.
 """
 import hashlib
 import json
 import os
 from pathlib import Path
 import signal
-import sys
 import subprocess
 import time
-import urllib.error
-import urllib.request
-
-
-class NoRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, *args, **kwargs):
-        return None
-
-
-opener = urllib.request.build_opener(NoRedirect)
-
-
-def download(url):
-    with opener.open(url, timeout=30) as response:
-        return response.read(16 * 1024 * 1024 + 1)
-
-
-def upload(url, data, conditional=False):
-    headers = {"If-None-Match": "*"} if conditional else {}
-    request = urllib.request.Request(url, data=data, method="PUT", headers=headers)
-    with opener.open(request, timeout=30) as response:
-        return response.headers.get("x-amz-version-id")
 
 
 def execute(task, identity):
@@ -77,8 +54,7 @@ def execute(task, identity):
 
 
 def main():
-    offline = "--offline" in sys.argv
-    manifest = json.loads(Path("/work/manifest.json").read_text()) if offline else json.loads(download(os.environ["MANIFEST_URL"]))
+    manifest = json.loads(Path("/work/manifest.json").read_text())
     task = manifest["task"]
     work = Path("/work/node")
     work.mkdir(mode=0o700, exist_ok=True)
@@ -89,7 +65,7 @@ def main():
     for name, reference in manifest["inputs"].items():
         if Path(name).name != name:
             raise ValueError("invalid input name")
-        data = (work / "inputs" / name).read_bytes() if offline else download(reference["url"])
+        data = (work / "inputs" / name).read_bytes()
         if len(data) > 16 * 1024 * 1024 or hashlib.sha256(data).hexdigest() != reference["sha256"]:
             raise ValueError("input size/checksum mismatch")
         path = work / "inputs" / name
@@ -97,24 +73,7 @@ def main():
         path.chmod(0o555 if name == "binary" else 0o444)
         os.chown(path, 65532, 65532)
     outcome = execute(task, manifest["identity"])
-    if offline:
-        Path("/work/result.json").write_text(json.dumps(outcome))
-        return
-    for name, reference in manifest["outputs"].items():
-        path = work / "outputs" / name
-        if not path.exists() and task["phase"] == "compile" and outcome["exit_code"]:
-            continue
-        if not path.is_file() or path.is_symlink() or path.stat().st_size > 8 * 1024 * 1024:
-            raise ValueError("invalid declared output")
-        data = path.read_bytes()
-        version = upload(reference["url"], data)
-        outcome["artifacts"][name] = {"key": reference["key"], "version": version, "sha256": hashlib.sha256(data).hexdigest()}
-    try:
-        upload(manifest["result_url"], json.dumps(outcome).encode(), conditional=True)
-    except urllib.error.HTTPError as exc:
-        if exc.code != 412:
-            raise
-    print(json.dumps({"node": outcome["node"], "exit_code": outcome["exit_code"], "timed_out": outcome["timed_out"]}))
+    Path("/work/result.json").write_text(json.dumps(outcome))
 
 
 if __name__ == "__main__":

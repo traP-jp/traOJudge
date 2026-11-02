@@ -2,10 +2,13 @@
 import json
 from pathlib import Path
 
-priority = {"AC": 0, "WA": 1, "RE": 2, "MLE": 3, "OLE": 4, "TLE": 5}
+priority = {"SKIP": -1, "AC": 0, "WA": 1, "RE": 2, "MLE": 3, "OLE": 4, "TLE": 5}
 cases = sorted(Path("inputs").glob("case-*.json"), key=lambda p: int(p.stem.split("-")[1]))
 if not cases or [int(p.stem.split("-")[1]) for p in cases] != list(range(len(cases))):
     raise ValueError("case verdict artifacts must be contiguous")
 verdicts = [json.loads(p.read_text())["verdict"] for p in cases]
-print(json.dumps({"verdict": max(verdicts, key=priority.__getitem__),
-                  "completed_cases": len(cases), "total_cases": len(cases), "case_verdicts": verdicts}))
+summary = {"verdict": max(verdicts, key=priority.__getitem__), "completed_cases": len(cases) - verdicts.count("SKIP"),
+           "total_cases": len(cases), "case_verdicts": verdicts}
+if "SKIP" in verdicts:
+    summary["skipped_cases"] = verdicts.count("SKIP")
+print(json.dumps(summary))

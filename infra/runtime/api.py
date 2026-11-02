@@ -9,6 +9,7 @@ from urllib.parse import parse_qs
 from botocore.exceptions import ClientError
 
 from common import BUCKET, TABLE, checkpoint_key, ddb, digest, encode, get_item, identifier, load_json, s3
+from planning import validate_parents
 
 
 def response(status, body):
@@ -31,7 +32,11 @@ def accept(body):
         if not original:
             raise ValueError("unknown original submission")
         receipt = {**original, "request_id": request_id, "run": run, "request_hash": body_hash,
-                   "rejudge_of": original["run"], "accepted_ns": time.time_ns()}
+                   "rejudge_of": original["run"], "accepted_ns": time.time_ns(),
+                   "inject_poison": bool(body.get("inject_poison", False)),
+                   "inject_host_loss": bool(body.get("inject_host_loss", False)),
+                   "crash_after_checkpoint": bool(body.get("crash_after_checkpoint", False)),
+                   "host_loss_phase": body.get("host_loss_phase", "compile")}
     else:
         if body.get("language", "c") != "c":
             raise ValueError("this infrastructure fixture supports native C17")
@@ -42,6 +47,7 @@ def accept(body):
         if any(not isinstance(t, dict) or set(t) != {"input", "expected"} or
                any(not isinstance(v, str) or len(v.encode()) > 65536 for v in t.values()) for t in tests):
             raise ValueError("each test needs input/expected strings <=64KiB")
+        parents = validate_parents(body.get("test_parents", [None] * len(tests)), len(tests))
         limits = body.get("limits", {"wall_seconds": 3, "cpu_seconds": 2, "memory_mb": 128})
         if set(limits) != {"wall_seconds", "cpu_seconds", "memory_mb"} or not (
             1 <= limits["wall_seconds"] <= 20 and 1 <= limits["cpu_seconds"] <= 15 and 32 <= limits["memory_mb"] <= 768
@@ -59,7 +65,11 @@ def accept(body):
         receipt = {"contest": contest, "request_id": request_id, "request_hash": body_hash,
                    "run": run, "tests": [{"id": i} for i in range(len(tests))], "limits": limits,
                    "artifacts": artifacts, "crash_after_checkpoint": bool(body.get("crash_after_checkpoint", False)),
-                   "inject_host_loss": bool(body.get("inject_host_loss", False))}
+                   "inject_host_loss": bool(body.get("inject_host_loss", False)), "test_parents": parents,
+                   "host_loss_phase": body.get("host_loss_phase", "compile"),
+                   "inject_poison": bool(body.get("inject_poison", False))}
+        if receipt["host_loss_phase"] not in ["compile", "run", "after_result"]:
+            raise ValueError("invalid host loss phase")
 
     for _ in range(20):
         old = get_item(f"COUNTER#{contest}") or {"number": 0, "accepted_ns": 0}

@@ -1,0 +1,7755 @@
+{
+  "started_at": "2026-11-02T02:28:18.732758+00:00",
+  "policy_profile": "lookahead",
+  "policy_sha256": "83496c57063b54b19a470ddf32b47a3dd346ca915ac3f84c2cd367a73b2a0e60",
+  "checks": {
+    "cloudformation_step_scaling_policies_present": true,
+    "sleep_rejected_while_work_active": true,
+    "five_VMs_observed_ready_before_wide_tree_layer": false,
+    "failed_parent_prunes_only_descendants_without_VM_execution": true,
+    "same_warm_VM_reused_after_verified_cleanup": true,
+    "host-loss-run_same_run_recovered": true,
+    "host-loss-after_result_same_run_recovered": true,
+    "bounded_retries_DLQ_quarantine_terminal_IE_and_explicit_rejudge": true,
+    "new_submission_during_irreversible_drain_runs_on_safe_worker": true,
+    "final_ASG_instances_zero": true,
+    "no_unhandled_DLQ_messages_at_end": true,
+    "saved_intervals_grouped_by_opaque_physical_VM_do_not_overlap": true,
+    "distinct_cleanup_node_joins_verified": true,
+    "pruned_nodes_have_no_attempt_records": true,
+    "powered_off_VMs_physically_terminated": true,
+    "DLQs_visible_inflight_delayed_settled_zero": true
+  },
+  "scenarios": {
+    "forecast-tree": {
+      "last_view": {
+        "completed_cases": 13,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          },
+          {
+            "case": 5,
+            "completed_cases": 6,
+            "verdict": "AC"
+          },
+          {
+            "case": 6,
+            "completed_cases": 7,
+            "verdict": "AC"
+          },
+          {
+            "case": 7,
+            "completed_cases": 8,
+            "verdict": "AC"
+          },
+          {
+            "case": 11,
+            "completed_cases": 9,
+            "verdict": "AC"
+          },
+          {
+            "case": 8,
+            "completed_cases": 10,
+            "verdict": "AC"
+          },
+          {
+            "case": 12,
+            "completed_cases": 11,
+            "verdict": "AC"
+          },
+          {
+            "case": 9,
+            "completed_cases": 12,
+            "verdict": "AC"
+          },
+          {
+            "case": 10,
+            "completed_cases": 13,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0ab8e434-b9b4-5cdb-ac08-48ff70d76a62": "completed",
+          "286538fb-ac4d-590b-b5cb-eb143bcbde88": "completed",
+          "2d2a9f4b-6a04-56a1-abe5-f100d9ff8a99": "completed",
+          "324f4813-69f1-5852-bdbb-eee5890d8676": "completed",
+          "3bafe485-8ddd-5bc8-8e7c-021eb8f13622": "completed",
+          "505e1eda-9f7f-569a-acc9-fc96fd786d9f": "completed",
+          "53db77cf-d9c5-5777-9ade-eeb11a8c22ee": "completed",
+          "5989f1cd-817d-54f9-8254-8fe11d8dd883": "completed",
+          "6609cf96-2cd8-5248-af4b-2fedb459914e": "completed",
+          "762b892b-4104-5065-8396-d72b4390c851": "completed",
+          "83946769-b927-5f80-b827-cbed18971cdb": "completed",
+          "87974576-2bc6-5359-bb0f-c385745b1644": "completed",
+          "918e4beb-56f1-5467-b385-fd6a61b5d884": "completed",
+          "949ba915-c0d4-5700-aa8a-edc469438a21": "completed",
+          "aeecbb64-fa37-5329-a9d6-7d1c95974636": "completed",
+          "b10a7a88-d1d6-5b51-8ed8-d4a483f23dce": "completed",
+          "b2a1b173-6f3f-59fd-b907-fa3544bd481e": "completed",
+          "bf10390d-90c6-5f89-89b8-c14f17588762": "completed",
+          "bfc42756-fabb-5121-b5df-0415cfded8a6": "completed",
+          "c5fba7d1-79ed-54a5-983b-1a6e1ddc52bc": "completed",
+          "d4f01d9d-8554-52e0-b438-e55bc51c5751": "completed",
+          "d52d09fa-4b63-5701-8178-cde2d1d4645f": "completed",
+          "db4bea07-76ff-5886-873b-ed470b6a60a6": "completed",
+          "e5cd581f-a649-5707-a8f0-c8b476c310ab": "completed",
+          "e6bbd3df-7d16-5243-b647-059119718bdf": "completed",
+          "eb028089-0f15-5722-9a16-48a57a3fed04": "completed",
+          "f31b4a2c-423c-5519-b2f0-daf8639bc1e4": "completed",
+          "f4992533-7fcb-5462-9e38-02ecbd32b1d6": "completed"
+        },
+        "revision": 29,
+        "run": "2d131747-ade3-5754-86a5-889a9f279fc2",
+        "status": "completed",
+        "submission": 1,
+        "summary": {
+          "case_verdicts": [
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC"
+          ],
+          "completed_cases": 13,
+          "total_cases": 13,
+          "verdict": "AC"
+        },
+        "total_cases": 13,
+        "verdict": "AC"
+      },
+      "five_ready_before_wide_layer_seconds": -0.9
+    },
+    "pruned-tree": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:37:18.098467+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "pruned-tree",
+        "run": "4d4d4535-ecba-5e34-b30f-9e6691284148",
+        "submission": 2
+      },
+      "last_view": {
+        "completed_cases": 3,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          },
+          {
+            "case": 4,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 5,
+            "completed_cases": 3,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "05da429b-fd26-5318-b402-f8b46a102de0": "completed",
+          "0f49f9a6-6a65-565f-bce1-468903b4e967": "completed",
+          "16d35384-62b2-5d31-a5b2-f9eff485c24b": "completed",
+          "790265b8-7200-538f-b12b-85c2fd083653": "completed",
+          "9a15ad1b-fbd5-52e4-b72a-4b525ff906ef": "completed",
+          "a6db0983-b291-5204-90ce-718e7a70d288": "completed",
+          "b683973d-0aba-5cd9-b0a9-d6db37b22d8b": "completed",
+          "c462de51-dd91-578b-8c7e-00d28a84b94b": "completed",
+          "cc94e7f5-02e4-527f-8356-31c4ba5ef6bf": "completed",
+          "cf4fc9a0-31df-5ebf-a160-ad8113923371": "completed",
+          "e05aea67-18fc-5f50-9934-61c16d47b19a": "completed",
+          "e7bbef5c-df86-5cd9-8c41-b6dc8ea418aa": "completed",
+          "f0884ec3-43d0-55a3-a6da-0508635a5555": "completed",
+          "f787ef0b-7eaf-5d61-a81b-ca65a4d67191": "completed"
+        },
+        "revision": 9,
+        "run": "4d4d4535-ecba-5e34-b30f-9e6691284148",
+        "skipped_cases": 3,
+        "status": "completed",
+        "submission": 2,
+        "summary": {
+          "case_verdicts": [
+            "WA",
+            "SKIP",
+            "SKIP",
+            "SKIP",
+            "AC",
+            "AC"
+          ],
+          "completed_cases": 3,
+          "skipped_cases": 3,
+          "total_cases": 6,
+          "verdict": "WA"
+        },
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "accept_to_observed_terminal_seconds": 21.216
+    },
+    "reuse-A": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:38:00.324869+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "reuse-A",
+        "run": "977c37d6-0f86-5550-aab0-5c40388fa360",
+        "submission": 3
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "a02ffac6-5c00-5c13-9f63-f7c676505cbd": "completed",
+          "c4d921b9-8ed2-56f0-a00e-4fb0d444587d": "completed",
+          "c774a259-e2ee-5508-9b05-94a14fa95e5a": "completed",
+          "e5e8898b-920a-5028-84c0-d71f384bc090": "completed"
+        },
+        "revision": 5,
+        "run": "977c37d6-0f86-5550-aab0-5c40388fa360",
+        "status": "completed",
+        "submission": 3,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 4.756
+    },
+    "reuse-B": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:38:16.177357+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "reuse-B",
+        "run": "1fd23763-19f8-537d-9bc0-546b4534b85f",
+        "submission": 4
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "9a3c48ad-d28a-5f6d-b06e-7494d8ef166c": "completed",
+          "a183c8f7-52b3-5c39-bb02-b0fd913d1908": "completed",
+          "ce132184-7fcb-5af7-83fa-a9b3d41e39d7": "completed",
+          "e9c06569-ee4c-5da6-a84e-e4113e817687": "completed"
+        },
+        "revision": 5,
+        "run": "1fd23763-19f8-537d-9bc0-546b4534b85f",
+        "status": "completed",
+        "submission": 4,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 10.83
+    },
+    "host-loss-run": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:38:32.136961+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "host-loss-run",
+        "run": "275d0523-ec96-5187-a550-a1134ace4153",
+        "submission": 5
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "4ba0ab8e-a8a3-5b43-86ee-77e69d61782a": "completed",
+          "91888ff9-42d6-526d-9fc2-375d514953b7": "completed",
+          "b4e44653-ee13-5341-960f-8f27cbb32e87": "completed",
+          "f7d7fe84-bcdd-5aa0-b945-4a05ffabedb0": "completed"
+        },
+        "revision": 5,
+        "run": "275d0523-ec96-5187-a550-a1134ace4153",
+        "status": "completed",
+        "submission": 5,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 228.783,
+      "fault": {
+        "event": "host_poweroff_run",
+        "node": "f7d7fe84-bcdd-5aa0-b945-4a05ffabedb0",
+        "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+        "at": 1793587116.3201256,
+        "docker_running": true
+      },
+      "receive_counts": [
+        1,
+        4
+      ]
+    },
+    "host-loss-after_result": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:42:26.293498+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "host-loss-after_result",
+        "run": "235a798a-a3df-5e75-a6ab-2ec3f51999e8",
+        "submission": 6
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "47e3417e-149c-5542-9538-c5011c99a267": "completed",
+          "84a48f26-14f6-5cfe-bc32-1f01d4453e5e": "completed",
+          "f13c0a15-3301-59a8-90a0-8d116a1bb21a": "completed",
+          "fee0e417-9e9d-5334-b2be-a21b6816dd3f": "completed"
+        },
+        "revision": 5,
+        "run": "235a798a-a3df-5e75-a6ab-2ec3f51999e8",
+        "status": "completed",
+        "submission": 6,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 186.684,
+      "fault": {
+        "event": "host_poweroff_after_result",
+        "node": "84a48f26-14f6-5cfe-bc32-1f01d4453e5e",
+        "worker": "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "at": 1793587348.7039785,
+        "result_saved": true
+      },
+      "receive_counts": [
+        2,
+        1
+      ]
+    },
+    "poison": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:45:39.333115+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "poison",
+        "run": "cf383537-581f-5313-95b1-4242216937e7",
+        "submission": 7
+      },
+      "last_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "05bb37ee-8b97-5cce-9578-09e2b3ea3556": "failed",
+          "13c7c795-8c96-5b8e-a79d-25dcebe56d42": "waiting",
+          "3dfb1cc4-9a99-5da0-8ba4-59edf004e93f": "waiting",
+          "403df03b-e301-59c1-b304-7b5c46959fe5": "waiting"
+        },
+        "revision": 2,
+        "run": "cf383537-581f-5313-95b1-4242216937e7",
+        "status": "infrastructure_error",
+        "submission": 7,
+        "total_cases": 1
+      },
+      "accept_to_observed_terminal_seconds": 10.395,
+      "receive_counts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "operator-rejudge": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:45:57.031613+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "operator-rejudge",
+        "run": "0261b891-0cba-5a40-9010-832201a01e6a",
+        "submission": 7
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "042eb9fc-014e-54cc-b471-adcda8d6cda0": "completed",
+          "1c033d60-687a-5d08-a515-f4b1b27d73bb": "completed",
+          "98d37a0a-216d-518e-9e3e-218d0111cac1": "completed",
+          "dd2c8090-35a6-586e-9177-df8a58a9296b": "completed"
+        },
+        "revision": 5,
+        "run": "0261b891-0cba-5a40-9010-832201a01e6a",
+        "status": "completed",
+        "submission": 7,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 9.723
+    },
+    "arrival-during-drain": {
+      "receipt": {
+        "accepted_at": "2026-11-02T02:46:32.179147+00:00",
+        "contest": "scaling-158a44ef76eb",
+        "request_id": "arrival-during-drain",
+        "run": "6783f62d-6ed9-5143-935b-e54a31486aeb",
+        "submission": 8
+      },
+      "last_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0439a926-17a0-5177-bb29-a8489e76f9ef": "completed",
+          "20474417-fed4-507c-993f-966c9e282e1e": "completed",
+          "c94b8997-ccea-50a7-b7b7-6102b1a1531f": "completed",
+          "ee078206-ab38-5985-b75d-79596e288068": "completed"
+        },
+        "revision": 5,
+        "run": "6783f62d-6ed9-5143-935b-e54a31486aeb",
+        "status": "completed",
+        "submission": 8,
+        "summary": {
+          "case_verdicts": [
+            "AC"
+          ],
+          "completed_cases": 1,
+          "total_cases": 1,
+          "verdict": "AC"
+        },
+        "total_cases": 1,
+        "verdict": "AC"
+      },
+      "accept_to_observed_terminal_seconds": 87.11
+    }
+  },
+  "samples": [
+    {
+      "at": 1793586504.0712006,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586507.3608642,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586513.7280238,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 1
+        }
+      }
+    },
+    {
+      "at": 1793586519.927768,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586531.3974762,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586542.159181,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586553.0464864,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586563.7008383,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586574.3349555,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 1
+        }
+      }
+    },
+    {
+      "at": 1793586585.5027957,
+      "desired": 5,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586596.4093645,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586606.7454755,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586617.7015588,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586628.3422995,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586639.3728733,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586650.4269938,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586661.586186,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586675.630123,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        },
+        {
+          "worker": "46b925885ee749aabf6943eb675288bd",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147574
+        },
+        {
+          "worker": "a36987f7b8214f57a2facece7ca21aca",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.214759
+        },
+        {
+          "worker": "dad3af5978f14334a47cbe031a25790e",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147613
+        },
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793586689.515892,
+      "desired": 5,
+      "physical_members": 5,
+      "hosts": [
+        {
+          "worker": "1f750badf8fc4f5f89600f226b476bfe",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586503.0724666
+        },
+        {
+          "worker": "46b925885ee749aabf6943eb675288bd",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147574
+        },
+        {
+          "worker": "a36987f7b8214f57a2facece7ca21aca",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.214759
+        },
+        {
+          "worker": "dad3af5978f14334a47cbe031a25790e",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147613
+        },
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 2
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587007.7460196,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587014.1794336,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587044.5267925,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 1
+        }
+      }
+    },
+    {
+      "at": 1793587058.2886539,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587073.067153,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587079.3646781,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587091.838157,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587106.0390346,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587118.5873706,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587132.9594731,
+      "desired": 3,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793586674.2147632
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587146.1129274,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587159.9665773,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587173.7931166,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587187.204574,
+      "desired": 1,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587201.1436305,
+      "desired": 1,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587216.519552,
+      "desired": 1,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587231.857498,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587246.7281933,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587261.555418,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587276.8249621,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587292.037792,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587307.8399413,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587323.470468,
+      "desired": 2,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509037
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587340.1206872,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d",
+          "state": "ready",
+          "active": 1,
+          "protected": true,
+          "first_observed_at": 1793587339.1632867
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587354.8233085,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587339.1632867
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587370.4444892,
+      "desired": 3,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587339.1632867
+        },
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587385.8296437,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587401.2541912,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587417.1251106,
+      "desired": 3,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587433.1744335,
+      "desired": 1,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587215.1509082
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587449.2347398,
+      "desired": 1,
+      "physical_members": 3,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587465.8439934,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587482.099113,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587498.7406201,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587515.511191,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587532.171308,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587548.7536087,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587565.7789052,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587580.9025407,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "132f92261f564d90968db8a1e1c8e01c",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587579.5137293
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 1
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587591.3688326,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "132f92261f564d90968db8a1e1c8e01c",
+          "state": "drained",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587579.5137293
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587608.7729206,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "132f92261f564d90968db8a1e1c8e01c",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587579.5137293
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587626.2046232,
+      "desired": 2,
+      "physical_members": 3,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587644.082855,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587661.1295726,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587678.4801393,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 1,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587693.8607192,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "6f49f14b052c43a1867d057808ff0f18",
+          "state": "ready",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587692.8774312
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587705.3157935,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "6f49f14b052c43a1867d057808ff0f18",
+          "state": "drained",
+          "active": 0,
+          "protected": true,
+          "first_observed_at": 1793587692.8774312
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587718.951893,
+      "desired": 2,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "6f49f14b052c43a1867d057808ff0f18",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587692.8774312
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587731.9501789,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "6f49f14b052c43a1867d057808ff0f18",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587692.8774312
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587745.3696287,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "6f49f14b052c43a1867d057808ff0f18",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587692.8774312
+        },
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587758.9410307,
+      "desired": 1,
+      "physical_members": 2,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587772.415281,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587785.6704614,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587798.9414902,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587812.6528387,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587825.8317912,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587838.9452553,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587852.1067746,
+      "desired": 1,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587865.1756136,
+      "desired": 0,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587878.5738962,
+      "desired": 0,
+      "physical_members": 1,
+      "hosts": [
+        {
+          "worker": "ac0313311dd84482b175380ea728f843",
+          "state": "drained",
+          "active": 0,
+          "protected": false,
+          "first_observed_at": 1793587464.462839
+        }
+      ],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587891.6667502,
+      "desired": 0,
+      "physical_members": 1,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587905.1292987,
+      "desired": 0,
+      "physical_members": 1,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    },
+    {
+      "at": 1793587918.5464272,
+      "desired": 0,
+      "physical_members": 0,
+      "hosts": [],
+      "queue": {
+        "NodeQueue": {
+          "visible": 0,
+          "inflight": 0
+        },
+        "ControlQueue": {
+          "visible": 0,
+          "inflight": 0
+        }
+      }
+    }
+  ],
+  "observed_peak_parallel_executions": 5,
+  "finished_at": "2026-11-02T02:51:59.508883+00:00",
+  "agent_to_opaque_VM_label": {
+    "132f92261f564d90968db8a1e1c8e01c": "vm-08",
+    "1f750badf8fc4f5f89600f226b476bfe": "vm-04",
+    "46b925885ee749aabf6943eb675288bd": "vm-06",
+    "6f49f14b052c43a1867d057808ff0f18": "vm-02",
+    "7e81ca9d0ab1469391b3f6a73e730f4d": "vm-03",
+    "a36987f7b8214f57a2facece7ca21aca": "vm-05",
+    "ac0313311dd84482b175380ea728f843": "vm-11",
+    "cef4dc03afc84b9099dfb41ed756bfa8": "vm-10",
+    "dad3af5978f14334a47cbe031a25790e": "vm-01",
+    "e26f750bf38e40c69b177d9d1232c8f5": "vm-07",
+    "fc1a32b3e5a4413590311e95f08d0b33": "vm-09"
+  },
+  "saved_execution_intervals_by_VM": {
+    "vm-04": [
+      {
+        "request": "forecast-tree",
+        "node": "0ab8e434-b9b4-5cdb-ac08-48ff70d76a62",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586682808657102,
+        "started_ns": 1793586682680857214
+      },
+      {
+        "request": "forecast-tree",
+        "node": "286538fb-ac4d-590b-b5cb-eb143bcbde88",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586680758476498,
+        "started_ns": 1793586674730561247
+      },
+      {
+        "request": "forecast-tree",
+        "node": "2d2a9f4b-6a04-56a1-abe5-f100d9ff8a99",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586674000249408,
+        "started_ns": 1793586673831624463
+      },
+      {
+        "request": "forecast-tree",
+        "node": "324f4813-69f1-5852-bdbb-eee5890d8676",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586633419976652,
+        "started_ns": 1793586615365032779
+      },
+      {
+        "request": "forecast-tree",
+        "node": "3bafe485-8ddd-5bc8-8e7c-021eb8f13622",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586613519360998,
+        "started_ns": 1793586595469827706
+      },
+      {
+        "request": "forecast-tree",
+        "node": "505e1eda-9f7f-569a-acc9-fc96fd786d9f",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586573878651419,
+        "started_ns": 1793586555839074572
+      },
+      {
+        "request": "forecast-tree",
+        "node": "53db77cf-d9c5-5777-9ade-eeb11a8c22ee",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586574882420711,
+        "started_ns": 1793586574765226342
+      },
+      {
+        "request": "forecast-tree",
+        "node": "5989f1cd-817d-54f9-8254-8fe11d8dd883",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586555108224278,
+        "started_ns": 1793586554977129790
+      },
+      {
+        "request": "forecast-tree",
+        "node": "762b892b-4104-5065-8396-d72b4390c851",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586654184003413,
+        "started_ns": 1793586654002587138
+      },
+      {
+        "request": "forecast-tree",
+        "node": "83946769-b927-5f80-b827-cbed18971cdb",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586515624374992,
+        "started_ns": 1793586515456276159
+      },
+      {
+        "request": "forecast-tree",
+        "node": "949ba915-c0d4-5700-aa8a-edc469438a21",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586634408676102,
+        "started_ns": 1793586634277576984
+      },
+      {
+        "request": "forecast-tree",
+        "node": "b10a7a88-d1d6-5b51-8ed8-d4a483f23dce",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586594735221331,
+        "started_ns": 1793586594566471270
+      },
+      {
+        "request": "forecast-tree",
+        "node": "bfc42756-fabb-5121-b5df-0415cfded8a6",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586534427447613,
+        "started_ns": 1793586516380472423
+      },
+      {
+        "request": "forecast-tree",
+        "node": "c5fba7d1-79ed-54a5-983b-1a6e1ddc52bc",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586653175184204,
+        "started_ns": 1793586635111097185
+      },
+      {
+        "request": "forecast-tree",
+        "node": "d52d09fa-4b63-5701-8178-cde2d1d4645f",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586672976209779,
+        "started_ns": 1793586654900109872
+      },
+      {
+        "request": "forecast-tree",
+        "node": "e5cd581f-a649-5707-a8f0-c8b476c310ab",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586554177906663,
+        "started_ns": 1793586536127684287
+      },
+      {
+        "request": "forecast-tree",
+        "node": "eb028089-0f15-5722-9a16-48a57a3fed04",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586614593680710,
+        "started_ns": 1793586614426027738
+      },
+      {
+        "request": "forecast-tree",
+        "node": "f31b4a2c-423c-5519-b2f0-daf8639bc1e4",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586593650400428,
+        "started_ns": 1793586575595195856
+      },
+      {
+        "request": "forecast-tree",
+        "node": "f4992533-7fcb-5462-9e38-02ecbd32b1d6",
+        "agent": "1f750badf8fc4f5f89600f226b476bfe",
+        "finished_ns": 1793586535408265109,
+        "started_ns": 1793586535277503973
+      }
+    ],
+    "vm-09": [
+      {
+        "request": "forecast-tree",
+        "node": "6609cf96-2cd8-5248-af4b-2fedb459914e",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793586680967696480,
+        "started_ns": 1793586674906870467
+      },
+      {
+        "request": "forecast-tree",
+        "node": "aeecbb64-fa37-5329-a9d6-7d1c95974636",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793586684667840892,
+        "started_ns": 1793586684537445256
+      },
+      {
+        "request": "forecast-tree",
+        "node": "b2a1b173-6f3f-59fd-b907-fa3544bd481e",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793586681810150950,
+        "started_ns": 1793586681690504255
+      },
+      {
+        "request": "pruned-tree",
+        "node": "05da429b-fd26-5318-b402-f8b46a102de0",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587045372559710,
+        "started_ns": 1793587045242313945
+      },
+      {
+        "request": "pruned-tree",
+        "node": "0f49f9a6-6a65-565f-bce1-468903b4e967",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587047052696643,
+        "started_ns": 1793587046027813077
+      },
+      {
+        "request": "pruned-tree",
+        "node": "16d35384-62b2-5d31-a5b2-f9eff485c24b",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587050443212429,
+        "started_ns": 1793587050311824741
+      },
+      {
+        "request": "pruned-tree",
+        "node": "9a15ad1b-fbd5-52e4-b72a-4b525ff906ef",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587051342972342,
+        "started_ns": 1793587051217570235
+      },
+      {
+        "request": "pruned-tree",
+        "node": "b683973d-0aba-5cd9-b0a9-d6db37b22d8b",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587048767567236,
+        "started_ns": 1793587048635033357
+      },
+      {
+        "request": "pruned-tree",
+        "node": "cc94e7f5-02e4-527f-8356-31c4ba5ef6bf",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587049547825642,
+        "started_ns": 1793587049430615714
+      },
+      {
+        "request": "pruned-tree",
+        "node": "e05aea67-18fc-5f50-9934-61c16d47b19a",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587044488592188,
+        "started_ns": 1793587044318942689
+      },
+      {
+        "request": "pruned-tree",
+        "node": "e7bbef5c-df86-5cd9-8c41-b6dc8ea418aa",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587047913175384,
+        "started_ns": 1793587047795977380
+      },
+      {
+        "request": "reuse-A",
+        "node": "a02ffac6-5c00-5c13-9f63-f7c676505cbd",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587084543188065,
+        "started_ns": 1793587084416572471
+      },
+      {
+        "request": "reuse-A",
+        "node": "c4d921b9-8ed2-56f0-a00e-4fb0d444587d",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587083693445326,
+        "started_ns": 1793587083518005222
+      },
+      {
+        "request": "reuse-A",
+        "node": "c774a259-e2ee-5508-9b05-94a14fa95e5a",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587081911322726,
+        "started_ns": 1793587081736114044
+      },
+      {
+        "request": "reuse-A",
+        "node": "e5e8898b-920a-5028-84c0-d71f384bc090",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587082741402332,
+        "started_ns": 1793587082622532901
+      },
+      {
+        "request": "reuse-B",
+        "node": "9a3c48ad-d28a-5f6d-b06e-7494d8ef166c",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587099739344943,
+        "started_ns": 1793587099569473733
+      },
+      {
+        "request": "reuse-B",
+        "node": "a183c8f7-52b3-5c39-bb02-b0fd913d1908",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587097911097591,
+        "started_ns": 1793587097791440660
+      },
+      {
+        "request": "reuse-B",
+        "node": "ce132184-7fcb-5af7-83fa-a9b3d41e39d7",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587098792128758,
+        "started_ns": 1793587098674882341
+      },
+      {
+        "request": "reuse-B",
+        "node": "e9c06569-ee4c-5da6-a84e-e4113e817687",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587100643311161,
+        "started_ns": 1793587100475036519
+      },
+      {
+        "request": "host-loss-run",
+        "node": "4ba0ab8e-a8a3-5b43-86ee-77e69d61782a",
+        "agent": "fc1a32b3e5a4413590311e95f08d0b33",
+        "finished_ns": 1793587113892066584,
+        "started_ns": 1793587113774671209
+      }
+    ],
+    "vm-01": [
+      {
+        "request": "forecast-tree",
+        "node": "87974576-2bc6-5359-bb0f-c385745b1644",
+        "agent": "dad3af5978f14334a47cbe031a25790e",
+        "finished_ns": 1793586682181266430,
+        "started_ns": 1793586682050686827
+      },
+      {
+        "request": "forecast-tree",
+        "node": "d4f01d9d-8554-52e0-b438-e55bc51c5751",
+        "agent": "dad3af5978f14334a47cbe031a25790e",
+        "finished_ns": 1793586683107704081,
+        "started_ns": 1793586682990690969
+      },
+      {
+        "request": "forecast-tree",
+        "node": "e6bbd3df-7d16-5243-b647-059119718bdf",
+        "agent": "dad3af5978f14334a47cbe031a25790e",
+        "finished_ns": 1793586680963266761,
+        "started_ns": 1793586674930063534
+      }
+    ],
+    "vm-05": [
+      {
+        "request": "forecast-tree",
+        "node": "918e4beb-56f1-5467-b385-fd6a61b5d884",
+        "agent": "a36987f7b8214f57a2facece7ca21aca",
+        "finished_ns": 1793586681003815551,
+        "started_ns": 1793586674944208009
+      }
+    ],
+    "vm-06": [
+      {
+        "request": "forecast-tree",
+        "node": "bf10390d-90c6-5f89-89b8-c14f17588762",
+        "agent": "46b925885ee749aabf6943eb675288bd",
+        "finished_ns": 1793586680993002215,
+        "started_ns": 1793586674960704779
+      },
+      {
+        "request": "forecast-tree",
+        "node": "db4bea07-76ff-5886-873b-ed470b6a60a6",
+        "agent": "46b925885ee749aabf6943eb675288bd",
+        "finished_ns": 1793586682518076920,
+        "started_ns": 1793586682349475830
+      }
+    ],
+    "vm-03": [
+      {
+        "request": "host-loss-run",
+        "node": "91888ff9-42d6-526d-9fc2-375d514953b7",
+        "agent": "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "finished_ns": 1793587337096197414,
+        "started_ns": 1793587336913814549
+      },
+      {
+        "request": "host-loss-run",
+        "node": "b4e44653-ee13-5341-960f-8f27cbb32e87",
+        "agent": "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "finished_ns": 1793587336223445511,
+        "started_ns": 1793587336053713045
+      },
+      {
+        "request": "host-loss-run",
+        "node": "f7d7fe84-bcdd-5aa0-b945-4a05ffabedb0",
+        "agent": "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "finished_ns": 1793587335159786094,
+        "started_ns": 1793587327105172089
+      },
+      {
+        "request": "host-loss-after_result",
+        "node": "84a48f26-14f6-5cfe-bc32-1f01d4453e5e",
+        "agent": "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "finished_ns": 1793587348568819434,
+        "started_ns": 1793587348400240668
+      }
+    ],
+    "vm-11": [
+      {
+        "request": "host-loss-after_result",
+        "node": "47e3417e-149c-5542-9538-c5011c99a267",
+        "agent": "ac0313311dd84482b175380ea728f843",
+        "finished_ns": 1793587530848452486,
+        "started_ns": 1793587530680677204
+      },
+      {
+        "request": "host-loss-after_result",
+        "node": "f13c0a15-3301-59a8-90a0-8d116a1bb21a",
+        "agent": "ac0313311dd84482b175380ea728f843",
+        "finished_ns": 1793587528874715669,
+        "started_ns": 1793587528757316263
+      },
+      {
+        "request": "host-loss-after_result",
+        "node": "fee0e417-9e9d-5334-b2be-a21b6816dd3f",
+        "agent": "ac0313311dd84482b175380ea728f843",
+        "finished_ns": 1793587529924728326,
+        "started_ns": 1793587529754415420
+      },
+      {
+        "request": "operator-rejudge",
+        "node": "042eb9fc-014e-54cc-b471-adcda8d6cda0",
+        "agent": "ac0313311dd84482b175380ea728f843",
+        "finished_ns": 1793587564882299929,
+        "started_ns": 1793587564694988425
+      },
+      {
+        "request": "operator-rejudge",
+        "node": "98d37a0a-216d-518e-9e3e-218d0111cac1",
+        "agent": "ac0313311dd84482b175380ea728f843",
+        "finished_ns": 1793587563957369057,
+        "started_ns": 1793587563783603951
+      }
+    ],
+    "vm-08": [
+      {
+        "request": "operator-rejudge",
+        "node": "1c033d60-687a-5d08-a515-f4b1b27d73bb",
+        "agent": "132f92261f564d90968db8a1e1c8e01c",
+        "finished_ns": 1793587562046272098,
+        "started_ns": 1793587561876517708
+      },
+      {
+        "request": "operator-rejudge",
+        "node": "dd2c8090-35a6-586e-9177-df8a58a9296b",
+        "agent": "132f92261f564d90968db8a1e1c8e01c",
+        "finished_ns": 1793587562963989562,
+        "started_ns": 1793587562843627727
+      }
+    ],
+    "vm-02": [
+      {
+        "request": "arrival-during-drain",
+        "node": "0439a926-17a0-5177-bb29-a8489e76f9ef",
+        "agent": "6f49f14b052c43a1867d057808ff0f18",
+        "finished_ns": 1793587677597703466,
+        "started_ns": 1793587677468996153
+      },
+      {
+        "request": "arrival-during-drain",
+        "node": "20474417-fed4-507c-993f-966c9e282e1e",
+        "agent": "6f49f14b052c43a1867d057808ff0f18",
+        "finished_ns": 1793587674920249625,
+        "started_ns": 1793587674751467300
+      },
+      {
+        "request": "arrival-during-drain",
+        "node": "c94b8997-ccea-50a7-b7b7-6102b1a1531f",
+        "agent": "6f49f14b052c43a1867d057808ff0f18",
+        "finished_ns": 1793587675900970099,
+        "started_ns": 1793587675782624571
+      },
+      {
+        "request": "arrival-during-drain",
+        "node": "ee078206-ab38-5985-b75d-79596e288068",
+        "agent": "6f49f14b052c43a1867d057808ff0f18",
+        "finished_ns": 1793587676775710597,
+        "started_ns": 1793587676659273937
+      }
+    ]
+  },
+  "joined_execution_cleanup_analysis": {
+    "forecast-tree": {
+      "run": "2d131747-ade3-5754-86a5-889a9f279fc2",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 13,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 28,
+      "distinct_cleanup_nodes": 28,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "1f750badf8fc4f5f89600f226b476bfe",
+        "46b925885ee749aabf6943eb675288bd",
+        "a36987f7b8214f57a2facece7ca21aca",
+        "dad3af5978f14334a47cbe031a25790e",
+        "fc1a32b3e5a4413590311e95f08d0b33"
+      ],
+      "last_checkpoint_published_elapsed_seconds": 174.623
+    },
+    "pruned-tree": {
+      "run": "4d4d4535-ecba-5e34-b30f-9e6691284148",
+      "verdict": "WA",
+      "state": "completed",
+      "completed_cases": 3,
+      "skipped_cases": 3,
+      "saved_execution_nodes": 8,
+      "distinct_cleanup_nodes": 8,
+      "pruned_nodes": 6,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "fc1a32b3e5a4413590311e95f08d0b33"
+      ]
+    },
+    "reuse-A": {
+      "run": "977c37d6-0f86-5550-aab0-5c40388fa360",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 4,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "fc1a32b3e5a4413590311e95f08d0b33"
+      ]
+    },
+    "reuse-B": {
+      "run": "1fd23763-19f8-537d-9bc0-546b4534b85f",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 4,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "fc1a32b3e5a4413590311e95f08d0b33"
+      ]
+    },
+    "host-loss-run": {
+      "run": "275d0523-ec96-5187-a550-a1134ace4153",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 4,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "fc1a32b3e5a4413590311e95f08d0b33"
+      ]
+    },
+    "host-loss-after_result": {
+      "run": "235a798a-a3df-5e75-a6ab-2ec3f51999e8",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 3,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 1,
+      "agents": [
+        "7e81ca9d0ab1469391b3f6a73e730f4d",
+        "ac0313311dd84482b175380ea728f843"
+      ]
+    },
+    "operator-rejudge": {
+      "run": "0261b891-0cba-5a40-9010-832201a01e6a",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 4,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "132f92261f564d90968db8a1e1c8e01c",
+        "ac0313311dd84482b175380ea728f843"
+      ]
+    },
+    "poison": {
+      "run": "cf383537-581f-5313-95b1-4242216937e7",
+      "verdict": null,
+      "state": "infrastructure_error",
+      "completed_cases": 0,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 0,
+      "distinct_cleanup_nodes": 0,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": []
+    },
+    "arrival-during-drain": {
+      "run": "6783f62d-6ed9-5143-935b-e54a31486aeb",
+      "verdict": "AC",
+      "state": "completed",
+      "completed_cases": 1,
+      "skipped_cases": 0,
+      "saved_execution_nodes": 4,
+      "distinct_cleanup_nodes": 4,
+      "pruned_nodes": 0,
+      "pruned_nodes_have_no_attempts": true,
+      "cleanup_missing_only_for_powered_off_VM": 0,
+      "agents": [
+        "6f49f14b052c43a1867d057808ff0f18"
+      ]
+    }
+  },
+  "VM_final_states": {
+    "vm-10": "terminated",
+    "vm-07": "terminated",
+    "vm-03": "terminated",
+    "vm-08": "terminated",
+    "vm-05": "terminated",
+    "vm-06": "terminated",
+    "vm-01": "terminated",
+    "vm-09": "terminated",
+    "vm-02": "terminated",
+    "vm-11": "terminated",
+    "vm-04": "terminated"
+  },
+  "scaling_activities_sanitized": [
+    {
+      "started_at": "2026-11-02T02:51:02.389000+00:00",
+      "ended_at": "2026-11-02T02:51:44+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        0
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:48:52.155000+00:00",
+      "ended_at": "2026-11-02T02:49:13+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        2,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:46:43.107000+00:00",
+      "ended_at": "2026-11-02T02:46:48+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        2
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:46:30.287000+00:00",
+      "ended_at": "2026-11-02T02:47:12+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": false,
+      "health_replacement": false,
+      "capacity_transition": null
+    },
+    {
+      "started_at": "2026-11-02T02:45:46.455000+00:00",
+      "ended_at": "2026-11-02T02:45:46+00:00",
+      "status": "Cancelled",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        2,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:44:42.597000+00:00",
+      "ended_at": "2026-11-02T02:44:47+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        2
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:43:46.313000+00:00",
+      "ended_at": "2026-11-02T02:44:28+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        3,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:43:45.880000+00:00",
+      "ended_at": "2026-11-02T02:44:07+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": false,
+      "health_replacement": true,
+      "capacity_transition": null
+    },
+    {
+      "started_at": "2026-11-02T02:42:52.813000+00:00",
+      "ended_at": "2026-11-02T02:42:58+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        2,
+        3
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:41:45.949000+00:00",
+      "ended_at": "2026-11-02T02:42:07+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        3,
+        2
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:40:52.536000+00:00",
+      "ended_at": "2026-11-02T02:40:57+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        3
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:40:18.208000+00:00",
+      "ended_at": "2026-11-02T02:40:18+00:00",
+      "status": "Cancelled",
+      "alarm_policy_triggered": false,
+      "health_replacement": false,
+      "capacity_transition": null
+    },
+    {
+      "started_at": "2026-11-02T02:39:56.039000+00:00",
+      "ended_at": "2026-11-02T02:40:17+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": false,
+      "health_replacement": true,
+      "capacity_transition": null
+    },
+    {
+      "started_at": "2026-11-02T02:39:45.138000+00:00",
+      "ended_at": "2026-11-02T02:39:45+00:00",
+      "status": "Cancelled",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        3,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:38:51.110000+00:00",
+      "ended_at": "2026-11-02T02:38:56+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        3
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:38:51.110000+00:00",
+      "ended_at": "2026-11-02T02:38:56+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        3
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:34:51.287000+00:00",
+      "ended_at": "2026-11-02T02:35:33+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        5,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:34:51.212000+00:00",
+      "ended_at": "2026-11-02T02:35:33+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        5,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:34:51.084000+00:00",
+      "ended_at": "2026-11-02T02:35:32+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        5,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:34:51.024000+00:00",
+      "ended_at": "2026-11-02T02:35:33+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        5,
+        1
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:29:49.696000+00:00",
+      "ended_at": "2026-11-02T02:29:54+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        5
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:29:49.696000+00:00",
+      "ended_at": "2026-11-02T02:29:54+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        5
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:29:49.696000+00:00",
+      "ended_at": "2026-11-02T02:29:55+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        5
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:29:49.696000+00:00",
+      "ended_at": "2026-11-02T02:29:54+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": true,
+      "health_replacement": false,
+      "capacity_transition": [
+        1,
+        5
+      ]
+    },
+    {
+      "started_at": "2026-11-02T02:25:51.562000+00:00",
+      "ended_at": "2026-11-02T02:25:56+00:00",
+      "status": "Successful",
+      "alarm_policy_triggered": false,
+      "health_replacement": false,
+      "capacity_transition": [
+        0,
+        1
+      ]
+    }
+  ],
+  "controller_observations": [
+    {
+      "at": 1793586450.0756824,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586508.7633436,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586512.0412118,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586513.039365,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586515.2858686,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586516.15357,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586535.0175478,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586535.900446,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586554.739584,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586555.585262,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586568.62857,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586574.46089,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586575.3391244,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793586594.2602613,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586595.1925783,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586614.132241,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586615.0872343,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586628.6986399,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586634.0083747,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586634.8996565,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586653.7346942,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586654.6467152,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586673.520551,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586674.5426514,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586681.4397306,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586681.9211054,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586682.4224384,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586682.7807097,
+      "forecast_executions": 5,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586683.139181,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586683.4542308,
+      "forecast_executions": 2,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 3
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586683.7761056,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 2,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793586684.269709,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 5,
+          "visible": 0
+        }
+      },
+      "ready_executions": 5,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 5,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586684.6225681,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793586684.9204597,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793586685.4141648,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793586688.6444232,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793586748.6876774,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 5,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 4,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "await_drain"
+    },
+    {
+      "at": 1793586808.6220672,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 4,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793586868.7001143,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "1f750badf8fc4f5f89600f226b476bfe"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "46b925885ee749aabf6943eb675288bd"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "a36987f7b8214f57a2facece7ca21aca"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "dad3af5978f14334a47cbe031a25790e"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 5,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 4,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793586928.59248,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793586988.6453326,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587041.403639,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587042.3108318,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587044.1647031,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587044.9719565,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 2,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587045.8362908,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 2,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587047.5413916,
+      "forecast_executions": 3,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 2,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 3,
+      "transition": "request_scale_out"
+    },
+    {
+      "at": 1793587048.513781,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587048.9808626,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587049.305471,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587050.0255482,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587050.8824542,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587051.713138,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587080.6983914,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587081.189788,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587081.620061,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587082.366917,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587083.2331161,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587084.152381,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587084.9195745,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587096.4243917,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587096.8225253,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587097.5374417,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587098.357365,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587099.2733693,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587100.2001731,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587101.056593,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587108.6268451,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587112.4441712,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587112.7854362,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587113.5201643,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587114.372228,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "fc1a32b3e5a4413590311e95f08d0b33"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587168.7697148,
+      "forecast_executions": 1,
+      "hosts": [],
+      "policy": "lookahead",
+      "previous_desired": 3,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587228.702071,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587288.786831,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "cef4dc03afc84b9099dfb41ed756bfa8"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 3,
+      "published_safe_target": 3,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 2,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "await_drain"
+    },
+    {
+      "at": 1793587335.7810614,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587336.6879125,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587337.4861479,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 1
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587346.6995828,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587347.2220974,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587348.1330712,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587348.6412597,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "7e81ca9d0ab1469391b3f6a73e730f4d"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587408.7104123,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "e26f750bf38e40c69b177d9d1232c8f5"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 3,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587468.6675286,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587528.4612513,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587529.0272117,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587529.5748377,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587530.3763566,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587531.2472897,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587539.619483,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587540.1850173,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587541.0373878,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587548.0103486,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587559.1078582,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587559.600605,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587560.5457273,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587562.5250258,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587563.4301343,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587564.4392014,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587565.2525086,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 1,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "cooldown"
+    },
+    {
+      "at": 1793587581.552168,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 2,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 2,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "await_drain"
+    },
+    {
+      "at": 1793587588.5701458,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "132f92261f564d90968db8a1e1c8e01c"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 2,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587592.6340692,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587593.0922089,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587594.1380637,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587648.674708,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587675.5099475,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 1
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587676.3788779,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 1
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587677.2389426,
+      "forecast_executions": 1,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587677.9945679,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 1
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587694.4755049,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": true,
+          "state": "ready",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 1,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 2,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587708.7623036,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "6f49f14b052c43a1867d057808ff0f18"
+        },
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 2,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 1,
+          "visible": 0
+        }
+      },
+      "ready_executions": 1,
+      "retiring_count": 2,
+      "strategy": "lookahead",
+      "target_instances": 1,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587768.6415796,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587828.7645338,
+      "forecast_executions": 0,
+      "hosts": [
+        {
+          "active": 0,
+          "protected": false,
+          "state": "drained",
+          "worker": "ac0313311dd84482b175380ea728f843"
+        }
+      ],
+      "policy": "lookahead",
+      "previous_desired": 1,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 1,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "request_scale_in_after_drain"
+    },
+    {
+      "at": 1793587888.6793377,
+      "forecast_executions": 0,
+      "hosts": [],
+      "policy": "lookahead",
+      "previous_desired": 0,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "hold"
+    },
+    {
+      "at": 1793587948.8583884,
+      "forecast_executions": 0,
+      "hosts": [],
+      "policy": "lookahead",
+      "previous_desired": 0,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "hold"
+    },
+    {
+      "at": 1793588008.6319683,
+      "forecast_executions": 0,
+      "hosts": [],
+      "policy": "lookahead",
+      "previous_desired": 0,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "hold"
+    },
+    {
+      "at": 1793588068.7679665,
+      "forecast_executions": 0,
+      "hosts": [],
+      "policy": "lookahead",
+      "previous_desired": 0,
+      "published_safe_target": 0,
+      "queue": {
+        "CONTROL_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        },
+        "NODE_QUEUE": {
+          "inflight": 0,
+          "visible": 0
+        }
+      },
+      "ready_executions": 0,
+      "retiring_count": 0,
+      "strategy": "lookahead",
+      "target_instances": 0,
+      "transition": "hold"
+    }
+  ],
+  "safe_target_metric_minutes": [
+    {
+      "at": "2026-11-02T02:28:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 5.0,
+      "Average": 4.428571428571429
+    },
+    {
+      "at": "2026-11-02T02:29:00+00:00",
+      "Minimum": 5.0,
+      "Maximum": 5.0,
+      "Average": 5.0
+    },
+    {
+      "at": "2026-11-02T02:30:00+00:00",
+      "Minimum": 5.0,
+      "Maximum": 5.0,
+      "Average": 5.0
+    },
+    {
+      "at": "2026-11-02T02:31:00+00:00",
+      "Minimum": 5.0,
+      "Maximum": 5.0,
+      "Average": 5.0
+    },
+    {
+      "at": "2026-11-02T02:32:00+00:00",
+      "Minimum": 5.0,
+      "Maximum": 5.0,
+      "Average": 5.0
+    },
+    {
+      "at": "2026-11-02T02:33:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:34:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:35:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:36:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:37:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 3.0,
+      "Average": 2.0
+    },
+    {
+      "at": "2026-11-02T02:38:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:39:00+00:00",
+      "Minimum": 3.0,
+      "Maximum": 3.0,
+      "Average": 3.0
+    },
+    {
+      "at": "2026-11-02T02:40:00+00:00",
+      "Minimum": 2.0,
+      "Maximum": 2.0,
+      "Average": 2.0
+    },
+    {
+      "at": "2026-11-02T02:41:00+00:00",
+      "Minimum": 3.0,
+      "Maximum": 3.0,
+      "Average": 3.0
+    },
+    {
+      "at": "2026-11-02T02:42:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:43:00+00:00",
+      "Minimum": 2.0,
+      "Maximum": 2.0,
+      "Average": 2.0
+    },
+    {
+      "at": "2026-11-02T02:44:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:45:00+00:00",
+      "Minimum": 2.0,
+      "Maximum": 2.0,
+      "Average": 2.0
+    },
+    {
+      "at": "2026-11-02T02:46:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 2.0,
+      "Average": 1.2727272727272727
+    },
+    {
+      "at": "2026-11-02T02:47:00+00:00",
+      "Minimum": 1.0,
+      "Maximum": 1.0,
+      "Average": 1.0
+    },
+    {
+      "at": "2026-11-02T02:48:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 1.0,
+      "Average": 0.5
+    },
+    {
+      "at": "2026-11-02T02:49:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:50:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:51:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:52:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:53:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:54:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    },
+    {
+      "at": "2026-11-02T02:55:00+00:00",
+      "Minimum": 0.0,
+      "Maximum": 0.0,
+      "Average": 0.0
+    }
+  ],
+  "settled_DLQ_samples": [
+    {
+      "at": 1793588171.0363014,
+      "counts": {
+        "NodeDLQ": {
+          "ApproximateNumberOfMessages": 0,
+          "ApproximateNumberOfMessagesNotVisible": 0,
+          "ApproximateNumberOfMessagesDelayed": 0
+        },
+        "ControlDLQ": {
+          "ApproximateNumberOfMessages": 0,
+          "ApproximateNumberOfMessagesNotVisible": 0,
+          "ApproximateNumberOfMessagesDelayed": 0
+        }
+      }
+    },
+    {
+      "at": 1793588177.042246,
+      "counts": {
+        "NodeDLQ": {
+          "ApproximateNumberOfMessages": 0,
+          "ApproximateNumberOfMessagesNotVisible": 0,
+          "ApproximateNumberOfMessagesDelayed": 0
+        },
+        "ControlDLQ": {
+          "ApproximateNumberOfMessages": 0,
+          "ApproximateNumberOfMessagesNotVisible": 0,
+          "ApproximateNumberOfMessagesDelayed": 0
+        }
+      }
+    }
+  ],
+  "measurement_limits": [
+    "Saved execution intervals exclude attempts killed before publication and losing duplicate results.",
+    "Heartbeat/protection samples are not atomic and are sampled; source guards and unit tests provide separate evidence.",
+    "Cross-VM timestamp comparison assumes AWS guest realtime clocks are sufficiently aligned.",
+    "Five-ready lead uses first observed readiness, so the negative timing check is retained with sampling uncertainty."
+  ],
+  "deployment_provenance": {
+    "source_stage": "before poll reservation and await_unknown_capacity fixes",
+    "synthesized_template_sha256": "3c1c908555ebe8057174e3b277473f6327274d225bfd5e270955625cb2194f01",
+    "source_asset_hashes_in_synthesized_template": [
+      "1c4738d686e48fd95bdaaacd1a52d8fc9c769659ae9e0dd7c9b82d15d42bd5cb",
+      "f087536f80198e420a0aa2cf4222c0e54fb2fac06204ed6366a1079fbd4fd5a2",
+      "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+      "ff88c90f641536eac772f65a17174f66ad8d7a40800cb406c156250c36065617"
+    ],
+    "note": "Asset hashes distinguish the deployed pre-fix source. The current worktree includes subsequent fixes; its behavior is not retroactively attributed to this trial."
+  },
+  "teardown": {
+    "dedicated_stack_deleted": true,
+    "cloudformation_absence_verified_at": "2026-11-02T03:37:11.428363+00:00",
+    "shared_bootstrap_deleted": false
+  }
+}

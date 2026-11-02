@@ -18,3 +18,7 @@ treefmt.toml
 .vscode
 .codex
 work/
+
+# python runtime / experiment caches
+__pycache__/
+*.py[cod]

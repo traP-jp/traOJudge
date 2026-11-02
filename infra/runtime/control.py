@@ -10,6 +10,55 @@ from botocore.exceptions import ClientError
 from common import BUCKET, build_graph, checkpoint_key, encode, load_json, result_key, s3, sqs
 
 
+def run_engine(state, request):
+    with tempfile.TemporaryDirectory() as temp:
+        db = f"{temp}/workflow.sqlite"
+        if state["database"]:
+            with open(db, "wb") as stream:
+                stream.write(base64.b64decode(state["database"]))
+        request = {**request, "database": db}
+        proc = subprocess.run([os.environ.get("ENGINE_PATH", "/opt/engine")], input=encode(request),
+                              text=True, capture_output=True, timeout=20, check=True)
+        result = json.loads(proc.stdout)
+        with open(db, "rb") as stream:
+            state["database"] = base64.b64encode(stream.read()).decode()
+    return result
+
+
+def resolve_skips(state, result):
+    """Resolve gated descendants without allocating a VM slot or fabricating case completion."""
+    receipt = state["receipt"]
+    parents = receipt.get("test_parents", [None] * len(receipt["tests"]))
+    verdicts = state.setdefault("case_verdicts", {str(v["case"]): v["verdict"] for v in state["view"]["history"]})
+    while True:
+        for dispatch in result["dispatches"]:
+            state["pending"][dispatch["id"]] = dispatch["task"]
+        blocked = next(((node, task) for node, task in state["pending"].items()
+            if task["phase"] in ["run", "check"] and parents[task["case"]] is not None
+            and verdicts.get(str(parents[task["case"]])) not in [None, "AC"]), None)
+        if blocked is None:
+            return result
+        node, task = blocked
+        state["pending"].pop(node)
+        state["results"][node] = {"skipped": True, "reason": "ancestor_not_AC", "node": node}
+        if task["phase"] == "check":
+            verdicts[str(task["case"])] = "SKIP"
+            key = f"artifacts/{receipt['contest']}/{receipt['submission']}/{receipt['run']}/controller/{node}/verdict"
+            data = b'{"verdict":"SKIP"}'
+            saved = s3.put_object(Bucket=BUCKET, Key=key, Body=data)
+            import hashlib
+            state["artifacts"][f"verdict-{task['case']}"] = {
+                "key": key, "version": saved["VersionId"], "sha256": hashlib.sha256(data).hexdigest()}
+            state["view"]["skipped_cases"] = list(verdicts.values()).count("SKIP")
+        result = run_engine(state, {"pipeline": receipt["run"], "jobs": state["jobs"], "edges": state["edges"], "completed": node})
+
+
+def signal_demand(state):
+    if os.environ.get("CAPACITY_FUNCTION"):
+        from common import notify_demand
+        notify_demand(state["receipt"], state)
+
+
 def publish_pending(state, etag):
     changed = False
     for node, task in state["pending"].items():
@@ -40,9 +89,11 @@ def process(message):
     if message["kind"] == "result" and message["node"] in state["results"]:
         # Replaying a completion also repairs any saved but unsent dispatches.
         publish_pending(state, etag)
+        signal_demand(state)
         return
     if message["kind"] == "submit" and state["database"]:
         publish_pending(state, etag)
+        signal_demand(state)
         return
     request = {"pipeline": receipt["run"], "jobs": state["jobs"], "edges": state["edges"]}
     terminal = False
@@ -61,6 +112,7 @@ def process(message):
         task = state["pending"].pop(node)
         if any(result[k] != receipt[k] for k in ["contest", "submission", "run"]) or result["node"] != node:
             raise ValueError("result identity mismatch")
+        state.setdefault("case_verdicts", {str(v["case"]): v["verdict"] for v in state["view"]["history"]})
         state["results"][node] = result
         state["artifacts"].update(result.get("artifacts", {}))
         request.update(completed=node, failed=bool(result.get("infrastructure_error")))
@@ -76,28 +128,19 @@ def process(message):
             history = state["view"]["history"]
             history.append({"case": task["case"], "verdict": verdict, "completed_cases": len(history) + 1})
             state["view"]["completed_cases"] = len(history)
+            state.setdefault("case_verdicts", {})[str(task["case"])] = verdict
         elif task["phase"] == "summarize":
             summary = result["node_output"]
             priority = {"AC": 0, "WA": 1, "RE": 2, "MLE": 3, "OLE": 4, "TLE": 5}
-            expected = [v["verdict"] for v in sorted(state["view"]["history"], key=lambda v: v["case"])]
-            if (summary["completed_cases"] != len(receipt["tests"]) or summary["total_cases"] != len(expected)
-                    or summary["case_verdicts"] != expected
-                    or summary["verdict"] != max(expected, key=priority.__getitem__)):
+            expected = [state["case_verdicts"][str(i)] for i in range(len(receipt["tests"]))]
+            if (summary["completed_cases"] != len(state["view"]["history"]) or summary["total_cases"] != len(expected)
+                    or summary["case_verdicts"] != expected or summary.get("skipped_cases", 0) != expected.count("SKIP")
+                    or summary["verdict"] != max((v for v in expected if v != "SKIP"), key=priority.__getitem__)):
                 raise ValueError("summary does not match durable case results")
             state["view"]["summary"] = summary
-    with tempfile.TemporaryDirectory() as temp:
-        db = f"{temp}/workflow.sqlite"
-        if state["database"]:
-            with open(db, "wb") as stream:
-                stream.write(base64.b64decode(state["database"]))
-        request["database"] = db
-        proc = subprocess.run([os.environ.get("ENGINE_PATH", "/opt/engine")], input=encode(request),
-                              text=True, capture_output=True, timeout=20, check=True)
-        result = json.loads(proc.stdout)
-        with open(db, "rb") as stream:
-            state["database"] = base64.b64encode(stream.read()).decode()
-    for dispatch in result["dispatches"]:
-        state["pending"][dispatch["id"]] = dispatch["task"]
+    result = run_engine(state, request)
+    if not terminal:
+        result = resolve_skips(state, result)
     if terminal:
         state["pending"] = {}
     elif result["pipeline"] == "completed":
@@ -118,6 +161,7 @@ def process(message):
     if receipt.get("crash_after_checkpoint") and state["revision"] == 1:
         raise RuntimeError("injected stop after durable checkpoint, before dispatch")
     publish_pending(state, saved["ETag"])
+    signal_demand(state)
 
 
 def handler(event, context):
