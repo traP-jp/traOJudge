@@ -1,0 +1,1 @@
+The trusted runner mounts only this job's inputs and pinned toolchain closure.

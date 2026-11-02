@@ -1,0 +1,1122 @@
+{
+  "environment": {
+    "flake_lock_sha256": "249fb35ec3b9f9616bcdc755daa0ded8a21a4f42b8431013629fa6fe6af33bf6",
+    "languages": {
+      "cpp": {
+        "compile": [
+          "/nix/store/qd70v8g0561vm8m33kmnp79z00cgyi5n-gcc-wrapper-15.2.0/bin/g++",
+          "-std=c++23",
+          "-O2",
+          "-pipe",
+          "main.cpp",
+          "-o",
+          "program"
+        ],
+        "language": "cpp",
+        "run": [
+          "./program"
+        ],
+        "schema": 1,
+        "source": "main.cpp",
+        "version": "15.2.0"
+      },
+      "python": {
+        "compile": [],
+        "language": "python",
+        "run": [
+          "/nix/store/0r6k8xa2kgqyp3r4v2w7yrb80ma2iawm-python3-3.13.12/bin/python3",
+          "-I",
+          "-B",
+          "main.py"
+        ],
+        "schema": 1,
+        "source": "main.py",
+        "version": "3.13.12"
+      },
+      "rust": {
+        "compile": [
+          "/nix/store/ph8jb0mw89p4lfshpp36z70l6r4kg3vh-rustc-wrapper-1.94.1/bin/rustc",
+          "--edition=2024",
+          "-O",
+          "-C",
+          "codegen-units=1",
+          "main.rs",
+          "-o",
+          "program"
+        ],
+        "language": "rust",
+        "run": [
+          "./program"
+        ],
+        "schema": 1,
+        "source": "main.rs",
+        "version": "1.94.1"
+      }
+    },
+    "image": "sha256:562ad9422234d03fd595ad13dfcd9de718e73ed691d97aed93ad45f9701aa57d",
+    "gvisor": {
+      "url": "https://storage.googleapis.com/gvisor/releases/release/20261026.0/x86_64/gvisor.tar.bz2",
+      "sha512": "26e4a327565f5da0f73261a6387e2c20f4695a232e330095a3111b70efd604fdf09d734e8cc8f714dbb5c5607ce8c87ea80b26df549d83a146f2efd5a1af448a"
+    }
+  },
+  "first": {
+    "accepted": 48,
+    "published": 48,
+    "outcomes": {
+      "DLQ": 12,
+      "AC": 36
+    },
+    "cases": [
+      {
+        "label": "cold-0",
+        "language": "cpp",
+        "ordinal": 1,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 274.275171,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "cold-1",
+        "language": "python",
+        "ordinal": 2,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 272.683612,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "cold-2",
+        "language": "rust",
+        "ordinal": 3,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 269.985427,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "cold-3",
+        "language": "cpp",
+        "ordinal": 4,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 266.574403,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "cold-4",
+        "language": "python",
+        "ordinal": 5,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 263.627804,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "cold-5",
+        "language": "rust",
+        "ordinal": 6,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 259.363521,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-0",
+        "language": "cpp",
+        "ordinal": 7,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.40397,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-1",
+        "language": "python",
+        "ordinal": 8,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.765,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-2",
+        "language": "rust",
+        "ordinal": 9,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.211508,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-3",
+        "language": "cpp",
+        "ordinal": 10,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.321949,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-4",
+        "language": "python",
+        "ordinal": 11,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.897845,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-5",
+        "language": "rust",
+        "ordinal": 12,
+        "terminal": true,
+        "published": true,
+        "verdict": "DLQ",
+        "terminal_seconds": 90.30358,
+        "publication_seconds": null,
+        "attempts": 3,
+        "run_cpu_usec": null
+      },
+      {
+        "label": "warm-fixed-0",
+        "language": "cpp",
+        "ordinal": 13,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.372438,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 23463
+      },
+      {
+        "label": "warm-fixed-1",
+        "language": "python",
+        "ordinal": 14,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 1.98783,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 46662
+      },
+      {
+        "label": "warm-fixed-2",
+        "language": "rust",
+        "ordinal": 15,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.896007,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 24566
+      },
+      {
+        "label": "warm-fixed-3",
+        "language": "cpp",
+        "ordinal": 16,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.208334,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 22547
+      },
+      {
+        "label": "warm-fixed-4",
+        "language": "python",
+        "ordinal": 17,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 1.637423,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 49894
+      },
+      {
+        "label": "warm-fixed-5",
+        "language": "rust",
+        "ordinal": 18,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.951329,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 23767
+      },
+      {
+        "label": "serial-0",
+        "language": "cpp",
+        "ordinal": 19,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.417679,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 160868
+      },
+      {
+        "label": "serial-1",
+        "language": "cpp",
+        "ordinal": 20,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.390396,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 153348
+      },
+      {
+        "label": "serial-2",
+        "language": "cpp",
+        "ordinal": 21,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.445104,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 178380
+      },
+      {
+        "label": "serial-3",
+        "language": "cpp",
+        "ordinal": 22,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.436437,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 157695
+      },
+      {
+        "label": "serial-4",
+        "language": "cpp",
+        "ordinal": 23,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.507417,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 163707
+      },
+      {
+        "label": "parallel-0",
+        "language": "cpp",
+        "ordinal": 24,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.400145,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 164177
+      },
+      {
+        "label": "parallel-1",
+        "language": "cpp",
+        "ordinal": 25,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.503367,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 180167
+      },
+      {
+        "label": "parallel-2",
+        "language": "cpp",
+        "ordinal": 26,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.31237,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 156082
+      },
+      {
+        "label": "parallel-3",
+        "language": "cpp",
+        "ordinal": 27,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.620624,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 160393
+      },
+      {
+        "label": "parallel-4",
+        "language": "cpp",
+        "ordinal": 28,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.491258,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 161696
+      },
+      {
+        "label": "boundary-0",
+        "language": "cpp",
+        "ordinal": 29,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.132614,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2610720
+      },
+      {
+        "label": "boundary-1",
+        "language": "cpp",
+        "ordinal": 30,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.207661,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2909589
+      },
+      {
+        "label": "boundary-2",
+        "language": "cpp",
+        "ordinal": 31,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.128981,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2583708
+      },
+      {
+        "label": "boundary-3",
+        "language": "cpp",
+        "ordinal": 32,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.105705,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2562516
+      },
+      {
+        "label": "boundary-4",
+        "language": "cpp",
+        "ordinal": 33,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.968861,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2617833
+      },
+      {
+        "label": "boundary-5",
+        "language": "cpp",
+        "ordinal": 34,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.306014,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2948670
+      },
+      {
+        "label": "boundary-6",
+        "language": "cpp",
+        "ordinal": 35,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.394571,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2593159
+      },
+      {
+        "label": "boundary-7",
+        "language": "cpp",
+        "ordinal": 36,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.730722,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2511164
+      },
+      {
+        "label": "boundary-8",
+        "language": "cpp",
+        "ordinal": 37,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.235955,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2510907
+      },
+      {
+        "label": "boundary-9",
+        "language": "cpp",
+        "ordinal": 38,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.095868,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2570153
+      },
+      {
+        "label": "boundary-10",
+        "language": "cpp",
+        "ordinal": 39,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.83674,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2554615
+      },
+      {
+        "label": "boundary-11",
+        "language": "cpp",
+        "ordinal": 40,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.410402,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2571601
+      },
+      {
+        "label": "boundary-12",
+        "language": "cpp",
+        "ordinal": 41,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.354164,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2561151
+      },
+      {
+        "label": "boundary-13",
+        "language": "cpp",
+        "ordinal": 42,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.03791,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2538322
+      },
+      {
+        "label": "boundary-14",
+        "language": "cpp",
+        "ordinal": 43,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.879557,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2586166
+      },
+      {
+        "label": "boundary-15",
+        "language": "cpp",
+        "ordinal": 44,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.150195,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2622716
+      },
+      {
+        "label": "boundary-16",
+        "language": "cpp",
+        "ordinal": 45,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.005732,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2492103
+      },
+      {
+        "label": "boundary-17",
+        "language": "cpp",
+        "ordinal": 46,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.103096,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2559421
+      },
+      {
+        "label": "boundary-18",
+        "language": "cpp",
+        "ordinal": 47,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.950627,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2509412
+      },
+      {
+        "label": "boundary-19",
+        "language": "cpp",
+        "ordinal": 48,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 4.748627,
+        "publication_seconds": null,
+        "attempts": 1,
+        "run_cpu_usec": 2488244
+      }
+    ],
+    "observations": [
+      {
+        "event": "warm_complete",
+        "time": 1793630840.0332904,
+        "ordered_seconds": [
+          2.372438,
+          1.98783,
+          2.896007,
+          2.208334,
+          1.637423,
+          2.951329
+        ]
+      },
+      {
+        "event": "fairness_distribution",
+        "time": 1793631197.0925248,
+        "serial": {
+          "n": 5,
+          "median_usec": 160868,
+          "min_usec": 153348,
+          "max_usec": 178380,
+          "cv_percent": 5.231560498599967
+        },
+        "parallel": {
+          "n": 5,
+          "median_usec": 161696,
+          "min_usec": 156082,
+          "max_usec": 180167,
+          "cv_percent": 5.021286303890629
+        }
+      },
+      {
+        "event": "cpu_limit_boundary",
+        "time": 1793631302.1375837,
+        "iterations": 1491906408,
+        "verdicts": [
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC",
+          "AC"
+        ]
+      }
+    ]
+  },
+  "v2": {
+    "accepted": 25,
+    "published": 25,
+    "outcomes": {
+      "AC": 22,
+      "WA": 1,
+      "OLE": 1,
+      "MLE": 1
+    },
+    "cases": [
+      {
+        "label": "cold-0",
+        "language": "cpp",
+        "ordinal": 1,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 188.615692,
+        "publication_seconds": 188.62122,
+        "attempts": 1,
+        "run_cpu_usec": 27719,
+        "client_result_seconds": 199.45362043380737
+      },
+      {
+        "label": "cold-1",
+        "language": "python",
+        "ordinal": 2,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 187.387364,
+        "publication_seconds": 187.392348,
+        "attempts": 1,
+        "run_cpu_usec": 53282,
+        "client_result_seconds": 195.7489550113678
+      },
+      {
+        "label": "cold-2",
+        "language": "rust",
+        "ordinal": 3,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 185.261904,
+        "publication_seconds": 185.266728,
+        "attempts": 1,
+        "run_cpu_usec": 27957,
+        "client_result_seconds": 191.89721965789795
+      },
+      {
+        "label": "cold-3",
+        "language": "cpp",
+        "ordinal": 4,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 181.948755,
+        "publication_seconds": 181.956563,
+        "attempts": 1,
+        "run_cpu_usec": 23498,
+        "client_result_seconds": 188.04352951049805
+      },
+      {
+        "label": "cold-4",
+        "language": "python",
+        "ordinal": 5,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 178.227431,
+        "publication_seconds": 178.232353,
+        "attempts": 1,
+        "run_cpu_usec": 51801,
+        "client_result_seconds": 184.1537299156189
+      },
+      {
+        "label": "cold-5",
+        "language": "rust",
+        "ordinal": 6,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 176.718202,
+        "publication_seconds": 176.723426,
+        "attempts": 1,
+        "run_cpu_usec": 24078,
+        "client_result_seconds": 180.32200145721436
+      },
+      {
+        "label": "warm-fixed-0",
+        "language": "cpp",
+        "ordinal": 7,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.397518,
+        "publication_seconds": 2.402666,
+        "attempts": 1,
+        "run_cpu_usec": 23211,
+        "client_result_seconds": 8.271321773529053
+      },
+      {
+        "label": "warm-fixed-1",
+        "language": "python",
+        "ordinal": 8,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.234802,
+        "publication_seconds": 2.240204,
+        "attempts": 1,
+        "run_cpu_usec": 48201,
+        "client_result_seconds": 8.180208444595337
+      },
+      {
+        "label": "warm-fixed-2",
+        "language": "rust",
+        "ordinal": 9,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 3.675535,
+        "publication_seconds": 3.681078,
+        "attempts": 1,
+        "run_cpu_usec": 22785,
+        "client_result_seconds": 8.182539224624634
+      },
+      {
+        "label": "warm-fixed-3",
+        "language": "cpp",
+        "ordinal": 10,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.636128,
+        "publication_seconds": 2.641553,
+        "attempts": 1,
+        "run_cpu_usec": 22092,
+        "client_result_seconds": 8.09900975227356
+      },
+      {
+        "label": "warm-fixed-4",
+        "language": "python",
+        "ordinal": 11,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 1.813082,
+        "publication_seconds": 1.818226,
+        "attempts": 1,
+        "run_cpu_usec": 45383,
+        "client_result_seconds": 8.593533277511597
+      },
+      {
+        "label": "warm-fixed-5",
+        "language": "rust",
+        "ordinal": 12,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 3.973903,
+        "publication_seconds": 3.97895,
+        "attempts": 1,
+        "run_cpu_usec": 27692,
+        "client_result_seconds": 8.348271608352661
+      },
+      {
+        "label": "burst-0",
+        "language": "cpp",
+        "ordinal": 13,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.233252,
+        "publication_seconds": 2.239006,
+        "attempts": 1,
+        "run_cpu_usec": 21424
+      },
+      {
+        "label": "burst-2",
+        "language": "cpp",
+        "ordinal": 14,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.273731,
+        "publication_seconds": 2.279641,
+        "attempts": 1,
+        "run_cpu_usec": 23255
+      },
+      {
+        "label": "burst-4",
+        "language": "cpp",
+        "ordinal": 15,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.283121,
+        "publication_seconds": 2.288156,
+        "attempts": 1,
+        "run_cpu_usec": 23797
+      },
+      {
+        "label": "burst-3",
+        "language": "cpp",
+        "ordinal": 18,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.248061,
+        "publication_seconds": 2.252962,
+        "attempts": 1,
+        "run_cpu_usec": 23670
+      },
+      {
+        "label": "burst-1",
+        "language": "cpp",
+        "ordinal": 17,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.400185,
+        "publication_seconds": 2.405234,
+        "attempts": 1,
+        "run_cpu_usec": 23521
+      },
+      {
+        "label": "worker-loss",
+        "language": "python",
+        "ordinal": 16,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.744502,
+        "publication_seconds": 5.751046,
+        "attempts": 1,
+        "run_cpu_usec": 47258,
+        "client_result_seconds": 601.7036166191101
+      },
+      {
+        "label": "worker-loss-active",
+        "language": "python",
+        "ordinal": 19,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 5.724065,
+        "publication_seconds": 5.729557,
+        "attempts": 1,
+        "run_cpu_usec": 47721,
+        "client_result_seconds": 185.42212915420532
+      },
+      {
+        "label": "network",
+        "language": "python",
+        "ordinal": 20,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 1.854399,
+        "publication_seconds": 1.86004,
+        "attempts": 1,
+        "run_cpu_usec": 63562,
+        "client_result_seconds": 8.819969177246094
+      },
+      {
+        "label": "process",
+        "language": "python",
+        "ordinal": 21,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 2.204862,
+        "publication_seconds": 2.210312,
+        "attempts": 1,
+        "run_cpu_usec": 403939,
+        "client_result_seconds": 8.044199705123901
+      },
+      {
+        "label": "invalid-utf8",
+        "language": "python",
+        "ordinal": 22,
+        "terminal": true,
+        "published": true,
+        "verdict": "WA",
+        "terminal_seconds": 1.812249,
+        "publication_seconds": 1.817252,
+        "attempts": 1,
+        "run_cpu_usec": 46875,
+        "client_result_seconds": 8.15474009513855
+      },
+      {
+        "label": "output-limit",
+        "language": "python",
+        "ordinal": 23,
+        "terminal": true,
+        "published": true,
+        "verdict": "OLE",
+        "terminal_seconds": 1.831011,
+        "publication_seconds": 1.837012,
+        "attempts": 1,
+        "run_cpu_usec": null,
+        "client_result_seconds": 9.092938423156738
+      },
+      {
+        "label": "memory-limit",
+        "language": "python",
+        "ordinal": 24,
+        "terminal": true,
+        "published": true,
+        "verdict": "MLE",
+        "terminal_seconds": 2.104537,
+        "publication_seconds": 2.109753,
+        "attempts": 1,
+        "run_cpu_usec": null,
+        "client_result_seconds": 12.047228336334229
+      },
+      {
+        "label": "after-memory",
+        "language": "python",
+        "ordinal": 25,
+        "terminal": true,
+        "published": true,
+        "verdict": "AC",
+        "terminal_seconds": 1.798046,
+        "publication_seconds": 1.803166,
+        "attempts": 1,
+        "run_cpu_usec": 45668,
+        "client_result_seconds": 8.161373853683472
+      }
+    ],
+    "observations": [
+      {
+        "event": "cold_complete",
+        "time": 1793634643.5686157,
+        "observed_seconds": 218.2279586980003,
+        "instances": 5,
+        "ordered_seconds": [
+          188.615692,
+          187.387364,
+          185.261904,
+          181.948755,
+          178.227431,
+          176.718202
+        ],
+        "client_result_seconds": [
+          199.45362043380737,
+          195.7489550113678,
+          191.89721965789795,
+          188.04352951049805,
+          184.1537299156189,
+          180.32200145721436
+        ]
+      },
+      {
+        "event": "warm_complete",
+        "time": 1793634944.7508826,
+        "ordered_seconds": [
+          2.397518,
+          2.234802,
+          3.675535,
+          2.636128,
+          1.813082,
+          3.973903
+        ],
+        "publication_seconds": [
+          2.402666,
+          2.240204,
+          3.681078,
+          2.641553,
+          1.818226,
+          3.97895
+        ],
+        "client_result_seconds": [
+          8.271321773529053,
+          8.180208444595337,
+          8.182539224624634,
+          8.09900975227356,
+          8.593533277511597,
+          8.348271608352661
+        ]
+      },
+      {
+        "event": "network_guard",
+        "time": 1793635791.4354525
+      },
+      {
+        "event": "process_guard",
+        "time": 1793635808.9423542
+      },
+      {
+        "event": "byte_checker_and_output_limit",
+        "time": 1793635844.9130607
+      },
+      {
+        "event": "memory_bomb_terminal",
+        "time": 1793635877.279622,
+        "status": "done",
+        "verdict": "MLE"
+      },
+      {
+        "event": "events_reconnect",
+        "time": 1793635888.4565456,
+        "events": 700,
+        "published": 25
+      }
+    ],
+    "event_replay": {
+      "events": 700,
+      "final_results": 25,
+      "contiguous_cursors": true,
+      "unique_finals": true,
+      "ordered_finals": true
+    }
+  }
+}

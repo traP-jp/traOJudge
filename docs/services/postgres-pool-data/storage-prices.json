@@ -1,0 +1,9 @@
+[
+  {
+    "description": "$0.276 per GB-month of provisioned GP3 storage for Multi-AZ deployments running PostgreSQL",
+    "unit": "GB-Mo",
+    "pricePerUnit": {
+      "USD": "0.2760000000"
+    }
+  }
+]

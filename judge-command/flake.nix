@@ -19,6 +19,7 @@
       imports = [
         ./lib
         ./languages
+        ./runtime.nix
       ];
     };
 }

@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-02T16:50:38.020847+00:00",
+  "resources": [
+    {
+      "trial": "first",
+      "all_absent": {
+        "AWS::EC2::VPC": true,
+        "AWS::EC2::VPCEndpoint": true,
+        "nonterminated_instances": true,
+        "auto_scaling_groups": true,
+        "databases": true,
+        "lambda_functions": true,
+        "evidence_buckets": true
+      }
+    },
+    {
+      "trial": "v2",
+      "all_absent": {
+        "AWS::EC2::VPC": true,
+        "AWS::EC2::VPCEndpoint": true,
+        "nonterminated_instances": true,
+        "auto_scaling_groups": true,
+        "databases": true,
+        "lambda_functions": true,
+        "evidence_buckets": true
+      }
+    }
+  ],
+  "shared_CDKToolkit": "retained"
+}
