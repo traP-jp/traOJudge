@@ -20,24 +20,27 @@ html = template + '''
 <path class="aws" d="M360 286 V320 H900 V354" marker-end="url(#open)"/><text class="el" x="745" y="311" text-anchor="middle">launch evidence</text>
 <path class="aws" d="M200 380 V530 H326" marker-end="url(#open)"/><text class="el" x="210" y="475">submit</text>
 <path class="aws" d="M394 530 H616" marker-end="url(#open)"/><text class="el" x="505" y="518" text-anchor="middle">one submission</text>
+<path class="aws" d="M360 494 V410 H450 V286 H360" marker-end="url(#open)"/><text class="el" x="460" y="375">resume + compile</text>
 <path class="aws" d="M684 530 H900 V466" marker-end="url(#open)"/><text class="el" x="810" y="518" text-anchor="middle">durable result</text>
 <path class="aws" d="M900 466 V690 H110 V456" marker-end="url(#open)"/><text class="el" x="500" y="681" text-anchor="middle">read result · compare CPU time and end-to-end latency</text>
 </svg>
 '''
 for x, y, icon, name, role in [
     (110, 350, 'user', 'Test client', 'measure / assert'),
-    (360, 180, 'lambda', 'AWS Lambda', 'CloudFormation owner'),
-    (650, 180, 'lambda', 'AWS Lambda MicroVMs', '3 fresh VMs · no AWS role'),
-    (360, 500, 'sqs', 'Amazon SQS', 'submission queue + DLQ'),
+    (360, 180, 'lambda', 'AWS Lambda', 'owner + queue worker'),
+    (650, 180, 'lambda', 'AWS Lambda MicroVMs', '3 VMs · isolated egress'),
+    (360, 500, 'sqs', 'Amazon SQS', '2 queues + DLQs'),
     (650, 500, 'ec2', 'Amazon EC2', '2 × c7g.large / gVisor'),
-    (900, 360, 's3', 'Amazon S3', 'measurement evidence'),
+    (900, 360, 's3', 'Amazon S3', 'separate result buckets'),
 ]:
     imgs = f'<img src="%%ICON_{icon}%%" alt="">'
     if icon == 'user':
         imgs = '<img class="lt" src="%%ICON_user%%" alt=""><img class="dk" src="%%ICON_user_dark%%" alt="">'
     tile = 'bare res' if icon == 'user' else 'bare'
     html += f'<div class="node" style="left:{x-100}px;top:{y}px;width:200px"><div class="tile {tile}">{imgs}</div><div class="name"><span>{name}</span></div><div class="role"><span>{role}</span></div></div>'
-html += '''<p style="position:absolute;left:35px;top:775px;font-size:14px">Allowlisted fixtures, not a production judge. CloudFormation owns creation and teardown of both alternatives.</p>
+html += '''<p style="position:absolute;left:550px;top:625px;font-size:11px">+ native diagnostic control</p>
+<p style="position:absolute;left:250px;top:715px;font-size:12px">MicroVMs: no runtime AWS role. Native EC2 execution is a diagnostic control, not the proposed isolation boundary.</p>
+<p style="position:absolute;left:35px;top:775px;font-size:14px">Allowlisted fixtures, not a production judge. CloudFormation owns creation and teardown of both alternatives.</p>
 </div></div><p class="foot">AWS Architecture Icons · <a href="https://github.com/caru-ini/stack-diagram">made with stack-diagram</a></p></main></body></html>'''
 draft = root / 'work/fairness-diagram-draft.html'
 draft.write_text(html)
