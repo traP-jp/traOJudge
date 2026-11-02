@@ -12,9 +12,8 @@
     "settled_DLQs_zero": true,
     "saved_intervals_grouped_by_opaque_physical_VM_do_not_overlap": true,
     "distinct_cleanup_node_joins_verified": true,
-    "pruned_nodes_have_no_attempt_records": true,
-    "powered_off_VMs_physically_terminated": true,
-    "DLQs_visible_inflight_delayed_settled_zero": true
+    "DLQs_visible_inflight_delayed_settled_zero": true,
+    "observed_VMs_physically_terminated": true
   },
   "scenarios": {
     "drain-arrival-0": {
@@ -8665,7 +8664,7 @@
     "Saved execution intervals exclude attempts killed before publication and losing duplicate results.",
     "Heartbeat/protection samples are not atomic and are sampled; source guards and unit tests provide separate evidence.",
     "Cross-VM timestamp comparison assumes AWS guest realtime clocks are sufficiently aligned.",
-    "Five-ready lead uses first observed readiness, so the negative timing check is retained with sampling uncertainty."
+    "Not exercised by this trial: tree_pruning, host_poweroff, poison_DLQ_exhaustion, future_readiness."
   ],
   "finished_at_unix": 1793590221.7849574,
   "agent_to_opaque_VM_label": {
@@ -9115,5 +9114,20 @@
   "post_trial_source_cleanup": {
     "change": "Removed deprecated CDK cooldown arguments ignored for StepScaling; updated documentation.",
     "fresh_synthesis_template_identical": true
+  },
+  "evidence_scope": {
+    "tree_pruning": false,
+    "host_poweroff": false,
+    "poison_DLQ_exhaustion": false,
+    "future_readiness": false
+  },
+  "analysis_annotation_revision": {
+    "reviewed_push": "13747d5",
+    "new_AWS_experiment": false,
+    "changes": [
+      "Removed vacuous host-poweroff and tree-pruning success labels from trial B.",
+      "Scoped measurement limits to the scenarios actually exercised."
+    ],
+    "raw_observations_changed": false
   }
 }

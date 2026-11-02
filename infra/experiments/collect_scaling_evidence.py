@@ -11,6 +11,43 @@ import time
 import boto3
 
 
+def annotate_evidence_scope(report):
+    """Do not label an absent fault/pruning scenario as a successful test."""
+    scenarios = report["scenarios"].values()
+    scope = {
+        "tree_pruning": any(v.get("pruned_nodes", 0) > 0
+                            for v in report["joined_execution_cleanup_analysis"].values()),
+        "host_poweroff": any(v.get("fault", {}).get("event", "").startswith("host_poweroff") for v in scenarios),
+        # The public acceptance receipt omits fixture fault flags. The dedicated
+        # suite's check is emitted after archive/IE/rejudge have been exercised.
+        "poison_DLQ_exhaustion": "bounded_retries_DLQ_quarantine_terminal_IE_and_explicit_rejudge" in report["checks"],
+        "future_readiness": "five_VMs_observed_ready_before_wide_tree_layer" in report["checks"],
+    }
+    report["evidence_scope"] = scope
+    checks = report["checks"]
+    final_states = report["VM_final_states"]
+    terminated = bool(final_states) and all(v == "terminated" for v in final_states.values())
+    checks["observed_VMs_physically_terminated"] = terminated
+    if scope["tree_pruning"]:
+        checks["pruned_nodes_have_no_attempt_records"] = True
+    else:
+        checks.pop("pruned_nodes_have_no_attempt_records", None)
+    if scope["host_poweroff"]:
+        checks["powered_off_VMs_physically_terminated"] = terminated
+    else:
+        checks.pop("powered_off_VMs_physically_terminated", None)
+    report["measurement_limits"] = [
+        "Saved execution intervals exclude attempts killed before publication and losing duplicate results.",
+        "Heartbeat/protection samples are not atomic and are sampled; source guards and unit tests provide separate evidence.",
+        "Cross-VM timestamp comparison assumes AWS guest realtime clocks are sufficiently aligned."]
+    if scope["future_readiness"]:
+        report["measurement_limits"].append(
+            "Five-ready lead uses first observed readiness; its timing check retains sampling uncertainty.")
+    absent = [name for name, exercised in scope.items() if not exercised]
+    if absent:
+        report["measurement_limits"].append("Not exercised by this trial: " + ", ".join(absent) + ".")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--stack", required=True)
@@ -142,13 +179,8 @@ def main():
     for key in ["one_execution_per_VM_in_all_observed_intervals", "observed_parallel_executions_at_most_five", "active_hosts_kept_scale_in_protection"]:
         old.pop(key, None)
     old.update(saved_intervals_grouped_by_opaque_physical_VM_do_not_overlap=True,
-               distinct_cleanup_node_joins_verified=True, pruned_nodes_have_no_attempt_records=True,
-               powered_off_VMs_physically_terminated=True, DLQs_visible_inflight_delayed_settled_zero=True)
-    report["measurement_limits"] = [
-        "Saved execution intervals exclude attempts killed before publication and losing duplicate results.",
-        "Heartbeat/protection samples are not atomic and are sampled; source guards and unit tests provide separate evidence.",
-        "Cross-VM timestamp comparison assumes AWS guest realtime clocks are sufficiently aligned.",
-        "Five-ready lead uses first observed readiness, so the negative timing check is retained with sampling uncertainty."]
+               distinct_cleanup_node_joins_verified=True, DLQs_visible_inflight_delayed_settled_zero=True)
+    annotate_evidence_scope(report)
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print("Post-analysis joins, physical VM aliases, declared scaling actions, and settled DLQs verified")
 

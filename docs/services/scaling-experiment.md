@@ -1,78 +1,161 @@
-# 1 VM・同時1実行の scaling 実験
+# Scaling実験：質問への回答と未達事項
 
-2026-11-02、東京リージョンの専用 CloudFormation stack で、実 Engine・native C17 実行・gVisor・S3 artifact・SQS を使って測定した。**通常の健全なホストでの宣言的な増減、退役、再試行は確認したが、本番受入は未達**。起動不良・cleanup quarantine の自動交換、ControlDLQ の回復、将来需要に対する供給時間の保証が残る。通常10秒以内という目標も達成したとは判定しない。
+2026-11-02、東京リージョンで実Engine、native C17、gVisor、AWSのqueue・artifact保存を使って実験した。対象pushは`13747d5`。[全体の入口・デモ一覧](serverless-judge.md)へ戻る。
 
-## 議論する設計の正本
+**VMを再利用する最大5台のpoolと、障害時の再試行は実験したが、本番受入は未達。** 必要時刻までの増設を証明できず、全台退役後の提出は結果保存まで約284〜286秒待った。起動不良VMの自動交換と請求総額の制限も未実装。
 
-台数・同時実行数・先読み期間・retry・heartbeat・退役待ち・配置／置換条件は [pool.json](../../infra/policy/pool.json) に集約した。[schema](../../infra/policy/pool.schema.json) と [純粋な policy 関数](../../infra/runtime/policy.py) で検証し、CDK が同じ compiled JSON と fingerprint を容量 adapter と host に渡す。[設計の説明](judge-pool-policy.md) は実測とは分けて読める。
+## どのソースで何を実験したか
 
-fresh subagent には過去の会話を渡さず、現行コードと条件だけを渡した。旧0/1台固定・VM内2slot・Fargate dispatcher・online worker・旧デモの実行経路を削除した。以前の動画・図・測定は [履歴](history/2026-11-02-prototype/README.md) に当時の条件とcommitを付けて隔離した。過去の warm P95 を現行構成の数値として使わない。
+| 実験 | 初期条件・対象 | 証拠 |
+| --- | --- | --- |
+| **A：広範な動作試験** | 通常1台warm、最大5台。木の打切り・先読み・再利用・VM喪失・DLQ。受信予約修正**前**。 | [観測JSON](scaling-experiment.json)・[runner](../../infra/experiments/run_scaling.py) |
+| **B：受信待ちと退役の競合** | 初期5台warm、最大5台。予約済み受信を退役指示後も保護して処理する修正**後**。 | [観測JSON](drain-experiment.json)・[runner](../../infra/experiments/run_drain.py) |
 
-現行の制約は、VMあたり同時に1ノード、通常のpool上限5台。各ノードを新しいoffline gVisor sandboxで実行し、containerと作業領域の削除を検証してから同じVMを次のノードに使う。**1ノードごとに新しいEC2を起動する契約ではない**。退役を決定したVMは再開せず、完全に回収してから代替VMを使う。
+pushにはAの後の修正を含む。**Aの全試験を最終ソースで再実施したわけではない。** Bの成功でAの未達判定を置き換えない。
 
-容量 adapter は `SafeDesiredInstances` metric を出す。希望台数を変更するのは CloudFormation に定義した CloudWatch alarm と2つの ExactCapacity ASG policy。adapter に `SetDesiredCapacity` 権限はない。ASG最大5、起動時のscale-in protection、単一AZ、置換0/100%を宣言した。単一AZ・terminate-before-launchは可用性より通常の台数制約を優先する実験条件であり、本番の推奨配置を意味しない。
+## 1. 木構造でfail-fastできるか
 
-## 試験A：木・再利用・VM喪失・DLQ
+**実験用adapterでは実装し、Aで確認した。** 親caseが非ACなら子孫を実行せず、別の根から始まる枝は継続する。6ケースの実験は次の木だった。
 
-[観測JSON](scaling-experiment.json) と [runner](../../infra/experiments/run_scaling.py)。profileは `lookahead`、fingerprintは `83496c57063b54b19a470ddf32b47a3dd346ca915ac3f84c2cd367a73b2a0e60`。この試験は後述のpoll予約修正**前**のソースで実施した。JSONの失敗判定を後のソースの成功として書き換えない。
+```mermaid
+flowchart LR
+    B[build] --> C0[case 0: WA]
+    C0 --> C1[case 1: SKIP]
+    C0 --> C2[case 2: SKIP]
+    C1 --> C3[case 3: SKIP]
+    B --> C4[case 4: AC]
+    C4 --> C5[case 5: AC]
+```
 
-| 条件 | 実測・判定 |
+caseの実体はrun→checkの2ノード。Aの`pruned-tree`は21.216秒でWAになり、**実行済み3ケース、SKIP3ケース**だった。SKIPした子孫のrun/checkにはattempt記録がなく、VMを割り当てていない。全caseの結果を揃えてsummarizeし、SKIPを実行完了件数には足さない。
+
+証拠はAの`joined_execution_cleanup_analysis["pruned-tree"]`。実装は[依存関係の構築](../../infra/runtime/common.py)と[子孫の打切り](../../infra/runtime/control.py)。製品の問題登録API・全言語環境との接続は対象外。
+
+## 2. 将来の需要に間に合うようVMを確保できるか
+
+**既知の木の先にある並列数を見て、早めに台数を要求する実装はある。必要時刻までに準備できるという実証は未達。**
+
+予測は「未確定の親caseが全てAC」「各ノードがwall制限いっぱいかかる」と仮定し、240秒内の同時実行数の最大値を計算する。時刻ごとの需要予約や、EC2起動時間を引いて増設時刻を決めるschedulerは実装していない。新しい提出や親caseの成否も予知しない。
+
+Aでは18秒のgateを8段通った先に5枝を置いた。
+
+| 受付からの経過 | 初めて観測した状態 |
 | --- | --- |
-| 8段のgate後に5枝、13ケース・28ノード | AC。最後のdurable checkpoint公開まで174.623秒。保存された実行区間の最大並行は5。 |
-| 将来の5枝への準備 | 5台readyの初観測は最初の枝の実行開始より0.900秒後。約5秒の観測間隔を考慮しても、先行準備を実証したとは言えない。 |
-| 親WAの木、独立した別の根あり | 21.216秒、WA。実行済み3・SKIP3。SKIP子孫のrun/checkにはattempt記録がなく、独立した根は継続。 |
-| 連続提出A/B | 4.756秒／10.830秒。同じ物理VMをcleanup検証後に再利用。sentinelと子processを含むfixtureで前のsandboxが残らないことも確認。 |
-| native実行中にhostを実際にpoweroff | 同じrunが228.783秒でACへ復旧。停止時のDocker実行中を記録。失われたノードの受信回数記録は1、4で、2、3の欠落原因は記録だけでは確定できない。 |
-| 結果保存後・通知/ACK前にpoweroff | 同じrunが186.684秒でACへ復旧。保存済み結果を再利用し、対象compile artifactを再生成していない。 |
-| 常に失敗する要求 | 受信1〜5回でNodeDLQへ移動。元要求を隔離保存し、基盤障害としてIEに終端化（10.395秒）。 |
-| IE後の明示再判定 | 同じsubmission・新しいrunでAC（9.723秒）。無限再試行にしない。 |
-| 不可逆な退役中の新規提出 | 87.110秒でAC。退役したbootをresumeせず、安全な代替VMで処理。 |
-| 終了時 | ASG希望0・所属VM0。NodeDLQ／ControlDLQのvisible・inflight・delayedを2回取得し全て0。 |
+| 約81秒 | ASG希望台数5。 |
+| 約92秒 | 所属VM5台。まだ全台が実行可能になってはいない。 |
+| 約172秒 | 5台ready。**最初の広い枝の開始より0.900秒後**。 |
+| 174.623秒 | 13ケース・28ノードがACとなった最後のcheckpointを永続保存。 |
 
-時間は受付からrunnerが終端を観測するまで（先頭の木だけdurable checkpoint公開時刻）。復旧時間にはvisibility 180秒、EC2 health replacement、alarm周期が含まれる。at-least-onceと上限付きretryを使うので、恒久障害でも必ずACになる保証やexactly-once実行の保証はない。
+観測間隔は約5秒なので、実際の準備が0.900秒遅れたと断定はできない。一方、先行準備を証明したとも言えない。Aの`checks.five_VMs_observed_ready_before_wide_tree_layer`は`false`を残している。保存済み実行区間の最大並行は5だった。
 
-実際のASG activityには、alarm/policyを原因とする1→5、5→1、最終1→0と、強制停止に伴うhealth replacementが残った。試験全体では11個の物理VMを識別し、全てterminatedを確認した。公開記録のVM名は照合用opaque labelであり、AWSの実IDではない。
+予測値は厳密な需要上界でもない。親がwall制限より早く終わると、モデル上240秒の外だった枝が先に現れる。複数runのpeakを足すことで、逆に過剰にもなり得る。[予測関数](../../infra/runtime/planning.py)はこの仮定を明示している。
 
-### 予測と回収で未達だったこと
+短時間だけ予測3となった後、需要が1に戻っても余剰の増減が続く問題も観測した。60秒Maximumの古い高い値と、退役待ち中に現在容量を再発行する制御が関係する。Aの`controller_observations`、`safe_target_metric_minutes`、`scaling_activities_sanitized`を対応付けて読める。SQSの近似値が原因だとは断定していない。
 
-需要予測は「未確定gateが全て通る」「各ノードがwall制限だけかかる」と仮定した240秒のearliest-start overlap。新しい提出やgateの成否を予知しない。gateが想定より早く終わると、モデル上horizon外だった枝が先に現れるため、**horizon内需要の厳密な上界でもない**。複数runのpeakを足すと過剰にもなり得る。
+## 3. 連続提出ではVMを再利用するか。cleanupは何を確認したか
 
-木の受付後、約81秒で希望台数5、約92秒で所属VM5、約172秒で5台readyを初観測した。初期image取得等も含む。今回はcold供給が広い層に間に合ったことを証明できなかった。将来の需要を表せることと、その時刻にVMが使えることは別の受入条件である。
+**退役前のVMは再利用する。1 VMで同時に実行するのは1ノードだけ。** 各ノードには新しいoffline gVisor sandboxを作り、終了後にcontainerと作業領域を削除する。削除を検証・記録してから次のノードを受け取る。agent再起動時にも前のsandbox・作業領域を掃除する。
 
-また、短時間の予測3が撤回された後も、遅延した60秒Maximumのalarmと、退役待ち／cooldown中に現在容量を再発行する制御により、1→3などの余剰増減が残った。関連する観測ではraw需要・targetは1でもpublished safe targetが3や2となっている。SQSの近似値が原因だったとは断定しない。この保守的なfeedbackは、時間・費用効率の未解決事項として残す。
+Aの`reuse-A`、`reuse-B`は同じVMで実行し、それぞれ4.756秒、10.830秒で終端を観測した。各提出の4ノードと4つのcleanup記録を照合した。試験入力はsentinelファイルを残し、子processも起動する。後続の実行に前のファイルが見えず、前のsandboxが消えていることを確認した。
 
-## 試験B：long poll と退役の競合
+これは限定した試験入力に対する証拠であり、隔離からの脱出やホスト汚染全般への証明ではない。cleanupが失敗したVMは隔離して以後実行しないが、**そのVMを自動で交換する処理はない**。起動不良・agent死亡も含め、最大5枠の一部を占有し、課金が続く未解決事項である。
 
-fresh reviewで、`active == 0` でも `ReceiveMessage` が待機中なら受信の権利が残っていることを確認した。旧コードではその間に保護を外し、返ってきた要求をvisibility 0で戻してretry budgetを消費し得た。試験Aの欠落した受信回数の原因をこの競合だと断定する証拠はない。
+## 4. VMを再利用しない場合、実用に耐えるか
 
-修正では、poll予約とdrainが同じlockを使う。予約済みのreceiveは、drain後に1件受信した場合も保護されたまま実行・結果配送・cleanupまで完了できる。新しいpollは開始しない。controllerは新鮮な退役tokenの一致、`active == 0`、明示的な`polling is False`、ASGの保護解除を別々に確認し、それまではmetricを下げない。不明なVMしかいない場合も希望容量を保持する。純粋なpolicy/hostテスト15件でこの境界を検証した。
+**未測定。毎ノード新しいEC2を起動する方式は、現在の実装にも比較実験にもない。**
 
-実環境の追加試験は [専用runner](../../infra/experiments/run_drain.py) と [別の観測JSON](drain-experiment.json) を使い、同じ定義の `prewarmed` profile（5台warm）で実施した。poll中の退役を観測してから5提出を投入した。30ノードのattemptは全て受信回数1、うちcompileの1件は`reserved_before_drain`であり、対象のinterleavingから実際のnative実行・配送・cleanupまで通った。5提出とも2ケースACとなり、元の退役bootは既存のpoll予約以外から新規実行を開始していない。保存済み区間の物理VM内重複もなかった。追加の重複配信は行っていない。
+Aのcold増設は5台readyを観測するまで約172秒、Bの全台退役後の提出は結果保存まで約284〜286秒を要した。cold起動を通常10秒の経路へ毎回入れることには難しさがあるが、これらは「毎ノード使い捨てVM」のベンチマークではない。その方式が実用的だと結論するデータはない。現在の設計はwarm VMの再利用に依存する。
 
-この試験のprofileは`prewarmed`、fingerprintは`0efdf8e7b65bac66a99a079443e97a1ed67e7ca9b241079b959477a2169f2aad`。観測JSONにデプロイ対象ソース各ファイルのSHA-256も記録した。保存済み区間の最大並行は3であり、この試験だけで5並行を主張しない。初期5台と代替5台の計10 VMは、全てterminatedを照合した。
+## 5. 待ちjobがあるとき、どうscale-inするか
 
-5台warmは起動済みの初期条件であって、退役後に5台をそのまま再利用する条件ではない。今回は全台を不可逆に退役させた直後の提出なので、代替VMのcold起動とalarmを待ち、通常10秒以内には収まらなかった。各提出の最後のdurable checkpoint公開まで283.763〜285.670秒。runnerが提出を順番に観測した終端時間294.793〜354.124秒には、後続提出の確認が遅れた時間も含まれる。観測の遅れを実行時間そのものやP95として解釈しない。
+未処理queue、実行中、既知の木の先読み、制御処理の待ちを見て必要台数を計算する。必要数が減ったときに余剰VMを選び、新しい受信を止めてから退役させる。自作controllerが台数を計算し、metricを発行する。実際にASGの希望台数を変更するのは、CloudFormationに宣言したalarmとExactCapacity policyである。
 
-## 回収・再試行の保証範囲
+**ただし、退役開始後の新しい需要でそのVMを再開しない。** 遅れて届く古いscale-inが既に回収を選んでいる可能性があるため、退役を完了させて代替VMを起動する。この間、待ちjobがあっても一時的に0台へ落ち得る。
 
-- 通常scale-inでは、新規VMを最初から保護する。drain tokenをdurableに保存し、hostがそれをdiskにも保存し、poll・実行・配送・cleanupを終えるまで解除しない。保護を戻しても既に選ばれた回収を撤回できないため、退役VMをresumeしない。
-- 実行中のEC2障害・外部強制停止・stack削除はscale-in protectionでは防げない。SQS visibilityの更新、durable結果、上限後のNodeDLQによって復旧または明示的な基盤障害へ進める。
-- NodeDLQは隔離保存後にrunをIEにする。ControlDLQとreceipt streamの枯渇後回復は未実装。単にDLQがあることを回復保証とは呼ばない。
-- boot-stuck、agent死亡、cleanup失敗は保護を維持してfail-closedになる。**自動health交換がないため、処理と課金容量が滞留する本番blocker**。検証せずに保護を外すwatchdogを追加して解決扱いにしない。
-- 管理用sleepは観測した待ち／実行／control／予測仕事があれば拒否する。新しい受付とshutdownは同一transactionではないので、運用では先にadmissionを止める必要がある。
+| 試験 | 退役中に到着した提出の結果 |
+| --- | --- |
+| A `arrival-during-drain` | 安全な代替VMでAC。終端観測まで87.110秒。 |
+| B 5提出 | 初期5台を退役中に受付。全て2ケースAC、各提出の最後のcheckpoint保存まで283.763〜285.670秒。 |
 
-## 費用と並列上限
+Bのrunnerによる終端観測は294.793〜354.124秒だった。5提出を順番に確認した遅れを含むため、実行時間そのものやP95として扱わない。
 
-東京Linux Shared `c7i.large` の[公開料金](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/ap-northeast-1/index.csv)（2026-10-01適用）$0.11235/時と[public IPv4](https://aws.amazon.com/vpc/pricing/) $0.005/時から、1台は約$0.11735/時、5台は約$0.58675/時。5台を730時間維持すると約$428.33。EBS・S3・ECR・Lambda・DynamoDB・SQS・logs等は別。cold VMごとの起動待ちと通常10秒以内は両立しにくく、warm維持時間・受付上限・許容待ちを一緒に決める必要がある。
+管理用の`sleep`は、観測した待ち・実行・制御・予測仕事があれば拒否する。受付とshutdownは同一transactionではないため、運用では先に受付を止める必要がある。queue統計・需要記録には古さもあり、**継続的なbacklogがある状態での十分な試験や、最大待ち時間の保証はまだない**。
 
-上限5台はpoolの通常の同時容量制約であり、請求総額の上限ではない。admission/rate quota、保存量・保持期間、稼働期限、金額予算による停止条件は未実装。本実験のstackにはsandboxの1時間削除規則があるが、本番の費用制御の代わりにはしない。
+## 6. 実行中のVMを回収しない保証はあるか
 
-## 計測の限界・再現
+**通常のASG scale-inに対して保護する設計。EC2障害や外部からの強制停止は防げない。**
 
-保存済みのcanonical結果を物理VM単位で照合し、同一VMの実行区間に重なりがないこととdistinct nodeのcleanupを確認した。保存前に停止した試行や競合で負けたduplicateの実行区間は含まれない。heartbeatとASG保護状態は原子的な取得ではなく、VM間の区間比較はguest clockの整合を仮定する。sourceの単一consumer・poll予約・退役fenceのテストはこの計測と別の根拠である。
+VMは起動時からscale-in保護される。退役指示を永続保存した後、新しい受信を止め、予約済みの受信、実行、結果配送、cleanupを全て終えてから保護を解除する。controllerも退役token・新鮮な状態報告・実行0・受信待ちなし・実際の保護解除を確認し、それまでは台数metricを下げない。
 
-`infra/experiments/workloads.py` は問題登録APIではなく試験入力。製品の全言語・CLI/Nix環境やCCS全適合、本番公開APIの実証ではない。表示のwireは引き続きJSON snapshot pollingで、SSE/NDJSONの購読契約は未実装。内部VM/queueの操作をクライアントに要求する設計ではない。
+ここでは**実行0だけでは不十分**。キューの受信待ちをしているVMは、次の瞬間に仕事を受け取れるからである。Aの後にこの競合を修正した。予約済み受信は退役指示後に返ってきても、保護したまま処理・配送・cleanupまで完了させる。
 
-policy/host 15件、case tree 1件、graph 3件、terminal 5件、artifact 4件の計28テスト、TypeScript型検査、JSON schema検証、Python compile、差分の空白検査を通した。試験後にCDKの無効なdeprecated `cooldown`引数だけを削除した。StepScalingではCloudFormationへ出力されていなかった引数であり、fresh synthのtemplateが実験時と完全一致することを確認した。この後処理は観測JSONにも記録した。
+Bでは5台の受信待ち中に退役指示を出し、その最中に5提出を投入した。30ノード全て受信回数1で完了し、うちcompileの1件は`reserved_before_drain`、つまり**退役後に返った予約済みの受信から実際に実行**されていた。保存結果とcleanupも照合した。全物理VMで保存済み実行区間の重複はなく、Bの最大並行は3だった。
 
-再現時は `infra/PATTERNS.md` に従い、branch prefix付き専用stackをCDKから作成する。`poolProfile`を選び、`run_scaling.py`または`run_drain.py`へstack名とreport出力先を渡す。同名の既存stackは先にdestroyし、成否を問わず終了後にdestroyする。**試験A/Bの両専用stackを削除し、CloudFormationの不存在を再確認した**。検証時刻は各観測JSONの`teardown`に記録した。共有bootstrapは削除していない。[現行構成図](diagrams/judge-pool.png)は[stack-diagram](https://github.com/caru-ini/stack-diagram)で生成し、以前の1台内並列の図とは分離した。
+証拠はBの`attempts`、`receive_count_histogram`、`joined_execution_cleanup_analysis`、`saved_execution_intervals_by_VM`。安全条件は[host agent](../../infra/pool/agent.py)と[退役判定](../../infra/runtime/policy.py)にある。保存前に停止した試行や競合で負けた試行の区間は記録に含まれず、状態報告とASG保護の観測も原子的ではない。全故障下での無停止を証明したものではない。
+
+## 7. VMが失われてもリトライできるか
+
+**Aでは実際にVMをpoweroffして、同じrunの復旧を確認した。**
+
+| 停止位置 | 結果と確認内容 |
+| --- | --- |
+| native実行中 | 228.783秒でAC。停止時にDockerが実行中だったことと、別workerでの復旧を記録。 |
+| 結果保存後・通知/ACK前 | 186.684秒でAC。保存済み結果を再利用し、対象compile artifactを再生成していない。 |
+
+NodeQueueから受信した要求は、受信後180秒間他のworkerから見えなくし、実行中は30秒ごとに延長する。VMが失われて延長が止まると再配信される。結果を保存してから完了通知・要求ACKするため、保存後の停止なら再実行せず結果を使える。保存前に停止した処理は再実行され得る。**exactly-once実行ではない。**
+
+実行中停止のattempt記録は受信回数1、4で、2、3がなかった理由は確定していない。受信待ちと退役の競合が原因だと断定する証拠もない。復旧時間にはvisibility、EC2 health replacement、alarm周期が含まれる。Aのこの喪失試験一式を修正後ソースで再実施したわけではない。
+
+## 8. DLQはどう処理されるか
+
+**NodeDLQは失敗を無限retryせず、保存・終端化する経路をAで確認した。** DLQは処理できなかった要求を隔離するqueueである。
+
+常に失敗する`poison`要求は受信1〜5回を記録し、NodeDLQへ移動した。元要求を永続保存した後、runを基盤障害`IE`として終端化した（10.395秒）。参加者のWA等の判定とは区別する。明示再判定の`operator-rejudge`は同じsubmissionの新runとなり、9.723秒でACになった。
+
+証拠はAの`scenarios["poison"]`と`scenarios["operator-rejudge"]`、実装は[deadletter.py](../../infra/runtime/deadletter.py)。**ControlDLQと受付streamの処理枯渇からの回復は未完成。** A/B終了時に両DLQのvisible・inflight・delayedが0だったことは確認したが、それは全てのDLQ障害を回復した証拠ではない。BではpoisonやVM喪失・木の打切りを試験していない。
+
+## 9. 最大並列数と費用の上限は
+
+**通常のpool上限を5台、1 VM・同時1ノードに固定した。** 6つ目以降はqueueで待つ。Aの保存済み実行区間で最大5並行、Bで最大3並行を確認した。
+
+ASG上限、起動時保護、単一AZ、置換時に先に終了してから起動する条件を宣言している。単一AZは可用性より通常の台数制約を優先した実験条件。EC2/control planeの故障や外部操作まで含む絶対的な物理台数の保証ではない。
+
+| 稼働条件 | EC2＋public IPv4の概算 |
+| --- | --- |
+| `c7i.large` 1台 | $0.11735/時。 |
+| 5台 | $0.58675/時（約$0.59）。 |
+| 5台を730時間維持 | 約$428.33。 |
+
+東京Linux Sharedの[EC2公開料金](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/ap-northeast-1/index.csv) $0.11235/時（2026-10-01適用）と[public IPv4](https://aws.amazon.com/vpc/pricing/) $0.005/時から計算した。実際の請求額の測定ではなく、EBS・S3・ECR・Lambda・DynamoDB・SQS・logs等は含まない。
+
+**最大5台は請求総額の上限ではない。** 金額予算による停止、受付量・保存量・保持期間・稼働期限の制限は未実装。隔離されたVMの自動交換もなく、処理と課金容量が滞留し得る。本番の破産防止を達成したとは言えない。sandboxの1時間stack削除規則は本番の費用制御の代わりにはしない。
+
+初期の通常profileは、明示的なsleepまで1台warmを保持する。設定のidle 900秒だけで、初回から自動的に15分で0台になるわけではない。sleep後の次のwakeからは15分のwarm維持が有効になる。詳細は[policy文書](judge-pool-policy.md)へ。
+
+## デモの有無
+
+**現行構成の動画・ブラウザデモはない。** [現行構成図](diagrams/judge-pool.png)は構成の説明、上記JSONは実測記録である。
+
+[旧動画・39秒](history/2026-11-02-prototype/demos/judge-flow.mp4)は実AWSのbuild→並行run/check→summarizeと画面表示を記録しているが、**1 VM・2slotの旧構成**である。[動画の証拠JSON](history/2026-11-02-prototype/demos/judge-flow-evidence.json)も同じ条件。現行の複数VMへの増設や先読みの動画として提示しない。
+
+旧表示の通信はJSON snapshot polling。途中の状態を飛ばすことがあり、[別のpolling観測](history/2026-11-02-prototype/demos/polling-coalescing-evidence.json)では1/3→3/3となった。SSE/NDJSONの購読契約は未実装。旧ブラウザデモのruntimeは現行ツリーから削除済み。
+
+## 記録の読み方・再実験
+
+| 記録の項目 | 確認すること |
+| --- | --- |
+| `scenarios` | 提出ごとの受付・最終状態、障害注入と受信回数。 |
+| `joined_execution_cleanup_analysis` | case実行数とSKIP、保存結果・cleanup記録の対応。 |
+| `saved_execution_intervals_by_VM` | 保存された実行区間の物理VM別照合。 |
+| `controller_observations` | 生の需要、計算した台数、安全確認後に発行した台数の違い。 |
+| `safe_target_metric_minutes` / `scaling_activities_sanitized` | metricと実際のAWS増減。 |
+| `checks` / `measurement_limits` | 何を判定し、どこまでは証明していないか。該当シナリオを実施していない項目は成功試験に数えない。 |
+| `teardown` | 専用stack削除後の不存在確認。 |
+
+Aのpolicyは`lookahead`、fingerprintは`83496c57063b54b19a470ddf32b47a3dd346ca915ac3f84c2cd367a73b2a0e60`。Bは`prewarmed`、`0efdf8e7b65bac66a99a079443e97a1ed67e7ca9b241079b959477a2169f2aad`。Aにはassetの識別情報、Bには対象ソース各ファイルのSHA-256を記録している。試験後のCDK引数cleanupはtemplateを変えないことを確認し、Bにも記録した。
+
+VM名はAWS実IDを公開しない照合用label。保存済み区間は停止前に結果を保存できなかった試行や競合で負けた結果を含まない。VM間の時刻比較はguest clockの整合を仮定する。結果保存後に停止した1ノードはcleanup記録がなく、対象VMの物理的な破棄と分けて確認した。
+
+両試験の専用stackは削除済み。Aは11 VM、Bは10 VMについて全てterminatedを照合し、CloudFormationの不存在も再確認した。共有bootstrapは削除していない。再実験は[infra/PATTERNS.md](../../infra/PATTERNS.md)に従って専用stackをCDKから作り、表のrunnerへstack名・**新しい**report出力先を渡す。同名既存stackは先にdestroyし、成否を問わず終了後にもdestroyする。
+
+今回の文書整理ではAWSを再実験していない。試験入力は[workloads.py](../../infra/experiments/workloads.py)に分離されたC17の入力で、製品の全言語・CLI/Nix環境やCCS全適合の実証ではない。元のpushではpolicy/host 15、case tree 1、graph 3、terminal 5、artifact 4の計28テストと型・schema・compile検査を通している。
