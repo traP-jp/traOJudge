@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>木構造テストケースとスケジューラのfail-fast</title>
+<style>
+:root{font-family:system-ui,"Noto Sans CJK JP",sans-serif;color:#172b45;background:#f3f6fa;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;padding:28px 36px}main{max-width:1368px;margin:auto}h1{font-size:27px;margin:5px 0 12px;letter-spacing:.02em}h2{font-size:19px;margin:0}p{margin:5px 0;line-height:1.65}.eyebrow{font-size:12px;color:#526a86;letter-spacing:.12em}.intro{font-size:16px;color:#475d76}.toolbar{display:flex;align-items:center;gap:18px;margin:18px 0}button{background:#214f91;color:white;border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer}button:disabled{background:#8d9daf;cursor:default}#elapsed{margin-left:auto;font-variant-numeric:tabular-nums;font-size:17px}.pill{font-size:13px;border:1px solid #d4dfe9;border-radius:20px;padding:6px 12px;background:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{background:white;border:1px solid #d8e1eb;border-radius:14px;overflow:hidden}.cardhead{padding:17px 20px;border-bottom:1px solid #e4ebf2}.heading{display:flex;justify-content:space-between;align-items:center}.result{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}.sub{font-size:13px;color:#61748a}.pipeline{min-height:24px;margin-top:7px;font-size:14px;font-weight:650}.graph{position:relative;width:640px;height:435px;margin:0 auto}.edges{position:absolute;inset:0;width:640px;height:435px}.edge{fill:none;stroke:#a6b6c8;stroke-width:2}.build{position:absolute;left:237px;top:16px;width:166px;text-align:center;font-size:14px;background:#eaf0f8;border-radius:7px;padding:9px}.case{position:absolute;width:160px;height:74px;border:1.5px solid #d3dce6;background:#f8fafc;border-radius:9px;text-align:center;padding:8px 4px}.case b{display:block;font-size:15px}.case span{display:block;font-size:13px;font-weight:650;margin-top:5px}.case small{display:block;font-size:10px;color:#698096;margin-top:3px}.case.issued{background:#fff8e6;border-color:#d4ac39}.case.AC{background:#eaf8ef;border-color:#3d9f66;color:#17683b}.case.WA,.case.RE,.case.TLE,.case.MLE,.case.OLE{background:#fff0ed;border-color:#d15c4c;color:#a22d20}.case.stopped{background:#f0f2f5;border-color:#bbc4cf;border-style:dashed;color:#68778a}.case.finished{background:#edf4ff;border-color:#6c97ce;color:#335e94}.cardfoot{padding:12px 20px;background:#fafbfd;border-top:1px solid #e4ebf2;display:flex;justify-content:space-between;gap:12px;font-size:14px}.legend{display:flex;gap:20px;font-size:13px;margin:15px 0;color:#52667d}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}.log{border:1px solid #d8e1eb;border-radius:10px;background:#fff;padding:13px 18px;min-height:116px;font-size:13px}.log p{margin:2px 0}.footer{margin-top:12px;font-size:12px;color:#657890}#error{color:#aa3027;font-weight:700}#done{font-weight:700;color:#17683b}
+</style></head><body><main>
+<div class="eyebrow">traOJudge · 実AWS / 実Engine / 等速録画</div>
+<h1>失敗を受理したスケジューラが、新しいdispatchを止める</h1>
+<p class="intro">同じケース木へ2件提出。左はcase 0をWAに、右は全ケースACにする入力です。</p>
+<div class="toolbar"><button id="submit">2件を提出して開始</button><span class="pill">5台warm・1 VM同時1ノード</span><span id="done"></span><span id="elapsed">経過 0.0 秒</span></div>
+<section class="grid"><article id="fast" class="card"></article><article id="pass" class="card"></article></section>
+<div class="legend"><span><i class="dot" style="background:#e5c867"></i>dispatch済み・結果待ち</span><span><i class="dot" style="background:#b9c3d0"></i>未dispatchのまま停止</span><span><i class="dot" style="background:#dc7c6d"></i>非AC → job_failed</span><span><i class="dot" style="background:#67b68a"></i>AC → job_completed</span></div>
+<section class="log" id="log"><p>workerは結果を返すだけ。後続の開始要求はスケジューラが生成します。</p></section>
+<p class="footer">caseはrun → check。case 0が失敗した後は、別の枝のcheckや後続caseも新規発行されません。すでに発行済みのrunは終了します。</p>
+<p id="error"></p>
+</main><script>
+const parents=__TREE_PARENTS__, positions=[[180,100],[95,220],[265,220],[95,340],[460,100],[460,220]];
+window.demoSnapshots=[];window.demoDone=false;let start=null, previous=[{},{}];
+function shell(id,title){
+ document.getElementById(id).innerHTML=`<div class="cardhead"><div class="heading"><h2>${title}</h2><span class="result">WJ</span></div><p class="sub">受付待ち</p><div class="pipeline">未開始</div></div><div class="graph"><svg class="edges" viewBox="0 0 640 435"><defs><marker id="${id}-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#a6b6c8"/></marker></defs>${['M320 52 V80 H180 V94','M320 80 H460 V94','M180 174 V198 H95 V214','M180 198 H265 V214','M95 294 V334','M460 174 V214'].map(d=>`<path class="edge" d="${d}" marker-end="url(#${id}-arrow)"/>`).join('')}</svg><div class="build">build待ち</div>${positions.map(([x,y],i)=>`<div class="case waiting" data-case="${i}" style="left:${x-80}px;top:${y}px"><b>case ${i}</b><span>待機</span><small>${parents[i]===null?'build完了後':`親: case ${parents[i]}`}</small></div>`).join('')}</div><div class="cardfoot"><span class="count">判定済み 0 / 6</span><span class="summary">summarize待ち</span></div>`;
+}
+shell('fast','非ACになる提出');shell('pass','全ACになる提出');
+function event(message){const p=document.createElement('p');p.textContent=`${((performance.now()-start)/1000).toFixed(1)}s  ${message}`;document.getElementById('log').prepend(p);while(document.getElementById('log').children.length>5)document.getElementById('log').lastChild.remove()}
+function render(card,index){
+ const root=document.getElementById(index===0?'fast':'pass');
+ root.querySelector('.result').textContent=card.verdict || (card.judged?`${card.judged}/6`:'WJ');
+ root.querySelector('.sub').textContent=`提出 #${card.submission} · 観測revision ${card.revision}`;
+ root.querySelector('.pipeline').textContent=card.pipeline==='cancelled'?'job_failed受理 → 新規dispatch停止':card.pipeline==='completed'?'全ノード完了':'結果を受け、スケジューラが後続を発行';
+ root.querySelector('.build').textContent=card.build_complete?'build完了':'build待ち・結果待ち';
+ root.querySelector('.count').textContent=`判定済み ${card.judged} / ${card.total}`;
+ root.querySelector('.summary').textContent=card.summary_complete?'summarize完了':card.pipeline==='cancelled'?'summarizeも未dispatch':'summarize待ち';
+ card.cases.forEach(c=>{const node=root.querySelector(`[data-case="${c.id}"]`);node.className=`case ${c.status}`;node.querySelector('span').textContent=c.label});
+ if(card.pipeline==='cancelled'&&previous[index].pipeline!=='cancelled')event(`提出 #${card.submission}: 非ACをjob_failedとして受理。全ての新規dispatchを停止。`);
+ if(card.existing_finished&&!previous[index].existing_finished)event(`提出 #${card.submission}: 発行済みcase 4のrunが終了。check 4・後続は発行されない。`);
+ if(card.pipeline==='completed'&&previous[index].pipeline!=='completed')event(`提出 #${card.submission}: 木を最後まで実行、summarizeでAC。`);
+ previous[index]=card;
+}
+async function poll(){
+ try{
+  const response=await fetch('/state');const value=await response.json();if(!response.ok)throw Error(value.error);
+  value.cards.forEach(render);window.demoSnapshots.push({at_ms:performance.now()-start,...value});
+  if(value.cards.length===2&&value.cards[0].pipeline==='cancelled'&&value.cards[0].existing_finished&&value.cards[1].pipeline==='completed'){
+   window.demoDone=true;document.getElementById('done').textContent='2件の実行と結果を確認';return;
+  }
+  setTimeout(poll,800);
+ }catch(e){document.getElementById('error').textContent=`取得エラー: ${e.message}`;window.demoError=e.message}
+}
+document.getElementById('submit').onclick=async()=>{
+ document.getElementById('submit').disabled=true;start=performance.now();
+ setInterval(()=>{if(!window.demoDone)document.getElementById('elapsed').textContent=`経過 ${((performance.now()-start)/1000).toFixed(1)} 秒`},100);
+ try{const response=await fetch('/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const receipts=await response.json();if(!response.ok)throw Error(receipts.error);event('2件の受付を確認。開始要求と結果を実応答から表示。');poll()}
+ catch(e){document.getElementById('error').textContent=`受付エラー: ${e.message}`;window.demoError=e.message}
+};
+</script></body></html>

@@ -2,6 +2,8 @@
 
 2026-11-02、東京リージョンで実Engine、native C17、gVisor、AWSのqueue・artifact保存を使って実験した。対象pushは`13747d5`。[全体の入口・デモ一覧](serverless-judge.md)へ戻る。
 
+この文書は過去のA/Bの測定条件と結果を保持する。**非ACを`job_failed`に渡す修正後の木構造デモ（C）は[別の動画・レポート](tree-demo.md)**。Aの独自な子孫SKIPは現行コードから削除した。
+
 **VMを再利用する最大5台のpoolと、障害時の再試行は実験したが、本番受入は未達。** 必要時刻までの増設を証明できず、全台退役後の提出は結果保存まで約284〜286秒待った。起動不良VMの自動交換と請求総額の制限も未実装。
 
 ## どのソースで何を実験したか
@@ -15,7 +17,7 @@ pushにはAの後の修正を含む。**Aの全試験を最終ソースで再実
 
 ## 1. 木構造でfail-fastできるか
 
-**実験用adapterでは実装し、Aで確認した。** 親caseが非ACなら子孫を実行せず、別の根から始まる枝は継続する。6ケースの実験は次の木だった。
+**Aで確認したのは、実験用adapterが追加した条件付きの枝の打切りである。既存Engineの失敗停止と同じではない。** Aでは親caseが非ACなら子孫を実行せず、別の根から始まる枝では新規dispatchも続けた。6ケースの実験は次の木だった。
 
 ```mermaid
 flowchart LR
@@ -30,6 +32,8 @@ flowchart LR
 caseの実体はrun→checkの2ノード。Aの`pruned-tree`は21.216秒でWAになり、**実行済み3ケース、SKIP3ケース**だった。SKIPした子孫のrun/checkにはattempt記録がなく、VMを割り当てていない。全caseの結果を揃えてsummarizeし、SKIPを実行完了件数には足さない。
 
 証拠はAの`joined_execution_cleanup_analysis["pruned-tree"]`。実装は[依存関係の構築](../../infra/runtime/common.py)と[子孫の打切り](../../infra/runtime/control.py)。製品の問題登録API・全言語環境との接続は対象外。
+
+既存の[Rust Engine](../../server/traojudge-workflow/src/engine.rs)は`job_failed`を受けるとpipelineをcancelledにし、同じpipelineの後続を新しくdispatchしない。workerへ既存実行の停止命令を送る処理ではない。後続を決めるのはschedulerで、workerが後続jobを直接起動するわけでもない。AのadapterはWAを`job_completed`として渡し、独自に子孫をSKIPしたため、この失敗停止を通していなかった。**Aの結果を「失敗後は新規dispatchを止め、dispatch済みだけが継続する」という仕様の実証には使えない。** 現行adapterは非ACをcheck jobの失敗へ変換し、既存Engineへ通知する。[C](tree-demo.md)ではこの経路を確認した。
 
 ## 2. 将来の需要に間に合うようVMを確保できるか
 
@@ -134,7 +138,7 @@ ASG上限、起動時保護、単一AZ、置換時に先に終了してから起
 
 ## デモの有無
 
-**現行構成の動画・ブラウザデモはない。** [現行構成図](diagrams/judge-pool.png)は構成の説明、上記JSONは実測記録である。
+**現行の木構造デモ動画は[C](tree-demo.md)にある。** このA/Bの実験そのものの動画はない。[現行構成図](diagrams/judge-pool.png)は構成の説明、上記JSONは実測記録である。
 
 [旧動画・39秒](history/2026-11-02-prototype/demos/judge-flow.mp4)は実AWSのbuild→並行run/check→summarizeと画面表示を記録しているが、**1 VM・2slotの旧構成**である。[動画の証拠JSON](history/2026-11-02-prototype/demos/judge-flow-evidence.json)も同じ条件。現行の複数VMへの増設や先読みの動画として提示しない。
 

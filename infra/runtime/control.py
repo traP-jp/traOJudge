@@ -25,34 +25,6 @@ def run_engine(state, request):
     return result
 
 
-def resolve_skips(state, result):
-    """Resolve gated descendants without allocating a VM slot or fabricating case completion."""
-    receipt = state["receipt"]
-    parents = receipt.get("test_parents", [None] * len(receipt["tests"]))
-    verdicts = state.setdefault("case_verdicts", {str(v["case"]): v["verdict"] for v in state["view"]["history"]})
-    while True:
-        for dispatch in result["dispatches"]:
-            state["pending"][dispatch["id"]] = dispatch["task"]
-        blocked = next(((node, task) for node, task in state["pending"].items()
-            if task["phase"] in ["run", "check"] and parents[task["case"]] is not None
-            and verdicts.get(str(parents[task["case"]])) not in [None, "AC"]), None)
-        if blocked is None:
-            return result
-        node, task = blocked
-        state["pending"].pop(node)
-        state["results"][node] = {"skipped": True, "reason": "ancestor_not_AC", "node": node}
-        if task["phase"] == "check":
-            verdicts[str(task["case"])] = "SKIP"
-            key = f"artifacts/{receipt['contest']}/{receipt['submission']}/{receipt['run']}/controller/{node}/verdict"
-            data = b'{"verdict":"SKIP"}'
-            saved = s3.put_object(Bucket=BUCKET, Key=key, Body=data)
-            import hashlib
-            state["artifacts"][f"verdict-{task['case']}"] = {
-                "key": key, "version": saved["VersionId"], "sha256": hashlib.sha256(data).hexdigest()}
-            state["view"]["skipped_cases"] = list(verdicts.values()).count("SKIP")
-        result = run_engine(state, {"pipeline": receipt["run"], "jobs": state["jobs"], "edges": state["edges"], "completed": node})
-
-
 def signal_demand(state):
     if os.environ.get("CAPACITY_FUNCTION"):
         from common import notify_demand
@@ -125,22 +97,30 @@ def process(message):
             terminal = True
         elif task["phase"] == "check":
             verdict = result["node_output"]["verdict"]
+            if verdict not in {"AC", "WA", "RE", "MLE", "OLE", "TLE"}:
+                raise ValueError("unknown case verdict")
             history = state["view"]["history"]
             history.append({"case": task["case"], "verdict": verdict, "completed_cases": len(history) + 1})
             state["view"]["completed_cases"] = len(history)
             state.setdefault("case_verdicts", {})[str(task["case"])] = verdict
+            # A non-AC verdict is a failed check job. The existing Rust Engine
+            # owns pipeline cancellation and suppresses all future dispatches.
+            request["failed"] = verdict != "AC"
+            if request["failed"]:
+                state["view"].update(status="completed", verdict=verdict)
+                terminal = True
         elif task["phase"] == "summarize":
             summary = result["node_output"]
             priority = {"AC": 0, "WA": 1, "RE": 2, "MLE": 3, "OLE": 4, "TLE": 5}
             expected = [state["case_verdicts"][str(i)] for i in range(len(receipt["tests"]))]
             if (summary["completed_cases"] != len(state["view"]["history"]) or summary["total_cases"] != len(expected)
-                    or summary["case_verdicts"] != expected or summary.get("skipped_cases", 0) != expected.count("SKIP")
-                    or summary["verdict"] != max((v for v in expected if v != "SKIP"), key=priority.__getitem__)):
+                    or summary["case_verdicts"] != expected
+                    or summary["verdict"] != max(expected, key=priority.__getitem__)):
                 raise ValueError("summary does not match durable case results")
             state["view"]["summary"] = summary
     result = run_engine(state, request)
-    if not terminal:
-        result = resolve_skips(state, result)
+    for dispatch in result["dispatches"]:
+        state["pending"][dispatch["id"]] = dispatch["task"]
     if terminal:
         state["pending"] = {}
     elif result["pipeline"] == "completed":
@@ -153,6 +133,7 @@ def process(message):
         state["view"]["status"] = "judging" if state["results"] else "queued"
     state["revision"] += 1
     state["view"]["revision"] = state["revision"]
+    state["view"]["pipeline_state"] = result["pipeline"]
     state["view"]["nodes"] = result["states"]
     # One immutable S3 version contains the closed DB, progress and full outbox.
     # S3 conditional writes also fence an unexpectedly overlapping FIFO handler.

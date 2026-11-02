@@ -35,5 +35,15 @@ def forecast_tree(contest, request):
 
 
 def pruned_tree(contest, request):
-    return body(contest, request, [100, 100, 100, 100, 1000, 100],
+    return body(contest, request, [100, 100, 100, 100, 10000, 100],
                 parents=[None, 0, 0, 1, None, 4], fail_case=0)
+
+
+TREE_DEMO_PARENTS = [None, 0, 0, 1, None, 4]
+TREE_DEMO_DELAYS_MS = [2500, 2000, 2000, 1500, 14000, 2500]
+
+
+def tree_demo(contest, request, fail=False):
+    # Wall delays are visible experimental input, not scheduler/scaling policy.
+    return body(contest, request, TREE_DEMO_DELAYS_MS,
+                parents=TREE_DEMO_PARENTS, fail_case=0 if fail else None)

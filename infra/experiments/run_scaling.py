@@ -200,12 +200,14 @@ class Experiment:
         await_cleanup = self.cleanup(tree)
         assert len(await_cleanup) == 28
         pruned = self.complete(self.submit(pruned_tree(self.contest, "pruned-tree")))
-        assert pruned["view"]["verdict"] == "WA" and pruned["view"]["completed_cases"] == 3 and pruned["view"]["skipped_cases"] == 3
+        assert pruned["view"]["verdict"] == "WA" and pruned["view"]["pipeline_state"] == "cancelled"
         for node, task in pruned["jobs"]:
             if task["phase"] in ["run", "check"] and task["case"] in [1, 2, 3]:
-                assert pruned["results"][node]["skipped"]
+                assert pruned["view"]["nodes"][node] == "waiting"
                 assert not list(self.objects(f"workers/attempts/{pruned['receipt']['run']}/{node}/"))
-        self.report["checks"]["failed_parent_prunes_only_descendants_without_VM_execution"] = True
+            if task["phase"] == "check" and task["case"] == 0:
+                assert pruned["view"]["nodes"][node] == "failed"
+        self.report["checks"]["non_AC_check_is_failed_and_engine_stops_pipeline_dispatch"] = True
         self.cleanup(pruned)
         self.wait(self.only_one_ready, 600, "Excess VMs retired through declared policy")
         first = self.complete(self.submit(body(self.contest, "reuse-A", [100])))

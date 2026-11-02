@@ -1,0 +1,3583 @@
+{
+  "policy_profile": "prewarmed",
+  "policy_sha256": "0efdf8e7b65bac66a99a079443e97a1ed67e7ca9b241079b959477a2169f2aad",
+  "receipts": [
+    {
+      "accepted_at": "2026-11-02T08:16:16.921677+00:00",
+      "contest": "tree-demo-1a8bedff430b",
+      "request_id": "non-ac",
+      "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+      "submission": 1
+    },
+    {
+      "accepted_at": "2026-11-02T08:16:17.089849+00:00",
+      "contest": "tree-demo-1a8bedff430b",
+      "request_id": "all-ac",
+      "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+      "submission": 2
+    }
+  ],
+  "test_parents": [
+    null,
+    0,
+    0,
+    1,
+    null,
+    4
+  ],
+  "native_delays_ms": [
+    2500,
+    2000,
+    2000,
+    1500,
+    14000,
+    2500
+  ],
+  "raw_API_observations": [
+    {
+      "at": 1793607378.107921,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "queued",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607378.1614218,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "queued",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607379.9176922,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "queued",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607380.0750852,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "queued",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607381.4470587,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "queued",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607381.7727177,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "queued",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607383.3752253,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "running",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "waiting",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 2,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "judging",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607383.4171953,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "waiting",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "waiting",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "waiting",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "waiting",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "waiting",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "running",
+          "93068325-1936-57c8-88af-f35791bdb98e": "waiting",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "waiting",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "waiting"
+        },
+        "pipeline_state": "running",
+        "revision": 1,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "queued",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607384.9885306,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "running",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "waiting",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 2,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "judging",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607385.0709562,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "waiting",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "waiting",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "running",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "waiting",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "waiting",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "waiting",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "waiting"
+        },
+        "pipeline_state": "running",
+        "revision": 2,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607386.729279,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "running",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 3,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "judging",
+        "submission": 1,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607386.8523943,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 0,
+        "history": [],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "waiting",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "waiting",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "running",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "waiting",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "waiting",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "waiting",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "waiting"
+        },
+        "pipeline_state": "running",
+        "revision": 2,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607388.659748,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "running",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "waiting",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "waiting",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "running",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "waiting"
+        },
+        "pipeline_state": "running",
+        "revision": 4,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607388.234546,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607390.763218,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "running",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "waiting",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "waiting",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "running"
+        },
+        "pipeline_state": "running",
+        "revision": 5,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607390.7367244,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607393.1351616,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 3,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "waiting",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "running",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 8,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607393.1982536,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607395.7606182,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 4,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 10,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607395.461422,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607397.4254973,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 4,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "running",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "waiting",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "waiting",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 10,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607397.7626982,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": true
+    },
+    {
+      "at": 1793607400.1034427,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 5,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "completed",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "completed",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "running",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 12,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607400.0195603,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": true
+    },
+    {
+      "at": 1793607402.352293,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 5,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "waiting",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "completed",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "completed",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "waiting",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "running",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 12,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607402.2632425,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": true
+    },
+    {
+      "at": 1793607404.6686664,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 6,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          },
+          {
+            "case": 5,
+            "completed_cases": 6,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "running",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "completed",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "completed",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "completed",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "completed",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "running",
+        "revision": 14,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "judging",
+        "submission": 2,
+        "total_cases": 6
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607404.5321217,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": true
+    },
+    {
+      "at": 1793607406.849359,
+      "request_id": "all-ac",
+      "api_view": {
+        "completed_cases": 6,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          },
+          {
+            "case": 5,
+            "completed_cases": 6,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "completed",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "completed",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "completed",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "completed",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "completed",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "completed",
+        "revision": 15,
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "status": "completed",
+        "submission": 2,
+        "summary": {
+          "case_verdicts": [
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC"
+          ],
+          "completed_cases": 6,
+          "total_cases": 6,
+          "verdict": "AC"
+        },
+        "total_cases": 6,
+        "verdict": "AC"
+      },
+      "already_dispatched_run4_result_saved": false
+    },
+    {
+      "at": 1793607406.775409,
+      "request_id": "non-ac",
+      "api_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "status": "completed",
+        "submission": 1,
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "already_dispatched_run4_result_saved": true
+    }
+  ],
+  "started_at_unix": 1793607374.4901166,
+  "browser_snapshots": [
+    {
+      "at_ms": 3679.60000000149,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 3.6718356609344482
+    },
+    {
+      "at_ms": 5592.39999999851,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 5.585792064666748
+    },
+    {
+      "at_ms": 7290.5,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 0,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 7.283346891403198
+    },
+    {
+      "at_ms": 8937.69999999553,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 2,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 1,
+          "build_complete": false,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "waiting",
+              "label": "\u5f85\u6a5f"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 8.928969144821167
+    },
+    {
+      "at_ms": 10591.5,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 2,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 2,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 10.581404209136963
+    },
+    {
+      "at_ms": 12369.10000000149,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 3,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 0,
+          "total": 6,
+          "revision": 2,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 12.36276364326477
+    },
+    {
+      "at_ms": 14581.29999999702,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 14.574958086013794
+    },
+    {
+      "at_ms": 16985.19999999553,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 1,
+          "total": 6,
+          "revision": 5,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 16.97919464111328
+    },
+    {
+      "at_ms": 19477.79999999702,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 3,
+          "total": 6,
+          "revision": 8,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 19.47042942047119
+    },
+    {
+      "at_ms": 21698.5,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 4,
+          "total": 6,
+          "revision": 10,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 21.69228720664978
+    },
+    {
+      "at_ms": 23975.69999999553,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": true,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "finished",
+              "label": "run\u7d42\u4e86\uff0fcheck\u672a\u767a\u884c"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 4,
+          "total": 6,
+          "revision": 10,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "waiting",
+              "label": "\u89aa\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 23.969149351119995
+    },
+    {
+      "at_ms": 26264.60000000149,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": true,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "finished",
+              "label": "run\u7d42\u4e86\uff0fcheck\u672a\u767a\u884c"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 5,
+          "total": 6,
+          "revision": 12,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 26.25852680206299
+    },
+    {
+      "at_ms": 28515.39999999851,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": true,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "finished",
+              "label": "run\u7d42\u4e86\uff0fcheck\u672a\u767a\u884c"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 5,
+          "total": 6,
+          "revision": 12,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "issued",
+              "label": "\u767a\u884c\u6e08\u307f\u30fb\u7d50\u679c\u5f85\u3061"
+            }
+          ]
+        }
+      ],
+      "elapsed": 28.50864267349243
+    },
+    {
+      "at_ms": 30766.60000000149,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": true,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "finished",
+              "label": "run\u7d42\u4e86\uff0fcheck\u672a\u767a\u884c"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "running",
+          "verdict": null,
+          "judged": 6,
+          "total": 6,
+          "revision": 14,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "AC",
+              "label": "AC"
+            }
+          ]
+        }
+      ],
+      "elapsed": 30.759926080703735
+    },
+    {
+      "at_ms": 33029.19999999553,
+      "cards": [
+        {
+          "request_id": "non-ac",
+          "submission": 1,
+          "pipeline": "cancelled",
+          "verdict": "WA",
+          "judged": 1,
+          "total": 6,
+          "revision": 4,
+          "build_complete": true,
+          "summary_complete": false,
+          "existing_finished": true,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "WA",
+              "label": "WA"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "finished",
+              "label": "run\u7d42\u4e86\uff0fcheck\u672a\u767a\u884c"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "stopped",
+              "label": "\u672adispatch\uff08\u505c\u6b62\uff09"
+            }
+          ]
+        },
+        {
+          "request_id": "all-ac",
+          "submission": 2,
+          "pipeline": "completed",
+          "verdict": "AC",
+          "judged": 6,
+          "total": 6,
+          "revision": 15,
+          "build_complete": true,
+          "summary_complete": true,
+          "existing_finished": false,
+          "cases": [
+            {
+              "id": 0,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 1,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 2,
+              "parent": 0,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 3,
+              "parent": 1,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 4,
+              "parent": null,
+              "status": "AC",
+              "label": "AC"
+            },
+            {
+              "id": 5,
+              "parent": 4,
+              "status": "AC",
+              "label": "AC"
+            }
+          ]
+        }
+      ],
+      "elapsed": 33.02229022979736
+    }
+  ],
+  "recording": {
+    "speed": "1x",
+    "cuts": false,
+    "source": "live Chromium capture of actual AWS responses and read-only external-result observations",
+    "capture_started_at_unix": 1793607374.4216123,
+    "width": 1440,
+    "height": 1050,
+    "duration_seconds": 37.88,
+    "codec": "h264",
+    "sha256": "715d820fbf42b9cc2f3ee12c1a7c28bcdb29bb07e94db26c9bbe6fbae20221af"
+  },
+  "source_base_commit": "7675a6cd233c3d4b2d50e960408920b074e76a89",
+  "deployed_source_sha256": {
+    "infra/runtime/api.py": "bf8beff5e10c53b739332f858b9764a91c1e18b92b660b28a3e83f7a0fcb12b0",
+    "infra/runtime/capacity.py": "85cc5072e3aaf8723fa4fc1bbd23b379f74a53c05830c054f55168140d6b0d40",
+    "infra/runtime/common.py": "07e11081e08860ed1d85f27526035ba1e200cff9bdc86bd372a489efed2f22d0",
+    "infra/runtime/control.py": "d32e210ee130c399610a7a172765af7065803c68aa9de29a025c433a39b81f54",
+    "infra/runtime/deadletter.py": "2d2a8eb7d3244482e98d542227b67c4e8830c7457c3c532ff9ccb9f0c0d65f8d",
+    "infra/runtime/planning.py": "f444037ced5c0725cf6e64015d37cacf05d11c6ca0110444b75f2b07d33405e9",
+    "infra/runtime/policy.py": "7076db6a9bfae37032ffbef3f04b3f9e7367fab7e267b5142e2ee860fb813b44",
+    "infra/runtime/relay.py": "0d8f73639dc973e1cdd3905518d41ad0440573af4c211652ab92a735f6bb5964",
+    "infra/runtime/runtime.py": "f024a923ed8291737cf6dd2ea5d46b6159d81a916b1cd9b7bbaac3ebc4ab5996",
+    "infra/worker/check.py": "fccd8f30cbf3cb0fdcdb0f3a80991c414d555764566cb29fc0b672aaf8f1d904",
+    "infra/worker/summarize.py": "83232e11ea7079cf6efcd4f5b14fe37163b2c62eba67eb822106b0e57ed36531",
+    "infra/worker/worker.py": "6af0feb57b33f19a1d24f11c1877400a83ca30ae5915c4f6eb880f2b7186922f",
+    "infra/pool/agent.py": "dd9bd91b5fe8e3705e9fff964fd31cc9484609f60291d4d926a15af40c44406b",
+    "infra/pool/artifacts.py": "61a1a37da8342107285ddd255379cf0ed0fa01a2d85bfc05c87a19e69bce16e0",
+    "infra/pool/gvisor-version.json": "49686123dd0767abf4af511cc18a94f1cd409dba1e359b0250f31c46cc0d47ac",
+    "infra/bin/app.ts": "343512a7c8746ea7f0c36a9468f7d612637f6eef62206ec7a2a12c2050a63e2b",
+    "infra/bin/pool-stack.ts": "3c1907016e2a4b3c0b11f84b4887c44cca11687ece8a32318d6b0cb7f2032ec3",
+    "infra/policy/pool.json": "0aba9af19d5d121a26f4e9a44372b5fca3dcd10f70e7c1477458f8dc4619f08b",
+    "infra/policy/pool.schema.json": "fbbd98054c36fe0812b365c068bc221018fd98a9247beeac897ad9d87fe88194"
+  },
+  "worker_to_opaque_VM_label": {
+    "4ba46f2dc2804ee4b5ca09c8ea22bc35": "vm-03",
+    "5e3727ea24434bd28e3dd34301a9ece0": "vm-05",
+    "91b40706d7284f44ad406caab4b06e7c": "vm-04",
+    "acfe8b1563af4644b26a0ca834ab293e": "vm-01",
+    "ae9546050b224f61bae87b59eeb86cd1": "vm-02"
+  },
+  "scenarios": {
+    "non-ac": {
+      "receipt": {
+        "accepted_at": "2026-11-02T08:16:16.921677+00:00",
+        "contest": "tree-demo-1a8bedff430b",
+        "request_id": "non-ac",
+        "run": "155f65a4-0aa5-5e12-a2bc-faf4c735965a",
+        "submission": 1
+      },
+      "final_view": {
+        "completed_cases": 1,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "WA"
+          }
+        ],
+        "nodes": {
+          "2fb561e9-e802-5035-bc4c-ce8bd350134e": "running",
+          "3237ddb6-e3eb-571c-99ec-68d659ed55a0": "completed",
+          "3407206f-910d-5ef6-80da-955d20c25a21": "waiting",
+          "39639d19-b211-512e-9770-aadfe11ef03c": "failed",
+          "6664c649-650f-5347-9f2d-ac0d5ece4376": "waiting",
+          "77bab8c5-8d8f-56c4-b1d4-391291a716b8": "waiting",
+          "877aa7b4-6cf2-5430-8ee1-a71483abc366": "waiting",
+          "a9445a7f-042c-54e3-b07a-29a57a9ce71e": "waiting",
+          "b60fb3c9-200e-5f2f-9c1f-6272650bfcbf": "waiting",
+          "c6755378-531c-59b7-99e9-abe0d93131a4": "waiting",
+          "c80f628c-10f1-5a07-9c80-f1d6361c560d": "waiting",
+          "cde0327a-5b4e-5520-b76b-b3a747333337": "waiting",
+          "d3f0d6a5-6d14-571c-a26d-861e5c524897": "waiting",
+          "fd9cd18b-0c72-5679-ba6c-0f7f07bb5b6e": "completed"
+        },
+        "pipeline_state": "cancelled",
+        "revision": 4,
+        "status": "completed",
+        "total_cases": 6,
+        "verdict": "WA"
+      },
+      "issued_node_names": [
+        "check-0",
+        "compile",
+        "run-0",
+        "run-4"
+      ],
+      "saved_result_node_names": [
+        "check-0",
+        "compile",
+        "run-0",
+        "run-4"
+      ],
+      "engine_states_by_name": {
+        "run-4": "running",
+        "run-0": "completed",
+        "run-3": "waiting",
+        "check-0": "failed",
+        "check-2": "waiting",
+        "check-3": "waiting",
+        "check-5": "waiting",
+        "run-5": "waiting",
+        "run-2": "waiting",
+        "run-1": "waiting",
+        "summarize": "waiting",
+        "check-1": "waiting",
+        "check-4": "waiting",
+        "compile": "completed"
+      },
+      "attempts": [
+        {
+          "worker": "5e3727ea24434bd28e3dd34301a9ece0",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607382.6834693,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607373.2751431,
+            "admitted_at": 1793607382.683199
+          },
+          "node_name": "run-4"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607382.6901724,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607382.5472057,
+            "admitted_at": 1793607382.6899514
+          },
+          "node_name": "run-0"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607385.9997168,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607385.8886795,
+            "admitted_at": 1793607385.9995155
+          },
+          "node_name": "check-0"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "compile",
+          "at": 1793607381.7753224,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607378.564824,
+            "admitted_at": 1793607381.775088
+          },
+          "node_name": "compile"
+        }
+      ],
+      "cleanup_distinct_nodes": 4,
+      "external_execution_results": {
+        "run-4": {
+          "worker": "5e3727ea24434bd28e3dd34301a9ece0",
+          "execution": {
+            "started_ns": 1793607383169344513,
+            "finished_ns": 1793607397202979695
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "run-0": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607383120080949,
+            "finished_ns": 1793607385663463581
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "check-0": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607386448278244,
+            "finished_ns": 1793607386625314276
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "WA"
+          }
+        },
+        "compile": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607382222656144,
+            "finished_ns": 1793607382341610040
+          },
+          "exit_code": 0,
+          "node_output": {}
+        }
+      }
+    },
+    "all-ac": {
+      "receipt": {
+        "accepted_at": "2026-11-02T08:16:17.089849+00:00",
+        "contest": "tree-demo-1a8bedff430b",
+        "request_id": "all-ac",
+        "run": "f2fb8622-0f9d-5fba-ad4d-9b32cff2823b",
+        "submission": 2
+      },
+      "final_view": {
+        "completed_cases": 6,
+        "history": [
+          {
+            "case": 0,
+            "completed_cases": 1,
+            "verdict": "AC"
+          },
+          {
+            "case": 1,
+            "completed_cases": 2,
+            "verdict": "AC"
+          },
+          {
+            "case": 2,
+            "completed_cases": 3,
+            "verdict": "AC"
+          },
+          {
+            "case": 3,
+            "completed_cases": 4,
+            "verdict": "AC"
+          },
+          {
+            "case": 4,
+            "completed_cases": 5,
+            "verdict": "AC"
+          },
+          {
+            "case": 5,
+            "completed_cases": 6,
+            "verdict": "AC"
+          }
+        ],
+        "nodes": {
+          "0544694b-e235-5543-bf88-a817b7d362d7": "completed",
+          "09a6867b-667b-502a-8f3c-95d4c3cc77dc": "completed",
+          "112f0daf-a138-51d1-b9ac-94b88096f861": "completed",
+          "46256207-2d3c-54a7-9ee6-bbb108165356": "completed",
+          "48cf1c4b-80d3-5217-9211-e21f67ce0477": "completed",
+          "596b7eca-dff0-5fdf-a3d0-f9fd036d2d1b": "completed",
+          "691fa863-ac48-56e0-9ded-e43a20ae09c8": "completed",
+          "758db11d-c2b3-5515-8f57-cbd3370d3631": "completed",
+          "93068325-1936-57c8-88af-f35791bdb98e": "completed",
+          "9d88bf46-05ac-5084-b82e-4de154ee8454": "completed",
+          "b08f08a3-2842-5e30-9945-0dbe220a793e": "completed",
+          "be2bab3c-ea82-5b1b-b97d-bae40e194a6b": "completed",
+          "d2eaed99-3df1-570b-b9b4-14729eaf43bf": "completed",
+          "df204639-47d2-5b82-b20f-3959fa0b0946": "completed"
+        },
+        "pipeline_state": "completed",
+        "revision": 15,
+        "status": "completed",
+        "summary": {
+          "case_verdicts": [
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC",
+            "AC"
+          ],
+          "completed_cases": 6,
+          "total_cases": 6,
+          "verdict": "AC"
+        },
+        "total_cases": 6,
+        "verdict": "AC"
+      },
+      "issued_node_names": [
+        "check-0",
+        "check-1",
+        "check-2",
+        "check-3",
+        "check-4",
+        "check-5",
+        "compile",
+        "run-0",
+        "run-1",
+        "run-2",
+        "run-3",
+        "run-4",
+        "run-5",
+        "summarize"
+      ],
+      "saved_result_node_names": [
+        "check-0",
+        "check-1",
+        "check-2",
+        "check-3",
+        "check-4",
+        "check-5",
+        "compile",
+        "run-0",
+        "run-1",
+        "run-2",
+        "run-3",
+        "run-4",
+        "run-5",
+        "summarize"
+      ],
+      "engine_states_by_name": {
+        "run-2": "completed",
+        "check-3": "completed",
+        "check-2": "completed",
+        "run-0": "completed",
+        "run-3": "completed",
+        "summarize": "completed",
+        "run-4": "completed",
+        "compile": "completed",
+        "run-1": "completed",
+        "check-4": "completed",
+        "check-5": "completed",
+        "run-5": "completed",
+        "check-0": "completed",
+        "check-1": "completed"
+      },
+      "attempts": [
+        {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607387.7897022,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607384.1032088,
+            "admitted_at": 1793607387.789415
+          },
+          "node_name": "run-2"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607393.8772995,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607393.7945983,
+            "admitted_at": 1793607393.8770936
+          },
+          "node_name": "check-3"
+        },
+        {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607390.9445968,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607390.6847348,
+            "admitted_at": 1793607390.9442997
+          },
+          "node_name": "check-2"
+        },
+        {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607383.4672425,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607383.2977324,
+            "admitted_at": 1793607383.4669988
+          },
+          "node_name": "run-0"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607391.582625,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607391.4731753,
+            "admitted_at": 1793607391.5824153
+          },
+          "node_name": "run-3"
+        },
+        {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "receive_count": 1,
+          "phase": "summarize",
+          "at": 1793607403.5300288,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607401.8682103,
+            "admitted_at": 1793607403.529289
+          },
+          "node_name": "summarize"
+        },
+        {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607383.4847686,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607383.347787,
+            "admitted_at": 1793607383.4845262
+          },
+          "node_name": "run-4"
+        },
+        {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "receive_count": 1,
+          "phase": "compile",
+          "at": 1793607382.5083911,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607372.597779,
+            "admitted_at": 1793607382.508116
+          },
+          "node_name": "compile"
+        },
+        {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607387.7983623,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607387.676389,
+            "admitted_at": 1793607387.798153
+          },
+          "node_name": "run-1"
+        },
+        {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607398.280285,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607390.5146577,
+            "admitted_at": 1793607398.280032
+          },
+          "node_name": "check-4"
+        },
+        {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607402.5955584,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607399.166267,
+            "admitted_at": 1793607402.595304
+          },
+          "node_name": "check-5"
+        },
+        {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "receive_count": 1,
+          "phase": "run",
+          "at": 1793607399.256111,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607398.1989245,
+            "admitted_at": 1793607399.2558696
+          },
+          "node_name": "run-5"
+        },
+        {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607386.8550954,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607386.7459185,
+            "admitted_at": 1793607386.8549204
+          },
+          "node_name": "check-0"
+        },
+        {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "receive_count": 1,
+          "phase": "check",
+          "at": 1793607390.6371236,
+          "admission": {
+            "mode": "poll_reserved",
+            "poll_started_at": 1793607386.8146172,
+            "admitted_at": 1793607390.6368916
+          },
+          "node_name": "check-1"
+        }
+      ],
+      "cleanup_distinct_nodes": 14,
+      "external_execution_results": {
+        "run-2": {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "execution": {
+            "started_ns": 1793607388375969454,
+            "finished_ns": 1793607390423628972
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "check-3": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607394338091415,
+            "finished_ns": 1793607394517741655
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        },
+        "check-2": {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "execution": {
+            "started_ns": 1793607391473173801,
+            "finished_ns": 1793607391647374140
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        },
+        "run-0": {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "execution": {
+            "started_ns": 1793607383955625723,
+            "finished_ns": 1793607386517116349
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "run-3": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607392037715851,
+            "finished_ns": 1793607393570108704
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "summarize": {
+          "worker": "ae9546050b224f61bae87b59eeb86cd1",
+          "execution": {
+            "started_ns": 1793607404159970242,
+            "finished_ns": 1793607404347183155
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC",
+            "completed_cases": 6,
+            "total_cases": 6,
+            "case_verdicts": [
+              "AC",
+              "AC",
+              "AC",
+              "AC",
+              "AC",
+              "AC"
+            ]
+          }
+        },
+        "run-4": {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "execution": {
+            "started_ns": 1793607383932621399,
+            "finished_ns": 1793607397965786532
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "compile": {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "execution": {
+            "started_ns": 1793607382969195669,
+            "finished_ns": 1793607383139471384
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "run-1": {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "execution": {
+            "started_ns": 1793607388253224633,
+            "finished_ns": 1793607390293912374
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "check-4": {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "execution": {
+            "started_ns": 1793607398788203124,
+            "finished_ns": 1793607398956777855
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        },
+        "check-5": {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "execution": {
+            "started_ns": 1793607403051306798,
+            "finished_ns": 1793607403230513923
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        },
+        "run-5": {
+          "worker": "91b40706d7284f44ad406caab4b06e7c",
+          "execution": {
+            "started_ns": 1793607399719026279,
+            "finished_ns": 1793607402258073874
+          },
+          "exit_code": 0,
+          "node_output": {}
+        },
+        "check-0": {
+          "worker": "acfe8b1563af4644b26a0ca834ab293e",
+          "execution": {
+            "started_ns": 1793607387308529179,
+            "finished_ns": 1793607387480786067
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        },
+        "check-1": {
+          "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+          "execution": {
+            "started_ns": 1793607391109058144,
+            "finished_ns": 1793607391276742961
+          },
+          "exit_code": 0,
+          "node_output": {
+            "verdict": "AC"
+          }
+        }
+      }
+    }
+  },
+  "saved_execution_intervals_by_VM": {
+    "vm-05": [
+      {
+        "request": "non-ac",
+        "node_name": "run-4",
+        "started_ns": 1793607383169344513,
+        "finished_ns": 1793607397202979695
+      }
+    ],
+    "vm-03": [
+      {
+        "request": "non-ac",
+        "node_name": "run-0",
+        "started_ns": 1793607383120080949,
+        "finished_ns": 1793607385663463581
+      },
+      {
+        "request": "non-ac",
+        "node_name": "check-0",
+        "started_ns": 1793607386448278244,
+        "finished_ns": 1793607386625314276
+      },
+      {
+        "request": "non-ac",
+        "node_name": "compile",
+        "started_ns": 1793607382222656144,
+        "finished_ns": 1793607382341610040
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-3",
+        "started_ns": 1793607394338091415,
+        "finished_ns": 1793607394517741655
+      },
+      {
+        "request": "all-ac",
+        "node_name": "run-3",
+        "started_ns": 1793607392037715851,
+        "finished_ns": 1793607393570108704
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-1",
+        "started_ns": 1793607391109058144,
+        "finished_ns": 1793607391276742961
+      }
+    ],
+    "vm-02": [
+      {
+        "request": "all-ac",
+        "node_name": "run-2",
+        "started_ns": 1793607388375969454,
+        "finished_ns": 1793607390423628972
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-2",
+        "started_ns": 1793607391473173801,
+        "finished_ns": 1793607391647374140
+      },
+      {
+        "request": "all-ac",
+        "node_name": "summarize",
+        "started_ns": 1793607404159970242,
+        "finished_ns": 1793607404347183155
+      }
+    ],
+    "vm-01": [
+      {
+        "request": "all-ac",
+        "node_name": "run-0",
+        "started_ns": 1793607383955625723,
+        "finished_ns": 1793607386517116349
+      },
+      {
+        "request": "all-ac",
+        "node_name": "run-1",
+        "started_ns": 1793607388253224633,
+        "finished_ns": 1793607390293912374
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-4",
+        "started_ns": 1793607398788203124,
+        "finished_ns": 1793607398956777855
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-5",
+        "started_ns": 1793607403051306798,
+        "finished_ns": 1793607403230513923
+      },
+      {
+        "request": "all-ac",
+        "node_name": "check-0",
+        "started_ns": 1793607387308529179,
+        "finished_ns": 1793607387480786067
+      }
+    ],
+    "vm-04": [
+      {
+        "request": "all-ac",
+        "node_name": "run-4",
+        "started_ns": 1793607383932621399,
+        "finished_ns": 1793607397965786532
+      },
+      {
+        "request": "all-ac",
+        "node_name": "compile",
+        "started_ns": 1793607382969195669,
+        "finished_ns": 1793607383139471384
+      },
+      {
+        "request": "all-ac",
+        "node_name": "run-5",
+        "started_ns": 1793607399719026279,
+        "finished_ns": 1793607402258073874
+      }
+    ]
+  },
+  "saved_execution_peak": 4,
+  "checks": {
+    "non_AC_mapped_to_real_Engine_job_failed": true,
+    "no_future_nodes_dispatched_after_pipeline_failure": true,
+    "already_dispatched_external_run_finished_after_failed_check": true,
+    "all_AC_tree_reached_summary": true,
+    "distinct_cleanup_joins_verified": true,
+    "saved_intervals_per_VM_do_not_overlap": true,
+    "source_hashes_unchanged_since_audit": true
+  },
+  "measurement_limits": [
+    "Two deliberately timed C17 fixture submissions with five initially warm VMs; not a latency benchmark or predictive-scaling trial.",
+    "The cancelled Engine ignores late completion; the live adapter observes its durable external result separately.",
+    "Saved canonical intervals exclude killed or losing duplicate attempts. Cross-VM ordering assumes aligned guest clocks.",
+    "Browser states come from live snapshot polling; intermediate revisions may be missed."
+  ],
+  "final_DLQ_counts": {
+    "NodeDLQ": {
+      "ApproximateNumberOfMessages": 0,
+      "ApproximateNumberOfMessagesNotVisible": 0,
+      "ApproximateNumberOfMessagesDelayed": 0
+    },
+    "ControlDLQ": {
+      "ApproximateNumberOfMessages": 0,
+      "ApproximateNumberOfMessagesNotVisible": 0,
+      "ApproximateNumberOfMessagesDelayed": 0
+    }
+  },
+  "pool_desired_and_members_zero": true,
+  "audit_completed_at": "2026-11-02T08:22:29.053049+00:00",
+  "initial_ready_observation": {
+    "at": 1793607315.6432338,
+    "desired": 5,
+    "physical_members": 5,
+    "hosts": [
+      {
+        "worker": "4ba46f2dc2804ee4b5ca09c8ea22bc35",
+        "state": "ready",
+        "active": 0,
+        "protected": true,
+        "first_observed_at": 1793607290.9229522
+      },
+      {
+        "worker": "5e3727ea24434bd28e3dd34301a9ece0",
+        "state": "ready",
+        "active": 0,
+        "protected": true,
+        "first_observed_at": 1793607296.7538314
+      },
+      {
+        "worker": "91b40706d7284f44ad406caab4b06e7c",
+        "state": "ready",
+        "active": 0,
+        "protected": true,
+        "first_observed_at": 1793607296.7538333
+      },
+      {
+        "worker": "acfe8b1563af4644b26a0ca834ab293e",
+        "state": "ready",
+        "active": 0,
+        "protected": true,
+        "first_observed_at": 1793607296.7538347
+      },
+      {
+        "worker": "ae9546050b224f61bae87b59eeb86cd1",
+        "state": "ready",
+        "active": 0,
+        "protected": true,
+        "first_observed_at": 1793607314.2656856
+      }
+    ],
+    "queue": {
+      "NodeQueue": {
+        "visible": 0,
+        "inflight": 0
+      },
+      "ControlQueue": {
+        "visible": 0,
+        "inflight": 0
+      }
+    }
+  },
+  "recording_source_sha256": {
+    "infra/experiments/tree_demo/record.py": "65cab90f5a594e945a55a34670b8d909f22cbf89cb72fd12f4f6dad05ffda762",
+    "infra/experiments/tree_demo/index.html": "0c0998db4e427d9b76e573a8e7e59bbf20f99a1b0560d66baca06fb66130ce4b",
+    "infra/experiments/tree_demo/server.py": "1d7e271fabae7b97f7a429ed95ead1693c244614e3ac534a0b7205fe7b9f7095",
+    "infra/experiments/tree_demo/audit.py": "d383d19f3bee0c71524feccc12eee3c65622fe2ca96196b320f19af40cd0a515",
+    "infra/experiments/workloads.py": "633ffe4272894f9625dca4b71d554a8bf3274dec12643d58bc719ac872b37dcc"
+  },
+  "aborted_setup_teardown": {
+    "submission_count": 0,
+    "direct_destroy_blocked_by_protected_VMs": true,
+    "VPC_gateway_attachment_timed_out": true,
+    "operator_cleared_protection_only_after_API_removed_and_empty_queues_no_submissions_verified": true,
+    "CloudFormation_destroy_retry_succeeded": true,
+    "included_as_runtime_scaling_success": false
+  },
+  "teardown": {
+    "dedicated_stack_deleted": true,
+    "cloudformation_absence_verified_at": "2026-11-02T08:31:01.854458+00:00",
+    "recording_stack_EC2_instances_observed": 5,
+    "all_recording_stack_EC2_instances_terminated": true,
+    "shared_bootstrap_deleted": false,
+    "recorded_run_required_operator_protection_override": false
+  }
+}

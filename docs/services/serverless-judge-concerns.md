@@ -18,7 +18,7 @@
 | C12 retry | 結果保存→通知→元要求ACK。再配信は保存済み結果を使える。exactly-once実行ではなく、上限付きのat-least-once試行。 |
 | C13 artifact/cleanup | 入力version/hashを固定。cleanupはcontainer・作業領域・distinct nodeを照合。回収でcleanup通知を失った場合はVM破棄の確認と分ける。 |
 | C14 権限 | guestにAWS資格情報を渡さない。容量計算roleにSetDesiredCapacityを与えない。hostの保護操作は自stackに限定する。 |
-| C15 木・fail-fast | 親の非ACで子孫だけを打切り、独立した根を継続。SKIPを実行完了件数に偽装しない。実験adapterと製品の登録契約は別。 |
+| C15 木・fail-fast | 現行は非ACをcheck jobの失敗へ変換し、既存Engine.job_failedに渡す。Cの動画で、発行済みrunの終了と、全ての新規dispatchの停止を区別して確認。Aの独自な子孫SKIPは削除し、過去の測定条件としてのみ残す。 |
 | C16 表示 | 現状の表示はsnapshot polling。切断後の最新取得とイベントの再送保証は別。 |
 | C17 再判定 | 回収再試行は同じrun、基盤障害で終端化した後の明示再判定は別run。古い結果を混ぜない。 |
 | C18 DLQ | NodeDLQを隔離保存後、基盤障害を終端化する。無限retryしない。ControlDLQとreceipt stream枯渇の回復は未完成。 |
@@ -38,3 +38,5 @@
 | C32 metric feedback | 過去の高いMaximumと退役/cooldown中の現在容量再発行が余剰増減を長引かせた。raw需要・safe target・alarmの遅延を別々に観測し、queue近似値のせいだと断定しない。 |
 | C33 poll予約 | active=0でもlong receiveは要求を受け得る。poll→実行の予約引継ぎとdrainを同じlockでfenceし、受信待ちを残して保護を解除しない。実環境でreserved_before_drainからの実行を確認。 |
 | C34 時刻・実験版 | 受付、実行終了、durable checkpoint公開、runnerの終端観測を区別する。修正前後のAWS試験とsource/policyのfingerprintを分け、後の修正で古い未達判定を塗り替えない。 |
+| C35 撤去順序 | 保護付きVMを残して直接destroyするとASG縮小が進まず、VPC接続の削除もタイムアウトした。controllerが生きているうちにdrain・希望0・所属0を確認してからdestroyする。未実行の先行stackでは空queue等を確認した撤去限定の保護解除とCFN再試行が必要だった。 |
+| C36 取消後の観測 | Engineはcancelled後の遅い完了通知を無視する。job状態と、発行済み外部実行の終了・cleanupを分けて観測する。Cの観測adapterは結果を読むだけでscheduler状態を完了に書き換えない。製品の状態取得契約への反映は別途必要。 |

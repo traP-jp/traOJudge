@@ -2,6 +2,8 @@
 
 この文書は**設計を議論するための参照先**。[質問への回答](serverless-judge.md)と[実験で確認した範囲](scaling-experiment.md)は別にまとめている。ここに安全条件を定義したことと、全故障下で実証したことは区別する。
 
+caseの非ACは判定jobの失敗として既存Engineへ通知する。同じpipelineの新規dispatchを止めるのはEngineであり、poolやworkerに別の枝刈り処理を持たせない。[木構造デモ](tree-demo.md)で発行済み実行と新規dispatchの区別を確認できる。
+
 ## 先に決めていること
 
 | 判断 | 現在の選択 | 意味・代償 |
