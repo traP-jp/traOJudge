@@ -1,0 +1,67 @@
+{
+  "scenario": "latest-snapshot-polling-coalesces-intermediate-progress",
+  "observations": [
+    {
+      "observed_at": "2026-11-02T00:59:44.263256+00:00",
+      "elapsed_seconds": 0.831,
+      "display": "WJ",
+      "revision": 1,
+      "completed_cases": 0
+    },
+    {
+      "observed_at": "2026-11-02T00:59:45.956730+00:00",
+      "elapsed_seconds": 2.525,
+      "display": "WJ",
+      "revision": 2,
+      "completed_cases": 0
+    },
+    {
+      "observed_at": "2026-11-02T00:59:49.354568+00:00",
+      "elapsed_seconds": 5.922,
+      "display": "WJ",
+      "revision": 3,
+      "completed_cases": 0
+    },
+    {
+      "observed_at": "2026-11-02T00:59:50.197939+00:00",
+      "elapsed_seconds": 6.766,
+      "display": "WJ",
+      "revision": 4,
+      "completed_cases": 0
+    },
+    {
+      "observed_at": "2026-11-02T00:59:51.142125+00:00",
+      "elapsed_seconds": 7.71,
+      "display": "1/3",
+      "revision": 6,
+      "completed_cases": 1
+    },
+    {
+      "observed_at": "2026-11-02T00:59:51.995493+00:00",
+      "elapsed_seconds": 8.563,
+      "display": "3/3",
+      "revision": 8,
+      "completed_cases": 3
+    },
+    {
+      "observed_at": "2026-11-02T00:59:52.858567+00:00",
+      "elapsed_seconds": 9.426,
+      "display": "AC",
+      "revision": 9,
+      "completed_cases": 3
+    }
+  ],
+  "final_completed_cases": 3,
+  "final_summary": {
+    "case_verdicts": [
+      "AC",
+      "AC",
+      "AC"
+    ],
+    "completed_cases": 3,
+    "total_cases": 3,
+    "verdict": "AC"
+  },
+  "missing_displayed_case_count": 2,
+  "case_results_lost": false
+}

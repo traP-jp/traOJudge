@@ -1,75 +1,61 @@
-# 提出から WJ → ケース進捗 → AC までの実演
+# 提出・進捗・結果を、どのAPIと通信で受け取るか
 
-[デモ動画（MP4）](demos/judge-flow.mp4) · [最終画面](demos/judge-flow-poster.png) · [実 API 応答・検証記録](demos/judge-flow-evidence.json)
+[実演動画（MP4）](demos/judge-flow.mp4) · [画面](demos/judge-flow-poster.png) · [検証記録](demos/judge-flow-evidence.json)
 
-東京リージョンの実 AWS スタックに C17 の加算プログラムを2件提出する。採番された **#1、#2** について、ブラウザーで **WJ → 1/3 → 2/3 → 3/3 → AC** を確認する。
-動画はライブ画面の等速・無編集録画。進捗は実 API の保存済み状態から作り、タイマーで増やさない。プログラム自体が各ケースで100ms待機する。
-この画面は `infra/demo/` の検証用ビューで、製品 UI の実装ではない。
-動画は **43.08秒**（1440×1040、H.264）。新規スタックの最初の提出は受付から AC の画面観測まで **14.473秒**、続く提出は **9.661秒**。この2件だけで latency SLO の統計的な保証とはしない。
+**今回動いているのは polling。通常の HTTP request/response で、最新状態の JSON を繰り返し取得する。SSE・WebSocket・NDJSON subscribe は未実装。** この文書は呼出側の契約を説明する。保存先・キュー・実行ホストの選定は[内部構成](serverless-judge.md)に分ける。
 
-## 実行されるフロー
+## 現在の通信とデモ用API
 
-```text
-提出 → 採番 → build
-              → run 1 → check 1  [1/3]
-              → run 2 → check 2  [2/3]
-              → run 3 → check 3  [3/3]
-              → summarize       [AC]
-```
+ブラウザーは表示サービスに `fetch` する。ローカル実演は loopback HTTP、表示サービスから受付・状態取得サービスへは HTTPS/JSON。ブラウザーが実行環境や保存先へ直接接続する必要はない。デモ用の入出力は次のとおりで、製品APIとは別の検証用契約である。
 
-`flow: "sequential"` を指定すると、既存の Rust Engine にこの8ノードの DAG を渡す。表示上の build は `compile` ノード。各 check から次の run に依存を張るため、順次処理は画面上の演出ではない。既存の並行フローは既定値として保持する。
-
-| 段階 | 実現方法・表示の根拠 |
+| リクエスト | 応答・意味 |
 | --- | --- |
-| 提出・採番 | IAM 認証の Lambda API が source/test を S3 に保存。DynamoDB の counter＋receipt transaction 成功で提出番号と run を確定する。HTTP の到着順・実行完了順を採番順とはしない。 |
-| durable 実行 | receipt の DynamoDB Streams → run ごとの SQS FIFO → 制御 Lambda。Rust Engine の閉じた SQLite、進捗、dispatch outbox を同じ S3 checkpoint に条件付き保存してから、実行要求を SQS に送る。 |
-| 隔離・共有 | warm EC2 の agent が各ノードに新しい gVisor sandbox を作る。guest は network none・read-only rootfs。agent だけが version＋SHA-256 を固定した入力を取得し、成果物を保存する。build の binary 1版を3 run が参照し、check の verdict 成果物3個を summarize が読む。 |
-| WJ・途中進捗 | `completed_cases == 0` なら WJ。**check の結果を checkpoint に反映した件数**から 1/3、2/3、3/3 を作る。run の起動要求や node 数で進捗を増やさない。フローカードの「配送済み」は guest の実起動を保証する時刻ではない。 |
-| 結果表示 | summarize は各 verdict 成果物を読み、最終 verdict を出力する独立した実ノード。制御側も耐久保存済みの全 case 結果と集約結果の一致を検証する。最後のノード完了によって Engine が completed となった時点で AC を表示する。 |
+| `POST /submit` | 同一Originのブラウザーから本文なしで呼ぶ。固定したC17ソース・3ケースを提出し、`202 application/json` で `submission`（提出番号）、`run`（今回の実行ID）、`request_id`、`contest`、`accepted_at` を返す。202は受付であり判定完了ではない。 |
+| `GET /status?id={request_id}` | `200 application/json`、`Cache-Control: no-store`。同じ提出・実行の最新状態を返す。下記の `view` と表示用の経過秒を読む。 |
 
-ブラウザーは localhost の Python bridge を通じて実 Lambda API を繰り返し読む。AWS 資格情報・接続先 URL は bridge 側に置き、HTML・録画・公開レポートに渡さない。各応答の revision、完了件数、Engine の node state、観測時刻を JSON に残す。
+状態応答の主要部分の例（表示用の補助項目は省略）:
 
-## 動画を検証する仕組み
-
-`infra/demo/record.py` が実ブラウザーを操作し、2件それぞれで WJ、1/3、2/3、3/3、AC の全表示を観測するまで待つ。件数の単調性と採番 #1/#2 を検査し、JavaScript エラーがあれば失敗する。
-最後に S3 checkpoint と結果を読み、8ノードの完了、全ノードの `runsc`・network none・read-only、binary の版固定と各 run の参照、summarize 入力3個の checksum と AC を確認する。
-JSON の表示観測時刻には API 通信・ポーリングの遅延も含む。全中間状態を必ず表示する保証はポーリング一般にはないため、この録画では実際に全状態を観測したことを別途 assert する。
-
-逐次フローは並列性を使わず、summarize の独立起動も含む。これは先行の「2提出並行・3ケース、warm P95 8.511秒」の測定とは異なるワークロードであり、その数値をこの動画に流用しない。新しい計測値は動画内の経過秒と JSON を参照する。
-
-## 再実演
-
-毎シェルで `/workspace/tooling/env.sh` を source し、`infra/PATTERNS.md` に従う。AWS profile は環境の非機密 manifest から選ぶ。Python に `boto3==1.42.20` と `playwright==1.62.0`、実行環境に Chromium と FFmpeg が必要。
-
-リポジトリ直下から準備・デプロイする。同名 stack が既にあれば先に destroy する。管理環境で Docker 設定が read-only の場合は、proxy・CA・既存認証を保持した書込み可能な一時コピーを `CDK_DOCKER` 経由で使い、終了時に削除する。
-
-```sh
-source /workspace/tooling/env.sh
-bash infra/scripts/prepare-engine.sh
-python infra/scripts/prepare-gvisor.py
-python infra/scripts/check-sequential.py
-cd infra
-npm ci && npm run build
-npx aws-cdk bootstrap
-npx aws-cdk deploy --all --context proofName=Demo --require-approval never
+```json
+{"submission":1,"run":"example-run-id","request_id":"example-request-id","view":{"status":"judging","completed_cases":2,"total_cases":3,"revision":6}}
 ```
 
-EC2 agent の ready heartbeat を確認してから、リポジトリ直下で次を起動する。
+`status` は `queued / judging / completed / infrastructure_error`。最終結果は `completed` のときの `view.verdict`。同じrunのrevisionで新旧を区別する。最初の保存より前はrevisionを省略するため表示側で0と扱う。接続エラーは判定結果に変換しない。この検証用APIは loopback 専用であり、固定問題・本人認証なし。未知ID等の例外は現状500にまとめている。POSTの再送は別提出となり、製品のIdempotency-Key、外部向け認証/CORS・エラー契約には未接続。
 
-```sh
-source /workspace/tooling/env.sh
-python infra/demo/server.py --stack codex-serverless-judge-Demo
-```
+通信は **応答を読み終えてから100ms待ち、次のGETを送る**。100ms周期で必ず更新されるという保証ではなく、実際の間隔には通信時間が加わる。1本のHTTP応答を開いたまま変更を配信する方式ではない。全ての中間状態の受信は保証しない。[実際の観測例](demos/polling-coalescing-evidence.json)でも1/3の次に3/3を取得した。ケース結果の欠落とは異なる。切断中も判定は継続し、同じbridgeが動いている間は再GETで最新状態へ追い付ける。bridge再起動後のID復元はこのデモでは未実装。
 
-別シェルで録画する。新しい bridge の起動ごとに大会 ID を作るため、最初の2件の採番は #1/#2 となる。
+## 表示契約と並行実行
 
-```sh
-source /workspace/tooling/env.sh
-python infra/demo/record.py
-cd infra
-npx aws-cdk destroy --all --context proofName=Demo --force
-```
+`i/n` の `i` は **判定が完了したケースの件数**であり、実行中のケース番号・DAGのノード数ではない。ケースの完了順は任意でよい。0件ならWJ、1件なら1/3、2件なら2/3、3件なら3/3。全件の後に最終集約を完了してACとなる。3/3と最終確定は別の状態である。
 
-Playwright の browser cache を環境で指定する場合は、録画にも同じ `PLAYWRIGHT_BROWSERS_PATH` を渡す。初回は `python -m playwright install ffmpeg` で録画用バイナリも準備する。
+実行フローは `build → { run/check 1, run/check 2, run/check 3 } → summarize`。build後は全ケースを実行可能にし、summarizeは全ケースの結果を待つ。検証容量は1ホスト・2slotなので最大2ノード同時。ホスト数1と逐次DAGは同義ではない。前の動画で入れたケース間の逐次依存は解釈の誤りだったため除いた。
 
-成功・失敗にかかわらず専用スタックを撤去する。共有 CDK bootstrap は保持する。構成の全体像と障害復旧の試験は[構成・実証結果](serverless-judge.md)、残る設計判断は[関心事](serverless-judge-concerns.md)を参照。
+今回の動画は並行実行を観測しやすいよう、プログラム内でケースごとに3.4秒／1秒／2.2秒待つ。進捗をタイマーで生成することはしない。検証記録で実際の実行区間の重なりと、全ケース後の集約を確認する。これは通常10秒の性能測定とは分ける。
+
+## 既存の製品API契約案との関係
+
+[既存OpenAPI](../API/front_back.yaml)には、次の契約案が既にある。**このデモをそのハンドラーへ接続した実装はまだない。**
+
+| 操作 | 契約案 |
+| --- | --- |
+| `POST /submissions` | `202`、`SubmissionAccepted`。`submissionId / judgeRunId / problemVersionId / acceptedAt` を返す。ソース転送と提出確定は分ける。 |
+| `GET /submissions/{submissionId}/judge-runs/{judgeRunId}` | `200 application/json`、`JudgeRun`。`state / completedCaseCount / totalCaseCount / revision / result / failure` 等を返す。`Cache-Control: no-store`。 |
+
+詳細は[進捗取得の操作](../API/paths/submissions.yaml)・[JudgeRunスキーマ](../API/schemas/submissions.yaml)を正とする。公開できない総数はnull、結果と基盤障害は別項目。同じrun内のrevisionで新旧を判定し、再判定は別runとして扱う。ケース名・入出力・個別判定や内部ノードIDはこの製品の進捗契約に含めない。取得には既存の本人・同一チーム・運営の認可を適用する。
+
+このOpenAPIは最新状態の取得を定義しているが、通知手段・間隔は未決としている。ページング用cursorは購読再開tokenではなく、snapshotのrevisionもイベント配信の再開tokenではない。
+また、デモの数値 `submission` と製品案の識別子 `submissionId` は同じ契約ではない。大会内orderingを外部へ公開するキー・比較規則は製品案に明示されておらず、識別子や通知tokenから順番を推測させないよう定義する必要がある。
+
+## 別サイトがsubscribeする場合に必要な契約（未実装）
+
+外部順位表のような独立した利用側を接続するなら、最新状態の取得に加えてイベント配信を設計する必要がある。候補は長時間のHTTP GETで `application/x-ndjson` を配信し、1行を1通知として読み取る方式。SSEなら `text/event-stream` とSSEのフレーミング・再開規則となり、wire形式が異なる。現時点ではどちらも採用・実装済みとはしない。
+
+決めるべき契約は、初期状態と配信開始位置の整合、公開イベントのスキーマ、対象範囲の認可、順序の範囲、重複の扱い、再開token・保持期間・期限切れ時の復元、heartbeat・切断・遅い購読者の扱い。提出の採番順とイベントの配送順は別に定義する。実装のDBやqueueを利用側の契約にはしない。
+
+[ICPC Contest APIのevent feed](https://ccs-specs.icpc.io/2026-01-next/contest_api#event-feed)は、長時間HTTP応答のNDJSON通知と、対応する場合の `since_token` による再接続を定義する。全ての内部更新が1件ずつ必ず通知されるという規格ではなく、重複・集約・順序の保証にも規則がある。独自JSONをNDJSONにしただけではCCS互換にならない。CCS互換の外部順位表を対象にするなら、その公開オブジェクトと認可・freezeも含めた対応を別途実証する。
+
+## 実演の検証・再実行
+
+[録画スクリプト](../../infra/demo/record.py)は2件の採番、途中の完了件数、件数の単調性、最終ACを検証する。受信した中間表示はJSONに記録し、未観測の更新を画面上で補って全件配信に見せることはしない。
+更新した動画は39.08秒。2件ともケースの完了順は2→3→1、同じホスト上のcase 2とcase 3のrun区間が約1.027秒重なった。最大同時run数は2。件数表示はこの完了順序に依存しない。
+
+実行環境を[構成文書](serverless-judge.md)に従って用意し、`--context proofName=ParallelDemo` で専用stackを作る。agent ready後、リポジトリ直下から `python infra/demo/server.py --stack codex-serverless-judge-ParallelDemo`、別シェルで `python infra/demo/record.py` を実行する。毎シェルで `/workspace/tooling/env.sh` をsourceし、必要なら同じ `PLAYWRIGHT_BROWSERS_PATH` を録画にも指定する。成功・失敗にかかわらず `infra/` で `npx aws-cdk destroy --all --context proofName=ParallelDemo --force` を実行する。

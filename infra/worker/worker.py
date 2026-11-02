@@ -45,6 +45,7 @@ def execute(task, identity):
     stderr_path = work / "stderr"
     timed_out = False
     with stdin_path.open("rb") as stdin, stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
+        execution_started_ns = time.time_ns()
         proc = subprocess.Popen(command, cwd=work, stdin=stdin, stdout=stdout, stderr=stderr,
             start_new_session=True, env={"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8", "TMPDIR": str(work / "outputs")})
         try:
@@ -58,8 +59,10 @@ def execute(task, identity):
                 os.killpg(proc.pid, signal.SIGKILL)
             except ProcessLookupError:
                 pass
+        execution_finished_ns = time.time_ns()
     outcome = {**identity, "exit_code": proc.returncode, "timed_out": timed_out,
                "wall_seconds": round(time.monotonic() - started, 6), "artifacts": {}, "node_output": {},
+               "execution": {"started_ns": execution_started_ns, "finished_ns": execution_finished_ns},
                "stderr_excerpt": stderr_path.read_bytes()[:4096].decode(errors="replace")}
     if task["phase"] == "run":
         (work / "outputs" / task["outputs"][1]).write_text(json.dumps({"exit_code": proc.returncode, "timed_out": timed_out}))

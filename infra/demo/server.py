@@ -23,7 +23,8 @@ SOURCE = '''#define _POSIX_C_SOURCE 199309L
 int main(void) {
   long a, b;
   if (scanf("%ld%ld", &a, &b) != 2) return 1;
-  struct timespec delay = {0, 100000000};
+  long delay_ms = a == 1 ? 3400 : a == 4 ? 1000 : 2200;
+  struct timespec delay = {delay_ms / 1000, (delay_ms % 1000) * 1000000};
   nanosleep(&delay, NULL);
   printf("%ld\\n", a + b);
   return 0;
@@ -64,8 +65,8 @@ class Demo:
 
     def submit(self):
         request = "submission-" + uuid.uuid4().hex[:12]
-        receipt = self.api("POST", {"contest": self.contest, "request_id": request, "flow": "sequential",
-            "source": SOURCE, "tests": TESTS})
+        receipt = self.api("POST", {"contest": self.contest, "request_id": request,
+            "source": SOURCE, "tests": TESTS, "limits": {"wall_seconds": 5, "cpu_seconds": 2, "memory_mb": 128}})
         with self.lock:
             self.receipts[request] = receipt
             self.traces[request] = []
@@ -84,7 +85,10 @@ class Demo:
             trace = self.traces[request]
             if not trace or trace[-1]["view"] != view:
                 trace.append(snapshot)
-        return {**receipt, **snapshot}
+        # The viewer needs domain progress, not raw engine UUID/state maps.
+        public_view = {k: v for k, v in view.items() if k in [
+            "status", "completed_cases", "total_cases", "revision", "verdict"]}
+        return {**receipt, **snapshot, "view": public_view}
 
     def audit(self, request):
         if request in self.audits:
@@ -101,6 +105,21 @@ class Demo:
         compile_id = str(uuid.uuid5(uuid.UUID(receipt["run"]), "compile"))
         assert state["results"][compile_id]["artifacts"]["binary"] == binary
         assert all(t["inputs"]["binary"] == "binary" for _, t in state["jobs"] if t["phase"] == "run")
+        runs = [{"case": t["case"], "worker": state["results"][node]["worker"],
+                 **state["results"][node]["execution"]} for node, t in state["jobs"] if t["phase"] == "run"]
+        overlaps = []
+        for i, left in enumerate(runs):
+            for right in runs[i + 1:]:
+                overlap = min(left["finished_ns"], right["finished_ns"]) - max(left["started_ns"], right["started_ns"])
+                if left["worker"] == right["worker"] and overlap > 0:
+                    overlaps.append({"cases": [left["case"], right["case"]], "seconds": round(overlap / 1e9, 6)})
+        assert overlaps, "no same-host run execution overlap observed"
+        origin = min(r["started_ns"] for r in runs)
+        timeline = [{"case": r["case"], "start_seconds": round((r["started_ns"] - origin) / 1e9, 6),
+                     "end_seconds": round((r["finished_ns"] - origin) / 1e9, 6)} for r in runs]
+        summary_start = state["results"][str(uuid.uuid5(uuid.UUID(receipt["run"]), "summarize"))]["execution"]["started_ns"]
+        assert all(state["results"][node]["execution"]["finished_ns"] <= summary_start
+                   for node, t in state["jobs"] if t["phase"] == "check")
         summary_id = str(uuid.uuid5(uuid.UUID(receipt["run"]), "summarize"))
         task = dict(state["jobs"])[summary_id]
         for artifact in task["inputs"].values():
@@ -109,10 +128,13 @@ class Demo:
             assert hashlib.sha256(data).hexdigest() == ref["sha256"]
             assert json.loads(data)["verdict"] == "AC"
         result = {"completed_nodes": len(state["results"]), "binary_sha256": binary["sha256"],
+            "run_execution_timeline": timeline, "same_host_overlaps": overlaps,
+            "case_completion_order": [v["case"] for v in state["view"]["history"]],
             "binary_version": binary["version"], "summary": state["view"]["summary"],
             "summary_sha256": state["artifacts"]["summary"]["sha256"],
             "checks": {"all_8_nodes_completed": True, "all_nodes_offline_gvisor": True,
-                "same_versioned_binary_binding_for_all_runs": True, "summary_reads_verified_case_artifacts": True}}
+                "same_versioned_binary_binding_for_all_runs": True, "summary_reads_verified_case_artifacts": True,
+                "same_host_run_execution_overlaps": True, "summarize_starts_after_all_checks": True}}
         self.audits[request] = result
         return result
 

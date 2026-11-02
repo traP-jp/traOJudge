@@ -65,7 +65,7 @@ def queue_control(message, identity):
 
 
 def build_graph(receipt):
-    """Native graph; the sequential fixture also has an explicit summarize node."""
+    """Compile once, fan out independent run/check branches, then join to summarize."""
     namespace = uuid.UUID(receipt["run"])
     nodes = []
     edges = []
@@ -79,8 +79,6 @@ def build_graph(receipt):
     compile_node = node("compile", "compile", {"source.c": "source"}, ["binary"],
                         command=["gcc", "-O2", "-std=c17", "inputs/source.c", "-o", "outputs/binary"],
                         wall_seconds=15, cpu_seconds=10, memory_mb=768)
-    sequential = receipt.get("flow") == "sequential"
-    previous = compile_node
     checks = []
     for i, case in enumerate(receipt["tests"]):
         run = node(f"run-{i}", "run", {"binary": "binary", "stdin": f"test-{i}"},
@@ -88,14 +86,12 @@ def build_graph(receipt):
                    stdin="stdin", wall_seconds=receipt["limits"]["wall_seconds"],
                    cpu_seconds=receipt["limits"]["cpu_seconds"], memory_mb=receipt["limits"]["memory_mb"])
         check = node(f"check-{i}", "check", {"actual": f"actual-{i}", "meta": f"meta-{i}", "expected": f"expected-{i}"},
-                     [f"verdict-{i}"] if sequential else [], case=i, command=["python3", "/opt/check.py"],
+                     [f"verdict-{i}"], case=i, command=["python3", "/opt/check.py"],
                      wall_seconds=5, cpu_seconds=3, memory_mb=128)
-        edges.extend([[previous if sequential else compile_node, run], [run, check]])
-        previous = check
+        edges.extend([[compile_node, run], [run, check]])
         checks.append(check)
-    if sequential:
-        summarize = node("summarize", "summarize", {f"case-{i}.json": f"verdict-{i}" for i in range(len(checks))},
-                         ["summary"], command=["python3", "/opt/summarize.py"],
-                         wall_seconds=5, cpu_seconds=3, memory_mb=128)
-        edges.extend([[check, summarize] for check in checks])
+    summarize = node("summarize", "summarize", {f"case-{i}.json": f"verdict-{i}" for i in range(len(checks))},
+                     ["summary"], command=["python3", "/opt/summarize.py"],
+                     wall_seconds=5, cpu_seconds=3, memory_mb=128)
+    edges.extend([[check, summarize] for check in checks])
     return nodes, edges

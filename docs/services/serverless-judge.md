@@ -1,11 +1,11 @@
 # 通常10秒を目標にした AWS native ジャッジ基盤
 
 `codex-serverless-judge` では **warm な EC2 pool＋ノードごとの新しい offline gVisor sandbox** を選んだ。
-短い C17 の提出・3ケース・2提出並行の10サンプルで、受付から結果取得まで中央値 **8.084秒**、P95・最大 **8.511秒** を実測した。
+初期の短い C17・3ケース・2提出並行・7ノードの10サンプルで、受付から結果取得まで中央値 **8.084秒**、P95・最大 **8.511秒** を実測した。現在は独立した summarize を加えた8ノードの並行DAGであり、この初期測定値を新しいフローの保証には流用しない。
 休止時の EC2 0台、次の受付による再起動も確認した。cold start と障害復旧は10秒の測定から分ける。
 
 判断の根拠・未決事項は[関心事の記録](serverless-judge-concerns.md)、構成図は[HTML](diagrams/traojudge-architecture.html)／[PNG](diagrams/traojudge-architecture.png)／[dark PNG](diagrams/traojudge-architecture-dark.png)。
-[逐次フローのライブ実演](judge-flow-demo.md)に WJ → ケース進捗 → AC の動画と実現方法をまとめた。
+[並行フローのライブ実演・通信契約](judge-flow-demo.md)に動画、現在のJSON polling、既存OpenAPIとの関係、未実装の購読契約をまとめた。
 
 ## 選定
 

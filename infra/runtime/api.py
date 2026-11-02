@@ -35,9 +35,6 @@ def accept(body):
     else:
         if body.get("language", "c") != "c":
             raise ValueError("this infrastructure fixture supports native C17")
-        flow = body.get("flow", "parallel")
-        if flow not in ["parallel", "sequential"]:
-            raise ValueError("flow must be parallel or sequential")
         source = body["source"]
         tests = body["tests"]
         if not isinstance(source, str) or len(source.encode()) > 65536 or not 1 <= len(tests) <= 32:
@@ -61,8 +58,7 @@ def accept(body):
             artifacts[name] = {"key": object_key, "version": obj["VersionId"], "sha256": digest(value)}
         receipt = {"contest": contest, "request_id": request_id, "request_hash": body_hash,
                    "run": run, "tests": [{"id": i} for i in range(len(tests))], "limits": limits,
-                   "artifacts": artifacts, "flow": flow,
-                   "crash_after_checkpoint": bool(body.get("crash_after_checkpoint", False)),
+                   "artifacts": artifacts, "crash_after_checkpoint": bool(body.get("crash_after_checkpoint", False)),
                    "inject_host_loss": bool(body.get("inject_host_loss", False))}
 
     for _ in range(20):

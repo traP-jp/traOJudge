@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record an uncut live browser demo and assert every displayed progress state."""
+"""Record live polling; validate latest-state progress without requiring every update."""
 import argparse
 import asyncio
 import json
@@ -21,8 +21,8 @@ async def main():
     console_errors = []
     async with async_playwright() as p:
         browser = await p.chromium.launch(executable_path="/usr/bin/chromium", args=["--no-sandbox"])
-        context = await browser.new_context(viewport={"width": 1440, "height": 1040},
-            record_video_dir=str(args.raw), record_video_size={"width": 1440, "height": 1040},
+        context = await browser.new_context(viewport={"width": 1440, "height": 1120},
+            record_video_dir=str(args.raw), record_video_size={"width": 1440, "height": 1120},
             timezone_id="Asia/Tokyo", locale="ja-JP")
         page = await context.new_page()
         page.on("pageerror", lambda error: console_errors.append(str(error)))
@@ -31,12 +31,9 @@ async def main():
         await page.wait_for_timeout(2200)
         for trial in range(2):
             await page.locator("#submit").click()
-            for progress in ["WJ", "1/3", "2/3", "3/3", "AC"]:
-                await page.wait_for_function("p => window.demo.observed.includes(p)", arg=progress, timeout=90000)
-                if trial == 0 and progress in ["WJ", "1/3", "AC"]:
-                    await page.screenshot(path=str(args.raw / (progress.replace("/", "-") + ".png")))
-            await page.wait_for_function("n => window.demo.completed.length === n", arg=trial + 1, timeout=30000)
-            print(f"Submission {trial + 1}: WJ -> 1/3 -> 2/3 -> 3/3 -> AC observed", flush=True)
+            await page.wait_for_function("n => window.demo.completed.length === n", arg=trial + 1, timeout=90000)
+            observed = await page.evaluate("window.demo.observed")
+            print(f"Submission {trial + 1}: {' -> '.join(observed)} observed (polling snapshots)", flush=True)
             await page.wait_for_timeout(2400)
         completed = await page.evaluate("window.demo.completed")
         assert not console_errors, "browser JavaScript error"
@@ -49,16 +46,26 @@ async def main():
     assert [r["submission"] for r in evidence["receipts"]] == [1, 2]
     checks = {"two_ordered_submissions": True, "browser_javascript_errors_absent": True}
     for i, row in enumerate(completed, 1):
-        assert row["observed"] == ["WJ", "1/3", "2/3", "3/3", "AC"], row["observed"]
+        assert row["observed"][0] == "WJ" and row["observed"][-1] == "AC", row["observed"]
+        assert any(s in row["observed"] for s in ["1/3", "2/3", "3/3"]), "no intermediate progress observed"
         audit = evidence["audits"][row["request_id"]]
         assert all(audit["checks"].values())
+        events = []
+        for run in audit["run_execution_timeline"]:
+            events.extend([(run["start_seconds"], 1), (run["end_seconds"], -1)])
+        active = peak = 0
+        for _, delta in sorted(events):
+            active += delta
+            peak = max(peak, active)
+        assert peak == 2, "expected two overlapping runs within the two-slot capacity"
+        audit["peak_simultaneous_runs"] = peak
         trace = evidence["traces"][row["request_id"]]
         assert [v["view"]["completed_cases"] for v in trace] == sorted(v["view"]["completed_cases"] for v in trace)
-        checks[f"submission_{i}_all_display_states_observed"] = True
+        checks[f"submission_{i}_latest_progress_monotone_and_terminal_AC"] = True
         checks[f"submission_{i}_8_isolated_nodes_and_artifact_summary_verified"] = True
-    report = {"scenario": "live-browser-sequential-compile-run-check-summarize", "region": "ap-northeast-1",
+    report = {"scenario": "live-browser-parallel-compile-run-check-summarize", "region": "ap-northeast-1",
         "recording": {"speed": "1x", "cuts": False, "source": "Playwright live Chromium capture; actual AWS API responses",
-                      "native_case_delay_ms": 100}, "checks": checks, "browser_completed": completed, **evidence}
+                      "native_case_delays_ms": [3400, 1000, 2200]}, "checks": checks, "browser_completed": completed, **evidence}
     (args.output / "judge-flow-evidence.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(video_path), "-c:v", "libx264",
         "-preset", "medium", "-crf", "22", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an",

@@ -105,6 +105,9 @@ def handle(record):
             config = json.loads(subprocess.check_output(["docker", "inspect", "--format={{json .HostConfig}}", name]))
             assert config["Runtime"] == "runsc" and config["NetworkMode"] == "none" and config["ReadonlyRootfs"]
             outcome["isolation"] = {"runtime": config["Runtime"], "network": config["NetworkMode"], "read_only_rootfs": True}
+            # Logical agent ID proves the intervals belong to the same host boot;
+            # it is not an EC2 instance ID or any AWS account identifier.
+            outcome["worker"] = worker
             for output in task["outputs"]:
                 path = directory / "node/outputs" / output
                 if not path.exists() and task["phase"] == "compile" and outcome["exit_code"]:
