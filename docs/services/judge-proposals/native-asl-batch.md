@@ -1,121 +1,41 @@
-# 独立提案B：作問者ASL＋Step Functions Standard＋AWS Batch
+# 作問者のASLをStep FunctionsとAWS Batchで実行する構成
 
-2026-11-03 JST。GPT-6 Astra / Maxによる独立した構成提案。
-既存リポジトリ、過去の会話、他の提案を参照せず、公開一次資料だけで策定。
-本レポートはその提案を整理したもの。コード編集・deploy・実測は行っていない。
+作問者が判定フローをAmazon States Language（ASL）で登録し、Step Functions Standardが分岐と処理の依存関係を管理する。AWS Batchがジョブの保持・配置・再試行を担い、EC2上のmicroVMがプログラムを実行する。問題ごとのリポジトリやインフラ定義の変更は不要になる。
 
-## 受領した条件
+![フロー登録から判定確定までの構成](../diagrams/native-asl-batch.png)
 
-AWS内で完結するproduction構成。提出順が守られるが、実行順は自由。
-durable execution、isolated execution、real-time進捗表示、EC2最大5台を満たす。
-作問者がフローをデータとして登録でき、問題ごとのリポジトリ・IaC変更は不要。
-Step Functionsのフロー自体のcustomも候補に含める。
-consumer group相当、最終判定1回またはDLQ、再起動・master死亡・worker死亡を説明する。
-既成AWSサービスの責務を使い、独自機構を増やしすぎない。
+[HTML版](../diagrams/native-asl-batch.html)・[暗色版](../diagrams/native-asl-batch-dark.png)
 
-## 提案
+## フローの登録と版固定
 
-**Step Functions Standard＋AWS Batch＋EC2＋DynamoDB＋S3＋AppSync Events。**
+作問者はASLと、テスト・採点プログラム・実行スクリプトをまとめた問題一式を登録する。登録APIは[AWSの構文検証API](https://docs.aws.amazon.com/step-functions/latest/apireference/API_ValidateStateMachineDefinition.html)に加え、呼び出し先、時間、並列数、入出力、権限と資源上限を検証する。問題別のStandardステートマシンを作成・更新して[変更不能なバージョン](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-version.html)を公開し、問題の版にバージョンARNと問題一式のハッシュを保存する。提出はその版に固定する。
 
-| 責務 | 担当 |
-| --- | --- |
-| 受理順・冪等キー・起動待ち | DynamoDBの受付トランザクション |
-| 入力・問題bundle・attempt別成果物 | S3 |
-| 分岐・待機・依存する処理の起動 | Step Functions Standard |
-| job保持・配置・worker障害時の再試行 | AWS Batch queue / scheduler / RetryStrategy |
-| 敵対的プログラムの実行 | EC2上のtrusted runner＋Firecracker等のmicroVM |
-| 最終判定1件または終端失敗 | DynamoDBの条件付きterminal確定 |
-| 進捗の正本・通知 | DynamoDB snapshot＋Streams＋AppSync Events |
-| 起動漏れ・期限超過等の回収 | 定期Reconciler |
+作問者は`Choice`、`Parallel`、`Map`、`Wait`、`Retry`、`Catch`と接続関係を定義する。`Task`の呼び出し先は共通の実行フローに限る。このフローは固定キュー・ジョブ定義に[`batch:submitJob.sync`](https://docs.aws.amazon.com/step-functions/latest/dg/connect-batch.html)で投入し、成功した試行のS3マニフェストを検証する。Batchの完了応答だけでは判定結果を確定しない。ホストコマンド、IAMロール、キュー、ジョブ定義は作問者に選ばせない。
 
-**この独立提案はSQSを使用しない。** DLQ相当はDynamoDBの`DEAD_LETTER`という永続失敗台帳。
-理由、入力参照、workflow版、execution参照を保持し、再判定の起点にする。
-SQSへの配送を含む構成を、この提案そのものとは扱わない。
+## 受付と実行
 
-## 作問者のフロー
+受付APIは、採番範囲内のカウンターの条件付き更新、提出、冪等キー、`START_PENDING`を[DynamoDBのトランザクション](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html)で保存する。`submissionSeq`はコミット順とし、画面もその順に表示する。実行順は問わない。入力と試行別の成果物はS3に置く。
 
-1. 作問者がASLと、テスト・checker・実行script等のbundleを登録する。
-2. 登録APIが構文、呼出先、時間、並列数、入出力の制約を検証する。
-3. AWS APIで問題別のStandard state machineを作成・更新し、不変versionを公開する。
-4. 問題版にversion ARNとbundle hashを保存し、提出はその版に固定する。
+Streamsを受けるLambdaが判定IDと再判定世代`generation`から固定名と入力を作り、判定全体の監督用フローを開始する。監督用フローは問題別フローを`.sync:2`で待つ。[`StartExecution`](https://docs.aws.amazon.com/step-functions/latest/apireference/API_StartExecution.html)は実行中の同名・同一入力には冪等だが、終了後は`ExecutionAlreadyExists`となり、90日後には名前を再利用できるため、起動状態も台帳に残す。
 
-作問者は`Choice / Parallel / Map / Wait / Retry / Catch`と接続関係を定義する。
-Taskの呼出先は共通SandboxTaskだけに制限する。
-共通Taskは固定queue・job definitionへ`batch:submitJob.sync`し、成功attemptのS3 manifestを検証する。
-Batchの完了response自体をjudge結果とは扱わない。
-ホストcommand、IAM role、queue、job definitionは作問者に選ばせず、プログラムはmicroVM内で実行する。
-構文検証と権限・資源上限の検証は別々に必要。[S1][S2][S3]
+Batchが仕事の分担を担い、EC2停止を含む失敗を[設定回数まで再試行](https://docs.aws.amazon.com/batch/latest/userguide/job_retries.html)する。アプリ側に実行権の管理、リーダー選出、常駐マスターは置かない。アプリやワーカーが再起動しても、進行状態はStep FunctionsとBatchに残る。
 
-## 受付・実行・確定
+## 一度だけの確定と障害回復
 
-scope内counterの条件付き更新、提出行、冪等キー、`START_PENDING`をDynamoDB transactionで保存する。
-`submissionSeq`はそのcommit順。画面もその順に表示する。[S4]
+プログラムの物理的な再実行は許容し、`(submissionId, generation)`の最終結果だけを条件付きで一度作成する。WA・CE・TLEは正常な判定結果として基盤障害と区別する。実行機に最終結果の更新権限は与えず、ジョブID・試行別S3パスで成果物を分離する。成功と期限切れが競合しても、一方だけを確定する。
 
-Streamsの短い起動Lambdaが、判定ID・generationから固定したnameと同一inputでSupervisorを開始する。
-Supervisorは問題別workflowを`.sync:2`で待ち、問題別workflowは共通SandboxTaskを呼ぶ。
-Standardの`StartExecution`は実行中の同一name・inputに対して冪等。
-終了後は`ExecutionAlreadyExists`、90日後はname再利用が可能なので、永続台帳も併用する。[S5]
+SQSは使わない。回復できない失敗はDynamoDBの`DEAD_LETTER`台帳へ確定し、理由、入力参照、フローの版、実行参照を再判定のために残す。
 
-Batchはjobを保持・配置し、EC2死亡を含む失敗を有限回再試行する。
-アプリ側にworker lease、leader election、masterプロセスを置かない。[S6][S7]
-プログラムの再実行は許容し、`(submissionId, generation)`のterminal recordだけを条件付きで一度確定する。
-WA / CE / TLE等は正常なjudge結果とし、基盤障害と分ける。
-workerには提出terminalの更新権限を与えず、古いattempt・generationの成果物を混ぜない。
+[Batchの`RUNNABLE`は無期限に滞留し得る](https://docs.aws.amazon.com/batch/latest/userguide/job_states.html)。[Batchのタイムアウトは`STARTING`を含まない](https://docs.aws.amazon.com/batch/latest/userguide/job_timeouts.html)ため、受付時に全体の絶対期限を固定する。独立した定期照合処理が、起動漏れ、フローの失敗・停止、期限超過を同じ確定処理で回収する。
 
-## 停止と回復
+[Streamsの保持は24時間](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html)で、[Step FunctionsのEventBridge通知](https://docs.aws.amazon.com/step-functions/latest/dg/eventbridge-integration.html)と[同期統合のキャンセル](https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html)は成功を保証しない。通知から独立した照合と残存ジョブの回収が必要になる。最終的な終端にはAWSの復旧、照合の再開、権限とデータの保持を前提とする。
 
-| 状況 | 回復手段 |
-| --- | --- |
-| 受理commit後にAPI死亡 | 台帳に残る起動待ちをStreamsまたはReconcilerが回収 |
-| StartExecution成功後に応答消失 | 固定name・inputと既存executionを照合 |
-| アプリ再起動・master死亡 | 進行状態はStep Functions / Batchに残る |
-| worker / EC2死亡 | Batchがretry budget内で別attemptを配置 |
-| 成果物保存後にworker死亡 | job ID・attempt別S3 pathから成功attemptだけを採用 |
-| queue・image pullが停滞 | 受付時に固定した全体期限で失敗終端 |
-| 成功と期限切れが競合 | 同じterminal keyの条件付き作成で一方だけ確定 |
-| workflow自体が失敗・timeout・停止 | 独立Reconcilerが同じ確定処理で回収 |
-| 通知欠落 | 台帳照合とUI snapshotの初回・再接続・定期取得 |
+進捗は判定ID・世代・タスクID・試行・通し番号とともにDynamoDBへ保存し、[AppSync Events](https://docs.aws.amazon.com/appsync/latest/eventapi/event-api-concepts.html)で通知する。UIは初回・再接続・定期取得でスナップショットを読み、重複や古い試行を除外する。
 
-`RUNNABLE`は無期限に滞留し得て、Batch timeoutは`STARTING`を含まない。[S6][S8]
-Streams保持は24時間、SF→EventBridge通知はbest effortなので、通知と独立した照合が必要。[S9][S10]
-`.sync`取消しもbest effort。terminal確定と残存jobの回収を分ける。[S11]
-eventual終端はAWSの復旧、定期照合の再開、必要な権限とデータ保持を前提とする。
+## 隔離と運用上の制約
 
-## 隔離・台数・進捗
+提出、コンパイラ、採点プログラムはmicroVM内で実行し、AWS資格情報、インスタンスメタデータ、ホストのファイルシステム、外部ネットワークへのアクセスを渡さない。信頼する実行管理プログラムが入出力と資源制限を担い、[ECSコンテナだけを隔離境界にしない](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)。[ネストされた仮想化に対応するEC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html)でも、KVMとの統合と[Firecrackerのホスト設定](https://github.com/firecracker-microvm/firecracker/blob/main/docs/prod-host-setup.md)は実装・運用の責任として残る。Batchのタイムアウトは最短60秒なので、細かな判定時間制限は実行管理プログラムが実装する。
 
-提出・compiler・checkerをmicroVM内へ置き、AWS資格情報、IMDS、host filesystem、外部networkを渡さない。
-trusted runnerが入出力と資源制限を担う。EC2上のECS containerだけを敵対的コードの隔離境界とはしない。[S12]
-C7i等のnested virtualizationは選択肢だが、KVM・Firecrackerの統合と運用は実装責任が残る。[S13][S14]
-Batch timeoutは最低60秒であり、細かな判定時間制限はrunner側で実装する。[S8]
+最大5台の候補は、単一インスタンスタイプ、On-Demandの`BEST_FIT`、`maxvCpus`を1台分のvCPU数の5倍にする設定である。[`BEST_FIT_PROGRESSIVE`などは最大1台分超過し得る](https://docs.aws.amazon.com/batch/latest/APIReference/API_ComputeResource.html)。`BEST_FIT`のインフラ更新制約に従い、計算環境の交換時も新旧合計を5台以内に管理する。
 
-5台制御の候補は単一instance type＋On-Demand `BEST_FIT`＋`maxvCpus=5q`（qは1台分のvCPU数）。
-`BEST_FIT_PROGRESSIVE`等は最大1台分超過し得る。
-`BEST_FIT`のinfrastructure update制約とcompute environment交換時の新旧合計も管理する。[S15]
-
-進捗には判定ID・generation・task ID・attempt・eventSeqを付け、保存してからAppSync Eventsへ配信する。
-UIはsnapshotで復元し、重複・古いattemptを除外する。[S16]
-
-## 未検証
-
-対象region / instance typeでのBatch＋nested KVM＋Firecracker、sandboxの攻撃耐性、障害回復、
-台数上限、起動時間、公平性、進捗遅延、処理能力、費用、quota適合は実機未検証。
-公開仕様と設計手順を確認した提案であり、要求適合を証明したものではない。
-
-## 一次資料
-
-- [S1: ASL検証API](https://docs.aws.amazon.com/step-functions/latest/apireference/API_ValidateStateMachineDefinition.html)
-- [S2: 不変state machine version](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-version.html)
-- [S3: Batch連携](https://docs.aws.amazon.com/step-functions/latest/dg/connect-batch.html)
-- [S4: DynamoDB transactions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html)
-- [S5: StartExecution](https://docs.aws.amazon.com/step-functions/latest/apireference/API_StartExecution.html)
-- [S6: Batch job states](https://docs.aws.amazon.com/batch/latest/userguide/job_states.html)
-- [S7: Batch retries](https://docs.aws.amazon.com/batch/latest/userguide/job_retries.html)
-- [S8: Batch timeout](https://docs.aws.amazon.com/batch/latest/userguide/job_timeouts.html)
-- [S9: DynamoDB Streams保持](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html)
-- [S10: Step Functions EventBridge通知](https://docs.aws.amazon.com/step-functions/latest/dg/eventbridge-integration.html)
-- [S11: 同期統合と取消し](https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html)
-- [S12: ECS task IAMと隔離](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)
-- [S13: EC2 nested virtualization](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html)
-- [S14: Firecracker host設定](https://github.com/firecracker-microvm/firecracker/blob/main/docs/prod-host-setup.md)
-- [S15: Batch compute resource制約](https://docs.aws.amazon.com/batch/latest/APIReference/API_ComputeResource.html)
-- [S16: AppSync Events](https://docs.aws.amazon.com/appsync/latest/eventapi/event-api-concepts.html)
+対象リージョンでのBatch・KVM・Firecrackerの組み合わせ、攻撃耐性、障害回復、台数上限、起動時間、公平性、進捗遅延、処理能力、費用、クォータ適合は実機未検証である。
