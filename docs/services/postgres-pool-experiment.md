@@ -195,6 +195,3 @@ npx aws-cdk destroy --app 'npx tsx bin/postgres-pool.ts' \
 実機binaryと、実証後のDB guard/test追加は同一ではない。集計のenvironmentに実際に準備したimage・Nix lock・toolchain・gVisor hashを記録。再現時はsource更新後にassetを作り直す。
 
 検証用2 stackはdestroy後、VPC、endpoint、未終了EC2、ASG、RDS、Lambda、evidence bucketの消失を個別APIで確認した。[削除確認](postgres-pool-data/teardown.json)。共有CDKToolkitは維持。
-
-次の優先事項は受付とscalerのlock分離、実機障害注入の確実化、公平性の受入基準と境界試験。
-10秒をcoldにも要求するなら現bootstrapでは成立せず、image/AMI事前配置やwarm容量の選択を別途実測する必要がある。

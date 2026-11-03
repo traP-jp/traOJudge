@@ -11,6 +11,7 @@
   - Vue 3 + TS + Tailwind のコーディング規約と設計意図。
 - **API スキーマ**: [`docs/API/front_back.yaml`](./docs/API/front_back.yaml)
 - **サービス構成**: [`docs/services/architecture-overview.puml`](./docs/services/architecture-overview.puml)
+  - Judgeの構成選定・独立提案・実測根拠: [`docs/services/judge-evidence.md`](./docs/services/judge-evidence.md)
 
 ## 共通の作法
 

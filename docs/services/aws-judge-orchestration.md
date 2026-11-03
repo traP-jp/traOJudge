@@ -2,38 +2,22 @@
 
 2026-11-03 JST。構成選定と保証の設計。新規PoC・deployの報告ではない。
 
-**推奨はStep Functions Standard＋AWS Batch＋EC2。作問者のフローはASLベースのデータとして登録し、AWS APIで公開する。**
+**現行設計はStep Functions Standard＋AWS Batch＋EC2。作問者のフローはASLベースのデータとして登録し、AWS APIで公開する。**
 依存ノードの配布、worker lease、leader election、durable DAG engineを自作しない。
 提出順・受付の冪等性・最終判定はDynamoDB、入力と成果物はS3、進捗配信はAppSync Eventsを使う。
 
-前のNeon/PGMQ案は現在の推奨から取り下げる。AWS外の選択肢、既存PG実装、物理実行生涯1回という追加解釈を設計へ持ち込みすぎた。
+## 要件
 
-## 白紙検討へ渡した条件
+- AWS内で完結する。
+- 提出の受理順を保持する。実行順は自由。
+- 受理済み提出は最終判定1件またはDLQへ収束する。物理的な再実行はあり得る。
+- 敵対的な提出・compiler・checkerを隔離する。
+- 進捗・結果を表示し、通知欠落から復旧できる。
+- EC2は0〜5台。公平性とcold時10秒は別途検証する。
+- 作問者がフローをデータとして登録する。問題ごとのリポジトリ・IaC変更は不要。
 
-別々のfresh GPT-6 Astra / Maxを`fork_turns: none`で起動し、既存コード・過去の案・会話履歴を渡さなかった。
-後の検討には、ユーザーが明確化した条件を最初からまとめて渡した。
-
-- AWS内で完結するproduction構成。
-- ordering：提出順を保持し、実行順は自由。
-- durable execution / isolated execution / real-time進捗表示。
-- EC2最大5台へのscale upを見据える。
-- 作問者がフローをデータとして渡せる。問題ごとのリポジトリ・IaC変更は不要。
-- Step Functionsのオーケストレーションもcustomできるものと考える。
-- consumer group相当、判定1回またはDLQ、再起動、master/worker死亡を説明する。
-- 既成AWSサービスの責務を利用し、自作の仕組みを増やしすぎない。
-
-PG、Neon、既存Rust Engine、物理実行の生涯1回、特定サービスを選ばせる条件は入れていない。
-公開一次資料だけで調査するよう依頼し、コード編集・AWS操作は行わせなかった。
-
-結果は一致していない。
-
-| 独立提案 | 残る自作部分 | 今回の判断 |
-| --- | --- | --- |
-| 固定Standard workflow＋汎用DSL interpreter＋SQS callback＋DynamoDB | PlanNext、依存管理、node lease/fencing、worker poller | データ定義は満たすが、DAG実行エンジンが残る |
-| 固定Supervisor＋作問者ASL子フロー＋Batch scheduler | 登録・権限検証、受付接続、sandbox、結果確定、回復照合 | **こちらを推奨。問題別フローをAWSに実行させる** |
-
-以下は後者を主案とし、ユーザーのDLQ要件に対し終端失敗のSQS配送を明示した設計。
-freshの提案と、ここでの採用判断を混同しない。
+[独立提案A](judge-proposals/sqs-callback.md) / [独立提案B](judge-proposals/native-asl-batch.md) /
+[根拠に基づく比較](judge-proposals/comparison.md) / [実測・一次資料](judge-evidence.md)。
 
 ![AWS judge orchestration](diagrams/aws-judge-orchestration.png)
 
@@ -41,8 +25,6 @@ freshの提案と、ここでの採用判断を混同しない。
 [stack-diagram](https://github.com/caru-ini/stack-diagram)で生成。[生成元](../../infra/scripts/aws-judge-orchestration-diagram.py)。
 
 ## 作問者が渡すのはフローのデータ
-
-「開発者が問題ごとにASLをリポジトリへ追加する」という意味ではない。
 
 1. 作問者がフロー定義と、checker・generator・テスト等のbundleを登録する。
 2. 登録APIがASL構文とプラットフォームの制約を検証する。
@@ -52,7 +34,7 @@ freshの提案と、ここでの採用判断を混同しない。
 
 ASLはJSONのデータであり、APIの`definition`として渡せる。公開versionは不変。
 問題ごとにAWSリソースは登録されるが、作問者のリポジトリ変更・CI・IaC deployではない。
-任意のASLを`StartExecution.input`へ入れただけで動く、とは説明しない。
+登録した定義を実行する。`StartExecution.input`は、その実行に渡す入力データ。
 [CreateStateMachine](https://docs.aws.amazon.com/step-functions/latest/apireference/API_CreateStateMachine.html) /
 [version](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-version.html)
 
@@ -71,7 +53,6 @@ ASLの構文検証だけでは権限検証にならないため、許可するTa
 [ASL検証API](https://docs.aws.amazon.com/step-functions/latest/apireference/API_ValidateStateMachineDefinition.html)
 
 データformatの検証・必要な変換は独自実装だが、実行時の依存解決を毎回PlanNextで行うschedulerにはしない。
-既存DAG形式への後方互換を理由に、独自interpreterを必須とはしない。
 
 ## 正常系：誰が何を保存するか
 
@@ -118,7 +99,6 @@ Batchの成功response自体をjudge結果のJSONとは扱わない。manifest�
 ## 判定1回またはDLQへ収束する条件
 
 保証対象は**最終判定を一度だけ確定すること**。worker故障によるプログラムの再実行はあり得る。
-「物理実行が生涯1回」という条件を追加して、開始権の不可逆marker等を必須にしない。
 
 状態には少なくとも`START_PENDING / RUNNING / FINALIZING / JUDGED / DLQ_PENDING / DLQ`を持つ。
 `(submissionId, generation)`のterminal outcomeを、未確定の場合だけDynamoDB transactionで作る。
@@ -228,15 +208,9 @@ publisher障害や通知欠落はsnapshotの再取得で修復する。WebSocket
 接続中も非終端の提出は低頻度でsnapshotを再取得し、最後の通知だけ欠落した場合も終端へ追いつく。
 [AppSync Events](https://docs.aws.amazon.com/appsync/latest/eventapi/event-api-concepts.html)
 
-## 自作する範囲を限定する
+## 実装が必要な部分
 
-残すもの：作問者データ登録・安全なASL束縛、受付の順序/冪等性、起動とDLQ配送の接続、sandbox runner、
+作問者データ登録・安全なASL束縛、受付の順序/冪等性、起動とDLQ配送の接続、sandbox runner、
 manifest検証、terminal条件付き確定、限定reconciler、進捗schemaと再同期。
 
-作らないもの：分散DAG scheduler、consumer group、worker lease/master election、独自durable engine。
-
-SQS callback案も成立する。同じ実行キューのcompeting consumers、visibility/再配送、task tokenで構成できるが、
-poller・backpressure・heartbeat・message削除との境界・worker lifecycleは自分たちの責務になる。
-今回はその部分をBatchへ任せる案を選ぶ。SQS failure queueは終端失敗の運用配送として残す。
-
-この資料は保証の設計と選定根拠であり、上記プロトコルが実装・検証済みという主張ではない。
+この資料は保証の設計であり、上記プロトコルが実装・検証済みという主張ではない。
