@@ -2,7 +2,7 @@
 
 ## 構成と提案
 
-- [現行構成](aws-judge-orchestration.md)
+- [関心事別の契約と採用判定](aws-judge-orchestration.md)
 - [独立提案・固定ワークフローとSQS callback](judge-proposals/sqs-callback.md)
 - [独立提案・作問者ASLとAWS Batch](judge-proposals/native-asl-batch.md)
 - [二つの独立提案の比較](judge-proposals/comparison.md)
