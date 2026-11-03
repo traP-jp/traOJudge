@@ -1,5 +1,9 @@
 # 無提出時の固定費を抑えるproduction構成の選定
 
+> **旧案・推奨取り下げ**：AWS内完結、作問者フローのデータ登録、自作orchestratorを増やさない要件を反映した現行案は
+> [AWS judge orchestration](aws-judge-orchestration.md)。以下のNeon/PGMQ推奨は履歴として残す。
+> 過去のadvisory依頼に候補・追加条件を入れており、要件だけの白紙提案として扱うべきではなかった。
+
 2026-11-03 JST。設計・通常価格の比較であり、新しい実機PoCやdeployの報告ではない。
 既存コードを前提にせず、4つのfreshなGPT-6 Astra / Max advisoryを独立に取得した。
 
