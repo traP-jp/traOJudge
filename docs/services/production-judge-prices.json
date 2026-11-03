@@ -1,0 +1,94 @@
+{
+  "checked_date_jst": "2026-11-03",
+  "source": "AWS Price List GetProducts API; public list prices, no discounts or credits",
+  "rows": [
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-vCPU-Second",
+      "description": "$0.0000371569 per vCPU-Second for Lambda-MicroVM-vCPU-Second in Asia Pacific (Tokyo)",
+      "unit": "vCPU-Seconds",
+      "usd": "0.0000371569"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-Snapshot-Read-GB",
+      "description": "$0.0018548941 per GB for Lambda-MicroVM-Snapshot-Read-GB in Asia Pacific (Tokyo)",
+      "unit": "GB",
+      "usd": "0.0018548941"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-Snapshot-Storage-GB-Hour",
+      "description": "$0.0001333333 per GB-Hour for Lambda-MicroVM-Snapshot-Storage-GB-Hour in Asia Pacific (Tokyo)",
+      "unit": "GB-Hours",
+      "usd": "0.0001333333"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-Memory-GB-Second-ARM",
+      "description": "$0.0000042688 per GB-Second for Lambda-MicroVM-Memory-GB-Second-ARM in Asia Pacific (Tokyo)",
+      "unit": "GB-Seconds",
+      "usd": "0.0000042688"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-Memory-GB-Second",
+      "description": "$0.0000049195 per GB-Second for Lambda-MicroVM-Memory-GB-Second in Asia Pacific (Tokyo)",
+      "unit": "GB-Seconds",
+      "usd": "0.0000049195"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-vCPU-Second-ARM",
+      "description": "$0.0000322421 per vCPU-Second for Lambda-MicroVM-vCPU-Second-ARM in Asia Pacific (Tokyo)",
+      "unit": "vCPU-Seconds",
+      "usd": "0.0000322421"
+    },
+    {
+      "service": "AWSLambda",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Lambda-MicroVM-Snapshot-Write-GB",
+      "description": "$0.0046556039 per GB for Lambda-MicroVM-Snapshot-Write-GB in Asia Pacific (Tokyo)",
+      "unit": "GB",
+      "usd": "0.0046556039"
+    },
+    {
+      "service": "AmazonRDS",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Aurora:ServerlessV2Usage",
+      "description": "USD 0.15 per Aurora Capacity Unit hour running Aurora PostgreSQL Serverless v2",
+      "unit": "ACU-Hr",
+      "usd": "0.1500000000"
+    },
+    {
+      "service": "AmazonRDS",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Aurora:ServerlessV2IOOptimizedUsage",
+      "description": "USD 0.20 per Aurora Capacity Unit hour running Aurora PostgreSQL Serverless v2 IO-Optimized",
+      "unit": "ACU-Hr",
+      "usd": "0.2000000000"
+    },
+    {
+      "service": "AmazonRDS",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Aurora:StorageUsage",
+      "description": "USD 0.12 per GB-month of consumed storage for Aurora PostgreSQL",
+      "unit": "GB-Mo",
+      "usd": "0.1200000000"
+    },
+    {
+      "service": "AmazonRDS",
+      "region": "ap-northeast-1",
+      "usage": "APN1-Aurora:StorageIOUsage",
+      "description": "USD 0.24 per 1 million I/O requests for Aurora PostgreSQL",
+      "unit": "IOs",
+      "usd": "0.0000002400"
+    }
+  ]
+}
