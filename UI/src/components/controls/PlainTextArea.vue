@@ -91,7 +91,7 @@ const onClickInnerBorder = (e: MouseEvent) => {
           </div>
           <span class="inline-flex items-center justify-end gap-2">
             <span v-if="displaysLength" class="fontstyle-ui-caption text-text-secondary">{{
-              value?.length ?? 0
+              Array.from(value ?? '').length
             }}</span>
             <MaterialIcon
               v-if="displaysRightIcon"

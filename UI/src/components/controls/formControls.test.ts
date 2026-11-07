@@ -1,10 +1,27 @@
-import { mount } from '@vue/test-utils'
+import { mount, type VueWrapper } from '@vue/test-utils'
 import { expect, it } from 'vitest'
 
 import CopyableTextArea from '@/components/controls/CopyableTextArea.vue'
 import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import SelectBox from '@/components/controls/SelectBox.vue'
 import PlainTextbox from '@/components/controls/textbox/PlainTextbox.vue'
+
+it.each([
+  [undefined, '0'],
+  ['', '0'],
+  ['日本語', '3'],
+  ['😀あ', '2']
+])('counts Unicode code points in the textarea: %s', (value, count) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
+  const wrapper: VueWrapper = mount(PlainTextArea, {
+    props: { modelValue: value, displaysLength: true }
+  })
+  try {
+    expect(wrapper.text()).toBe(count)
+  } finally {
+    wrapper.unmount()
+  }
+})
 
 it('associates labels with unique controls, including generated and explicit IDs', () => {
   const wrapper = mount({
