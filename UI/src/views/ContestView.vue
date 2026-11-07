@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
-import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
-import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
+import { ContestsApi } from '@/api/generated/apis/ContestsApi'
+import type { Contest } from '@/api/generated/models/Contest'
+import { Configuration, ResponseError } from '@/api/generated/runtime'
 import MarkdownContent from '@/components/MarkdownContent.vue'
 import BorderedButton from '@/components/Controls/BorderedButton.vue'
 import ContestHeader from '@/components/Navigations/ContestHeader.vue'
@@ -15,7 +15,8 @@ const isLoading = ref(true)
 const error = ref('')
 const api = new ContestsApi(
   new Configuration({
-    basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
+    basePath:
+      import.meta.env.VITE_CONTEST_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api/v1',
     credentials: 'include'
   })
 )

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ListContestProblems200ResponseItemsInner as ContestProblem } from '@/api/generated/contest/models/ListContestProblems200ResponseItemsInner'
+import type { ContestProblem as ContestProblem } from '@/api/generated/models/ContestProblem'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import type {
   FirstAccept,

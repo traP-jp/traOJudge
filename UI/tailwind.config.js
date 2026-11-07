@@ -21,7 +21,7 @@ export default {
       'status-error': '#e02a2a',
       'status-accepted': '#31bf8c',
       'status-failed': '#dc802c',
-      'status-pending': '#74889a',
+      'status-pending': '#737373',
       red: '#ff0000',
       white: '#ffffff',
       transparent: 'transparent'
@@ -31,6 +31,15 @@ export default {
       'noto-sans-jp': ['Noto Sans JP', 'sans-serif']
     },
     extend: {
+      keyframes: {
+        'judge-dot': {
+          '0%, 60%, 100%': { opacity: '0.25' },
+          '30%': { opacity: '1' }
+        }
+      },
+      animation: {
+        'judge-dot': 'judge-dot 1.2s ease-in-out infinite'
+      },
       spacing: {
         1.625: '0.40625rem',
         1.75: '0.4375rem',

@@ -1,203 +1,101 @@
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ref, watch, computed, onMounted } from 'vue'
-import AlertBox from '@/components/AlertBox.vue'
-import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
-import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
-import NumberTextbox from '@/components/Controls/Textbox/NumberTextbox.vue'
-import LabeledCheckbox from '@/components/Controls/LabeledCheckbox.vue'
 import { ProblemsApi, type Problem } from '@/api/generated'
+import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
+import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
+import BorderedButton from '@/components/Controls/BorderedButton.vue'
 import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
-import { type Ref } from 'vue'
-
-const { requireMockLogin } = useMockAuthGuard()
-
-const problem = ref<Problem>()
-
-const title = ref<string>('')
-const difficulty = ref<number>()
-const timeLimit = ref<number>()
-const memoryLimit = ref<number>()
-const isPublic = ref<boolean>(false)
-
-const problemTitleError = ref<string>('')
-const difficultyError = ref<string>('')
-const timeLimitError = ref<string>('')
-const memoryLimitError = ref<string>('')
-
-const saveError = ref<string>('')
-const saveSuccess = ref<boolean>(false)
-const saveErrorShow = ref<boolean>(false)
-const isLoading = ref<boolean>(false)
-
-const inputInvalid = computed<boolean>(() => {
-  if (!title.value) return true
-  if (!difficulty.value) return true
-  if (!timeLimit.value) return true
-  if (!memoryLimit.value) return true
-  if (difficultyError.value) return true
-  if (difficulty.value < 1 || difficulty.value > 10) return true
-  if (timeLimit.value < 1) return true
-  if (memoryLimit.value < 1) return true
-  return false
-})
-
+import { useUserStore } from '@/stores/user'
+import { apiErrorMessage, requireEtag } from '@/utils/apiError'
+const userStore = useUserStore()
+const canUnpublish = computed(() =>
+  userStore.user?.roles.some(
+    (role) => role.role === 'service-admin' && role.scope.kind === 'service'
+  )
+)
 const route = useRoute()
-
-if (typeof route.params.id !== 'string') throw new Error('Invalid route')
-const problemId = ref<string>('')
+const api = new ProblemsApi()
+const { requireMockLogin } = useMockAuthGuard()
+const problem = ref<Problem>()
+const title = ref('')
+const etag = ref('')
+const error = ref('')
+const message = ref('')
+const busy = ref(false)
 watch(
   () => route.params.id,
-  (id) => {
-    problemId.value = `${id}`
+  async (id) => {
+    problem.value = undefined
+    etag.value = ''
+    try {
+      const response = await api.getProblemRaw({ problemId: String(id) })
+      etag.value = requireEtag(response.raw)
+      problem.value = await response.value()
+      title.value = problem.value.title
+    } catch (cause) {
+      error.value = await apiErrorMessage(cause)
+    }
   },
   { immediate: true }
 )
-
-function validateRequiredField<Value>(valueRef: Ref<Value>, errorRef: Ref<string>) {
-  if (!valueRef.value) {
-    errorRef.value = '必須項目です。'
-  } else {
-    errorRef.value = ''
-  }
-}
-
-const onChangeTitle = validateRequiredField.bind(null, title, problemTitleError)
-const onChangeDifficulty = validateRequiredField.bind(null, difficulty, difficultyError)
-const onChangeTimeLimit = validateRequiredField.bind(null, timeLimit, timeLimitError)
-const onChangeMemoryLimit = validateRequiredField.bind(null, memoryLimit, memoryLimitError)
-
-const problemsApi = new ProblemsApi()
-
-async function fetchProblem() {
-  isLoading.value = true
+async function save() {
+  if (!problem.value) return
+  busy.value = true
+  error.value = ''
+  message.value = ''
   try {
-    problem.value = await problemsApi.getProblem({ problemId: problemId.value })
-    title.value = problem.value.title
-    difficulty.value = problem.value.difficulty
-    timeLimit.value = problem.value.timeLimit
-    memoryLimit.value = problem.value.memoryLimit / 1024 // KiB to MiB
-    isPublic.value = problem.value.isPublic
-  } catch (error) {
-    console.error('問題の取得に失敗しました:', error)
-    saveError.value = '問題の取得に失敗しました。'
-    saveErrorShow.value = true
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function saveSetting() {
-  if (problem.value == null) return
-  isLoading.value = true
-  try {
-    problem.value.title = title.value
-    problem.value.difficulty = difficulty.value!
-    problem.value.timeLimit = timeLimit.value!
-    problem.value.memoryLimit = memoryLimit.value! * 1024 // MiB to KiB
-    problem.value.isPublic = isPublic.value
-    await requireMockLogin(() =>
-      problemsApi.putProblem({
-        problemId: problemId.value,
-        putProblemRequest: problem.value!
+    const response = await requireMockLogin(() =>
+      api.updateProblemRaw({
+        origin: window.location.origin,
+        ifMatch: etag.value,
+        problemId: String(route.params.id),
+        problemUpdate: { title: title.value }
       })
     )
-    saveSuccess.value = true
-  } catch (error) {
-    console.error('基本設定の保存に失敗しました:', error)
-    saveError.value = error instanceof Error ? error.message : '基本設定の保存に失敗しました。'
-    saveErrorShow.value = true
+    etag.value = requireEtag(response.raw)
+    problem.value = await response.value()
+    message.value = '保存しました．'
+  } catch (cause) {
+    error.value = await apiErrorMessage(cause)
   } finally {
-    isLoading.value = false
+    busy.value = false
   }
 }
-
-onMounted(() => {
-  fetchProblem()
-})
+async function unpublish() {
+  busy.value = true
+  error.value = ''
+  try {
+    await requireMockLogin(() =>
+      api.unpublishProblem({ origin: window.location.origin, problemId: String(route.params.id) })
+    )
+    const response = await api.getProblemRaw({ problemId: String(route.params.id) })
+    etag.value = requireEtag(response.raw)
+    problem.value = await response.value()
+    message.value = '非公開にしました．'
+  } catch (cause) {
+    error.value = await apiErrorMessage(cause)
+  } finally {
+    busy.value = false
+  }
+}
 </script>
-
 <template>
-  <div class="flex w-full font-primary">
-    <div class="flex w-full flex-col">
-      <div class="flex max-w-profile-max flex-col items-start justify-start gap-4">
-        <h2 class="text-xl font-medium">基本設定</h2>
-
-        <div class="w-full">
-          <PlainTextbox
-            id="display-name"
-            v-model="title"
-            class="h-5.5 w-full"
-            label="問題タイトル"
-            required
-            displays-length
-            :error-message="problemTitleError"
-            @change="onChangeTitle"
-          />
-        </div>
-
-        <div class="w-full">
-          <NumberTextbox
-            id="difficulty"
-            v-model="difficulty"
-            class="h-5.5"
-            container-class="!w-24"
-            label="難易度"
-            supporting-text="1以上10以下の整数で入力してください。"
-            required
-            :min="1"
-            :max="10"
-            :error-message="difficultyError"
-            @change="onChangeDifficulty"
-          />
-        </div>
-
-        <div class="w-full">
-          <div class="flex flex-row items-start gap-2">
-            <NumberTextbox
-              id="time-limit"
-              v-model="timeLimit"
-              class="h-5.5"
-              container-class="!w-36"
-              label="実行時間制限"
-              required
-              unit="ms"
-              :min="1"
-              :error-message="timeLimitError"
-              @change="onChangeTimeLimit"
-            />
-          </div>
-        </div>
-
-        <div class="w-full">
-          <div class="flex flex-row items-start gap-2">
-            <NumberTextbox
-              id="memory-limit"
-              v-model="memoryLimit"
-              class="h-5.5"
-              container-class="!w-36"
-              label="メモリ制限"
-              required
-              unit="MiB"
-              :min="1"
-              :error-message="memoryLimitError"
-              @change="onChangeMemoryLimit"
-            />
-          </div>
-        </div>
-
-        <LabeledCheckbox id="is-public" v-model="isPublic" label="問題を公開する" />
-
-        <PrimaryButton
-          class="h-10 w-18 px-3 py-2"
-          :disabled="isLoading || inputInvalid"
-          @click="saveSetting"
-        >
-          保存
-        </PrimaryButton>
-        <AlertBox v-model:show="saveSuccess" text="基本設定が保存されました。" />
-        <AlertBox v-model:show="saveErrorShow" :text="saveError" type="error" />
-      </div>
-    </div>
+  <div class="flex w-full max-w-profile-max flex-col gap-4">
+    <h2 class="fontstyle-ui-subtitle">基本設定</h2>
+    <PlainTextbox v-model="title" label="問題タイトル" required />
+    <p>公開状態：{{ problem?.visibility === 'public' ? '公開' : '非公開' }}</p>
+    <p class="text-text-secondary">公開への変更は準備中です．</p>
+    <BorderedButton
+      v-if="problem?.visibility === 'public' && canUnpublish"
+      :disabled="busy"
+      @click="unpublish"
+      >非公開にする</BorderedButton
+    >
+    <PrimaryButton :disabled="busy || !etag || !title.trim() || title.length > 200" @click="save"
+      >保存</PrimaryButton
+    >
+    <p v-if="message" role="status">{{ message }}</p>
+    <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
   </div>
 </template>

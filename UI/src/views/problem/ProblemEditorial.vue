@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
-import { EditorialsApi } from '@/api/generated/contest/apis/EditorialsApi'
-import { MeApi } from '@/api/generated/contest/apis/MeApi'
-import type { GetEditorial200Response } from '@/api/generated/contest/models/GetEditorial200Response'
-import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
+import { ContestsApi } from '@/api/generated/apis/ContestsApi'
+import { EditorialsApi } from '@/api/generated/apis/EditorialsApi'
+import { MeApi } from '@/api/generated/apis/MeApi'
+import type { Editorial } from '@/api/generated/models/Editorial'
+import { Configuration, ResponseError } from '@/api/generated/runtime'
 import BorderedButton from '@/components/Controls/BorderedButton.vue'
 import MarkdownContent from '@/components/MarkdownContent.vue'
 import { useUserStore } from '@/stores/user'
@@ -13,11 +13,12 @@ import { getEarlyEditorialAccess, loadMyEditorialRoles } from '@/utils/editorial
 
 const route = useRoute()
 const userStore = useUserStore()
-const editorial = ref<GetEditorial200Response | null>(null)
+const editorial = ref<Editorial | null>(null)
 const isLoading = ref(true)
 const error = ref('')
 const config = new Configuration({
-  basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
+  basePath:
+    import.meta.env.VITE_CONTEST_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api/v1',
   credentials: 'include'
 })
 const contestsApi = new ContestsApi(config)

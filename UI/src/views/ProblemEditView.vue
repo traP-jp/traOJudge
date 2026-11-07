@@ -22,7 +22,7 @@ watch(
       <SideMenuProbleEdit :problem-id="problemId" />
     </nav>
     <main class="min-w-0 flex-auto py-6">
-      <RouterView />
+      <RouterView :key="route.path" />
     </main>
   </div>
 </template>

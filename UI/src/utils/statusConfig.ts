@@ -1,4 +1,5 @@
-import type { JudgeStatus } from '@/api/generated'
+import type { Verdict } from '@/api/generated'
+export type JudgeStatus = Verdict | 'WJ'
 
 export const statusConfig: Record<
   JudgeStatus,
@@ -10,6 +11,7 @@ export const statusConfig: Record<
   TLE: { label: 'TLE', bgColor: 'bg-status-failed', textColor: 'text-white' },
   RE: { label: 'RE', bgColor: 'bg-status-failed', textColor: 'text-white' },
   IE: { label: 'IE', bgColor: 'bg-status-error', textColor: 'text-white' },
+  WE: { label: 'WE', bgColor: 'bg-status-error', textColor: 'text-white' },
   WJ: { label: 'WJ', bgColor: 'bg-status-pending', textColor: 'text-white' },
   MLE: { label: 'MLE', bgColor: 'bg-status-failed', textColor: 'text-white' }
 }

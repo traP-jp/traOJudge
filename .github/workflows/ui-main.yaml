@@ -38,4 +38,5 @@ jobs:
       - run: npm ci
       - run: ./scripts/gen-api.sh development
       - run: npm test
+      - run: npm run test:mock
       - run: npm run build

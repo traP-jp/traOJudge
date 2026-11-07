@@ -1,95 +1,65 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { EditorialsApi, UsersApi, type Profile } from '@/api/generated'
+import { useCursorPagination } from '@/composables/useCursorPagination'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
-import { EditorialsApi, type EditorialSummary, type User, UsersApi } from '@/api/generated'
+import CursorPagination from '@/components/Controls/Pagination/CursorPagination.vue'
+import TextLink from '@/components/TextLink.vue'
 import { dateToString } from '@/utils/date'
-import MaterialIcon from '@/components/MaterialIcon.vue'
-
-const { problemId } = defineProps<{
-  problemId: string
-}>()
-
-const router = useRouter()
-
-const isLoaded = ref<boolean>(false)
-const editorialIds = ref<string[]>([])
-const editorials = ref<Map<string, EditorialSummary>>(new Map())
-const users = ref<Map<string, User>>(new Map())
-
-const editorialsApi = new EditorialsApi()
+const props = defineProps<{ problemId: string }>()
+const api = new EditorialsApi()
 const usersApi = new UsersApi()
-
-async function loadEditorials() {
-  isLoaded.value = false
-  try {
-    const summaries: EditorialSummary[] = await editorialsApi.getEditorialsOnProblem({
-      problemId
-    })
-
-    editorialIds.value = summaries.map(({ id }) => id)
-    editorials.value = new Map(summaries.map((editorial) => [editorial.id, editorial]))
-
-    const userIds = [...new Set(summaries.map((e) => e.authorId))]
-    const userPromises = userIds.map((userId) => usersApi.getUser({ userId }))
-    const userProfiles = await Promise.all(userPromises)
-    users.value = new Map(userProfiles.map((user: User) => [user.id, user]))
-  } catch (error) {
-    console.error('API Error:', error)
-    alert(`API Error: ${error}`)
-  } finally {
-    isLoaded.value = true
-  }
-}
-
-onMounted(() => {
-  loadEditorials()
+const users = ref(new Map<string, Profile>())
+const { items, page, hasNext, hasPrevious, isLoading, error, next, previous } = useCursorPagination(
+  (cursor, signal) =>
+    api.listProblemEditorials({ problemId: props.problemId, cursor, limit: 20 }, { signal }),
+  () => props.problemId
+)
+const editorials = computed(() => new Map(items.value.map((item) => [item.id, item])))
+watch(items, async (value) => {
+  const ids = [...new Set(value.map((item) => item.authorId))]
+  const profiles = await Promise.all(
+    ids.map((userId) => usersApi.getUserProfile({ userId }).catch(() => null))
+  )
+  users.value = new Map(
+    profiles
+      .filter((profile): profile is Profile => profile !== null)
+      .map((profile) => [profile.id, profile])
+  )
 })
-
 const cols: (Column & { name: string })[] = [
   { id: 'title', textAlign: 'start', name: 'タイトル' },
-  { id: 'owner', textAlign: 'start', name: '著者', width: '200px' },
-  { id: 'updatedAt', textAlign: 'start', name: '最終更新', width: '150px' }
-] as const
-
-function handleEditorialClick(editorialId: string) {
-  router.push(`/problems/${problemId}/editorials/${editorialId}`)
-}
-
-function handleUserClick(userId: string) {
-  router.push(`/users/${userId}`)
-}
+  { id: 'author', textAlign: 'start', name: '著者', width: '200px' },
+  { id: 'updatedAt', textAlign: 'start', name: '最終更新', width: '176px' }
+]
 </script>
-
 <template>
-  <ListingTable v-if="isLoaded" :cols="cols" :row-ids="editorialIds" :selected-rows="[]">
-    <template #head="{ colId }">
-      {{ cols.find(({ id }) => id === colId)?.name }}
-    </template>
+  <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
+  <p v-else-if="isLoading">読み込み中...</p>
+  <p v-else-if="!items.length">解説はまだありません．</p>
+  <ListingTable v-else :cols="cols" :row-ids="[...editorials.keys()]">
+    <template #head="{ colId }">{{ cols.find((col) => col.id === colId)?.name }}</template>
     <template #cell="{ rowId, colId }">
-      <template v-if="colId === 'title'">
-        <button
-          class="flex items-center gap-1 text-text-primary hover:underline"
-          @click="handleEditorialClick(rowId)"
-        >
-          {{ editorials.get(rowId)?.title }}
-          <MaterialIcon icon="open_in_new" size="20px" />
-        </button>
-      </template>
-      <template v-else-if="colId === 'owner'">
-        <button
-          class="flex items-center gap-1 text-text-primary hover:underline"
-          @click="handleUserClick(editorials.get(rowId)?.authorId || '')"
-        >
-          {{ users.get(editorials.get(rowId)?.authorId || '')?.name || 'Unknown' }}
-          <MaterialIcon icon="open_in_new" size="20px" />
-        </button>
-      </template>
-      <template v-else-if="colId === 'updatedAt'">
-        {{ dateToString(editorials.get(rowId)?.updatedAt) }}
-      </template>
-      <template v-else>Unknown column: {{ colId }}</template>
+      <TextLink v-if="colId === 'title'" :href="`/problems/${problemId}/editorials/${rowId}`">{{
+        editorials.get(rowId)?.title
+      }}</TextLink>
+      <TextLink
+        v-else-if="colId === 'author'"
+        :href="`/users/${editorials.get(rowId)?.authorId}`"
+        >{{
+          users.get(editorials.get(rowId)?.authorId ?? '')?.displayName ??
+          editorials.get(rowId)?.authorId
+        }}</TextLink
+      >
+      <template v-else>{{ dateToString(editorials.get(rowId)?.updatedAt) }}</template>
     </template>
   </ListingTable>
-  <div v-else>読み込み中...</div>
+  <CursorPagination
+    :page="page"
+    :has-next="hasNext"
+    :has-previous="hasPrevious"
+    :loading="isLoading"
+    @next="next"
+    @previous="previous"
+  />
 </template>

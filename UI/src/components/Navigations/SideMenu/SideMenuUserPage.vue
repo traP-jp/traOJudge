@@ -67,7 +67,7 @@ watch(
     :main-contents="mainContents"
   >
     <div class="flex w-full flex-col items-center justify-center">
-      <img :src="iconUrl" alt="user-icon" class="size-40 rounded-full" />
+      <img v-if="iconUrl" :src="iconUrl" alt="user-icon" class="size-40 rounded-full" />
       <span class="mt-2 font-primary text-xl font-semibold text-text-primary">{{ username }}</span>
     </div>
   </SideMenuBase>

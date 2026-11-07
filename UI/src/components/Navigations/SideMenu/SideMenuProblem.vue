@@ -13,31 +13,31 @@ const { isAdmin = false, isEditorialAvailable = false } = defineProps<{
   isEditorialAvailable?: boolean
 }>()
 
-const problemId = route.params.id as string
+const problemId = computed(() => String(route.params.id))
 
 const mainContents = computed(() => {
   const contents: SideMenuProps[] = [
     {
       text: '問題',
       icon: 'assignment',
-      href: `/problems/${problemId}`
+      href: `/problems/${problemId.value}`
     },
     {
       text: '提出',
       icon: 'edit',
-      href: `/problems/${problemId}/submit`
+      href: `/problems/${problemId.value}/submit`
     },
     {
       text: '提出一覧',
       icon: 'format_list_bulleted',
-      href: `/problems/${problemId}/submissions`
+      href: `/problems/${problemId.value}/submissions`
     }
   ]
   if (isEditorialAvailable) {
     contents.push({
       text: '解説',
       icon: 'assignment_turned_in',
-      href: `/problems/${problemId}/editorials`
+      href: `/problems/${problemId.value}/editorials`
     })
   }
   return contents
@@ -49,7 +49,7 @@ const bottomContents = computed((): SideMenuProps[] => {
       {
         text: '問題設定',
         icon: 'edit_note',
-        href: `/problems/${problemId}/edit`
+        href: `/problems/${problemId.value}/edit`
       }
     ]
   } else {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import TextLink from '@/components/TextLink.vue'
 import { computed } from 'vue'
-import type { User } from '@/api/generated'
+import type { Profile } from '@/api/generated'
 
-const { user } = defineProps<{ userId: string; user: User | null }>()
+const { user } = defineProps<{ userId: string; user: Profile | null }>()
 
 /**
  * GitHub username validation
@@ -34,10 +34,10 @@ const isValidXUsername = (username: string): boolean => {
   return X_USERNAME_REGEX.test(username)
 }
 
-const traqId = computed(() => user?.traqId ?? '')
+const atcoderId = computed(() => user?.atcoderId ?? '')
 const githubId = computed(() => user?.githubId ?? '')
 const xId = computed(() => user?.xId ?? '')
-const selfIntroduction = computed(() => user?.selfIntroduction ?? '')
+const selfIntroduction = computed(() => user?.bio ?? '')
 
 const isGithubIdValid = computed(() => isValidGithubUsername(githubId.value))
 const isXIdValid = computed(() => isValidXUsername(xId.value))
@@ -72,11 +72,9 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
         <span v-else>@{{ xId }}</span>
       </span>
     </div>
-    <div v-if="traqId" class="flex items-center">
-      <span>
-        <img src="/src/assets/service_icons/traq.svg" class="size-5" />
-      </span>
-      <span class="px-2"> @{{ traqId }} </span>
+    <div v-if="atcoderId" class="flex items-center">
+      <span> AtCoder </span>
+      <span class="px-2"> @{{ atcoderId }} </span>
     </div>
   </div>
 </template>

@@ -10,14 +10,15 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "test": "vitest run",
+    "test": "node scripts/check-mock.mjs && vitest run",
     "lint": "eslint '**/*.{js,mjs,cjs,ts,vue}' './*.js' './*.ts'",
     "lint:debug": "eslint ./src --debug",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write src/",
     "format:yaml": "prettier --write '../**/*.{yaml,yml}'",
     "format:yaml:check": "prettier --check '../**/*.{yaml,yml}'",
-    "prepare": "cd .. && git config core.hooksPath .husky || true"
+    "prepare": "cd .. && git config core.hooksPath .husky || true",
+    "test:mock": "bash scripts/test-mock-api.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,vue,js,mjs,cjs}": [
@@ -59,6 +60,8 @@
     "@vue/eslint-config-prettier": "^10.1.0",
     "@vue/eslint-config-typescript": "^14.2.0",
     "@vue/tsconfig": "^0.7.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.17.0",
     "eslint-plugin-tailwindcss": "^3.17.5",
@@ -76,6 +79,7 @@
     "typescript-eslint": "^8.6.0",
     "vite": "^5.4.3",
     "vitest": "^3.2.7",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "yaml": "^2.9.1"
   }
 }

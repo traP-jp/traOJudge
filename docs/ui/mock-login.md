@@ -7,8 +7,8 @@ bash scripts/run-mock-api.sh
 npm run dev
 ```
 
-`/login` の「モックでログイン」を押すと，固定トークンを `POST /api/v1/auth/email/verifications` に送り，続けて `GET /api/v1/me` から仮の利用者を取得する．ボタンは Vite の開発環境でだけ表示する．ログアウト時は `DELETE /api/v1/auth/session` を呼ぶ．これらのモックのパスと応答形式は [API 定義](../API/front_back.yaml)に合わせる．新契約のクライアントは `bash scripts/gen-auth-api.sh` で生成する．
+`/login` の「モックでログイン」を押すと，固定トークンを `POST /api/v1/auth/email/verifications` に送り，続けて `GET /api/v1/me` から仮の利用者を取得する．ボタンは Vite の開発環境でだけ表示する．ログアウト時は `DELETE /api/v1/auth/session` を呼ぶ．これらのモックのパスと応答形式は [API 定義](../API/front_back.yaml)に合わせる．クライアントは `bash scripts/gen-api.sh development` で生成する．
 
 モックはトークンや Cookie を検証しない．画面上のログイン状態はブラウザの `sessionStorage` に保存し，再読み込み時はモックの `GET /me` で利用者を取り直す．モックサーバーを止めると，次の読み込みでログイン状態は消える．この仕組みは認証・認可の検証には使えない．
 
-メールによる本人確認，外部サービスによる登録・ログイン，認証方法の管理，パスワード再設定は TODO とする．関連する画面には準備中と表示する．既存の問題画面などは旧 API クライアントを使っているため，旧定義への固定はその移行まで残す．
+メールによる本人確認，外部サービスによる登録・ログイン，認証方法の管理，パスワード再設定は TODO とする．関連する画面には準備中と表示する．問題・解説・提出・プロフィールのモックも新定義を使う．[モックAPIの確認手順](./mock-api.md)に対応範囲と検証方法を記す．

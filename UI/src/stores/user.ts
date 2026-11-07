@@ -1,17 +1,16 @@
-import { AuthenticationApi } from '@/api/generated/auth/apis/AuthenticationApi'
-import { MeApi } from '@/api/generated/auth/apis/MeApi'
-import type { GetMe200Response } from '@/api/generated/auth/models/GetMe200Response'
-import { Configuration, ResponseError } from '@/api/generated/auth/runtime'
+import { AuthenticationApi } from '@/api/generated/apis/AuthenticationApi'
+import { MeApi } from '@/api/generated/apis/MeApi'
+import type { CurrentUser } from '@/api/generated/models/CurrentUser'
+import { ResponseError } from '@/api/generated/runtime'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 const MOCK_SESSION_KEY = 'traOJudge_mockSession'
-const apiConfig = new Configuration({ basePath: '/api/v1', credentials: 'include' })
-const authApi = new AuthenticationApi(apiConfig)
-const meApi = new MeApi(apiConfig)
+const authApi = new AuthenticationApi()
+const meApi = new MeApi()
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<GetMe200Response | null>(null)
+  const user = ref<CurrentUser | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const isInitialized = ref(false)
@@ -30,7 +29,7 @@ export const useUserStore = defineStore('user', () => {
     sessionStorage.removeItem(MOCK_SESSION_KEY)
   }
 
-  const fetchCurrentUser = async (): Promise<GetMe200Response> => {
+  const fetchCurrentUser = async (): Promise<CurrentUser> => {
     isLoading.value = true
     error.value = null
 
@@ -72,7 +71,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const result = await authApi.verifyEmailAuthentication({
         origin: window.location.origin,
-        verifyEmailAuthenticationRequest: { token: 'mock-login' }
+        tokenConfirmation: { token: 'mock-login' }
       })
       if (result.status !== 'signed-in') throw new Error('モックログインに失敗しました．')
       await fetchCurrentUser()

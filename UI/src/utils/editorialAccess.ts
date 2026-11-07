@@ -1,7 +1,7 @@
-import type { MeApi } from '@/api/generated/contest/apis/MeApi'
-import type { GetMe200ResponseRolesInner } from '@/api/generated/contest/models/GetMe200ResponseRolesInner'
+import type { MeApi } from '@/api/generated/apis/MeApi'
+import type { RoleAssignment } from '@/api/generated/models/RoleAssignment'
 
-type EditorialRole = Pick<GetMe200ResponseRolesInner, 'role' | 'scope'>
+type EditorialRole = Pick<RoleAssignment, 'role' | 'scope'>
 
 export type EarlyEditorialAccess = {
   isOrganizer: boolean

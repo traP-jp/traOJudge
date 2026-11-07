@@ -6,6 +6,7 @@ import MarkdownView from '@/components/MarkdownView.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import { ProblemsApi, type Problem } from '@/api/generated'
 import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
+import { apiErrorMessage, requireEtag } from '@/utils/apiError'
 import AlertBox from '@/components/AlertBox.vue'
 
 const route = useRoute()
@@ -13,6 +14,7 @@ const { requireMockLogin } = useMockAuthGuard()
 
 const problem = ref<Problem>()
 const body = ref<string>('')
+const etag = ref('')
 
 const saveError = ref<string>('')
 const saveSuccess = ref<boolean>(false)
@@ -34,11 +36,13 @@ const problemsApi = new ProblemsApi()
 async function fetchProblem() {
   isLoading.value = true
   try {
-    problem.value = await problemsApi.getProblem({ problemId: problemId.value })
+    const response = await problemsApi.getProblemRaw({ problemId: problemId.value })
+    etag.value = requireEtag(response.raw)
+    problem.value = await response.value()
     body.value = problem.value.statement
   } catch (error) {
     console.error('問題の取得に失敗しました:', error)
-    saveError.value = '問題の取得に失敗しました。'
+    saveError.value = '問題の取得に失敗しました．'
     saveErrorShow.value = true
   } finally {
     isLoading.value = false
@@ -49,17 +53,20 @@ async function saveStatement() {
   if (problem.value == null) return
   isLoading.value = true
   try {
-    problem.value.statement = body.value
-    await requireMockLogin(() =>
-      problemsApi.putProblem({
+    const response = await requireMockLogin(() =>
+      problemsApi.updateProblemRaw({
+        origin: window.location.origin,
+        ifMatch: etag.value,
         problemId: problemId.value,
-        putProblemRequest: problem.value!
+        problemUpdate: { statement: body.value }
       })
     )
+    etag.value = requireEtag(response.raw)
+    problem.value = await response.value()
     saveSuccess.value = true
   } catch (error) {
     console.error('問題文の保存に失敗しました:', error)
-    saveError.value = error instanceof Error ? error.message : '問題文の保存に失敗しました。'
+    saveError.value = await apiErrorMessage(error)
     saveErrorShow.value = true
   } finally {
     isLoading.value = false
@@ -97,11 +104,15 @@ onMounted(() => {
           </div>
         </div>
 
-        <PrimaryButton class="h-10 w-18 px-3 py-2" :disabled="isLoading" @click="saveStatement">
+        <PrimaryButton
+          class="h-10 w-18 px-3 py-2"
+          :disabled="isLoading || !etag || body.length > 200000"
+          @click="saveStatement"
+        >
           保存
         </PrimaryButton>
 
-        <AlertBox v-model:show="saveSuccess" text="問題文が保存されました。" />
+        <AlertBox v-model:show="saveSuccess" text="問題文が保存されました．" />
         <AlertBox v-model:show="saveErrorShow" :text="saveError" type="error" />
       </div>
     </div>
