@@ -1,7 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fmt;
 
-pub const SERVICE_ENVIRONMENT_PREFIX: &str = "TRAOJUDGE_";
 pub const INIT_SCRIPT_ENVIRONMENT_VARIABLE: &str = "TRAOJUDGE_INIT_SCRIPT";
 
 /// アーティファクトと実行ノードに使う名前。
@@ -89,7 +88,6 @@ impl ExecutionNode {
 /// - 入力に割り当てる環境変数名が`^[A-Za-z_][A-Za-z0-9_]*$`を満たし、
 ///   同じ実行ノード内で重複しない。
 /// - 各実行ノードに、`TRAOJUDGE_INIT_SCRIPT`を割り当てた入力がちょうど1つ存在する。
-/// - 入力への割り当てに使う`TRAOJUDGE_*`の名前は、`TRAOJUDGE_INIT_SCRIPT`だけである。
 ///
 /// [`Self::new`]は構築時に検証する。公開フィールドを直接構築・変更した場合は、
 /// 利用前に[`Self::validate`]を呼ぶ必要がある。
@@ -159,11 +157,6 @@ impl<RealisationMethod> JudgeDag<RealisationMethod> {
                 })?;
                 if let Some(variable) = &input.environment_variable {
                     validate_environment_variable(variable)?;
-                    if variable.starts_with(SERVICE_ENVIRONMENT_PREFIX)
-                        && variable != INIT_SCRIPT_ENVIRONMENT_VARIABLE
-                    {
-                        return Err(DagError::ReservedEnvironmentVariable(variable.clone()));
-                    }
                     if !variables.insert(variable.as_str()) {
                         return Err(DagError::DuplicateEnvironmentVariable {
                             execution: execution.name.clone(),
@@ -179,7 +172,6 @@ impl<RealisationMethod> JudgeDag<RealisationMethod> {
             if execution.init_script().is_none() {
                 return Err(DagError::MissingInitScript(execution.name.clone()));
             }
-
             for output in &execution.outputs {
                 let artifact_index =
                     *artifact_indices
@@ -267,46 +259,6 @@ impl<RealisationMethod> ProblemJudgeDags<RealisationMethod> {
     }
 }
 
-/// 提出時に確定するパラメーターを渡す、サービス側の環境変数。
-///
-/// [`Self::validate`]が成功した時点で、すべての環境変数名が
-/// `^[A-Za-z_][A-Za-z0-9_]*$`を満たし、サービス予約の接頭辞`TRAOJUDGE_`を持ち、
-/// `TRAOJUDGE_INIT_SCRIPT`を含まない。起動スクリプトのパスは実行ノードの入力から設定する。
-///
-/// [`Self::new`]は構築時に検証する。公開フィールドを直接構築・変更した場合は、
-/// 利用前に[`Self::validate`]を呼ぶ必要がある。
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct SubmissionEnvironment {
-    pub environment_variables: BTreeMap<String, String>,
-}
-
-impl SubmissionEnvironment {
-    pub fn new(environment_variables: BTreeMap<String, String>) -> Result<Self, DagError> {
-        let environment = Self {
-            environment_variables,
-        };
-        environment.validate()?;
-        Ok(environment)
-    }
-
-    pub fn validate(&self) -> Result<(), DagError> {
-        for variable in self.environment_variables.keys() {
-            validate_environment_variable(variable)?;
-            if !variable.starts_with(SERVICE_ENVIRONMENT_PREFIX) {
-                return Err(DagError::NonServiceEnvironmentVariable(variable.clone()));
-            }
-            if variable == INIT_SCRIPT_ENVIRONMENT_VARIABLE {
-                return Err(DagError::ReservedEnvironmentVariable(variable.clone()));
-            }
-        }
-        Ok(())
-    }
-
-    pub fn environment_variables(&self) -> &BTreeMap<String, String> {
-        &self.environment_variables
-    }
-}
-
 pub fn validate_environment_variable(variable: &str) -> Result<(), DagError> {
     let mut characters = variable.bytes();
     let valid_start = characters
@@ -339,10 +291,6 @@ pub enum DagError {
     MissingInitScript(NodeName),
     #[error("invalid environment variable: {0:?}")]
     InvalidEnvironmentVariable(String),
-    #[error("environment variable {0} is reserved by the service")]
-    ReservedEnvironmentVariable(String),
-    #[error("submission parameter {0} must use {prefix}", prefix = SERVICE_ENVIRONMENT_PREFIX)]
-    NonServiceEnvironmentVariable(String),
     #[error("execution {execution} binds environment variable {variable} more than once")]
     DuplicateEnvironmentVariable {
         execution: NodeName,

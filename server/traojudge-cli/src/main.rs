@@ -2,7 +2,9 @@ use clap::{Parser, Subcommand};
 
 mod commands;
 mod config;
+mod definition;
 mod domain;
+mod local;
 mod ports;
 mod ports_impl;
 
@@ -16,10 +18,12 @@ struct Cli {
 #[derive(Subcommand)]
 enum Command {
     Apply,
-    Validate,
+    Validate(commands::validate::Args),
+    Run(commands::run::Args),
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     let filter = tracing_subscriber::EnvFilter::try_from_default_env()
@@ -35,7 +39,11 @@ fn main() {
     let global_config = config::GlobalConfig {};
 
     match cli.command {
-        Command::Apply => commands::apply::run(&global_config),
-        Command::Validate => commands::validate::run(&global_config),
+        Command::Apply => {
+            commands::apply::run(&global_config);
+            Ok(())
+        }
+        Command::Validate(args) => commands::validate::run(&global_config, &args),
+        Command::Run(args) => commands::run::run(&global_config, &args).await,
     }
 }
