@@ -3,6 +3,7 @@ node_modules
 
 # rust
 target
+.traojudge/runs/
 
 # environment
 .env
