@@ -11,7 +11,7 @@ export class StandingsPreviewError extends Error {
   }
 }
 
-const basePath = (import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1').replace(/\/$/, '')
+const basePath = (import.meta.env.VITE_CONTEST_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api/v1').replace(/\/$/, '')
 
 async function getPreview<T>(path: string, signal: AbortSignal): Promise<T> {
   const response = await fetch(`${basePath}${path}`, { credentials: 'include', signal })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
+import type { Contest } from '@/api/generated/models/Contest'
 import type { StandingRow } from '@/types/standings'
 import { canViewContestStandings } from '@/utils/contestStandingsAccess'
 import {

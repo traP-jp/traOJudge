@@ -18,13 +18,13 @@
 
 ## APIクライアントを生成する
 
-既存画面は旧契約の生成物を使っているため，コンテストtopのクライアントは`src/api/generated/contest/`へ分けて生成する．生成物は直接編集しない．`UI/`で次を実行する．
+すべての画面で`src/api/generated/`の共通クライアントを使う．生成物は直接編集しない．`UI/`で次を実行する．
 
 ```sh
-bash scripts/gen-contest-api.sh
+bash scripts/gen-api.sh development
 ```
 
-入力は`docs/API/front_back.yaml`で，`getContest`，`listContestProblems`，`getContestStandings`，`getProblem`，`listProblemEditorials`，`getEditorial`，`listMyRoles`を生成対象とする．既存の`bash scripts/gen-api.sh development`からも呼び出される．
+入力は`docs/API/front_back.yaml`である．分割された定義を束ね，共通スキーマの名前を型名に使って全APIを生成する．旧契約への固定は廃止した．
 
 ## モックで表示を確認する
 
@@ -35,6 +35,6 @@ bash scripts/run-mock-api.sh
 npm run dev
 ```
 
-`http://localhost:5173/contest/1`でサンプル大会を表示する．Viteは`/api/v1`へのリクエストを`localhost:4010`へ転送する．別のAPIに接続する場合は，`VITE_CONTEST_API_BASE_URL`に`/api/v1`まで含むURLを設定する．本番環境の既定値は同一オリジンの`/api/v1`である．
+`http://localhost:5173/contest/260b98b4-28de-5c53-8ebc-0f4980b3a0c0`でサンプル大会を表示する．Viteは`/api/v1`へのリクエストを`localhost:4010`へ転送する．別のAPIに接続する場合は，`VITE_API_BASE_URL`に`/api/v1`まで含むURLを設定する．本番環境の既定値は同一オリジンの`/api/v1`である．
 
-終了済みのサンプル大会の解説一覧は`http://localhost:5173/contest/1/editorials`で確認する．AとCには解説，Bには未掲載の表示を用意した．開催前の表示は`http://localhost:5173/contest/2/editorials`で確認する．モックは権限判定を行わないため，認可の検証には使用しない．
+終了済みのサンプル大会の解説一覧は`http://localhost:5173/contest/260b98b4-28de-5c53-8ebc-0f4980b3a0c0/editorials`で確認する．AとCには解説，Bには未掲載の表示を用意した．開催前の表示は`http://localhost:5173/contest/8e23f1b2-2179-5aeb-9dfe-0f6840f027c9/editorials`で確認する．モックは権限判定を行わないため，認可の検証には使用しない．

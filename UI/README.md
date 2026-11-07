@@ -42,7 +42,7 @@ npm run lint
 
 ## API周りのコード生成の仕方
 
-ルートディレクトリで`./scripts/gen-api.sh development`を実行してください。APIを利用する部分については，生成されたコードを使って実装をしてください。
+`UI/`で`bash scripts/gen-api.sh development`を実行してください．APIを利用する部分については，生成されたコードを使って実装をしてください。
 
 ## mockサーバーの立ち上げ方
 

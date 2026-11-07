@@ -13,6 +13,7 @@ export default [
     ignores: ['node_modules', 'dist', 'build', 'coverage', 'docs', 'public', 'src/api/generated/**']
   },
   { languageOptions: { globals: globals.browser } },
+  { files: ['scripts/**/*.mjs', '*.config.{js,ts}'], languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],

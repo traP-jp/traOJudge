@@ -1,5 +1,5 @@
-import type { MeApi } from '@/api/generated/contest/apis/MeApi'
-import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
+import type { MeApi } from '@/api/generated/apis/MeApi'
+import type { Contest } from '@/api/generated/models/Contest'
 import type { StandingsKind } from '@/types/standings'
 
 export type ContestViewerRole = {

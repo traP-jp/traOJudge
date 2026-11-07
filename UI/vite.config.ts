@@ -9,7 +9,8 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/api/v1': 'http://localhost:4010'
+      '/api/v1': process.env.MOCK_API_TARGET || 'http://localhost:4010',
+      '/mock-storage': process.env.MOCK_API_TARGET || 'http://localhost:4010'
     }
   },
   resolve: {

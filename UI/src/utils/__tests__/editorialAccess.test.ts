@@ -1,15 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import type { GetMe200ResponseRolesInner } from '@/api/generated/contest/models/GetMe200ResponseRolesInner'
+import type { RoleAssignment } from '@/api/generated/models/RoleAssignment'
 import {
   canViewEditorial,
   getEarlyEditorialAccess,
   parseEditorialRoles
 } from '@/utils/editorialAccess'
 
-function role(
-  name: GetMe200ResponseRolesInner['role'],
-  scope: GetMe200ResponseRolesInner['scope']
-): GetMe200ResponseRolesInner {
+function role(name: RoleAssignment['role'], scope: RoleAssignment['scope']): RoleAssignment {
   return { role: name, scope, userId: 'viewer', grantedAt: new Date('2026-10-01T00:00:00Z') }
 }
 

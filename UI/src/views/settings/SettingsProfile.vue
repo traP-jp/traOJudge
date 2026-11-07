@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import PlainTextArea from '@//components/PlainTextArea.vue'
+import PlainTextArea from '@/components/PlainTextArea.vue'
 import { MeApi } from '@/api/generated/apis/MeApi'
+import { apiErrorMessage, requireEtag } from '@/utils/apiError'
+import { useUserStore } from '@/stores/user'
 import AlertBox from '@/components/AlertBox.vue'
 import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
@@ -11,6 +13,9 @@ const displayName = ref<string>('')
 const introduction = ref<string>('')
 const githubAccount = ref<string>('')
 const xAccount = ref<string>('')
+const atcoderAccount = ref('')
+const etag = ref('')
+const userStore = useUserStore()
 
 const displayNameError = ref<string>('')
 const introductionError = ref<string>('')
@@ -19,21 +24,24 @@ const saveSuccess = ref<boolean>(false)
 const saveErrorShow = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
 
-const MAX_INTRO_LENGTH = 200
+const MAX_INTRO_LENGTH = 4000
 
 async function fetchUserData() {
   isLoading.value = true
   try {
     const meApi = new MeApi()
-    const user = await meApi.getMe()
+    const response = await meApi.getMeRaw()
+    etag.value = requireEtag(response.raw)
+    const user = await response.value()
 
-    displayName.value = user.name || ''
-    introduction.value = user.selfIntroduction || ''
+    displayName.value = user.displayName || ''
+    introduction.value = user.bio || ''
     githubAccount.value = user.githubId || ''
     xAccount.value = user.xId || ''
+    atcoderAccount.value = user.atcoderId || ''
   } catch (error) {
     console.error('プロフィール情報の取得に失敗しました:', error)
-    saveError.value = 'プロフィール情報の取得に失敗しました。'
+    saveError.value = await apiErrorMessage(error)
     saveErrorShow.value = true
   } finally {
     isLoading.value = false
@@ -49,11 +57,11 @@ async function saveProfile() {
 
   let hasError = false
   if (!displayName.value) {
-    displayNameError.value = '表示名は必須です。'
+    displayNameError.value = '表示名は必須です．'
     hasError = true
   }
   if (introduction.value.length > MAX_INTRO_LENGTH) {
-    introductionError.value = `自己紹介は${MAX_INTRO_LENGTH}文字以内で入力してください。`
+    introductionError.value = `自己紹介は${MAX_INTRO_LENGTH}文字以内で入力してください．`
     hasError = true
   }
   if (hasError) return
@@ -62,19 +70,23 @@ async function saveProfile() {
 
   const meApi = new MeApi()
   try {
-    await meApi.putMe({
-      putMeRequest: {
-        userName: displayName.value,
-        selfIntroduction: introduction.value,
+    const response = await meApi.updateMeRaw({
+      origin: window.location.origin,
+      ifMatch: etag.value,
+      profileUpdate: {
+        displayName: displayName.value,
+        bio: introduction.value,
         githubId: githubAccount.value,
         xId: xAccount.value,
-        icon: undefined // TODO: アイコンのアップロード機能を実装したらここを修正
+        atcoderId: atcoderAccount.value
       }
     })
+    etag.value = requireEtag(response.raw)
+    userStore.user = await response.value()
     saveSuccess.value = true
   } catch (error) {
     console.error('プロフィールの保存に失敗しました:', error)
-    saveError.value = 'プロフィールの保存に失敗しました。'
+    saveError.value = await apiErrorMessage(error)
     saveErrorShow.value = true
   } finally {
     isLoading.value = false
@@ -133,10 +145,15 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <PrimaryButton class="h-10 w-18 px-3 py-2" :disabled="isLoading" @click="saveProfile">
+        <PlainTextbox v-model="atcoderAccount" label="AtCoderユーザー名" />
+        <PrimaryButton
+          class="h-10 w-18 px-3 py-2"
+          :disabled="isLoading || !etag || displayName.length > 80"
+          @click="saveProfile"
+        >
           保存
         </PrimaryButton>
-        <AlertBox v-model:show="saveSuccess" text="プロフィールが保存されました。" />
+        <AlertBox v-model:show="saveSuccess" text="プロフィールが保存されました．" />
         <AlertBox v-model:show="saveErrorShow" :text="saveError" type="error" />
       </div>
     </div>

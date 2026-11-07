@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
+import type { Contest } from '@/api/generated/models/Contest'
 import { formatContestDuration, getContestPhase } from '@/utils/contest'
 
 const props = defineProps<{ contest: Contest }>()

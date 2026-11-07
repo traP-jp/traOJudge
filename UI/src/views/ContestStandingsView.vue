@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ContestsApi } from '@/api/generated/contest/apis/ContestsApi'
-import { MeApi } from '@/api/generated/contest/apis/MeApi'
-import type { GetContest200Response as Contest } from '@/api/generated/contest/models/GetContest200Response'
-import type { ListContestProblems200ResponseItemsInner as ContestProblem } from '@/api/generated/contest/models/ListContestProblems200ResponseItemsInner'
-import { Configuration, ResponseError } from '@/api/generated/contest/runtime'
+import { ContestsApi } from '@/api/generated/apis/ContestsApi'
+import { MeApi } from '@/api/generated/apis/MeApi'
+import type { Contest } from '@/api/generated/models/Contest'
+import type { ContestProblem as ContestProblem } from '@/api/generated/models/ContestProblem'
+import { Configuration, ResponseError } from '@/api/generated/runtime'
 import {
   getExtendedStandingBoard,
   getIndividualStandingDetails,
@@ -51,7 +51,8 @@ const page = ref(1)
 const selectedStanding = ref<StandingSelection | null>(null)
 const pageSize = 10
 const config = new Configuration({
-  basePath: import.meta.env.VITE_CONTEST_API_BASE_URL || '/api/v1',
+  basePath:
+    import.meta.env.VITE_CONTEST_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api/v1',
   credentials: 'include'
 })
 const contestsApi = new ContestsApi(config)

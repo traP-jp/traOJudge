@@ -1,95 +1,114 @@
 <script setup lang="ts">
-import { dateToString } from '@/utils/date'
-import SimplePagination from '@/components/Controls/Pagination/SimplePagination.vue'
-import TextLink from '@/components/TextLink.vue'
+import { computed } from 'vue'
+import { SubmissionsApi, ProblemsApi, type JudgeRun, type Submission } from '@/api/generated'
+import { useCursorPagination } from '@/composables/useCursorPagination'
+import CursorPagination from '@/components/Controls/Pagination/CursorPagination.vue'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
+import TextLink from '@/components/TextLink.vue'
 import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
-import type { SubmissionSummary } from '@/api/generated'
-import { ref, watch } from 'vue'
-
-const props = defineProps<{
-  displayUsername?: boolean
-  loadSubmissions: (page: number) => Promise<{
-    submissions: Map<string, SubmissionSummary>
-    totalPage: number
-  }>
-}>()
-
-const submissions = ref<Map<string, SubmissionSummary>>(new Map())
-const page = defineModel<number>({ required: true })
+import { dateToString } from '@/utils/date'
+const props = defineProps<{ problemId?: string }>()
+const api = new SubmissionsApi()
+const problemsApi = new ProblemsApi()
+type Row = { submission: Submission; title: string; run: JudgeRun | null }
+const { items, page, hasNext, hasPrevious, isLoading, error, next, previous } =
+  useCursorPagination<Row>(
+    async (cursor, signal) => {
+      let result = await api.listMySubmissions({ cursor, limit: 20 }, { signal })
+      let matches = result.items.filter(
+        (item) => !props.problemId || item.problemId === props.problemId
+      )
+      const seen = new Set<string>()
+      while (!matches.length && result.nextCursor) {
+        if (seen.has(result.nextCursor)) throw new Error('提出一覧を取得できませんでした．')
+        seen.add(result.nextCursor)
+        result = await api.listMySubmissions({ cursor: result.nextCursor, limit: 20 }, { signal })
+        matches = result.items.filter(
+          (item) => !props.problemId || item.problemId === props.problemId
+        )
+      }
+      const rows = await Promise.all(
+        matches.map(async (submission) => {
+          const [problem, run] = await Promise.all([
+            problemsApi
+              .getProblem({ problemId: submission.problemId }, { signal })
+              .catch(() => null),
+            api
+              .getJudgeRun(
+                { submissionId: submission.id, judgeRunId: submission.currentJudgeRunId },
+                { signal }
+              )
+              .catch(() => null)
+          ])
+          return { submission, title: problem?.title ?? submission.problemId, run }
+        })
+      )
+      return { items: rows, nextCursor: result.nextCursor }
+    },
+    () => props.problemId
+  )
+const rows = computed(() => new Map(items.value.map((item) => [item.submission.id, item])))
 const cols: (Column & { name: string })[] = [
   { id: 'submittedAt', textAlign: 'start', name: '提出日時', width: '176px' },
   { id: 'title', textAlign: 'start', name: '問題' },
-  { id: 'userName', textAlign: 'start', name: '提出者', width: '200px' },
-  { id: 'totalScore', textAlign: 'end', name: '得点', width: '64px' },
-  { id: 'judgeStatus', textAlign: 'center', name: '結果', width: '80px' },
-  { id: 'maxTime', textAlign: 'end', name: '実行時間', width: '112px' },
-  { id: 'maxMemory', textAlign: 'end', name: 'メモリ', width: '112px' }
-] as const
-
-const totalPage = ref<number>(0)
-const isLoaded = ref(true)
-
-const updateSubmissions = async () => {
-  isLoaded.value = false
-  const res = await props.loadSubmissions(page.value)
-  isLoaded.value = true
-  submissions.value = res.submissions
-  totalPage.value = res.totalPage
-  if (page.value < 1) page.value = 1
-  if (page.value >= totalPage.value) page.value = totalPage.value
-}
-
-watch([page], () => updateSubmissions(), {
-  immediate: true
-})
+  { id: 'score', textAlign: 'end', name: '得点', width: '64px' },
+  { id: 'result', textAlign: 'center', name: '結果', width: '96px' },
+  { id: 'time', textAlign: 'end', name: '実行時間', width: '112px' },
+  { id: 'memory', textAlign: 'end', name: 'メモリ', width: '112px' }
+]
 </script>
-
 <template>
-  <ListingTable
-    v-if="isLoaded"
-    :cols="
-      cols.filter((col) => (props.displayUsername ? col.id !== 'title' : col.id !== 'userName'))
-    "
-    :row-ids="[...submissions.keys()]"
-  >
-    <template #head="{ colId }">
-      {{ cols.find(({ id }) => id === colId)?.name }}
-    </template>
+  <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
+  <p v-else-if="isLoading">読み込み中...</p>
+  <p v-else-if="!items.length">提出はありません．</p>
+  <ListingTable v-else :cols="cols" :row-ids="[...rows.keys()]">
+    <template #head="{ colId }">{{ cols.find((col) => col.id === colId)?.name }}</template>
     <template #cell="{ rowId, colId }">
-      <template v-if="colId === 'submittedAt'">
-        {{ dateToString(submissions.get(rowId)?.submittedAt) }}
-      </template>
-      <template v-else-if="colId === 'title'">
-        <TextLink :href="`/problems/${submissions.get(rowId)?.problemId}`" :new-tab="true">
-          {{ submissions.get(rowId)?.title }}
-        </TextLink>
-      </template>
-      <template v-else-if="colId === 'userName'">
-        <TextLink :href="`/users/${submissions.get(rowId)?.userId}`" :new-tab="true">
-          {{ submissions.get(rowId)?.userName }}
-        </TextLink>
-      </template>
-      <template v-else-if="colId === 'totalScore'">
-        {{ submissions.get(rowId)?.totalScore }}
-      </template>
-      <template v-else-if="colId === 'judgeStatus'">
+      <TextLink
+        v-if="colId === 'submittedAt'"
+        :href="`/problems/${rows.get(rowId)?.submission.problemId}/submissions/${rowId}`"
+        >{{ dateToString(rows.get(rowId)?.submission.submittedAt) }}</TextLink
+      >
+      <TextLink
+        v-else-if="colId === 'title'"
+        :href="`/problems/${rows.get(rowId)?.submission.problemId}`"
+        >{{ rows.get(rowId)?.title }}</TextLink
+      >
+      <template v-else-if="colId === 'score'">{{
+        rows.get(rowId)?.run?.result?.score ?? '—'
+      }}</template>
+      <template v-else-if="colId === 'result'">
         <JudgeResultBadge
-          v-if="submissions.get(rowId)?.judgeStatus"
-          :status="submissions.get(rowId)!.judgeStatus"
+          v-if="rows.get(rowId)?.run?.result"
+          :status="rows.get(rowId)!.run!.result!.verdict"
         />
+        <span v-else>{{
+          rows.get(rowId)?.run?.state === 'failed'
+            ? '採点失敗'
+            : rows.get(rowId)?.run
+              ? '採点中'
+              : '取得できません'
+        }}</span>
       </template>
-      <template v-else-if="colId === 'maxTime'">
-        <span>{{ submissions.get(rowId)?.maxTime }}</span>
-        <span class="fontstyle-ui-body-2 ml-1">ms</span>
-      </template>
-      <template v-else-if="colId === 'maxMemory'">
-        <span>{{ submissions.get(rowId)?.maxMemory ?? 0 }}</span>
-        <span class="fontstyle-ui-body-2 ml-1">KiB</span>
-      </template>
-      <template v-else>Unknown column: {{ colId }}</template>
+      <template v-else-if="colId === 'time'"
+        >{{ rows.get(rowId)?.run?.result?.maxTimeMs ?? '—' }} ms</template
+      >
+      <template v-else
+        >{{
+          rows.get(rowId)?.run?.result
+            ? Math.ceil(rows.get(rowId)!.run!.result!.maxMemoryBytes / 1024)
+            : '—'
+        }}
+        KiB</template
+      >
     </template>
   </ListingTable>
-  <div v-else>読み込み中...</div>
-  <SimplePagination v-if="totalPage > 1" v-model="page" :end="totalPage" class="mt-6" />
+  <CursorPagination
+    :page="page"
+    :has-next="hasNext"
+    :has-previous="hasPrevious"
+    :loading="isLoading"
+    @next="next"
+    @previous="previous"
+  />
 </template>

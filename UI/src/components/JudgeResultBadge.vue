@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { JudgeStatus } from '@/api/generated'
+import { computed } from 'vue'
+import type { JudgeStatus } from '@/utils/statusConfig'
 import { statusConfig } from '@/utils/statusConfig'
 
 const props = defineProps<{
   status: JudgeStatus
 }>()
 
-const config = statusConfig[props.status] || statusConfig.WJ
+const config = computed(() => statusConfig[props.status] || statusConfig.WJ)
 </script>
 
 <template>

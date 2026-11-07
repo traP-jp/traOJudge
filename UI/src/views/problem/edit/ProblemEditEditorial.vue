@@ -7,14 +7,8 @@ import PrimaryButton from '@/components/Controls/PrimaryButton.vue'
 import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
 import MaterialIcon from '@/components/MaterialIcon.vue'
 import TextLink from '@/components/TextLink.vue'
-import {
-  EditorialsApi,
-  ResponseError,
-  type PostEditorialOperationRequest,
-  type PostEditorialRequest,
-  type PutEditorialOperationRequest,
-  type PutEditorialRequest
-} from '@/api/generated'
+import { EditorialsApi } from '@/api/generated'
+import { apiErrorMessage, requireEtag } from '@/utils/apiError'
 import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 import router from '@/router'
 
@@ -22,6 +16,7 @@ const { requireMockLogin } = useMockAuthGuard()
 
 const title = ref<string>('')
 const body = ref<string>('')
+const etag = ref('')
 
 const titleError = ref<string>('')
 
@@ -73,21 +68,18 @@ async function fetchEditorial() {
   isLoading.value = true
 
   try {
-    const response = await editorialApi.getEditorial({
+    const result = await editorialApi.getEditorialRaw({
       editorialId: editorialId.value
     })
 
+    etag.value = requireEtag(result.raw)
+    const response = await result.value()
     title.value = response.title
-    body.value = response.statement
+    body.value = response.body
   } catch (error) {
     console.error('解説取得エラー:', error)
 
-    if (error instanceof ResponseError) {
-      const response = await error.response.json()
-      saveError.value = `解説の取得に失敗しました: ${response.body.message} (${response.status})`
-    } else {
-      saveError.value = '解説の取得に失敗しました。もう一度お試しください。'
-    }
+    saveError.value = await apiErrorMessage(error)
 
     saveErrorShow.value = true
   } finally {
@@ -102,55 +94,31 @@ async function saveEditorial() {
 
   isLoading.value = true
 
-  const editorialPayload = {
-    title: title.value,
-    statement: body.value,
-    isPublic: true
-  }
-
   try {
     if (editorialId.value === 'new') {
       const response = await requireMockLogin(() =>
-        editorialApi.postEditorial({
-          problemId: problemId.value,
-          postEditorialRequest: editorialPayload as PostEditorialRequest
-        } as PostEditorialOperationRequest)
+        editorialApi.createEditorial({
+          origin: window.location.origin,
+          idempotencyKey: crypto.randomUUID(),
+          editorialCreate: { problemId: problemId.value, title: title.value, body: body.value }
+        })
       )
-
-      router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
+      await router.push(`/problems/${problemId.value}/edit/editorials/${response.id}`)
+      await fetchEditorial()
     } else {
-      await requireMockLogin(() =>
-        editorialApi.putEditorial({
+      const response = await requireMockLogin(() =>
+        editorialApi.updateEditorialRaw({
+          origin: window.location.origin,
+          ifMatch: etag.value,
           editorialId: editorialId.value,
-          putEditorialRequest: editorialPayload as PutEditorialRequest
-        } as PutEditorialOperationRequest)
+          editorialUpdate: { title: title.value, body: body.value }
+        })
       )
+      etag.value = requireEtag(response.raw)
     }
-
     saveSuccess.value = true
   } catch (error) {
-    console.error('解説保存エラー:', error)
-
-    if (error instanceof ResponseError) {
-      switch (error.response.status) {
-        case 400:
-          saveError.value = 'リクエストが不正です。入力内容を確認してください。'
-          break
-        case 403:
-          saveError.value = '解説を投稿または編集する権限がありません。'
-          break
-        case 404:
-          saveError.value = '問題が存在しないか、閲覧権限がありません．'
-          break
-        case 500:
-          saveError.value = 'サーバーエラーが発生しました。'
-          break
-        default:
-          saveError.value = '解説の保存に失敗しました。もう一度お試しください。'
-      }
-    } else {
-      saveError.value = '予期せぬエラーが発生しました。もう一度お試しください。'
-    }
+    saveError.value = await apiErrorMessage(error)
     saveErrorShow.value = true
   } finally {
     isLoading.value = false
@@ -201,12 +169,18 @@ onMounted(() => {
 
         <PrimaryButton
           class="h-10 w-18 px-3 py-2"
-          :disabled="isLoading || inputInvalid"
+          :disabled="
+            isLoading ||
+            inputInvalid ||
+            title.length > 200 ||
+            body.length > 200000 ||
+            (editorialId !== 'new' && !etag)
+          "
           @click="saveEditorial"
         >
           保存
         </PrimaryButton>
-        <AlertBox v-model:show="saveSuccess" text="解説が保存されました。" />
+        <AlertBox v-model:show="saveSuccess" text="解説が保存されました．" />
         <AlertBox v-model:show="saveErrorShow" :text="saveError" type="error" />
       </div>
     </div>
