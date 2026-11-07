@@ -20,6 +20,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:lint": "node scripts/lint.test.mjs",
+    "test:mock": "node --test scripts/mockProfile.test.mjs",
     "format:check": "prettier --check . ../docs/ui",
     "mock": "mockoon-cli start --data ./src/api/mock/front-back-api-mock.json --hostname 127.0.0.1 --disable-admin-api --watch"
   },

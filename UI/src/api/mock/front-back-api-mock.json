@@ -253,7 +253,7 @@
       "responses": [
         {
           "uuid": "1f761e37-5dc3-4674-bac3-da01215eddce",
-          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": \"mock-user\",\n  \"bio\": \"開発用の利用者です。\",\n  \"githubId\": \"\",\n  \"atcoderId\": \"\",\n  \"xId\": \"\",\n  \"revision\": \"1\",\n  \"roles\": {{data 'mockroles' 'setter'}}\n}",
+          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": {{{stringify (data 'mockprofile' 'displayName')}}},\n  \"bio\": {{{stringify (data 'mockprofile' 'bio')}}},\n  \"githubId\": {{{stringify (data 'mockprofile' 'githubId')}}},\n  \"atcoderId\": {{{stringify (data 'mockprofile' 'atcoderId')}}},\n  \"xId\": {{{stringify (data 'mockprofile' 'xId')}}},\n  \"revision\": \"{{data 'mockprofile' 'revision'}}\",\n  \"roles\": {{data 'mockroles' 'setter'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "開催中コンテストの運営",
@@ -261,6 +261,10 @@
             {
               "key": "Cache-Control",
               "value": "no-store"
+            },
+            {
+              "key": "ETag",
+              "value": "\"profile-{{data 'mockprofile' 'revision'}}\""
             }
           ],
           "bodyType": "INLINE",
@@ -292,7 +296,7 @@
         },
         {
           "uuid": "5b534b2f-0c33-4a8b-b45f-e96e73feea7d",
-          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": \"mock-user\",\n  \"bio\": \"開発用の利用者です。\",\n  \"githubId\": \"\",\n  \"atcoderId\": \"\",\n  \"xId\": \"\",\n  \"revision\": \"1\",\n  \"roles\": {{data 'mockroles' 'member'}}\n}",
+          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": {{{stringify (data 'mockprofile' 'displayName')}}},\n  \"bio\": {{{stringify (data 'mockprofile' 'bio')}}},\n  \"githubId\": {{{stringify (data 'mockprofile' 'githubId')}}},\n  \"atcoderId\": {{{stringify (data 'mockprofile' 'atcoderId')}}},\n  \"xId\": {{{stringify (data 'mockprofile' 'xId')}}},\n  \"revision\": \"{{data 'mockprofile' 'revision'}}\",\n  \"roles\": {{data 'mockroles' 'member'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "ログイン済み",
@@ -300,6 +304,10 @@
             {
               "key": "Cache-Control",
               "value": "no-store"
+            },
+            {
+              "key": "ETag",
+              "value": "\"profile-{{data 'mockprofile' 'revision'}}\""
             }
           ],
           "bodyType": "INLINE",
@@ -341,6 +349,259 @@
           "rules": [],
           "rulesOperator": "AND",
           "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c6ac06ab-5c91-4848-8b3c-f64ae2423437",
+      "type": "http",
+      "documentation": "本人プロフィールの更新。ETagが一致した場合だけモックの値を更新する。",
+      "method": "patch",
+      "endpoint": "api/v1/me",
+      "responses": [
+        {
+          "uuid": "3a39453b-46d1-44b5-b1d2-6783e1dc1b67",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "unauthenticated",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{cookie 'traojudge_mock_session'}}",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a93bee76-96f6-4fa7-a07e-d3a1130c0c41",
+          "body": "{\"code\": \"forbidden\", \"message\": \"Originを確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "forbidden",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{header 'Origin'}}",
+              "value": "http://localhost:5173",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "2b8b0a14-9d8d-4dd6-ba9b-36895a6110f7",
+          "body": "{\"code\": \"precondition_required\", \"message\": \"If-Matchが必要です。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 428,
+          "label": "precondition_required",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "If-Match",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3dd72fb0-5c95-46f6-b5d7-d6883328a1db",
+          "body": "{\"code\": \"precondition_failed\", \"message\": \"プロフィールが更新されています。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 412,
+          "label": "precondition_failed",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "If-Match",
+              "value": "\"profile-{{data 'mockprofile' 'revision'}}\"",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3f76c2c1-f11b-49cd-81c5-ecad2297f2ff",
+          "body": "{\"code\": \"validation_failed\", \"message\": \"入力内容を確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "validation_failed",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "$",
+              "value": "profileupdate",
+              "operator": "valid_json_schema",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d1ee7197-57ce-4a50-89e4-8d3ecca87bab",
+          "body": "{{#if (eq (header 'If-Match') (concat '\"profile-' (data 'mockprofile' 'revision') '\"'))}}{{setData 'merge' 'mockprofile' '' (bodyRaw)}}{{setData 'inc' 'mockprofile' 'revision'}}\n{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": {{{stringify (data 'mockprofile' 'displayName')}}},\n  \"bio\": {{{stringify (data 'mockprofile' 'bio')}}},\n  \"githubId\": {{{stringify (data 'mockprofile' 'githubId')}}},\n  \"atcoderId\": {{{stringify (data 'mockprofile' 'atcoderId')}}},\n  \"xId\": {{{stringify (data 'mockprofile' 'xId')}}},\n  \"revision\": \"{{data 'mockprofile' 'revision'}}\",\n  \"roles\": {{#if (eq (cookie 'traojudge_mock_role') 'setter')}}{{data 'mockroles' 'setter'}}{{else}}{{data 'mockroles' 'member'}}{{/if}}\n}\n{{else}}{{status 412}}{\"code\": \"precondition_failed\", \"message\": \"プロフィールが更新されています。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}{{/if}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "保存",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "ETag",
+              "value": "{{#if (eq (header 'If-Match') (concat '\"profile-' (data 'mockprofile' 'revision') '\"'))}}\"profile-{{add (dataRaw 'mockprofile' 'revision') 1}}\"{{else}}\"profile-{{data 'mockprofile' 'revision'}}\"{{/if}}"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": false
+            },
+            {
+              "target": "header",
+              "modifier": "Origin",
+              "value": "http://localhost:5173",
+              "operator": "equals",
+              "invert": false
+            },
+            {
+              "target": "header",
+              "modifier": "If-Match",
+              "value": "\"profile-{{data 'mockprofile' 'revision'}}\"",
+              "operator": "equals",
+              "invert": false
+            },
+            {
+              "target": "body",
+              "modifier": "$",
+              "value": "profileupdate",
+              "operator": "valid_json_schema",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "bd2a2666-6d4d-4e13-9f00-a264e0b6d520",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "unauthenticated",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
           "crudKey": "id",
@@ -1167,122 +1428,6 @@
           "body": "{\n  \"id\": \"{{urlParam 'userId'}}\",\n  \"name\": \"{{#eq (urlParam 'userId') 'bb4003b3-d8e0-5fd9-a8ed-2e1691e39368'}}mock-user{{else}}{{faker 'internet.username'}}{{/eq}}\",\n  \"traqId\": \"{{faker 'internet.username'}}\",\n  \"githubId\": \"{{faker 'internet.username'}}\",\n  \"iconUrl\": \"https://randomuser.me/api/portraits/{{oneOf (array 'men' 'women')}}/{{faker 'number.int' min=1 max=99}}.jpg\",\n  \"postProblems\": {\n    \"total\": 100,\n    \"problems\": [\n      {{#repeat 100}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"authorId\": \"{{faker 'string.uuid'}}\",\n        \"isPublic\": true,\n        \"difficulty\": {{faker 'number.int' min=1 max=10}},\n        \"timeLimit\": 2000,\n        \"memoryLimit\": 1024,\n        \"solvedCount\": {{faker 'number.int' min=10 max=100}},\n        \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"submitProblems\": {\n    \"total\": 5,\n    \"submissions\": [\n      {{#repeat 5}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"problemId\": \"{{faker 'string.uuid'}}\",\n        \"userId\": \"{{faker 'string.uuid'}}\",\n        \"userName\": \"{{faker 'internet.username'}}\",\n        \"submittedAt\": \"{{date '2024-01-01' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"languageId\": \"{{faker 'number.int' min=1 max=10}}\",\n        \"totalScore\": {{faker 'number.int' min=0 max=100}},\n        \"maxTime\": {{faker 'number.int' min=10 max=2000}},\n        \"maxMemory\": {{faker 'number.float' min=0.1 max=512 precision=0.1}},\n        \"codeLength\": {{faker 'number.int' min=100 max=5000}},\n        \"judgeStatus\": \"{{oneOf (array 'AC' 'WA' 'CE' 'IE' 'MLE' 'RE' 'TLE' 'WJ')}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"xId\": \"{{faker 'internet.url'}}\",\n  \"selfIntroduction\": \"{{faker 'lorem.sentence'}}\",\n  \"role\": \"{{oneOf (array 'Admin' 'traPUser' 'CommonUser')}}\",\n  \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n  \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\"\n}\n",
           "latency": 0,
           "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "28487a59-e7a6-46bf-a231-38dd42c7af27",
-      "type": "http",
-      "documentation": "",
-      "method": "get",
-      "endpoint": "users/me",
-      "responses": [
-        {
-          "uuid": "05ccc3e1-2568-4a36-a7b9-f4ef2497389c",
-          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"name\": \"mock-user\",\n  \"githubId\": \"\",\n  \"iconUrl\": \"https://randomuser.me/api/portraits/{{oneOf (array 'men' 'women')}}/{{faker 'number.int' min=1 max=99}}.jpg\",\n  \"postProblems\": {\n    \"total\": 5,\n    \"problems\": [\n      {{#repeat 5}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"authorId\": \"{{faker 'string.uuid'}}\",\n        \"isPublic\": true,\n        \"difficulty\": {{faker 'number.int' min=1 max=10}},\n        \"timeLimit\": 2000,\n        \"memoryLimit\": 1024,\n        \"solvedCount\": {{faker 'number.int' min=10 max=100}},\n        \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"submitProblems\": {\n    \"total\": 5,\n    \"submissions\": [\n      {{#repeat 5}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"problemId\": \"{{faker 'string.uuid'}}\",\n        \"userId\": \"{{faker 'string.uuid'}}\",\n        \"userName\": \"{{faker 'internet.username'}}\",\n        \"submittedAt\": \"{{date '2024-01-01' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"languageId\": \"{{faker 'number.int' min=1 max=10}}\",\n        \"totalScore\": {{faker 'number.int' min=0 max=100}},\n        \"maxTime\": {{faker 'number.int' min=10 max=2000}},\n        \"maxMemory\": {{faker 'number.float' min=0.1 max=512 precision=0.1}},\n        \"codeLength\": {{faker 'number.int' min=100 max=5000}},\n        \"judgeStatus\": \"{{oneOf (array 'AC' 'WA' 'CE' 'IE' 'MLE' 'RE' 'TLE' 'WJ')}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"xId\": \"\",\n  \"selfIntroduction\": \"開発用の利用者です。\",\n  \"role\": \"{{oneOf (array 'Admin' 'traPUser' 'CommonUser')}}\",\n  \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n  \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n  \"authentication\": {\n    \"emailAuth\": \"{{faker 'internet.email'}}\",\n    \"googleAuth\": \"{{faker 'internet.email'}}\",\n    \"githubAuth\": \"{{faker 'string.uuid'}}\",\n    \"traqAuth\": \"{{faker 'string.uuid'}}\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "cookie",
-              "modifier": "traojudge_mock_session",
-              "value": "1",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "b8029b79-2da5-469e-8146-1b5cc27d74ec",
-          "body": "{\"message\":\"Unauthorized\"}",
-          "latency": 0,
-          "statusCode": 401,
-          "label": "No mock session",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null,
-      "streamingMode": null,
-      "streamingInterval": 0
-    },
-    {
-      "uuid": "5de411f4-4a4d-43da-88b1-08a7ad608db9",
-      "type": "http",
-      "documentation": "",
-      "method": "put",
-      "endpoint": "users/me",
-      "responses": [
-        {
-          "uuid": "ee8a1917-79e4-41ac-900b-ff7377e02c0a",
-          "body": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"name\": \"mock-user\",\n  \"githubId\": \"\",\n  \"iconUrl\": \"https://randomuser.me/api/portraits/{{oneOf (array 'men' 'women')}}/{{faker 'number.int' min=1 max=99}}.jpg\",\n  \"postProblems\": {\n    \"total\": 5,\n    \"problems\": [\n      {{#repeat 5}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"authorId\": \"{{faker 'string.uuid'}}\",\n        \"isPublic\": true,\n        \"difficulty\": {{faker 'number.int' min=1 max=10}},\n        \"timeLimit\": 2000,\n        \"memoryLimit\": 1024,\n        \"solvedCount\": {{faker 'number.int' min=10 max=100}},\n        \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"submitProblems\": {\n    \"total\": 5,\n    \"submissions\": [\n      {{#repeat 5}}\n      {\n        \"id\": \"{{faker 'string.uuid'}}\",\n        \"title\": \"{{faker 'lorem.sentence'}}\",\n        \"problemId\": \"{{faker 'string.uuid'}}\",\n        \"userId\": \"{{faker 'string.uuid'}}\",\n        \"userName\": \"{{faker 'internet.username'}}\",\n        \"submittedAt\": \"{{date '2024-01-01' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n        \"languageId\": \"{{faker 'number.int' min=1 max=10}}\",\n        \"totalScore\": {{faker 'number.int' min=0 max=100}},\n        \"maxTime\": {{faker 'number.int' min=10 max=2000}},\n        \"maxMemory\": {{faker 'number.float' min=0.1 max=512 precision=0.1}},\n        \"codeLength\": {{faker 'number.int' min=100 max=5000}},\n        \"judgeStatus\": \"{{oneOf (array 'AC' 'WA' 'CE' 'IE' 'MLE' 'RE' 'TLE' 'WJ')}}\"\n      }\n      {{/repeat}}\n    ]\n  },\n  \"xId\": \"\",\n  \"selfIntroduction\": \"開発用の利用者です。\",\n  \"role\": \"{{oneOf (array 'Admin' 'traPUser' 'CommonUser')}}\",\n  \"createdAt\": \"{{date '2020-01-01' '2024-11-05' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n  \"updatedAt\": \"{{date '2024-11-06' '2024-11-11' 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\''}}\",\n  \"authentication\": {\n    \"emailAuth\": \"{{faker 'internet.email'}}\",\n    \"googleAuth\": \"{{faker 'internet.email'}}\",\n    \"githubAuth\": \"{{faker 'string.uuid'}}\",\n    \"traqAuth\": \"{{faker 'string.uuid'}}\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "$",
-              "value": "cmm7",
-              "invert": false,
-              "operator": "valid_json_schema"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "462e0c1f-6f8a-4ccf-93e8-683c64c8ff5f",
-          "body": "{\n  \"status\": 400,\n  \"body\": {\n    \"message\": \"Bad Request\"\n  }\n}",
-          "latency": 0,
-          "statusCode": 400,
           "label": "",
           "headers": [],
           "bodyType": "INLINE",
@@ -2815,11 +2960,15 @@
     },
     {
       "key": "Access-Control-Allow-Headers",
-      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With, If-Match"
     },
     {
       "key": "Access-Control-Allow-Credentials",
       "value": "true"
+    },
+    {
+      "key": "Access-Control-Expose-Headers",
+      "value": "ETag"
     }
   ],
   "proxyReqHeaders": [
@@ -2885,13 +3034,6 @@
       "value": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"languageId\": {\n      \"type\": \"string\"\n    },\n    \"source\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"languageId\"\n  ]\n}"
     },
     {
-      "uuid": "0ba051af-1379-4394-bcdb-27841e401c7d",
-      "id": "cmm7",
-      "name": "PutMeRequest",
-      "documentation": "既存APIの固定スキーマに準拠。password / binary はJSONの文字列として検証する。",
-      "value": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"userName\": {\n      \"type\": \"string\"\n    },\n    \"icon\": {\n      \"type\": \"string\"\n    },\n    \"xId\": {\n      \"type\": \"string\"\n    },\n    \"githubId\": {\n      \"type\": \"string\"\n    },\n    \"selfIntroduction\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"userName\",\n    \"xId\",\n    \"githubId\",\n    \"selfIntroduction\"\n  ]\n}"
-    },
-    {
       "uuid": "7b1fb4c2-283f-43a8-8569-e000a7dc0ab5",
       "id": "mockroles",
       "name": "MockRoles",
@@ -2904,6 +3046,20 @@
       "name": "TokenConfirmation",
       "documentation": "新APIのメール本人確認リクエスト。",
       "value": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"token\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    }\n  },\n  \"required\": [\n    \"token\"\n  ]\n}"
+    },
+    {
+      "uuid": "4d7a2bd5-b8a8-4ff6-9d77-f0b4a69860b0",
+      "id": "mockprofile",
+      "name": "MockProfile",
+      "documentation": "プロフィール更新はモックを再起動するまで保持する。",
+      "value": "{\n  \"id\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"displayName\": \"mock-user\",\n  \"bio\": \"開発用の利用者です。\",\n  \"githubId\": \"\",\n  \"atcoderId\": \"\",\n  \"xId\": \"\",\n  \"revision\": 1\n}"
+    },
+    {
+      "uuid": "16f9c305-9041-4199-b8b0-6b24683feb7a",
+      "id": "profileupdate",
+      "name": "ProfileUpdate",
+      "documentation": "PATCH /api/v1/meの入力。",
+      "value": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"minProperties\": 1,\n  \"properties\": {\n    \"displayName\": {\n      \"type\": \"string\",\n      \"minLength\": 1,\n      \"maxLength\": 80\n    },\n    \"bio\": {\n      \"type\": \"string\",\n      \"maxLength\": 4000\n    },\n    \"githubId\": {\n      \"type\": \"string\"\n    },\n    \"atcoderId\": {\n      \"type\": \"string\"\n    },\n    \"xId\": {\n      \"type\": \"string\"\n    }\n  }\n}"
     }
   ],
   "callbacks": []
