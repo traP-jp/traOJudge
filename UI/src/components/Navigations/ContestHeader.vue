@@ -11,18 +11,8 @@ let clock: ReturnType<typeof setInterval> | undefined
 
 const tabs = [
   { label: 'トップ', name: 'contest-top' },
-  { label: '解説', name: 'contest-editorials' },
-  { label: '順位表', name: 'contest-standings' }
+  { label: '解説', name: 'contest-editorials' }
 ] as const
-
-const activeTab = computed(() =>
-  typeof route.name === 'string' && route.name.startsWith('contest-standings')
-    ? 'contest-standings'
-    : route.name
-)
-const standingsRouteName = computed(() =>
-  props.contest.participationMode === 'team' ? 'contest-standings-team' : 'contest-standings'
-)
 
 const phase = computed(() =>
   getContestPhase(props.contest.startsAt, props.contest.endsAt, now.value)
@@ -72,14 +62,11 @@ onUnmounted(() => clearInterval(clock))
       <RouterLink
         v-for="tab in tabs"
         :key="tab.name"
-        :to="{
-          name: tab.name === 'contest-standings' ? standingsRouteName : tab.name,
-          params: { contestId: contest.id }
-        }"
-        :aria-current="activeTab === tab.name ? 'page' : undefined"
+        :to="{ name: tab.name, params: { contestId: contest.id } }"
+        :aria-current="route.name === tab.name ? 'page' : undefined"
         class="-mb-px inline-flex min-h-12 items-center border-b-2 px-5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
         :class="
-          activeTab === tab.name
+          route.name === tab.name
             ? 'border-brand-primary font-semibold text-brand-primary'
             : 'border-transparent text-text-secondary hover:border-border-secondary hover:text-text-primary'
         "
