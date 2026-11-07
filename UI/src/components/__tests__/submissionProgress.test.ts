@@ -111,8 +111,8 @@ describe.each([
 ])('$name polling', ({ component }) => {
   it('shows partial counts, ignores older revisions and stops only after a final result', async () => {
     await mount(component)
-    expect(content()).toContain('採点待ち')
-    expect(content()).toContain('0 / 総数不明')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 0/?...')
+    expect(host.querySelector('[role="status"]')?.getAttribute('aria-label')).toContain('総数不明')
     currentRun = {
       ...baseRun,
       state: 'running',
@@ -121,10 +121,10 @@ describe.each([
       revision: 2
     }
     await poll()
-    expect(content()).toContain('1 / 3')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 1/3...')
     currentRun = { ...completed, revision: 1 }
     await poll()
-    expect(content()).toContain('1 / 3')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 1/3...')
     expect(content()).not.toContain('WA')
     currentRun = {
       ...baseRun,
@@ -134,7 +134,7 @@ describe.each([
       revision: 3
     }
     await poll()
-    expect(content()).toContain('2 / 3')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 2/3...')
     currentRun = {
       ...baseRun,
       state: 'aggregating',
@@ -143,12 +143,14 @@ describe.each([
       revision: 5
     }
     await poll()
-    expect(content()).toContain('結果集計中')
-    expect(content()).toContain('3 / 3')
+    expect(host.querySelector('[role="status"]')?.getAttribute('title')).toBe('結果集計中')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 3/3...')
     expect(content()).not.toContain('WA')
     currentRun = completed
     await poll()
-    expect(content()).toContain('WA')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WA')
+    expect(content()).not.toContain('ケース完了')
+    expect(host.querySelector('[aria-hidden="true"]')).toBeNull()
     const calls = fetchMock.mock.calls.length
     await vi.advanceTimersByTimeAsync(10000)
     expect(fetchMock).toHaveBeenCalledTimes(calls)
@@ -165,11 +167,13 @@ describe.each([
     await mount(component)
     failNext = true
     await poll()
-    expect(content()).toContain('1 / 3')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 1/3...')
     expect(host.querySelector('[role="alert"]')?.textContent).toContain('再取得')
     currentRun = completed
     await poll()
-    expect(content()).toContain('WA')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WA')
+    expect(content()).not.toContain('ケース完了')
+    expect(host.querySelector('[aria-hidden="true"]')).toBeNull()
     expect(host.querySelector('[role="alert"]')).toBeNull()
   })
 
@@ -185,8 +189,8 @@ describe.each([
     currentRunId = '00000000-0000-4000-8000-000000000004'
     currentRun = { ...baseRun, id: currentRunId }
     await poll()
-    expect(content()).toContain('採点待ち')
-    expect(content()).toContain('0 / 総数不明')
+    expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 0/?...')
+    expect(host.querySelector('[role="status"]')?.getAttribute('aria-label')).toContain('総数不明')
     expect(fetchMock.mock.calls.at(-1)?.[0]).toContain(`/judge-runs/${currentRunId}`)
   })
 
@@ -240,6 +244,6 @@ it('discards the old detail response when navigating to another submission', asy
   expect(signal?.aborted).toBe(true)
   resolve(json(completed))
   await vi.advanceTimersByTimeAsync(0)
-  expect(content()).toContain('採点待ち')
+  expect(host.querySelector('[role="status"]')?.textContent).toBe('WJ 0/?...')
   expect(content()).not.toContain('WA')
 })

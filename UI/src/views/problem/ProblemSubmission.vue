@@ -2,9 +2,9 @@
 import { onScopeDispose, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { SubmissionsApi, type JudgeRun, type Submission } from '@/api/generated'
-import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
+import JudgeRunBadge from '@/components/JudgeRunBadge.vue'
 import { apiErrorMessage } from '@/utils/apiError'
-import { isJudgeRunFinished, latestJudgeRun, judgeRunStateLabels } from '@/utils/judgeRun'
+import { isJudgeRunFinished, latestJudgeRun } from '@/utils/judgeRun'
 
 const route = useRoute()
 const api = new SubmissionsApi()
@@ -61,12 +61,8 @@ onScopeDispose(() => {
     <p v-if="!error && (!submission || !run)">読み込み中...</p>
     <template v-if="submission && run">
       <p>提出日時：{{ submission.submittedAt.toLocaleString('ja-JP') }}</p>
-      <p role="status">
-        {{ judgeRunStateLabels[run.state] }}：{{ run.completedCaseCount }} /
-        {{ run.totalCaseCount ?? '総数不明' }} ケース完了
-      </p>
+      <JudgeRunBadge :run="run" />
       <template v-if="run.result">
-        <JudgeResultBadge :status="run.result.verdict" />
         <p>得点：{{ run.result.score }}</p>
         <p>実行時間：{{ run.result.maxTimeMs }} ms</p>
         <p>メモリ：{{ Math.ceil(run.result.maxMemoryBytes / 1024) }} KiB</p>

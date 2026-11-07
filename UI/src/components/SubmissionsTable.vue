@@ -5,9 +5,9 @@ import { useCursorPagination } from '@/composables/useCursorPagination'
 import CursorPagination from '@/components/Controls/Pagination/CursorPagination.vue'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import TextLink from '@/components/TextLink.vue'
-import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
+import JudgeRunBadge from '@/components/JudgeRunBadge.vue'
 import { dateToString } from '@/utils/date'
-import { isJudgeRunFinished, latestJudgeRun, judgeRunStateLabels } from '@/utils/judgeRun'
+import { isJudgeRunFinished, latestJudgeRun } from '@/utils/judgeRun'
 const props = defineProps<{ problemId?: string }>()
 const api = new SubmissionsApi()
 const problemsApi = new ProblemsApi()
@@ -102,7 +102,7 @@ const cols: (Column & { name: string })[] = [
   { id: 'submittedAt', textAlign: 'start', name: '提出日時', width: '176px' },
   { id: 'title', textAlign: 'start', name: '問題' },
   { id: 'score', textAlign: 'end', name: '得点', width: '64px' },
-  { id: 'result', textAlign: 'center', name: '結果', width: '96px' },
+  { id: 'result', textAlign: 'center', name: '結果', width: '144px' },
   { id: 'time', textAlign: 'end', name: '実行時間', width: '112px' },
   { id: 'memory', textAlign: 'end', name: 'メモリ', width: '112px' }
 ]
@@ -128,17 +128,7 @@ const cols: (Column & { name: string })[] = [
         rows.get(rowId)?.run?.result?.score ?? '—'
       }}</template>
       <template v-else-if="colId === 'result'">
-        <JudgeResultBadge
-          v-if="rows.get(rowId)?.run?.result"
-          :status="rows.get(rowId)!.run!.result!.verdict"
-        />
-        <template v-else-if="rows.get(rowId)?.run">
-          <span>{{ judgeRunStateLabels[rows.get(rowId)!.run!.state] }}</span>
-          <span class="block text-text-secondary">
-            {{ rows.get(rowId)!.run!.completedCaseCount }} /
-            {{ rows.get(rowId)!.run!.totalCaseCount ?? '総数不明' }}
-          </span>
-        </template>
+        <JudgeRunBadge v-if="rows.get(rowId)?.run" :run="rows.get(rowId)!.run!" />
         <span v-else>取得できません</span>
       </template>
       <template v-else-if="colId === 'time'"
