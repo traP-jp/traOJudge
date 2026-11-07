@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash, randomUUID } from 'node:crypto'
+import { setTimeout } from 'node:timers/promises'
 import { mock, findOperation, validate, isPreview } from './mock-contract.mjs'
 
 const base = process.env.MOCK_API_URL || 'http://localhost:4010'
@@ -163,7 +164,28 @@ const submission = (await request('get', '/submissions/' + accepted.value.submis
 assert.equal(submission.problemId, problemId)
 assert.equal(submission.languageId, languageId)
 assert.deepEqual(submission.context, { kind: 'practice' })
-await request('get', `/submissions/${submission.id}/judge-runs/${submission.currentJudgeRunId}`)
+const runPath = `/submissions/${submission.id}/judge-runs/${submission.currentJudgeRunId}`
+let run = (await request('get', runPath)).value
+assert.equal(run.state, 'queued')
+assert.equal(run.totalCaseCount, null)
+const states = new Set([run.state])
+const counts = new Set([run.completedCaseCount])
+const deadline = Date.now() + 20000
+while (run.state !== 'completed' && Date.now() < deadline) {
+  await setTimeout(500)
+  const next = (await request('get', runPath)).value
+  assert.ok(next.revision >= run.revision)
+  assert.ok(next.completedCaseCount >= run.completedCaseCount)
+  if (next.revision === run.revision) assert.deepEqual(next, run)
+  run = next
+  states.add(run.state)
+  counts.add(run.completedCaseCount)
+}
+assert.deepEqual([...states], ['queued', 'preparing', 'running', 'aggregating', 'completed'])
+assert.deepEqual([...counts], [0, 1, 2, 3])
+assert.equal(run.result.verdict, 'AC')
+assert.equal(run.completedCaseCount, run.totalCaseCount)
+assert.deepEqual((await request('get', runPath)).value, run)
 assert.ok(
   (await request('get', '/me/submissions')).value.items.some((item) => item.id === submission.id)
 )

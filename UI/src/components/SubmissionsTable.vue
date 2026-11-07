@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onScopeDispose, ref, watch } from 'vue'
 import { SubmissionsApi, ProblemsApi, type JudgeRun, type Submission } from '@/api/generated'
 import { useCursorPagination } from '@/composables/useCursorPagination'
 import CursorPagination from '@/components/Controls/Pagination/CursorPagination.vue'
@@ -7,6 +7,7 @@ import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import TextLink from '@/components/TextLink.vue'
 import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
 import { dateToString } from '@/utils/date'
+import { isJudgeRunFinished, latestJudgeRun, judgeRunStateLabels } from '@/utils/judgeRun'
 const props = defineProps<{ problemId?: string }>()
 const api = new SubmissionsApi()
 const problemsApi = new ProblemsApi()
@@ -47,6 +48,55 @@ const { items, page, hasNext, hasPrevious, isLoading, error, next, previous } =
     },
     () => props.problemId
   )
+const pollError = ref('')
+let timer: ReturnType<typeof setTimeout> | undefined
+let controller: AbortController | undefined
+
+function scheduleRefresh(signal: AbortSignal) {
+  if (signal.aborted || !items.value.some((item) => !isJudgeRunFinished(item.run))) return
+  timer = setTimeout(() => void refreshPending(signal), 2000)
+}
+
+async function refreshPending(signal: AbortSignal) {
+  pollError.value = ''
+  const updated = await Promise.all(
+    items.value.map(async (row) => {
+      if (isJudgeRunFinished(row.run)) return row
+      try {
+        const submission = await api.getSubmission({ submissionId: row.submission.id }, { signal })
+        const run = await api.getJudgeRun(
+          { submissionId: submission.id, judgeRunId: submission.currentJudgeRunId },
+          { signal }
+        )
+        return { ...row, submission, run: latestJudgeRun(row.run, run) }
+      } catch {
+        if (!signal.aborted) pollError.value = '採点状況を更新できませんでした．再取得しています．'
+        return row
+      }
+    })
+  )
+  if (signal.aborted) return
+  items.value = updated
+  scheduleRefresh(signal)
+}
+
+watch(
+  isLoading,
+  (loading) => {
+    clearTimeout(timer)
+    controller?.abort()
+    pollError.value = ''
+    if (loading || error.value) return
+    controller = new AbortController()
+    scheduleRefresh(controller.signal)
+  },
+  { immediate: true }
+)
+onScopeDispose(() => {
+  clearTimeout(timer)
+  controller?.abort()
+})
+
 const rows = computed(() => new Map(items.value.map((item) => [item.submission.id, item])))
 const cols: (Column & { name: string })[] = [
   { id: 'submittedAt', textAlign: 'start', name: '提出日時', width: '176px' },
@@ -82,13 +132,14 @@ const cols: (Column & { name: string })[] = [
           v-if="rows.get(rowId)?.run?.result"
           :status="rows.get(rowId)!.run!.result!.verdict"
         />
-        <span v-else>{{
-          rows.get(rowId)?.run?.state === 'failed'
-            ? '採点失敗'
-            : rows.get(rowId)?.run
-              ? '採点中'
-              : '取得できません'
-        }}</span>
+        <template v-else-if="rows.get(rowId)?.run">
+          <span>{{ judgeRunStateLabels[rows.get(rowId)!.run!.state] }}</span>
+          <span class="block text-text-secondary">
+            {{ rows.get(rowId)!.run!.completedCaseCount }} /
+            {{ rows.get(rowId)!.run!.totalCaseCount ?? '総数不明' }}
+          </span>
+        </template>
+        <span v-else>取得できません</span>
       </template>
       <template v-else-if="colId === 'time'"
         >{{ rows.get(rowId)?.run?.result?.maxTimeMs ?? '—' }} ms</template
@@ -103,6 +154,7 @@ const cols: (Column & { name: string })[] = [
       >
     </template>
   </ListingTable>
+  <p v-if="pollError" role="alert" class="text-status-error">{{ pollError }}</p>
   <CursorPagination
     :page="page"
     :has-next="hasNext"

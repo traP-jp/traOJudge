@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { SubmissionsApi, type JudgeRun, type Submission } from '@/api/generated'
 import JudgeResultBadge from '@/components/JudgeResultBadge.vue'
 import { apiErrorMessage } from '@/utils/apiError'
+import { isJudgeRunFinished, latestJudgeRun, judgeRunStateLabels } from '@/utils/judgeRun'
 
 const route = useRoute()
 const api = new SubmissionsApi()
@@ -24,11 +25,14 @@ async function load(signal: AbortSignal) {
     )
     if (signal.aborted) return
     submission.value = item
-    run.value = result
-    if (result.state !== 'completed' && result.state !== 'failed')
-      timer = setTimeout(() => void load(signal), 2000)
+    run.value = latestJudgeRun(run.value, result)
+    error.value = ''
   } catch (cause) {
-    if (!signal.aborted) error.value = await apiErrorMessage(cause)
+    const message = await apiErrorMessage(cause)
+    if (!signal.aborted) error.value = message
+  } finally {
+    if (!signal.aborted && !isJudgeRunFinished(run.value))
+      timer = setTimeout(() => void load(signal), 2000)
   }
 }
 watch(
@@ -53,10 +57,14 @@ onScopeDispose(() => {
 <template>
   <div class="space-y-4">
     <h2 class="fontstyle-ui-subtitle">提出結果</h2>
-    <p v-if="error" class="text-status-error" role="alert">{{ error }}</p>
-    <p v-else-if="!submission || !run">読み込み中...</p>
-    <template v-else>
+    <p v-if="error" class="text-status-error" role="alert">{{ error }} 再取得しています．</p>
+    <p v-if="!error && (!submission || !run)">読み込み中...</p>
+    <template v-if="submission && run">
       <p>提出日時：{{ submission.submittedAt.toLocaleString('ja-JP') }}</p>
+      <p role="status">
+        {{ judgeRunStateLabels[run.state] }}：{{ run.completedCaseCount }} /
+        {{ run.totalCaseCount ?? '総数不明' }} ケース完了
+      </p>
       <template v-if="run.result">
         <JudgeResultBadge :status="run.result.verdict" />
         <p>得点：{{ run.result.score }}</p>
@@ -64,9 +72,6 @@ onScopeDispose(() => {
         <p>メモリ：{{ Math.ceil(run.result.maxMemoryBytes / 1024) }} KiB</p>
       </template>
       <p v-else-if="run.failure" class="text-status-error">{{ run.failure.message }}</p>
-      <p v-else>
-        採点中：{{ run.completedCaseCount }} / {{ run.totalCaseCount ?? '未確定' }} ケース
-      </p>
     </template>
   </div>
 </template>

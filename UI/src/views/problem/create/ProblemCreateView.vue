@@ -39,6 +39,7 @@ async function createProblem() {
       <PlainTextbox v-model="title" label="問題タイトル" required />
       <PlainTextArea v-model="statement" label="問題文（Markdown）" class="h-64" />
       <PrimaryButton
+        class="h-12 shrink-0"
         :disabled="saving || !title.trim() || title.length > 200 || statement.length > 200000"
         @click="createProblem"
         >作成</PrimaryButton

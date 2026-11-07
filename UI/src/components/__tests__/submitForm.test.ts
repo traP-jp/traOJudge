@@ -33,7 +33,7 @@ const uploadId = '00000000-0000-4000-8000-000000000012'
 const submissionId = '00000000-0000-4000-8000-000000000013'
 const json = (value: unknown, status = 200) =>
   new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json' } })
-async function mountForm(failUpload = false) {
+async function mountForm(failUpload = false, filename = 'main.cpp') {
   DefaultConfig.config = new Configuration({ basePath: '/api/v1', credentials: 'include' })
   vi.stubGlobal('crypto', webcrypto)
   const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
@@ -80,6 +80,9 @@ async function mountForm(failUpload = false) {
   const source = host.querySelector<HTMLTextAreaElement>('#source')!
   source.value = 'あ'
   source.dispatchEvent(new Event('input', { bubbles: true }))
+  const name = host.querySelector<HTMLInputElement>('#source-filename')!
+  name.value = filename
+  name.dispatchEvent(new Event('input', { bubbles: true }))
   await nextTick()
   host.querySelector<HTMLButtonElement>('button')!.click()
   return fetchMock
@@ -124,6 +127,14 @@ describe('SubmitForm', () => {
       expect(host?.querySelector('[role="alert"]')?.textContent).toContain('転送できません')
     )
     expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(push).not.toHaveBeenCalled()
+  })
+  it('shows an invalid path before submitting and sends no upload request', async () => {
+    const fetchMock = await mountForm(false, '../main.cpp')
+    expect(host?.textContent).toContain('相対パスを指定してください')
+    expect(host?.querySelector('#source-filename')?.getAttribute('aria-invalid')).toBe('true')
+    expect(host?.querySelector<HTMLButtonElement>('button')?.disabled).toBe(true)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(push).not.toHaveBeenCalled()
   })
 })

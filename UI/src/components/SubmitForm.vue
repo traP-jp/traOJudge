@@ -7,7 +7,7 @@ import SelectBox, { type SelectOption } from '@/components/Controls/SelectBox.vu
 import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
 import { ProblemsApi, SubmissionsApi, type Language } from '@/api/generated'
 import { apiErrorMessage } from '@/utils/apiError'
-import { sourceFileManifest } from '@/utils/sourceFileManifest'
+import { sourceFileManifest, sourceFilePathError } from '@/utils/sourceFileManifest'
 
 const router = useRouter()
 const { problemId } = defineProps<{ problemId: string }>()
@@ -19,6 +19,7 @@ const selectedLanguage = computed(() =>
 )
 const sourceCode = ref<string | null>(null)
 const filename = ref('main.cpp')
+const filenameError = computed(() => sourceFilePathError(filename.value))
 const isLoading = ref(true)
 const isSubmitting = ref(false)
 const error = ref('')
@@ -35,7 +36,13 @@ onMounted(async () => {
 })
 
 async function handleSubmit() {
-  if (isSubmitting.value || !selectedLanguage.value || !sourceCode.value?.trim()) return
+  if (
+    isSubmitting.value ||
+    !selectedLanguage.value ||
+    !sourceCode.value?.trim() ||
+    filenameError.value
+  )
+    return
   isSubmitting.value = true
   error.value = ''
   try {
@@ -81,7 +88,7 @@ async function handleSubmit() {
     <p v-if="error" class="text-status-error" role="alert">{{ error }}</p>
     <p v-if="isLoading">読み込み中...</p>
     <template v-else>
-      <h2 class="fontstyle-ui-subtitle text-text-primary">練習提出</h2>
+      <h2 class="fontstyle-ui-subtitle text-text-primary">提出</h2>
       <SelectBox
         v-model="selectedOption"
         :options="languages"
@@ -90,7 +97,16 @@ async function handleSubmit() {
         :disabled="isSubmitting"
       />
       <p v-if="selectedLanguage" class="text-text-secondary">{{ selectedLanguage.versionLabel }}</p>
-      <PlainTextbox v-model="filename" label="ファイル名" :disabled="isSubmitting" />
+      <PlainTextbox
+        id="source-filename"
+        v-model="filename"
+        label="ファイル名"
+        required
+        supporting-text="例：main.cpp，src/main.cpp"
+        :disabled="isSubmitting"
+        :error-message="filenameError"
+        :aria-invalid="Boolean(filenameError)"
+      />
       <CodeBlock
         v-if="selectedLanguage"
         v-model="sourceCode"
@@ -98,7 +114,9 @@ async function handleSubmit() {
         class="w-full"
       />
       <PrimaryButton
-        :disabled="isSubmitting || !selectedLanguage || !sourceCode?.trim()"
+        :disabled="
+          isSubmitting || !selectedLanguage || !sourceCode?.trim() || Boolean(filenameError)
+        "
         class="h-12 w-24"
         right-icon="send"
         @click="handleSubmit"
