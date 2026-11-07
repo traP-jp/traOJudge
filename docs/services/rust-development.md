@@ -12,6 +12,33 @@ Nix を使わない場合は、Rust を用意したうえで次のコマンド�
 cargo install cargo-hakari --version 0.9.36 --locked
 ```
 
+## 依存クレートの公開から更新までの待機期間
+
+`.cargo/config.toml` の `registry.global-min-publish-age = "7 days"` と
+`resolver.incompatible-publish-age = "deny"` により、依存関係の解決では公開から7日未満のバージョンを候補から除外する。
+`cargo update` や `cargo add` に追加のフラグは不要。
+
+この設定に対応する Cargo を使うため、`rust-toolchain.toml` は `nightly-2026-10-25` に固定する。
+Rustup・Nix・CI はこのファイルを参照する。`rust-toolchain.toml` はツールチェーンを選ぶためのファイルであり、待機期間の設定は `.cargo/config.toml` に置く。
+この nightly には Rust 1.100 で安定化される機能が含まれるため、`-Z min-publish-age` や `[unstable]` は不要。
+詳細は [Cargo の設定リファレンス](https://doc.rust-lang.org/nightly/cargo/reference/config.html#registryglobal-min-publish-age) を参照する。
+
+すでに `Cargo.lock` に固定されているバージョンは待機期間の対象外で、既存の依存関係は自動で巻き戻さない。
+公開日時を提供しないレジストリや Git・path 依存にはこの制限は適用されない。
+明示的な別ツールチェーンの指定や Cargo の設定上書きは可能なので、上書きせずリポジトリ指定の環境を使う。
+
+緊急のセキュリティ修正など、7日を待たず特定のバージョンへ更新する必要がある場合だけ、次のようにその実行に限って制限を解除する。
+
+```sh
+CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow \
+  cargo update -p <crate> --precise <version>
+```
+
+その場合も、下記の cargo-hakari の再生成と整合性チェックを行い、変更した `Cargo.lock` をレビューする。
+
+Dependabot の Cargo の通常更新にも `.github/dependabot.yml` で7日の `cooldown` を設定する。
+[Dependabot の cooldown](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown) はセキュリティ更新には適用されない。
+
 ## 依存関係を変更したとき
 
 クレートの追加・削除、依存関係の feature の変更、`cargo update` の後は、リポジトリのルートで次を実行する。
