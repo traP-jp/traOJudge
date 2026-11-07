@@ -23,24 +23,6 @@ const router = createRouter({
       component: () => import('@/views/ContestEditorialsView.vue')
     },
     {
-      path: '/contest/:contestId/standings',
-      name: 'contest-standings',
-      component: () => import('@/views/ContestStandingsView.vue'),
-      props: { kind: 'individual' }
-    },
-    {
-      path: '/contest/:contestId/standings/team',
-      name: 'contest-standings-team',
-      component: () => import('@/views/ContestStandingsView.vue'),
-      props: { kind: 'team' }
-    },
-    {
-      path: '/contest/:contestId/standings/extended',
-      name: 'contest-standings-extended',
-      component: () => import('@/views/ContestStandingsView.vue'),
-      props: { kind: 'extended' }
-    },
-    {
       path: '/reset-password/:pathMatch(.*)*',
       component: () => import('@/views/AuthTodoView.vue')
     },

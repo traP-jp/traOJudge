@@ -599,14 +599,14 @@ contestsByContestIdStandings:
     tags:
       - 'contests'
     summary: '通常の個人戦の順位を取得する'
-    description: '個人戦の順位を返す．各問題の本人の最高得点の合計で集計し，同得点時は設定されたタイブレークを使う．採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す．チーム戦では /standings/team を使う．公開大会はログインせずに閲覧できる．非公開大会の閲覧条件はMUT-06で具体化する．'
+    description: '個人戦の順位を返す。各問題の本人の最高得点の合計で集計し、同得点時は設定されたタイブレークを使う。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。チーム戦では /standings/team を使う。公開時点・非公開大会の閲覧条件はMUT-06で具体化する。'
     security:
       - {}
       - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
-        - condition: '対象大会が公開大会である'
+        - condition: '公開されている順位表'
         - role: 'contest-setter'
           scope: 'contestId'
         - role: 'contestant'
@@ -641,14 +641,13 @@ contestsByContestIdTeamStandings:
     tags:
       - 'contests'
     summary: '通常のチーム戦の順位を取得する'
-    description: 'チーム戦の順位を返す．各問題はチームメンバー全員の提出から最高得点を採用し，その合計をチーム得点とする．同点時の比較値も全メンバーの提出を一つのチームとして集計し，設定されたタイブレークを使う．メンバー名を含める．採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す．個人戦では使用できない．公開大会はログインせずに閲覧できる．'
+    description: 'チーム戦の順位を返す。各問題はチームメンバー全員の提出から最高得点を採用し、その合計をチーム得点とする。同点時の比較値も全メンバーの提出を一つのチームとして集計し、設定されたタイブレークを使う。メンバー名を含める。採点結果の確定と順位への反映には時間差があり得るためupdatedAtを返す。個人戦では使用できない。'
     security:
       - {}
       - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
-        - condition: '対象大会が公開大会である'
         - role: 'contestant'
           scope: 'contestId'
         - role: 'contest-setter'

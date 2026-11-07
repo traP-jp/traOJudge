@@ -6,7 +6,7 @@
 
 通常大会の`description`にMarkdown形式の概要を保存する契約とした．省略・空文字列の場合は，概要が未掲載であることを表示する．本文中のHTMLは実行しない．[概要テンプレート](./contest-overview-template.md)を執筆のたたき台に使える．
 
-大会タイトルの下に「トップ」「解説」「順位表」のタブを置き，Vue Routerで画面を切り替える．[順位表ページの開発](./standings.md)に3種類の画面とモックの扱いを記す．問題・質問・提出のタブは，対応する画面の実装時に追加する．日時は閲覧端末の設定にかかわらず日本標準時で表示する．
+今回のUIは表示のみを扱う．大会タイトルの下に「トップ」と「解説」のタブを置き，Vue Routerで画面を切り替える．問題・質問・提出・順位表のタブは，対応する画面の実装時に追加する．日時は閲覧端末の設定にかかわらず日本標準時で表示する．
 
 ## 大会の解説一覧を表示する
 
@@ -24,7 +24,7 @@
 bash scripts/gen-contest-api.sh
 ```
 
-入力は`docs/API/front_back.yaml`で，`getContest`，`listContestProblems`，`getContestStandings`，`getProblem`，`listProblemEditorials`，`getEditorial`，`listMyRoles`を生成対象とする．既存の`bash scripts/gen-api.sh development`からも呼び出される．
+入力は`docs/API/front_back.yaml`で，`getContest`，`listContestProblems`，`getProblem`，`listProblemEditorials`，`getEditorial`，`listMyRoles`を生成対象とする．既存の`bash scripts/gen-api.sh development`からも呼び出される．
 
 ## モックで表示を確認する
 

@@ -23,7 +23,6 @@ export type Icon =
   | 'more_vert'
   | 'open_in_new'
   | 'person'
-  | 'refresh'
   | 'save'
   | 'search'
   | 'send'
