@@ -7,11 +7,11 @@ import PlainTextbox from '@/components/Controls/Textbox/PlainTextbox.vue'
 import NumberTextbox from '@/components/Controls/Textbox/NumberTextbox.vue'
 import PlainTextArea from '@/components/PlainTextArea.vue'
 import { ProblemsApi } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 import { type Ref } from 'vue'
 
 const router = useRouter()
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const title = ref<string>('')
 const difficulty = ref<number>()
@@ -58,7 +58,7 @@ const problemsApi = new ProblemsApi()
 async function createProblem() {
   isLoading.value = true
   try {
-    const createdProblem = await requireTraqAuth(() =>
+    const createdProblem = await requireMockLogin(() =>
       problemsApi.postProblem({
         postProblemRequest: {
           title: title.value,

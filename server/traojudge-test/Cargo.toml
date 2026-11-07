@@ -6,3 +6,14 @@ edition.workspace = true
 [dependencies]
 traojudge-core.workspace = true
 traojudge-infra.workspace = true
+workspace-hack.workspace = true
+
+[dev-dependencies]
+async-trait.workspace = true
+axum.workspace = true
+serde_json.workspace = true
+sqlx = { workspace = true, features = ["postgres", "macros", "migrate"] }
+tokio.workspace = true
+tower.workspace = true
+traojudge-backend_app.workspace = true
+uuid.workspace = true

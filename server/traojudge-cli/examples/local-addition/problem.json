@@ -1,0 +1,31 @@
+{
+  "dags": [{
+    "environment": "host",
+    "artifacts": [
+      {"kind": "input", "name": "compile_script", "realise": {"kind": "file", "path": "compile.sh"}},
+      {"kind": "input", "name": "run_script", "realise": {"kind": "file", "path": "run.sh"}},
+      {"kind": "input", "name": "check_script", "realise": {"kind": "file", "path": "check.sh"}},
+      {"kind": "input", "name": "source", "realise": {"kind": "submission"}},
+      {"kind": "input", "name": "case_input", "realise": {"kind": "file", "path": "input.txt"}},
+      {"kind": "input", "name": "expected", "realise": {"kind": "file", "path": "expected.txt"}},
+      {"kind": "intermediate", "name": "binary"},
+      {"kind": "intermediate", "name": "actual"}
+    ],
+    "executions": [
+      {"name": "compile", "inputs": [
+        {"artifact": "compile_script", "environment_variable": "TRAOJUDGE_INIT_SCRIPT"},
+        {"artifact": "source", "environment_variable": "TRAOJUDGE_SUBMISSION_SOURCE"}
+      ], "outputs": ["binary"]},
+      {"name": "run", "inputs": [
+        {"artifact": "run_script", "environment_variable": "TRAOJUDGE_INIT_SCRIPT"},
+        {"artifact": "binary", "environment_variable": "BINARY"},
+        {"artifact": "case_input", "environment_variable": "CASE_INPUT"}
+      ], "outputs": ["actual"]},
+      {"name": "check", "inputs": [
+        {"artifact": "check_script", "environment_variable": "TRAOJUDGE_INIT_SCRIPT"},
+        {"artifact": "actual", "environment_variable": "ACTUAL"},
+        {"artifact": "expected", "environment_variable": "EXPECTED"}
+      ], "outputs": []}
+    ]
+  }]
+}

@@ -1,0 +1,21 @@
+[package]
+name = "traojudge-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+clap.workspace = true
+reqwest.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+workspace-hack.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true
+futures.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+traojudge-core.workspace = true
+traojudge-workflow.workspace = true
+uuid.workspace = true
+sha2.workspace = true

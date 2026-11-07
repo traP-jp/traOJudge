@@ -26,3 +26,13 @@ updates:
       actions-deps:
         patterns:
           - '*'
+
+  - package-ecosystem: cargo
+    directory: '/'
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 10
+    groups:
+      rust-deps:
+        patterns:
+          - '*'

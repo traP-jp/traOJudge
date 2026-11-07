@@ -1,0 +1,505 @@
+ContestRules:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    tieBreak:
+      type: 'string'
+      enum:
+        - 'icpc'
+        - 'atcoder'
+    penaltyMinutes:
+      type: 'integer'
+      minimum: 0
+      description: '開始前まで変更可能。0は誤答ペナルティなし。'
+  required:
+    - 'tieBreak'
+    - 'penaltyMinutes'
+ContestCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    description:
+      type: 'string'
+      maxLength: 200000
+      default: ''
+      description: 'コンテストtopに表示するMarkdown形式の概要．HTMLは許可しない．'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '大会主催側が選ぶ参加方式。個人戦またはチーム戦。'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+      default: 'private'
+      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+  required:
+    - 'title'
+    - 'participationMode'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+ContestUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    description:
+      type: 'string'
+      maxLength: 200000
+      description: 'コンテストtopの概要．Markdown形式で記述し，空文字列で消去する．'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '変更要求時点が更新前のstartsAtより前なら現在の方式と異なる値へ変更できる。変更すると既存の参加登録と大会内チームをすべて削除する。'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+  required: []
+  minProperties: 1
+Contest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    description:
+      type: 'string'
+      maxLength: 200000
+      description: 'コンテストtopに表示するMarkdown形式の概要．未設定・省略時は概要なしとして表示する．'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    participationMode:
+      type: 'string'
+      enum:
+        - 'individual'
+        - 'team'
+      description: '個人戦またはチーム戦。'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'title'
+    - 'visibility'
+    - 'participationMode'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+    - 'revision'
+Contests:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Contest'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+ContestProblem:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    label:
+      type: 'string'
+    order:
+      type: 'integer'
+      minimum: 0
+  required:
+    - 'problemId'
+    - 'label'
+    - 'order'
+ContestProblems:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestProblem'
+  required:
+    - 'items'
+ContestProblemInput:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    label:
+      type: 'string'
+      minLength: 1
+      maxLength: 32
+    order:
+      type: 'integer'
+      minimum: 0
+  required: []
+Participation:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    joinedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'userId'
+    - 'joinedAt'
+ContestTeamJoinRequest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    name:
+      $ref: './common.yaml#/DisplayName'
+    password:
+      type: 'string'
+      minLength: 1
+      maxLength: 128
+      writeOnly: true
+      description: 'チーム作成・参加に使う秘密情報。応答には含めない。'
+  required:
+    - 'name'
+    - 'password'
+ContestTeamMember:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    displayName:
+      $ref: './common.yaml#/DisplayName'
+  required:
+    - 'userId'
+    - 'displayName'
+ContestTeam:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    name:
+      type: 'string'
+    members:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestTeamMember'
+  required:
+    - 'id'
+    - 'name'
+    - 'members'
+ContestTeamParticipation:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    team:
+      $ref: './contests.yaml#/ContestTeam'
+    joinedAt:
+      type: 'string'
+      format: 'date-time'
+      description: 'ログイン中の本人がこのチームに参加した時刻。'
+  required:
+    - 'team'
+    - 'joinedAt'
+VirtualContestCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    title:
+      type: 'string'
+      minLength: 1
+      maxLength: 200
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+      default: 'private'
+      description: '作成時の公開範囲。作成後の変更権限は別途具体化する。'
+  required:
+    - 'title'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+VirtualContestUpdate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+  required: []
+  minProperties: 1
+VirtualContest:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    title:
+      type: 'string'
+    visibility:
+      $ref: './permissions.yaml#/VisibilityValue'
+    startsAt:
+      type: 'string'
+      format: 'date-time'
+    endsAt:
+      type: 'string'
+      format: 'date-time'
+    rules:
+      $ref: './contests.yaml#/ContestRules'
+    revision:
+      $ref: './common.yaml#/Version'
+  required:
+    - 'id'
+    - 'title'
+    - 'visibility'
+    - 'startsAt'
+    - 'endsAt'
+    - 'rules'
+    - 'revision'
+VirtualContests:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/VirtualContest'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+ClarificationCreate:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 10000
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+  required:
+    - 'body'
+ClarificationAnswer:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    body:
+      type: 'string'
+      minLength: 1
+      maxLength: 10000
+    isPublic:
+      type: 'boolean'
+      description: 'trueなら質問と回答を公開する。コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。falseなら質問者本人と質問を受け付けた大会の運営担当だけが閲覧できる。'
+  required:
+    - 'body'
+    - 'isPublic'
+Clarification:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    id:
+      $ref: './common.yaml#/ResourceId'
+    authorId:
+      $ref: './common.yaml#/ResourceId'
+    body:
+      type: 'string'
+    problemId:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    answer:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+    isPublic:
+      type: 'boolean'
+      description: '質問と回答の公開範囲。回答前はfalse。trueなら、コンテスト全体への質問はこの大会の参加者に、問題への質問はその問題を含む全ての通常大会の参加者に公開する。'
+    answeredBy:
+      anyOf:
+        - $ref: './common.yaml#/ResourceId'
+        - type: 'null'
+    revision:
+      $ref: './common.yaml#/Version'
+    createdAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'id'
+    - 'authorId'
+    - 'body'
+    - 'problemId'
+    - 'answer'
+    - 'isPublic'
+    - 'answeredBy'
+    - 'revision'
+    - 'createdAt'
+Clarifications:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Clarification'
+    nextCursor:
+      anyOf:
+        - type: 'string'
+        - type: 'null'
+  required:
+    - 'items'
+    - 'nextCursor'
+Standing:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    userId:
+      $ref: './common.yaml#/ResourceId'
+    problemScores:
+      type: 'array'
+      description: '大会の全出題を出題順に返す。提出得点がない問題のscoreは0。'
+      items:
+        $ref: './contests.yaml#/ContestProblemScore'
+    rank:
+      type: 'integer'
+      minimum: 1
+    score:
+      type: 'number'
+    tieBreakValue:
+      type: 'number'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'userId'
+    - 'problemScores'
+    - 'rank'
+    - 'score'
+    - 'tieBreakValue'
+    - 'updatedAt'
+TeamStanding:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    teamId:
+      $ref: './common.yaml#/ResourceId'
+    teamName:
+      type: 'string'
+    members:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/ContestTeamMember'
+    problemScores:
+      type: 'array'
+      description: '大会の全出題を出題順に返す。各問題でチームメンバー全員の最高得点を採用し、得点がない問題のscoreは0。'
+      items:
+        $ref: './contests.yaml#/ContestProblemScore'
+    rank:
+      type: 'integer'
+      minimum: 1
+    score:
+      type: 'number'
+    tieBreakValue:
+      type: 'number'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'teamId'
+    - 'teamName'
+    - 'members'
+    - 'problemScores'
+    - 'rank'
+    - 'score'
+    - 'tieBreakValue'
+    - 'updatedAt'
+ContestProblemScore:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    problemId:
+      $ref: './common.yaml#/ResourceId'
+    label:
+      type: 'string'
+    score:
+      type: 'number'
+      minimum: 0
+  required:
+    - 'problemId'
+    - 'label'
+    - 'score'
+Standings:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/Standing'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'items'
+    - 'updatedAt'
+TeamStandings:
+  type: 'object'
+  additionalProperties: false
+  properties:
+    items:
+      type: 'array'
+      items:
+        $ref: './contests.yaml#/TeamStanding'
+    updatedAt:
+      type: 'string'
+      format: 'date-time'
+  required:
+    - 'items'
+    - 'updatedAt'

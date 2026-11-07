@@ -10,49 +10,23 @@ const router = createRouter({
       component: TopView,
       meta: { requiresAuth: true }
     },
-    {
-      path: '/signup',
-      children: [
-        {
-          path: '',
-          component: () => import('@/views/SignupView.vue')
-        },
-        {
-          path: 'register',
-          component: () => import('@/views/SignupRegisterView.vue')
-        },
-        {
-          path: 'mail-send',
-          component: () => import('@/views/SignupMailSendView.vue')
-        }
-      ]
-    },
+    { path: '/signup/:pathMatch(.*)*', component: () => import('@/views/AuthTodoView.vue') },
     { path: '/login', component: () => import('@/views/LoginView.vue') },
     {
-      path: '/reset-password',
-      children: [
-        {
-          path: '',
-          component: () => import('@/views/ResetPasswordView.vue')
-        },
-        {
-          path: 'form',
-          component: () => import('@/views/ResetPasswordFormView.vue')
-        },
-        {
-          path: 'mail-send',
-          component: () => import('@/views/ResetPasswordMailSendView.vue')
-        },
-        {
-          path: 'success',
-          component: () => import('@/views/ResetPasswordSuccessView.vue')
-        }
-      ]
+      path: '/contest/:contestId',
+      name: 'contest-top',
+      component: () => import('@/views/ContestView.vue')
     },
     {
-      path: '/oauth/:provider/:action/callback',
-      component: () => import('@/views/OAuthCallbackView.vue')
+      path: '/contest/:contestId/editorials',
+      name: 'contest-editorials',
+      component: () => import('@/views/ContestEditorialsView.vue')
     },
+    {
+      path: '/reset-password/:pathMatch(.*)*',
+      component: () => import('@/views/AuthTodoView.vue')
+    },
+    { path: '/oauth/:pathMatch(.*)*', component: () => import('@/views/AuthTodoView.vue') },
     {
       path: '/users/:id',
       component: () => import('@/views/UserView.vue'),
@@ -77,7 +51,7 @@ const router = createRouter({
     {
       path: '/problems/create',
       component: () => import('@/views/problem/create/ProblemCreateView.vue'),
-      meta: { requiresAuth: true, requiresTraqAuth: true }
+      meta: { requiresAuth: true }
     },
     {
       path: '/problems/:id',
@@ -113,7 +87,7 @@ const router = createRouter({
     {
       path: '/problems/:id/edit',
       component: () => import('@/views/ProblemEditView.vue'),
-      meta: { requiresAuth: true, requiresTraqAuth: true },
+      meta: { requiresAuth: true },
       children: [
         {
           path: '',
@@ -173,14 +147,6 @@ router.beforeEach(async (to, _, next) => {
       path: '/login',
       query: { redirect: to.fullPath }
     })
-    return
-  }
-
-  const requiresTraqAuth = to.matched.some((record) => record.meta.requiresTraqAuth)
-  const isAdmin = userStore.user?.role === 'Admin'
-  const isTraqAuthenticated = !!userStore.user?.authentication?.traqAuth
-  if (requiresTraqAuth && !isAdmin && !isTraqAuthenticated) {
-    next('/')
     return
   }
 
