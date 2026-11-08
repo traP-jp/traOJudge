@@ -131,6 +131,20 @@ await request(
   403
 )
 await request('get', `/contests/${teamContestId}/submissions`)
+// 終了後の公開条件と同じチームの条件が重なっても，判定を閲覧できる．
+const publicTeamSubmissions = seeded.filter(
+  (item) => item.context.contestId === teamContestId && item.userId !== ownId
+)
+for (const id of new Set(publicTeamSubmissions.map((item) => item.teamId))) {
+  const item = publicTeamSubmissions.find((submission) => submission.teamId === id)
+  const visible = (await request('get', `/submissions/${item.id}`)).value
+  assert.equal(visible.teamId, id)
+  const result = (
+    await request('get', `/submissions/${item.id}/judge-runs/${item.currentJudgeRunId}`)
+  ).value
+  assert.equal(result.state, 'completed')
+  assert.ok(result.result)
+}
 const search = await request('get', '/problems?query=' + encodeURIComponent('二数'))
 assert.ok(search.value.items.length)
 assert.ok(search.value.items.every((p) => p.title.includes('二数')))

@@ -2992,9 +2992,9 @@
           "rules": [
             {
               "target": "templating",
-              "modifier": "{{#with (dataRaw 'submissions' (urlParam 'submissionId')) as |sub|}}{{#if (eq sub.userId (dataRaw 'me' 'id'))}}allowed{{else}}{{#if (eq sub.context.kind 'contest')}}{{#with (dataRaw 'submission-contests' sub.context.contestId)}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}allowed{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=sub.context.contestId)))}}allowed{{/if}}{{#if sub.teamId}}{{#with (dataRaw 'submission-teams' sub.teamId)}}{{#if (filter members (object userId=(dataRaw 'me' 'id')))}}allowed{{/if}}{{/with}}{{/if}}{{/if}}{{/if}}{{/with}}",
-              "value": "allowed",
-              "operator": "includes",
+              "modifier": "{{setVar 'canReadSubmission' false}}{{#with (dataRaw 'submissions' (urlParam 'submissionId')) as |sub|}}{{#if (eq sub.userId (dataRaw 'me' 'id'))}}{{setVar 'canReadSubmission' true}}{{else}}{{#if (eq sub.context.kind 'contest')}}{{#with (dataRaw 'submission-contests' sub.context.contestId)}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}{{setVar 'canReadSubmission' true}}{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=sub.context.contestId)))}}{{setVar 'canReadSubmission' true}}{{/if}}{{#if sub.teamId}}{{#with (dataRaw 'submission-teams' sub.teamId)}}{{#if (filter members (object userId=(dataRaw 'me' 'id')))}}{{setVar 'canReadSubmission' true}}{{/if}}{{/with}}{{/if}}{{/if}}{{/if}}{{/with}}{{@canReadSubmission}}",
+              "value": "true",
+              "operator": "equals",
               "invert": true
             }
           ],
@@ -3123,9 +3123,9 @@
           "rules": [
             {
               "target": "templating",
-              "modifier": "{{#with (dataRaw 'submissions' (urlParam 'submissionId')) as |sub|}}{{#if (eq sub.userId (dataRaw 'me' 'id'))}}allowed{{else}}{{#if (eq sub.context.kind 'contest')}}{{#with (dataRaw 'submission-contests' sub.context.contestId)}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}allowed{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=sub.context.contestId)))}}allowed{{/if}}{{#if sub.teamId}}{{#with (dataRaw 'submission-teams' sub.teamId)}}{{#if (filter members (object userId=(dataRaw 'me' 'id')))}}allowed{{/if}}{{/with}}{{/if}}{{/if}}{{/if}}{{/with}}",
-              "value": "allowed",
-              "operator": "includes",
+              "modifier": "{{setVar 'canReadSubmission' false}}{{#with (dataRaw 'submissions' (urlParam 'submissionId')) as |sub|}}{{#if (eq sub.userId (dataRaw 'me' 'id'))}}{{setVar 'canReadSubmission' true}}{{else}}{{#if (eq sub.context.kind 'contest')}}{{#with (dataRaw 'submission-contests' sub.context.contestId)}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}{{setVar 'canReadSubmission' true}}{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=sub.context.contestId)))}}{{setVar 'canReadSubmission' true}}{{/if}}{{#if sub.teamId}}{{#with (dataRaw 'submission-teams' sub.teamId)}}{{#if (filter members (object userId=(dataRaw 'me' 'id')))}}{{setVar 'canReadSubmission' true}}{{/if}}{{/with}}{{/if}}{{/if}}{{/if}}{{/with}}{{@canReadSubmission}}",
+              "value": "true",
+              "operator": "equals",
               "invert": true
             }
           ],
@@ -3335,9 +3335,9 @@
           "rules": [
             {
               "target": "templating",
-              "modifier": "{{#with (dataRaw 'submission-contests' (urlParam 'contestId'))}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}allowed{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=(urlParam 'contestId'))))}}allowed{{/if}}",
-              "value": "allowed",
-              "operator": "includes",
+              "modifier": "{{setVar 'canReadSubmission' false}}{{#with (dataRaw 'submission-contests' (urlParam 'contestId'))}}{{#if (lte (dateFormat endsAt 'T') (now 'T'))}}{{setVar 'canReadSubmission' true}}{{/if}}{{/with}}{{#if (filter (dataRaw 'roles' 'items') (object role='contest-setter' scope=(object kind='contest' contestId=(urlParam 'contestId'))))}}{{setVar 'canReadSubmission' true}}{{/if}}{{@canReadSubmission}}",
+              "value": "true",
+              "operator": "equals",
               "invert": true
             }
           ],
