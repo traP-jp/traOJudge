@@ -26,6 +26,7 @@ export const useApiQuery = <T>(options: {
   fetch: (signal: AbortSignal) => Promise<T>
   enabled?: MaybeRefOrGetter<boolean>
   requiresAuth?: boolean
+  refetchInterval?: (data: T | undefined) => number | false
   keyPrefix: string
 }) => {
   const session = useUserStore()
@@ -42,6 +43,8 @@ export const useApiQuery = <T>(options: {
         : [options.keyPrefix, session.epoch, session.userId, ...toValue(options.key)]
     ),
     enabled,
+    refetchInterval: (query) =>
+      query.state.error ? false : (options.refetchInterval?.(query.state.data) ?? false),
     refetchOnMount: (query) => query.getObserversCount() <= 1,
     queryFn: ({ signal }) => options.fetch(signal)
   })

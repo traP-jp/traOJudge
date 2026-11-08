@@ -14,7 +14,7 @@ export const useRouteId = () => {
 
 export const contestLocation = (
   contestId: string,
-  tab: 'top' | 'problems' | 'submit' | 'editorials' = 'top'
+  tab: 'top' | 'problems' | 'submit' | 'submissions' | 'editorials' = 'top'
 ) => ({
   name: `contest-${tab}`,
   params: { contestId }

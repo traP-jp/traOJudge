@@ -3255,6 +3255,261 @@
       "streamingInterval": 0
     },
     {
+      "uuid": "e9411334-f6bc-5ae2-bf7e-f4d4e49b8bfd",
+      "type": "http",
+      "documentation": "listMySubmissions",
+      "method": "get",
+      "endpoint": "api/v1/me/submissions",
+      "responses": [
+        {
+          "uuid": "7e8ff814-1633-4888-a86f-62edafa042be",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "ログインしてください。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "8353eb3a-87ef-4c4a-a171-5d95c521a10c",
+          "body": "{{setVar 'items' (reverse (filter (dataRaw 'submissions' '$.*') (object userId='bb4003b3-d8e0-5fd9-a8ed-2e1691e39368')))}}{{setVar 'start' (parseInt (queryParam 'cursor' '0'))}}{{setVar 'end' (add @start (parseInt (queryParam 'limit' '20')))}}{\"items\":{{{stringify (slice @items @start @end)}}},\"nextCursor\":{{#if (lt @end (len @items))}}\"{{@end}}\"{{else}}null{{/if}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "1860b087-9176-54b0-8163-533e1d58b8dd",
+      "type": "http",
+      "documentation": "getSubmission",
+      "method": "get",
+      "endpoint": "api/v1/submissions/:submissionId",
+      "responses": [
+        {
+          "uuid": "fce9a9b9-50bb-4528-b98f-6f449f086832",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "ログインしてください。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "7d1c988f-8144-4cf7-a463-6963c06cca69",
+          "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"対象が見つかりません．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "404",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{dataRaw 'submissions' (urlParam 'submissionId')}}",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b3596bd8-4631-47ef-8f61-fff904107292",
+          "body": "{{{data 'submissions' (urlParam 'submissionId')}}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "359f0bee-cf5c-5a1a-9a7f-10ccb20d19c3",
+      "type": "http",
+      "documentation": "getJudgeRun",
+      "method": "get",
+      "endpoint": "api/v1/submissions/:submissionId/judge-runs/:judgeRunId",
+      "responses": [
+        {
+          "uuid": "925b6c10-ca87-4201-b21b-398a7d64b4b0",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "ログインしてください。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0ea753ef-b082-4650-a2f8-cca4c51400d5",
+          "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"対象が見つかりません．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "404",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{dataRaw 'judge-runs' (urlParam 'judgeRunId')}}",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "eb461edc-0019-481a-9dd3-aaeb8db30f68",
+          "body": "{{setVar 'run' (dataRaw 'judge-runs' (urlParam 'judgeRunId'))}}\n{{setVar 'elapsed' (subtract (now 'T') (dateFormat @run.requestedAt 'T'))}}\n{{setVar 'phase' 0}}{{setVar 'runState' 'queued'}}{{setVar 'done' 0}}{{setVar 'total' null}}{{setVar 'started' null}}{{setVar 'finished' null}}{{setVar 'result' null}}\n{{#if (gte @elapsed 2000)}}\n  {{setVar 'phase' 1}}{{setVar 'runState' 'preparing'}}{{setVar 'total' 3}}{{setVar 'started' (dateTimeShift date=@run.requestedAt seconds=2)}}\n{{/if}}\n{{#if (gte @elapsed 4000)}}{{setVar 'phase' 2}}{{setVar 'runState' 'running'}}{{setVar 'done' 1}}{{/if}}\n{{#if (gte @elapsed 6000)}}{{setVar 'phase' 3}}{{setVar 'done' 2}}{{/if}}\n{{#if (gte @elapsed 8000)}}{{setVar 'phase' 4}}{{setVar 'done' 3}}{{/if}}\n{{#if (gte @elapsed 10000)}}{{setVar 'phase' 5}}{{setVar 'runState' 'aggregating'}}{{/if}}\n{{#if (gte @elapsed 12000)}}\n  {{setVar 'phase' 6}}{{setVar 'runState' 'completed'}}{{setVar 'finished' (dateTimeShift date=@run.requestedAt seconds=12)}}\n  {{setVar 'result' (object verdict='AC' score=100 maxTimeMs=12 maxMemoryBytes=1048576)}}\n{{/if}}\n{{{stringify (objectMerge @run (object state=@runState completedCaseCount=@done totalCaseCount=@total revision=@phase updatedAt=(dateTimeShift date=@run.requestedAt seconds=(multiply @phase 2)) startedAt=@started finishedAt=@finished result=@result))}}}\n",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
       "uuid": "4e682aa3-709e-59ce-a755-107b62e74575",
       "type": "http",
       "documentation": "S3の直接アップロード先を模した開発専用エンドポイント．",
@@ -3313,6 +3568,244 @@
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "e6f40c9b-a6fe-4c86-b039-0691455c1ba0",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/contests/:contestId/submissions",
+      "responses": [
+        {
+          "uuid": "da1bf40f-a352-45e7-8873-a82812999aae",
+          "body": "{\"code\": \"not_found\", \"message\": \"操作条件を確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "404",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "contestId",
+              "value": "^(4bea2487-758f-5acc-b44b-2959fbdc887f|00f34a9a-2232-4ab3-a13e-187a6173475e|7e75693c-91da-50e8-920c-7f268c7d99c4)$",
+              "operator": "regex",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "51679ffe-c5e1-4446-be53-2040b3947583",
+          "body": "{\"code\": \"forbidden\", \"message\": \"操作条件を確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "403",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{#if (eq (urlParam 'contestId') '7e75693c-91da-50e8-920c-7f268c7d99c4')}}yes{{else}}{{#if (eq (cookie 'traojudge_mock_session') '1')}}{{#if (eq (cookie 'traojudge_mock_role') 'setter')}}yes{{/if}}{{/if}}{{/if}}",
+              "value": "yes",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0678fea5-2d26-4f6e-b70e-200397c7a4fd",
+          "body": "{{setVar 'items' (reverse (filter (dataRaw 'submissions' '$.*') (object context=(object kind='contest' contestId=(urlParam 'contestId')))))}}{{setVar 'start' (parseInt (queryParam 'cursor' '0'))}}{{setVar 'end' (add @start (parseInt (queryParam 'limit' '20')))}}{\"items\":{{{stringify (slice @items @start @end)}}},\"nextCursor\":{{#if (lt @end (len @items))}}\"{{@end}}\"{{else}}null{{/if}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "d34fd2fa-4b77-4dbb-bbf7-631c99e3a761",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/contests/:contestId/teams/:teamId/submissions",
+      "responses": [
+        {
+          "uuid": "7a2b8a82-6207-4c3b-9ed0-59b12565fc25",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"操作条件を確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "401",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "ebb05e52-d46b-45c6-9dc0-0b89661505c6",
+          "body": "{\"code\": \"forbidden\", \"message\": \"操作条件を確認してください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "403",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "contestId",
+              "value": "00f34a9a-2232-4ab3-a13e-187a6173475e",
+              "operator": "equals",
+              "invert": true
+            },
+            {
+              "target": "params",
+              "modifier": "teamId",
+              "value": "ae9abbb2-e6af-46ac-9f0f-4e6b5e3dbe78",
+              "operator": "equals",
+              "invert": true
+            },
+            {
+              "target": "templating",
+              "modifier": "{{cookie 'traojudge_mock_role' 'member'}}",
+              "value": "^(member|setter)$",
+              "operator": "regex",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "6ee15c09-8df4-4536-9b80-83e4609caee5",
+          "body": "{{setVar 'items' (reverse (filter (filter (dataRaw 'submissions' '$.*') (object context=(object kind='contest' contestId=(urlParam 'contestId')))) (object teamId=(urlParam 'teamId'))))}}{{setVar 'start' (parseInt (queryParam 'cursor' '0'))}}{{setVar 'end' (add @start (parseInt (queryParam 'limit' '20')))}}{\"items\":{{{stringify (slice @items @start @end)}}},\"nextCursor\":{{#if (lt @end (len @items))}}\"{{@end}}\"{{else}}null{{/if}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
@@ -3552,7 +4045,27 @@
     },
     {
       "type": "route",
+      "uuid": "e9411334-f6bc-5ae2-bf7e-f4d4e49b8bfd"
+    },
+    {
+      "type": "route",
+      "uuid": "1860b087-9176-54b0-8163-533e1d58b8dd"
+    },
+    {
+      "type": "route",
+      "uuid": "359f0bee-cf5c-5a1a-9a7f-10ccb20d19c3"
+    },
+    {
+      "type": "route",
       "uuid": "4e682aa3-709e-59ce-a755-107b62e74575"
+    },
+    {
+      "type": "route",
+      "uuid": "e6f40c9b-a6fe-4c86-b039-0691455c1ba0"
+    },
+    {
+      "type": "route",
+      "uuid": "d34fd2fa-4b77-4dbb-bbf7-631c99e3a761"
     }
   ],
   "proxyMode": false,

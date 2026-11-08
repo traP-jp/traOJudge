@@ -10,6 +10,7 @@ import QueryState from '@/components/QueryState.vue'
 import { useContestPhase } from '@/composables/contests/useContestPhase'
 import { useContestSubmission } from '@/composables/submissions/useContestSubmission'
 import { useSubmissionLanguages } from '@/composables/submissions/useSubmissionLanguages'
+import { contestLocation } from '@/router/locations'
 import { useUserStore } from '@/stores/user'
 import type { SelectOption } from '@/types/selectOption'
 import { hasContestRole } from '@/utils/contestAccess'
@@ -131,7 +132,14 @@ const handleSubmit = async () => {
           <p class="text-sm text-text-secondary">{{ selectedLanguage.versionLabel }}</p>
           <CodeEditor v-model="draft.source" :language="selectedLanguage" />
           <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
-          <p v-if="submitted" role="status">提出を受け付けました。</p>
+          <p v-if="submitted" role="status">
+            提出を受け付けました。
+            <RouterLink
+              :to="{ ...contestLocation(contest.id, 'submissions'), query: { scope: 'mine' } }"
+              class="text-brand-primary underline"
+              >提出一覧で確認する</RouterLink
+            >
+          </p>
           <PrimaryButton
             type="submit"
             :disabled="

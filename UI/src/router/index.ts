@@ -43,6 +43,11 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/contest/:contestId/submissions',
+      name: 'contest-submissions',
+      component: () => import('@/views/ContestSubmissionsView.vue')
+    },
+    {
       path: '/contest/:contestId/problems/:problemId/editorials/:editorialId',
       name: 'contest-editorial',
       component: () => import('@/views/ContestEditorialView.vue')

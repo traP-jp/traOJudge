@@ -9,7 +9,7 @@ const require = createRequire(import.meta.resolve('@mockoon/cli'))
 const { MockoonServer } = require('@mockoon/commons-server')
 const { parseDataFile } = require('./libs/data.js')
 
-test('コンテストの提出は転送を確認し、再送を処理する', { timeout: 15000 }, async (t) => {
+test('コンテストの提出と一覧は閲覧範囲を守り、再送を処理する', { timeout: 15000 }, async (t) => {
   const { environment } = await parseDataFile(
     fileURLToPath(new URL('../src/api/mock/front-back-api-mock.json', import.meta.url))
   )
@@ -70,4 +70,56 @@ test('コンテストの提出は転送を確認し、再送を処理する', { 
   const accepted = await created.json()
   const retry = await post('/submissions', creation, submissionKey)
   assert.deepEqual(await retry.json(), accepted)
+  const list = await fetch(`${base}/api/v1/me/submissions`, { headers: { Cookie: cookie } })
+  const page = await list.json()
+  assert.equal(page.items.length, 1)
+  assert.equal(page.items[0].id, accepted.submissionId)
+  assert.deepEqual(page.items[0].context, body.context)
+  const run = await fetch(
+    `${base}/api/v1/submissions/${accepted.submissionId}/judge-runs/${accepted.judgeRunId}`,
+    { headers: { Cookie: cookie } }
+  )
+  const progress = await run.json()
+  assert.equal(progress.submissionId, accepted.submissionId)
+  assert.equal(typeof progress.revision, 'number')
+
+  const read = (path, role = 'member') =>
+    fetch(`${base}/api/v1${path}`, {
+      headers: { Cookie: role ? `traojudge_mock_session=1; traojudge_mock_role=${role}` : '' }
+    })
+  assert.equal((await read('/languages', '')).status, 200)
+  const contestPath = `/contests/${body.context.contestId}`
+  assert.equal((await read(`${contestPath}/submissions`)).status, 403)
+  assert.equal((await read(`${contestPath}/submissions`, '')).status, 403)
+  const all = await read(`${contestPath}/submissions`, 'setter')
+  assert.equal(all.status, 200, await all.clone().text())
+  assert.equal((await all.json()).items[0].id, accepted.submissionId)
+  assert.equal(
+    (await read('/contests/7e75693c-91da-50e8-920c-7f268c7d99c4/submissions', '')).status,
+    200
+  )
+
+  const teamContestId = '00f34a9a-2232-4ab3-a13e-187a6173475e'
+  const teamUpload = await post(
+    '/submissions/uploads',
+    { ...body, context: { kind: 'contest', contestId: teamContestId } },
+    crypto.randomUUID()
+  )
+  assert.equal(teamUpload.status, 201, await teamUpload.clone().text())
+  const teamTarget = await teamUpload.json()
+  await fetch(teamTarget.targets[0].url, { method: 'PUT', body: 'abc' })
+  const teamCreated = await post(
+    '/submissions',
+    { uploadId: teamTarget.uploadId },
+    crypto.randomUUID()
+  )
+  const teamAccepted = await teamCreated.json()
+  assert.ok(teamAccepted.teamId)
+  const teamList = await read(`/contests/${teamContestId}/teams/${teamAccepted.teamId}/submissions`)
+  assert.equal(teamList.status, 200, await teamList.clone().text())
+  assert.deepEqual(
+    (await teamList.json()).items.map((item) => item.id),
+    [teamAccepted.submissionId]
+  )
+  assert.equal((await read(`/contests/${teamContestId}/teams/not-mine/submissions`)).status, 403)
 })
