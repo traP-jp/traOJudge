@@ -34,7 +34,7 @@
     "dompurify": "^3.4.17",
     "eslint-config-prettier": "^9.1.0",
     "jwt-decode": "^4.0.0",
-    "katex": "^0.16.47",
+    "katex": "^0.19.1",
     "markdown-it": "^14.1.0",
     "monaco-editor": "^0.52.2",
     "pinia": "^3.0.1",
