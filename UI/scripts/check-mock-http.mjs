@@ -56,6 +56,95 @@ const second = await request('get', `/problems?limit=1&cursor=${first.value.next
 assert.notEqual(second.value.items[0].id, first.value.items[0].id)
 const problemId = first.value.items[0].id
 const ownId = (await request('get', '/me')).value.id
+const contestId = '260b98b4-28de-5c53-8ebc-0f4980b3a0c0'
+const teamContestId = '62bdcafc-4ece-5a05-9a41-b4625c183d12'
+const runningContestId = '3c381dc5-8095-5bb4-9257-bd1e25588c5c'
+const seeded = Object.values(
+  JSON.parse(mock.data.find((item) => item.name === 'submissions').value)
+)
+const all = (await request('get', `/contests/${contestId}/submissions?limit=20`)).value
+assert.equal(all.items.length, 20)
+assert.ok(all.nextCursor)
+assert.ok(all.items.every((item) => item.context.contestId === contestId))
+const continuation = (
+  await request('get', `/contests/${contestId}/submissions?limit=20&cursor=${all.nextCursor}`)
+).value
+assert.ok(
+  continuation.items.every((item) => !all.items.some((previous) => previous.id === item.id))
+)
+const mine = (await request('get', '/me/submissions')).value
+assert.ok(mine.items.length)
+assert.ok(mine.items.every((item) => item.userId === ownId))
+const privateSubmission = seeded.find(
+  (item) =>
+    item.context.contestId === contestId &&
+    item.problemId === 'a851bcf7-36f4-5641-8353-01eb71ae382f' &&
+    item.userId !== ownId
+)
+assert.ok(privateSubmission)
+await request('get', `/problems/${privateSubmission.problemId}`, undefined, {}, 403)
+await request('get', `/submissions/${privateSubmission.id}`)
+const privateRun = (
+  await request(
+    'get',
+    `/submissions/${privateSubmission.id}/judge-runs/${privateSubmission.currentJudgeRunId}`
+  )
+).value
+assert.equal(privateRun.state, 'completed')
+assert.equal(privateRun.result.verdict, 'AC')
+const wrong = all.items.find((item) => item.userId !== ownId)
+const wrongRun = (
+  await request('get', `/submissions/${wrong.id}/judge-runs/${wrong.currentJudgeRunId}`)
+).value
+assert.equal(wrongRun.result.verdict, 'WA')
+await request(
+  'get',
+  `/submissions/${wrong.id}/judge-runs/${privateSubmission.currentJudgeRunId}`,
+  undefined,
+  {},
+  404
+)
+await request('get', `/contests/${runningContestId}/submissions`, undefined, {}, 403)
+const hidden = seeded.find(
+  (item) => item.context.contestId === runningContestId && item.userId !== ownId
+)
+await request('get', `/submissions/${hidden.id}`, undefined, {}, 403)
+await request(
+  'get',
+  `/submissions/${hidden.id}/judge-runs/${hidden.currentJudgeRunId}`,
+  undefined,
+  {},
+  403
+)
+const teamId = '2cfda6b0-5f87-50b7-aeca-0b8fb2aeee49'
+const teamList = (await request('get', `/contests/${teamContestId}/teams/${teamId}/submissions`))
+  .value
+assert.ok(teamList.items.length)
+assert.ok(
+  teamList.items.every((item) => item.teamId === teamId && item.context.contestId === teamContestId)
+)
+await request(
+  'get',
+  `/contests/${teamContestId}/teams/14bff32c-8a1d-5a21-b297-eff3a8f609bc/submissions`,
+  undefined,
+  {},
+  403
+)
+await request('get', `/contests/${teamContestId}/submissions`)
+// 終了後の公開条件と同じチームの条件が重なっても，判定を閲覧できる．
+const publicTeamSubmissions = seeded.filter(
+  (item) => item.context.contestId === teamContestId && item.userId !== ownId
+)
+for (const id of new Set(publicTeamSubmissions.map((item) => item.teamId))) {
+  const item = publicTeamSubmissions.find((submission) => submission.teamId === id)
+  const visible = (await request('get', `/submissions/${item.id}`)).value
+  assert.equal(visible.teamId, id)
+  const result = (
+    await request('get', `/submissions/${item.id}/judge-runs/${item.currentJudgeRunId}`)
+  ).value
+  assert.equal(result.state, 'completed')
+  assert.ok(result.result)
+}
 const search = await request('get', '/problems?query=' + encodeURIComponent('二数'))
 assert.ok(search.value.items.length)
 assert.ok(search.value.items.every((p) => p.title.includes('二数')))

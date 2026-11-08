@@ -11,6 +11,7 @@ let clock: ReturnType<typeof setInterval> | undefined
 
 const tabs = [
   { label: 'トップ', name: 'contest-top' },
+  { label: '提出一覧', name: 'contest-submissions' },
   { label: '解説', name: 'contest-editorials' },
   { label: '順位表', name: 'contest-standings' }
 ] as const
