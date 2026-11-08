@@ -36,7 +36,7 @@
     "jwt-decode": "^4.0.0",
     "katex": "^0.16.47",
     "markdown-it": "^14.1.0",
-    "monaco-editor": "^0.52.2",
+    "monaco-editor": "^0.57.0",
     "pinia": "^3.0.1",
     "shiki": "^4.6.0",
     "validator": "^13.15.35",
