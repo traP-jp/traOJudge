@@ -76,7 +76,7 @@
     "typescript-eslint": "^8.72.1",
     "vite": "^5.4.3",
     "vitest": "^3.2.7",
-    "vue-tsc": "^3.3.1"
+    "vue-tsc": "^3.3.14"
   },
   "engines": {
     "node": "^22.22.1 || >=24.12.0"
