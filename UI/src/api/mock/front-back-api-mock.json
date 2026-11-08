@@ -9,6 +9,78 @@
   "folders": [],
   "routes": [
     {
+      "uuid": "3dccdeea-d23d-480f-87f2-1a2e1a8da026",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/contests/00f34a9a-2232-4ab3-a13e-187a6173475e/problems",
+      "responses": [
+        {
+          "uuid": "6ede3531-6bb7-4d21-9565-e6096c1e109f",
+          "body": "{\n  \"items\": [\n    {\n      \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n      \"label\": \"A\",\n      \"order\": 0\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "634b2e2b-7c25-4d2e-8333-9bba5790de88",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/contests/00f34a9a-2232-4ab3-a13e-187a6173475e",
+      "responses": [
+        {
+          "uuid": "84d3bf1e-2f8b-4baa-a355-62df6b3d9158",
+          "body": "{\n  \"id\": \"00f34a9a-2232-4ab3-a13e-187a6173475e\",\n  \"title\": \"チーム提出の確認用コンテスト\",\n  \"description\": \"## はじめてのコンテスト\\n\\n基本的なアルゴリズムを使う問題に挑戦する練習コンテストです．初めての方も，自分のペースで取り組んでください．\\n\\n### 参加にあたって\\n\\n- 開始日時と終了日時を確認してください．\\n- 使用できる言語で解答を提出してください．\\n- 困ったことがあれば運営に質問してください．\\n\\n### 注意事項\\n\\nコンテスト中の問題や解答を，参加者同士で共有しないでください．\\n\\n> このページは開発用のサンプルです．\\n\\n### コンテスト終了後\\n\\n解けなかった問題は，解説を読みながら復習してみてください．\",\n  \"visibility\": \"public\",\n  \"startsAt\": \"2000-01-01T00:00:00Z\",\n  \"endsAt\": \"2099-11-01T06:00:00Z\",\n  \"rules\": {\n    \"tieBreak\": \"atcoder\",\n    \"penaltyMinutes\": 5\n  },\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"participationMode\": \"team\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
       "uuid": "fcb06d71-da67-4531-8f21-e49a39e8dcd1",
       "type": "http",
       "documentation": "開発用トークン mock-login で仮ログインする。",
@@ -2293,7 +2365,7 @@
       "responses": [
         {
           "uuid": "24b21f5b-c1d4-41bf-8076-64c0ffe779d1",
-          "body": "{\n  \"id\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"title\": \"開催中のサンプル問題\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
+          "body": "{\n  \"id\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"title\": \"開催中のサンプル問題\",\n  \"statement\": \"# A + B\\n\\n整数 $A$, $B$ の和を出力してください。\\n\\n## 入力\\n```text\\nA B\\n```\\n\\n## 入力例\\n```text\\n1 2\\n```\\n\\n## 出力例\\n```text\\n3\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2329,10 +2401,10 @@
       "responses": [
         {
           "uuid": "c7786a50-bbd0-4acd-8607-9aed952a238b",
-          "body": "{\n  \"id\": \"100fee48-efa2-56bc-b2c3-1e2d44c13944\",\n  \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"authorId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"title\": \"開催中の著者用解説\",\n  \"body\": \"## 考え方\\n\\n和は $a+b$ です。\\n\\n```cpp\\nint answer = a + b;\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
+          "body": "{\n  \"id\": \"100fee48-efa2-56bc-b2c3-1e2d44c13944\",\n  \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"authorId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n  \"title\": \"A + B の解説\",\n  \"body\": \"## 考え方\\n\\n和は $a+b$ です。\\n\\n```cpp\\nint answer = a + b;\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\"\n}",
           "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "開催中・著者として解説を閲覧",
           "headers": [
             {
               "key": "Cache-Control",
@@ -2397,10 +2469,10 @@
       "responses": [
         {
           "uuid": "bdc4cfd9-8755-4229-99a8-cd71f14cfefc",
-          "body": "{\n  \"items\": [\n    {\n      \"id\": \"100fee48-efa2-56bc-b2c3-1e2d44c13944\",\n      \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n      \"authorId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"title\": \"開催中の著者用解説\",\n      \"body\": \"## 考え方\\n\\n和は $a+b$ です。\\n\\n```cpp\\nint answer = a + b;\\n```\",\n      \"visibility\": \"public\",\n      \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n      \"createdAt\": \"2026-10-01T07:00:00Z\",\n      \"updatedAt\": \"2026-10-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"100fee48-efa2-56bc-b2c3-1e2d44c13944\",\n      \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n      \"authorId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"title\": \"A + B の解説\",\n      \"body\": \"## 考え方\\n\\n和は $a+b$ です。\\n\\n```cpp\\nint answer = a + b;\\n```\",\n      \"visibility\": \"public\",\n      \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n      \"createdAt\": \"2026-10-01T07:00:00Z\",\n      \"updatedAt\": \"2026-10-01T07:00:00Z\"\n    }\n  ],\n  \"nextCursor\": null\n}",
           "latency": 0,
           "statusCode": 200,
-          "label": "",
+          "label": "開催中・著者として解説を閲覧",
           "headers": [
             {
               "key": "Cache-Control",
@@ -2748,6 +2820,14 @@
   "rootChildren": [
     {
       "type": "route",
+      "uuid": "3dccdeea-d23d-480f-87f2-1a2e1a8da026"
+    },
+    {
+      "type": "route",
+      "uuid": "634b2e2b-7c25-4d2e-8333-9bba5790de88"
+    },
+    {
+      "type": "route",
       "uuid": "fcb06d71-da67-4531-8f21-e49a39e8dcd1"
     },
     {
@@ -3057,7 +3137,7 @@
       "id": "mockroles",
       "name": "MockRoles",
       "documentation": "本人取得とロール取得で共有するサンプル。",
-      "value": "{\n  \"setter\": [\n    {\n      \"role\": \"contest-setter\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"4bea2487-758f-5acc-b44b-2959fbdc887f\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    }\n  ],\n  \"member\": []\n}"
+      "value": "{\n  \"setter\": [\n    {\n      \"role\": \"contest-setter\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"4bea2487-758f-5acc-b44b-2959fbdc887f\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    },\n    {\n      \"role\": \"contestant\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"4bea2487-758f-5acc-b44b-2959fbdc887f\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    },\n    {\n      \"role\": \"contestant\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"00f34a9a-2232-4ab3-a13e-187a6173475e\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    },\n    {\n      \"role\": \"contest-setter\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"00f34a9a-2232-4ab3-a13e-187a6173475e\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    }\n  ],\n  \"member\": [\n    {\n      \"role\": \"contestant\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"4bea2487-758f-5acc-b44b-2959fbdc887f\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    },\n    {\n      \"role\": \"contestant\",\n      \"scope\": {\n        \"kind\": \"contest\",\n        \"contestId\": \"00f34a9a-2232-4ab3-a13e-187a6173475e\"\n      },\n      \"userId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\",\n      \"grantedAt\": \"2026-10-01T00:00:00Z\"\n    }\n  ]\n}"
     },
     {
       "uuid": "c765a78d-3c11-4bab-b255-bfb1e4c8ebe9",

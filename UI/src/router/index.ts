@@ -27,6 +27,16 @@ const router = createRouter({
       component: () => import('@/views/ContestEditorialsView.vue')
     },
     {
+      path: '/contest/:contestId/problems',
+      name: 'contest-problems',
+      component: () => import('@/views/ContestProblemsView.vue')
+    },
+    {
+      path: '/contest/:contestId/problems/:problemId',
+      name: 'contest-problem',
+      component: () => import('@/views/ContestProblemView.vue')
+    },
+    {
       path: '/contest/:contestId/problems/:problemId/editorials/:editorialId',
       name: 'contest-editorial',
       component: () => import('@/views/ContestEditorialView.vue')

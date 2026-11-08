@@ -13,8 +13,14 @@ const { now, phase } = useContestPhase(() => props.contest)
 
 const tabs = [
   { label: 'トップ', name: 'contest-top', tab: 'top' },
+  { label: '問題', name: 'contest-problems', tab: 'problems' },
   { label: '解説', name: 'contest-editorials', tab: 'editorials' }
 ] as const
+
+const isActive = (tab: (typeof tabs)[number]) =>
+  route.name === tab.name ||
+  (tab.tab === 'problems' && route.name === 'contest-problem') ||
+  (tab.tab === 'editorials' && route.name === 'contest-editorial')
 
 const phaseLabel = computed(() => {
   if (phase.value === 'upcoming') return '開催予定'
@@ -50,21 +56,15 @@ const remainingTime = computed(() => {
   </header>
 
   <nav aria-label="コンテストのページ" class="border-b border-border-primary">
-    <div class="flex gap-1">
+    <div class="flex flex-wrap gap-1">
       <RouterLink
         v-for="tab in tabs"
         :key="tab.name"
         :to="contestLocation(contest.id, tab.tab)"
-        :aria-current="
-          route.name === tab.name ||
-          (tab.tab === 'editorials' && route.name === 'contest-editorial')
-            ? 'page'
-            : undefined
-        "
+        :aria-current="isActive(tab) ? 'page' : undefined"
         class="-mb-px inline-flex min-h-12 items-center border-b-2 px-5 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
         :class="
-          route.name === tab.name ||
-          (tab.tab === 'editorials' && route.name === 'contest-editorial')
+          isActive(tab)
             ? 'border-brand-primary font-semibold text-brand-primary'
             : 'border-transparent text-text-secondary hover:border-border-secondary hover:text-text-primary'
         "
