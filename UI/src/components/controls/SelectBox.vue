@@ -2,11 +2,7 @@
 import { computed, useId } from 'vue'
 
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
-
-export interface SelectOption {
-  id: string
-  name: string
-}
+import type { SelectOption } from '@/types/selectOption'
 
 const {
   options,

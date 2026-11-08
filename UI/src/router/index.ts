@@ -37,6 +37,12 @@ const router = createRouter({
       component: () => import('@/views/ContestProblemView.vue')
     },
     {
+      path: '/contest/:contestId/submit',
+      name: 'contest-submit',
+      component: () => import('@/views/ContestSubmitView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/contest/:contestId/problems/:problemId/editorials/:editorialId',
       name: 'contest-editorial',
       component: () => import('@/views/ContestEditorialView.vue')

@@ -7,6 +7,7 @@ export type CurrentUser = components['schemas']['CurrentUser']
 export type Profile = components['schemas']['Profile']
 export type Contest = components['schemas']['Contest']
 export type Problem = components['schemas']['Problem']
+export type Language = components['schemas']['Language']
 export type Editorial = components['schemas']['Editorial']
 export type EditorialRole = Pick<components['schemas']['RoleAssignment'], 'role' | 'scope'>
 

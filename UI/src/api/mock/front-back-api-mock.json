@@ -2815,6 +2815,514 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "bc72403f-a6fa-5a55-bcf1-fd6d36500801",
+      "type": "http",
+      "documentation": "listLanguages",
+      "method": "get",
+      "endpoint": "api/v1/languages",
+      "responses": [
+        {
+          "uuid": "c6d8ac0c-89d2-474c-8394-9636f9f64060",
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"97f77b41-292a-50dd-aadc-3cc7193fff6e\",\n      \"name\": \"C++\",\n      \"versionLabel\": \"GCC 14.2\",\n      \"tags\": [\n        \"compiled\"\n      ]\n    },\n    {\n      \"id\": \"0b47f400-2e0a-55d3-aade-1bb1da4d0f3c\",\n      \"name\": \"Python\",\n      \"versionLabel\": \"CPython 3.13\",\n      \"tags\": [\n        \"interpreted\"\n      ]\n    }\n  ]\n}\n",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "641e86ff-6ca9-5f46-85a9-2a2e1410eae5",
+      "type": "http",
+      "documentation": "createSubmissionUpload",
+      "method": "post",
+      "endpoint": "api/v1/submissions/uploads",
+      "responses": [
+        {
+          "uuid": "889bd7cc-3c68-4fa8-aa66-e206c4044930",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "ログインしてください。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "cfd63f6b-7df6-4edf-8a01-25132f4e59b4",
+          "body": "{\"code\": \"forbidden\", \"message\": \"対象のコンテスト・問題に提出できません。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "対象のコンテスト・問題に提出できません。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "context.kind",
+              "value": "contest",
+              "operator": "equals",
+              "invert": true
+            },
+            {
+              "target": "body",
+              "modifier": "context.contestId",
+              "value": "^(4bea2487-758f-5acc-b44b-2959fbdc887f|00f34a9a-2232-4ab3-a13e-187a6173475e)$",
+              "operator": "regex",
+              "invert": true
+            },
+            {
+              "target": "body",
+              "modifier": "problemId",
+              "value": "afa35e34-c0cf-55ba-a3d4-16a59852d9bd",
+              "operator": "equals",
+              "invert": true
+            },
+            {
+              "target": "templating",
+              "modifier": "{{cookie 'traojudge_mock_role' 'member'}}",
+              "value": "^(member|setter)$",
+              "operator": "regex",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b1f4421d-01a9-4f89-b829-096a3c697667",
+          "body": "{\n  \"code\": \"origin_not_allowed\",\n  \"message\": \"許可された画面から操作してください．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "403",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Origin",
+              "value": "http://localhost:5173",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d67898b4-b3b7-498c-8b85-16a2a0f546f1",
+          "body": "{\n  \"code\": \"invalid_request\",\n  \"message\": \"Idempotency-Keyが必要です．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "400",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Idempotency-Key",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "920219ac-ae62-46c1-8058-358046ec3438",
+          "body": "{\n  \"code\": \"invalid_request\",\n  \"message\": \"入力の形式を確認してください．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "400",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "$",
+              "value": "createSubmissionUploadRequest",
+              "operator": "valid_json_schema",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "ab4d3de5-249e-475e-9a24-52fbf11e44da",
+          "body": "{{setVar 'id' (dataRaw 'upload-keys' (header 'Idempotency-Key'))}}\n{{#unless @id}}\n{{setVar 'id' (uuid)}}\n{{setData 'set' 'uploads' @id (objectMerge (bodyRaw) (object submissionId=(uuid) judgeRunId=(uuid) problemVersionId=(uuid) uploaded=false expiresAt=(dateTimeShift minutes=15)))}}\n{{setData 'set' 'upload-keys' (header 'Idempotency-Key') @id}}\n{{/unless}}\n{{setVar 'upload' (dataRaw 'uploads' @id)}}\n{\"uploadId\":\"{{@id}}\",\"expiresAt\":\"{{@upload.expiresAt}}\",\"targets\":[\n{{#each @upload.files}}\n{\"fileId\":\"{{@../id}}\",\"path\":{{{body (concat 'files.' @index '.path') '' true}}},\"method\":\"PUT\",\"url\":\"http://{{header 'Host'}}/mock-storage/{{@../id}}/{{@index}}\",\"headers\":{\"Content-Type\":\"application/octet-stream\"},\"expiresAt\":\"{{@../upload.expiresAt}}\"}{{#unless @last}},{{/unless}}\n{{/each}}]}\n",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "201",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "917fc44a-e4f4-540c-bdb7-58d6ccf38e32",
+      "type": "http",
+      "documentation": "createSubmission",
+      "method": "post",
+      "endpoint": "api/v1/submissions",
+      "responses": [
+        {
+          "uuid": "6faae7c3-d97f-4730-85e6-614dc1dd8010",
+          "body": "{\"code\": \"unauthenticated\", \"message\": \"ログインしてください。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "ログインしてください。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "cookie",
+              "modifier": "traojudge_mock_session",
+              "value": "1",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "87c25040-05e8-4164-8507-644fe7e0572e",
+          "body": "{\n  \"code\": \"origin_not_allowed\",\n  \"message\": \"許可された画面から操作してください．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "403",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Origin",
+              "value": "http://localhost:5173",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "491dbcaf-946a-4da9-832b-70f33ca918bc",
+          "body": "{\n  \"code\": \"invalid_request\",\n  \"message\": \"Idempotency-Keyが必要です．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "400",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Idempotency-Key",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3580daac-b876-4b96-a650-5c605c01ba0a",
+          "body": "{\n  \"code\": \"invalid_request\",\n  \"message\": \"入力の形式を確認してください．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "400",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "$",
+              "value": "createSubmissionRequest",
+              "operator": "valid_json_schema",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "704e6490-a298-484c-95d7-5e9adfde788a",
+          "body": "{\n  \"code\": \"upload_not_found\",\n  \"message\": \"提出ファイルが見つかりません．\",\n  \"requestId\": \"bae75e4f-eec7-5337-a379-8c310fd1d8fc\"\n}\n",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "422",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{dataRaw 'uploads' (bodyRaw 'uploadId')}}",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "b4b27c1d-0ef3-40c3-a239-6d538ad5974f",
+          "body": "{\"code\": \"invalid_request\", \"message\": \"ファイルの転送が完了していません。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "ファイルの転送が完了していません。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{#if (lookup (dataRaw 'uploads' (bodyRaw 'uploadId')) 'uploaded')}}true{{else}}false{{/if}}",
+              "value": "true",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "8a25a197-b95d-4b41-a56c-da65b5a15d9c",
+          "body": "{{setVar 'upload' (dataRaw 'uploads' (bodyRaw 'uploadId'))}}\n{{setVar 'id' @upload.submissionId}}{{setVar 'runId' @upload.judgeRunId}}{{setVar 'versionId' @upload.problemVersionId}}\n{{#unless (dataRaw 'submissions' @id)}}\n{{setVar 'acceptedTime' (now)}}\n{{setData 'set' 'submissions' @id (object id=@id userId='bb4003b3-d8e0-5fd9-a8ed-2e1691e39368' problemId=@upload.problemId languageId=@upload.languageId context=@upload.context submittedAt=@acceptedTime currentJudgeRunId=@runId)}}\n{{#if (eq @upload.context.contestId '00f34a9a-2232-4ab3-a13e-187a6173475e')}}{{setData 'set' 'submissions' @id (objectMerge (dataRaw 'submissions' @id) (object teamId='ae9abbb2-e6af-46ac-9f0f-4e6b5e3dbe78'))}}{{/if}}\n{{setData 'set' 'judge-runs' @runId (object id=@runId submissionId=@id problemVersionId=@versionId state='queued' completedCaseCount=0 totalCaseCount=null revision=0 updatedAt=@acceptedTime requestedAt=@acceptedTime startedAt=null finishedAt=null failure=null result=null)}}\n{{/unless}}\n{{setVar 'submission' (dataRaw 'submissions' @id)}}\n{\"submissionId\":\"{{@id}}\",\"judgeRunId\":\"{{@runId}}\",\"problemVersionId\":\"{{@versionId}}\",\"acceptedAt\":\"{{@submission.submittedAt}}\"{{#if @submission.teamId}},\"teamId\":\"{{@submission.teamId}}\"{{/if}} }\n",
+          "latency": 0,
+          "statusCode": 202,
+          "label": "202",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Location",
+              "value": "/api/v1/submissions/{{dataRaw 'uploads' (concat (bodyRaw 'uploadId') '.submissionId')}}"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4e682aa3-709e-59ce-a755-107b62e74575",
+      "type": "http",
+      "documentation": "S3の直接アップロード先を模した開発専用エンドポイント．",
+      "method": "put",
+      "endpoint": "mock-storage/:uploadId/:index",
+      "responses": [
+        {
+          "uuid": "3dd0a371-848a-4141-a99f-6009ff409f11",
+          "body": "{\"code\": \"not_found\", \"message\": \"転送先が見つかりません。\", \"requestId\": \"91109e96-2bcb-5d07-8c06-f6d60a1524f9\"}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "転送先が見つかりません。",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{dataRaw 'uploads' (urlParam 'uploadId')}}",
+              "value": "",
+              "operator": "null",
+              "invert": false
+            },
+            {
+              "target": "params",
+              "modifier": "index",
+              "value": "0",
+              "operator": "equals",
+              "invert": true
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a403845b-35bf-48f7-8ca4-92b3e2fecb9d",
+          "body": "{{setVar 'upload' (dataRaw 'uploads' (urlParam 'uploadId'))}}{{setData 'set' 'uploads' (urlParam 'uploadId') (objectMerge @upload (object uploaded=true))}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/octet-stream"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -3029,6 +3537,22 @@
     {
       "type": "route",
       "uuid": "ea7e625d-1549-4dcc-a318-b976e756b6a5"
+    },
+    {
+      "type": "route",
+      "uuid": "bc72403f-a6fa-5a55-bcf1-fd6d36500801"
+    },
+    {
+      "type": "route",
+      "uuid": "641e86ff-6ca9-5f46-85a9-2a2e1410eae5"
+    },
+    {
+      "type": "route",
+      "uuid": "917fc44a-e4f4-540c-bdb7-58d6ccf38e32"
+    },
+    {
+      "type": "route",
+      "uuid": "4e682aa3-709e-59ce-a755-107b62e74575"
     }
   ],
   "proxyMode": false,
@@ -3059,7 +3583,7 @@
     },
     {
       "key": "Access-Control-Allow-Headers",
-      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With, If-Match"
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With, If-Match, Idempotency-Key"
     },
     {
       "key": "Access-Control-Allow-Credentials",
@@ -3159,6 +3683,48 @@
       "name": "ProfileUpdate",
       "documentation": "PATCH /api/v1/meの入力。",
       "value": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"minProperties\": 1,\n  \"properties\": {\n    \"displayName\": {\n      \"type\": \"string\",\n      \"minLength\": 1,\n      \"maxLength\": 80\n    },\n    \"bio\": {\n      \"type\": \"string\",\n      \"maxLength\": 4000\n    },\n    \"githubId\": {\n      \"type\": \"string\"\n    },\n    \"atcoderId\": {\n      \"type\": \"string\"\n    },\n    \"xId\": {\n      \"type\": \"string\"\n    }\n  }\n}"
+    },
+    {
+      "uuid": "13766c38-860b-54cf-a27f-08103dd2f23f",
+      "id": "uploads",
+      "name": "uploads",
+      "documentation": "",
+      "value": "{}"
+    },
+    {
+      "uuid": "59875419-e8e6-519d-8654-d4525777ade2",
+      "id": "submissions",
+      "name": "submissions",
+      "documentation": "",
+      "value": "{}"
+    },
+    {
+      "uuid": "8313606b-54ba-5fe8-b7ab-fc4375b55421",
+      "id": "judge-runs",
+      "name": "judge-runs",
+      "documentation": "",
+      "value": "{}"
+    },
+    {
+      "uuid": "9cd3a193-9c31-5fea-9356-2540183be5f4",
+      "id": "createSubmissionUploadRequest",
+      "name": "createSubmissionUploadRequest",
+      "documentation": "",
+      "value": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"problemId\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n      \"description\": \"UUID形式のリソース識別子。\"\n    },\n    \"languageId\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n      \"description\": \"UUID形式のリソース識別子。\"\n    },\n    \"context\": {\n      \"description\": \"1件の提出が属する提出先を1つ指定する。practiceは大会に紐づかない問題単体への練習提出。 contestまたはvirtual-contestは指定した1大会への提出。同じ問題が複数の大会に登録されていても、1件の提出を複数大会の得点・順位に同時に反映しない。 複数大会で採点・集計する場合は大会ごとに別の提出を作成する。\",\n      \"oneOf\": [\n        {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"kind\": {\n              \"type\": \"string\",\n              \"const\": \"practice\"\n            }\n          },\n          \"required\": [\n            \"kind\"\n          ]\n        },\n        {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"kind\": {\n              \"type\": \"string\",\n              \"const\": \"contest\"\n            },\n            \"contestId\": {\n              \"type\": \"string\",\n              \"format\": \"uuid\",\n              \"description\": \"UUID形式のリソース識別子。\"\n            }\n          },\n          \"required\": [\n            \"kind\",\n            \"contestId\"\n          ]\n        },\n        {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"kind\": {\n              \"type\": \"string\",\n              \"const\": \"virtual-contest\"\n            },\n            \"virtualContestId\": {\n              \"type\": \"string\",\n              \"format\": \"uuid\",\n              \"description\": \"UUID形式のリソース識別子。\"\n            }\n          },\n          \"required\": [\n            \"kind\",\n            \"virtualContestId\"\n          ]\n        }\n      ]\n    },\n    \"files\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"additionalProperties\": false,\n        \"properties\": {\n          \"path\": {\n            \"type\": \"string\",\n            \"description\": \"バンドル内の相対パス。絶対パス・空要素・..による上位参照を認めない。\",\n            \"minLength\": 1,\n            \"maxLength\": 1024\n          },\n          \"byteLength\": {\n            \"type\": \"integer\",\n            \"minimum\": 0,\n            \"description\": \"期待するファイルサイズ（バイト）。\"\n          },\n          \"sha256\": {\n            \"type\": \"string\",\n            \"description\": \"内容のSHA-256。小文字16進64文字。\",\n            \"pattern\": \"^[a-f0-9]{64}$\"\n          }\n        },\n        \"required\": [\n          \"path\",\n          \"byteLength\",\n          \"sha256\"\n        ]\n      },\n      \"minItems\": 1\n    }\n  },\n  \"required\": [\n    \"problemId\",\n    \"languageId\",\n    \"context\",\n    \"files\"\n  ]\n}\n"
+    },
+    {
+      "uuid": "132bdf47-b5d7-562c-948a-adf41930be9b",
+      "id": "createSubmissionRequest",
+      "name": "createSubmissionRequest",
+      "documentation": "",
+      "value": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"uploadId\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n      \"description\": \"UUID形式のリソース識別子。\"\n    }\n  },\n  \"required\": [\n    \"uploadId\"\n  ]\n}\n"
+    },
+    {
+      "uuid": "13766c38-860b-54cf-a27f-08103dd2f23f",
+      "id": "upload-keys",
+      "name": "upload-keys",
+      "documentation": "",
+      "value": "{}"
     }
   ],
   "callbacks": []

@@ -49,6 +49,14 @@ const entry = computed(() =>
                 {{ entry.label }} — {{ entry.problem.title }}
               </h2>
               <MarkdownContent :source="entry.problem.statement" />
+              <RouterLink
+                :to="{
+                  ...contestLocation(contestId, 'submit'),
+                  query: { problemId: entry.problemId }
+                }"
+                class="inline-block rounded-sm bg-brand-primary px-5 py-3 text-white"
+                >この問題に提出する</RouterLink
+              >
             </article>
           </template>
         </QueryState>
