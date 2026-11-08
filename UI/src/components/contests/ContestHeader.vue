@@ -16,6 +16,7 @@ const tabs = [
   { label: '問題', name: 'contest-problems', tab: 'problems' },
   { label: '提出', name: 'contest-submit', tab: 'submit' },
   { label: '提出一覧', name: 'contest-submissions', tab: 'submissions' },
+  { label: '質問', name: 'contest-clarifications', tab: 'clarifications' },
   { label: '解説', name: 'contest-editorials', tab: 'editorials' }
 ] as const
 

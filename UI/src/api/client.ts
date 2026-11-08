@@ -10,6 +10,7 @@ export type Problem = components['schemas']['Problem']
 export type Language = components['schemas']['Language']
 export type Submission = components['schemas']['Submission']
 export type JudgeRun = components['schemas']['JudgeRun']
+export type Clarification = components['schemas']['Clarification']
 export type Editorial = components['schemas']['Editorial']
 export type EditorialRole = Pick<components['schemas']['RoleAssignment'], 'role' | 'scope'>
 
