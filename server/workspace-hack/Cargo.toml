@@ -18,26 +18,40 @@ publish = false
 base64 = { version = "0.22" }
 crypto-common-6f8ce4dd05d13bba = { package = "crypto-common", version = "0.2", default-features = false, features = ["getrandom"] }
 crypto-common-c65f7effa3be6d31 = { package = "crypto-common", version = "0.1", default-features = false, features = ["std"] }
-digest = { version = "0.10", features = ["std"] }
+digest-93f6ce9d446188ac = { package = "digest", version = "0.10", features = ["mac", "oid", "std"] }
+digest-a6292c17cd707f01 = { package = "digest", version = "0.11", features = ["alloc", "mac", "oid"] }
 either = { version = "1", features = ["serde"] }
 futures-channel = { version = "0.3", features = ["sink"] }
-futures-sink = { version = "0.3", default-features = false, features = ["std"] }
+futures-sink = { version = "0.3" }
 futures-util = { version = "0.3", default-features = false, features = ["async-await-macro", "channel", "io", "sink"] }
-getrandom = { version = "0.4", default-features = false, features = ["std", "sys_rng"] }
+generic-array = { version = "0.14", default-features = false, features = ["more_lengths", "zeroize"] }
+getrandom-6f8ce4dd05d13bba = { package = "getrandom", version = "0.2", default-features = false, features = ["std"] }
+getrandom-9fbad63c4bcf4a8f = { package = "getrandom", version = "0.4", default-features = false, features = ["std", "sys_rng"] }
+hashbrown = { version = "0.17", default-features = false, features = ["default-hasher", "inline-more"] }
+hyper = { version = "1", features = ["client", "http1", "http2", "server"] }
+hyper-util = { version = "0.1", features = ["client-legacy", "client-proxy", "http1", "http2", "server", "service"] }
 libsqlite3-sys = { version = "0.37", default-features = false, features = ["bundled", "pkg-config", "unlock_notify", "vcpkg"] }
 log = { version = "0.4", default-features = false, features = ["std"] }
+md-5 = { version = "0.11" }
 num-traits = { version = "0.2", default-features = false, features = ["i128", "std"] }
+rustls = { version = "0.23", default-features = false, features = ["prefer-post-quantum", "ring", "std", "tls12"] }
+rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
 serde = { version = "1", features = ["alloc", "derive", "rc"] }
 serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
-sha2 = { version = "0.10" }
+sha2-93f6ce9d446188ac = { package = "sha2", version = "0.10" }
+sha2-a6292c17cd707f01 = { package = "sha2", version = "0.11" }
+signature = { version = "2", default-features = false, features = ["digest", "rand_core", "std"] }
+slab = { version = "0.4" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
-sqlx = { version = "0.9", default-features = false, features = ["macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring", "uuid"] }
+sqlx = { version = "0.9", default-features = false, features = ["json", "macros", "migrate", "postgres", "runtime-tokio", "sqlite", "tls-rustls-ring", "uuid"] }
 sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "json", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+subtle = { version = "2" }
 sync_wrapper = { version = "1", default-features = false, features = ["futures"] }
 thiserror = { version = "2" }
-tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
+time = { version = "0.3", features = ["formatting", "macros", "parsing"] }
+tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
 tracing-core = { version = "0.1" }
 typenum = { version = "1", default-features = false, features = ["const-generics"] }
 uuid = { version = "1", features = ["serde", "v4"] }
@@ -45,95 +59,70 @@ zeroize = { version = "1", features = ["derive"] }
 
 [build-dependencies]
 base64 = { version = "0.22" }
+cc = { version = "1", default-features = false, features = ["parallel"] }
 crypto-common-6f8ce4dd05d13bba = { package = "crypto-common", version = "0.2", default-features = false, features = ["getrandom"] }
 crypto-common-c65f7effa3be6d31 = { package = "crypto-common", version = "0.1", default-features = false, features = ["std"] }
-digest = { version = "0.10", features = ["std"] }
+digest-93f6ce9d446188ac = { package = "digest", version = "0.10", features = ["mac", "oid", "std"] }
+digest-a6292c17cd707f01 = { package = "digest", version = "0.11", features = ["alloc", "mac", "oid"] }
 either = { version = "1", features = ["serde"] }
 futures-channel = { version = "0.3", features = ["sink"] }
-futures-sink = { version = "0.3", default-features = false, features = ["std"] }
+futures-sink = { version = "0.3" }
 futures-util = { version = "0.3", default-features = false, features = ["async-await-macro", "channel", "io", "sink"] }
-getrandom = { version = "0.4", default-features = false, features = ["std", "sys_rng"] }
+generic-array = { version = "0.14", default-features = false, features = ["more_lengths", "zeroize"] }
+getrandom-6f8ce4dd05d13bba = { package = "getrandom", version = "0.2", default-features = false, features = ["std"] }
+getrandom-9fbad63c4bcf4a8f = { package = "getrandom", version = "0.4", default-features = false, features = ["std", "sys_rng"] }
+hashbrown = { version = "0.17", default-features = false, features = ["default-hasher", "inline-more"] }
 libsqlite3-sys = { version = "0.37", default-features = false, features = ["bundled", "pkg-config", "unlock_notify", "vcpkg"] }
 log = { version = "0.4", default-features = false, features = ["std"] }
+md-5 = { version = "0.11" }
 num-traits = { version = "0.2", default-features = false, features = ["i128", "std"] }
+rustls = { version = "0.23", default-features = false, features = ["prefer-post-quantum", "ring", "std", "tls12"] }
+rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
 serde = { version = "1", features = ["alloc", "derive", "rc"] }
 serde_core = { version = "1", features = ["alloc", "rc"] }
 serde_json = { version = "1", features = ["raw_value"] }
-sha2 = { version = "0.10" }
+sha2-93f6ce9d446188ac = { package = "sha2", version = "0.10" }
+sha2-a6292c17cd707f01 = { package = "sha2", version = "0.11" }
+slab = { version = "0.4" }
 smallvec = { version = "1", default-features = false, features = ["const_new", "serde"] }
 sqlx-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "any", "json", "migrate", "offline", "uuid"] }
-sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+sqlx-macros = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "derive", "json", "macros", "migrate", "postgres", "sqlite", "sqlite-load-extension", "uuid"] }
+sqlx-macros-core = { version = "0.9", features = ["_rt-tokio", "_tls-rustls-ring-webpki", "derive", "json", "macros", "migrate", "postgres", "sqlite", "sqlite-load-extension", "uuid"] }
+sqlx-sqlite = { version = "0.9", default-features = false, features = ["bundled", "deserialize", "json", "load-extension", "migrate", "offline", "unlock-notify", "uuid"] }
+subtle = { version = "2" }
 syn-7b89eefb6aaa9bf3 = { package = "syn", version = "3", features = ["extra-traits", "fold", "full", "visit", "visit-mut"] }
 syn-f595c2ba2a3f28df = { package = "syn", version = "2", features = ["extra-traits", "full", "visit", "visit-mut"] }
 thiserror = { version = "2" }
-tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
+tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
 tracing-core = { version = "0.1" }
 typenum = { version = "1", default-features = false, features = ["const-generics"] }
 uuid = { version = "1", features = ["serde", "v4"] }
 zeroize = { version = "1", features = ["derive"] }
 
 [target.x86_64-unknown-linux-gnu.dependencies]
-futures-sink = { version = "0.3" }
-hyper = { version = "1", features = ["client", "http1", "http2", "server"] }
-hyper-util = { version = "0.1", features = ["client-legacy", "client-proxy", "client-proxy-system", "http1", "http2", "server", "service"] }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
+hyper-rustls = { version = "0.27", default-features = false, features = ["aws-lc-rs", "http1", "http2", "native-tokio", "tls12"] }
+hyper-util = { version = "0.1", default-features = false, features = ["client-proxy-system"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["aws-lc-rs", "tls12"] }
 tower = { version = "0.5", default-features = false, features = ["log", "make", "retry", "timeout"] }
-
-[target.x86_64-unknown-linux-gnu.build-dependencies]
-cc = { version = "1", default-features = false, features = ["parallel"] }
-futures-sink = { version = "0.3" }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
 
 [target.aarch64-unknown-linux-gnu.dependencies]
-futures-sink = { version = "0.3" }
-hyper = { version = "1", features = ["client", "http1", "http2", "server"] }
-hyper-util = { version = "0.1", features = ["client-legacy", "client-proxy", "client-proxy-system", "http1", "http2", "server", "service"] }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
+hyper-rustls = { version = "0.27", default-features = false, features = ["aws-lc-rs", "http1", "http2", "native-tokio", "tls12"] }
+hyper-util = { version = "0.1", default-features = false, features = ["client-proxy-system"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["aws-lc-rs", "tls12"] }
 tower = { version = "0.5", default-features = false, features = ["log", "make", "retry", "timeout"] }
-
-[target.aarch64-unknown-linux-gnu.build-dependencies]
-cc = { version = "1", default-features = false, features = ["parallel"] }
-futures-sink = { version = "0.3" }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
 
 [target.x86_64-apple-darwin.dependencies]
-futures-sink = { version = "0.3" }
-hyper = { version = "1", features = ["client", "http1", "http2", "server"] }
-hyper-util = { version = "0.1", features = ["client-legacy", "client-proxy", "client-proxy-system", "http1", "http2", "server", "service"] }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
+hyper-rustls = { version = "0.27", default-features = false, features = ["aws-lc-rs", "http1", "http2", "native-tokio", "tls12"] }
+hyper-util = { version = "0.1", default-features = false, features = ["client-proxy-system"] }
+security-framework-sys = { version = "2" }
+tokio-rustls = { version = "0.26", default-features = false, features = ["aws-lc-rs", "tls12"] }
 tower = { version = "0.5", default-features = false, features = ["log", "make", "retry", "timeout"] }
-
-[target.x86_64-apple-darwin.build-dependencies]
-cc = { version = "1", default-features = false, features = ["parallel"] }
-futures-sink = { version = "0.3" }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
 
 [target.aarch64-apple-darwin.dependencies]
-futures-sink = { version = "0.3" }
-hyper = { version = "1", features = ["client", "http1", "http2", "server"] }
-hyper-util = { version = "0.1", features = ["client-legacy", "client-proxy", "client-proxy-system", "http1", "http2", "server", "service"] }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
+hyper-rustls = { version = "0.27", default-features = false, features = ["aws-lc-rs", "http1", "http2", "native-tokio", "tls12"] }
+hyper-util = { version = "0.1", default-features = false, features = ["client-proxy-system"] }
+security-framework-sys = { version = "2" }
+tokio-rustls = { version = "0.26", default-features = false, features = ["aws-lc-rs", "tls12"] }
 tower = { version = "0.5", default-features = false, features = ["log", "make", "retry", "timeout"] }
-
-[target.aarch64-apple-darwin.build-dependencies]
-cc = { version = "1", default-features = false, features = ["parallel"] }
-futures-sink = { version = "0.3" }
-rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs", "aws_lc_rs", "ring", "std", "tls12"] }
-rustls-webpki = { version = "0.103", default-features = false, features = ["aws-lc-rs", "ring", "std"] }
-slab = { version = "0.4" }
 
 ### END HAKARI SECTION

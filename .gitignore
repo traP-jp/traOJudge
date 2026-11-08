@@ -17,3 +17,7 @@ treefmt.toml
 # editor
 .vscode
 .codex
+
+# Python tooling and judge supervisor tests
+__pycache__/
+*.py[cod]

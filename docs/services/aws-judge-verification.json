@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "aws_verified": true,
+  "checks": {
+    "internal_api_healthy": true,
+    "pinned_input_survives_key_replacement": true,
+    "controller_restart": true,
+    "duplicate_result": true,
+    "duplicate_submission": true,
+    "corrupt_checksum_rejected": true
+  },
+  "scenarios": {
+    "batch": {
+      "state": "completed",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "nodes": [
+        {
+          "name": "run",
+          "state": "completed",
+          "result": {},
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "compile",
+          "state": "completed",
+          "result": {},
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "check",
+          "state": "completed",
+          "result": {
+            "score": 100,
+            "verdict": "accepted"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:02.634219+00:00",
+          "kind": "dispatched",
+          "node": "compile",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:03.558727+00:00",
+          "kind": "result_received",
+          "node": "compile",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:03.603446+00:00",
+          "kind": "dispatched",
+          "node": "run",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:08.001187+00:00",
+          "kind": "result_received",
+          "node": "run",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:08.035197+00:00",
+          "kind": "dispatched",
+          "node": "check",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:15.409511+00:00",
+          "kind": "result_received",
+          "node": "check",
+          "observations": 1
+        }
+      ]
+    },
+    "heuristic": {
+      "state": "completed",
+      "completed_cases": 2,
+      "total_cases": 2,
+      "nodes": [
+        {
+          "name": "trial_1",
+          "state": "completed",
+          "result": {
+            "score": 17
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "aggregate",
+          "state": "completed",
+          "result": {
+            "score": 33.0,
+            "trials": 2
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "trial_0",
+          "state": "completed",
+          "result": {
+            "score": 49
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:02.906495+00:00",
+          "kind": "dispatched",
+          "node": "trial_1",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:02.940959+00:00",
+          "kind": "dispatched",
+          "node": "trial_0",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:09.333584+00:00",
+          "kind": "result_received",
+          "node": "trial_1",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:11.960362+00:00",
+          "kind": "result_received",
+          "node": "trial_0",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:11.987893+00:00",
+          "kind": "dispatched",
+          "node": "aggregate",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:14.760885+00:00",
+          "kind": "result_received",
+          "node": "aggregate",
+          "observations": 1
+        }
+      ]
+    },
+    "run_twice": {
+      "state": "completed",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "nodes": [
+        {
+          "name": "run_2",
+          "state": "completed",
+          "result": {},
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "check",
+          "state": "completed",
+          "result": {
+            "passes": 2,
+            "verdict": "accepted"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "run_1",
+          "state": "completed",
+          "result": {},
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:03.116404+00:00",
+          "kind": "dispatched",
+          "node": "run_1",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:05.233239+00:00",
+          "kind": "result_received",
+          "node": "run_1",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:05.262604+00:00",
+          "kind": "dispatched",
+          "node": "run_2",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:07.314674+00:00",
+          "kind": "result_received",
+          "node": "run_2",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:07.347015+00:00",
+          "kind": "dispatched",
+          "node": "check",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:08.625572+00:00",
+          "kind": "result_received",
+          "node": "check",
+          "observations": 1
+        }
+      ]
+    },
+    "interactive": {
+      "state": "completed",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "nodes": [
+        {
+          "name": "dialogue",
+          "state": "completed",
+          "result": {
+            "answer": "42",
+            "verdict": "accepted"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            },
+            "solution": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:03.275815+00:00",
+          "kind": "dispatched",
+          "node": "dialogue",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:04.584449+00:00",
+          "kind": "result_received",
+          "node": "dialogue",
+          "observations": 1
+        }
+      ]
+    },
+    "coding_game": {
+      "state": "completed",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "nodes": [
+        {
+          "name": "match",
+          "state": "completed",
+          "result": {
+            "scores": {
+              "a": 4,
+              "b": 5
+            },
+            "winner": "b"
+          },
+          "processes": {
+            "a": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            },
+            "b": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            },
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:03.438025+00:00",
+          "kind": "dispatched",
+          "node": "match",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:06.684807+00:00",
+          "kind": "result_received",
+          "node": "match",
+          "observations": 1
+        }
+      ]
+    },
+    "timeout": {
+      "state": "completed",
+      "completed_cases": 1,
+      "total_cases": 1,
+      "nodes": [
+        {
+          "name": "timeout",
+          "state": "completed",
+          "result": {
+            "verdict": "time_limit_exceeded"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 137,
+              "oom_killed": false,
+              "timed_out": true
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:03.536003+00:00",
+          "kind": "dispatched",
+          "node": "timeout",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:11.247664+00:00",
+          "kind": "result_received",
+          "node": "timeout",
+          "observations": 1
+        }
+      ]
+    },
+    "mixed_cases": {
+      "state": "completed",
+      "completed_cases": 3,
+      "total_cases": 3,
+      "nodes": [
+        {
+          "name": "time_limit",
+          "state": "completed",
+          "result": {
+            "verdict": "time_limit_exceeded"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 137,
+              "oom_killed": false,
+              "timed_out": true
+            }
+          }
+        },
+        {
+          "name": "accepted",
+          "state": "completed",
+          "result": {
+            "verdict": "accepted"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        },
+        {
+          "name": "wrong_answer",
+          "state": "completed",
+          "result": {
+            "verdict": "wrong_answer"
+          },
+          "processes": {
+            "main": {
+              "exit_code": 0,
+              "oom_killed": false,
+              "timed_out": false
+            }
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-11-08T07:12:03.637656+00:00",
+          "kind": "dispatched",
+          "node": "time_limit",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:03.656191+00:00",
+          "kind": "dispatched",
+          "node": "accepted",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:03.679016+00:00",
+          "kind": "dispatched",
+          "node": "wrong_answer",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:09.875463+00:00",
+          "kind": "result_received",
+          "node": "wrong_answer",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:13.315648+00:00",
+          "kind": "result_received",
+          "node": "time_limit",
+          "observations": 1
+        },
+        {
+          "at": "2026-11-08T07:12:13.948362+00:00",
+          "kind": "result_received",
+          "node": "accepted",
+          "observations": 1
+        }
+      ]
+    }
+  },
+  "stack_deleted": true
+}

@@ -23,6 +23,9 @@ server/
 │   └── models/           OpenAPIから生成するHTTP入出力型
 ├── traojudge-workflow/src/
 │   └── storage/          ワークフローエンジンの永続化・Unit of Workの契約
+├── traojudge-judge/src/
+│   ├── main.rs           内部API・AWSのノード起動と結果受理・再開
+│   └── protocol.rs       ノード要求・結果・版固定したファイル参照
 ├── traojudge-test/        クレートをまたぐ結合確認
 └── workspace-hack/        cargo-hakari が管理するビルド用の依存関係
 ```
@@ -48,12 +51,16 @@ server/
 Unit of Workの関連型にはproviderの借用期間を持たせ、backendが保持する接続などを借用できるようにする。
 providerは`Send + Sync`、Unit of Workと各操作のfutureは`Send`とする。エラー型はbackendが定義し、開始・確定・破棄で共有する。
 未確定のUnit of Workが破棄された場合、backend実装は変更が確定されないことを保証する。非同期の破棄処理を明示的に待つ場合は`rollback`を呼ぶ。
-現在は契約のみで、具体的なbackendやリポジトリ操作はまだ提供しない。
+現在はRepositoryとEngine、SQLite in-memory backendに加え、`traojudge-infra::postgres::workflow`にPostgreSQL backendを提供する。AWS上のノード実行との接続と再現手順は[AWS上のジャッジ実行](aws-judge.md)を参照する。
 
 ## 状態更新の境界
 
 結果の受理、ノード状態の更新、実行可能になった後続ノードの送信待ち登録は、applicationが同じDBトランザクションで確定する。トランザクションの契約はports、DB上の実装はinfraに置く。SQSへの送信は送信待ちの記録から行い、DBトランザクション中の外部送信を前提にしない。
 
-重複結果と並行更新による二重反映を防ぐ制約はDB側にも設ける。具体的な契約、スキーマ、再試行・期限切れからの復旧は実装時に定義する。ジャッジ結果の受理・送信待ちなどのapplication・ports・infra・consumersは配置先を用意した段階であり、これらの機能の実装完了を意味しない。
+重複結果と並行更新による二重反映を防ぐ制約はDB側にも設ける。具体的な契約、スキーマ、再試行・期限切れからの復旧は実装時に定義する。`backend_app`向けのジャッジ結果受理・送信待ちなどのapplication・ports・infra・consumersは配置先を用意した段階であり、公開APIへの実装完了を意味しない。内部のAWS実行経路は`traojudge-judge`に実装している。
 
 [利用者の公開プロフィール](../backend/users.md)では、Coreの取得処理・PostgreSQLのRepositoryとマイグレーション・HTTPを実装している。
+
+## AWS のノード実行
+
+`traojudge-judge`は内部API・CoreのDAG変換・Workflow Engine・SQSの起動と結果受理を組み立てる。別プロセスのWorkerは`deploy/judge/worker.py`にあり、依存解決やDB更新は行わない。[AWS上のジャッジ実行](aws-judge.md)に版固定した入出力、session内の複数sandbox、再配信と再起動の境界をまとめる。

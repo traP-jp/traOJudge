@@ -11,3 +11,6 @@ sqlx = { workspace = true, features = ["postgres", "migrate", "macros", "tls-rus
 tokio = { workspace = true, features = ["fs", "io-util"] }
 uuid.workspace = true
 workspace-hack.workspace = true
+
+serde_json.workspace = true
+traojudge-workflow.workspace = true

@@ -86,10 +86,9 @@ impl OnePlayerJudgeContract {
             if let ArtifactKind::Input {
                 realisation: Realisation::File { path },
             } = &artifact.kind
+                && path.trim().is_empty()
             {
-                if path.trim().is_empty() {
-                    return Err(OnePlayerError::EmptyFilePath(artifact.name.clone()));
-                }
+                return Err(OnePlayerError::EmptyFilePath(artifact.name.clone()));
             }
         }
         let artifacts: BTreeMap<_, _> = dag
@@ -130,9 +129,29 @@ impl OnePlayerJudgeContract {
         Callback: JobStartCallback,
         Builder: JudgePayloadBuilder<Input = Callback::Input> + ?Sized,
     {
+        let job_ids = dag.executions.iter().map(|_| JobId::new()).collect();
+        self.start_dag_with_ids(engine, dag, payload_builder, PipelineId::new(), job_ids)
+            .await
+    }
+
+    /// Starts or resumes the same persisted plan. Callers must retain IDs and inputs on retry.
+    pub async fn start_dag_with_ids<Provider, Callback, Builder>(
+        &self,
+        engine: &Engine<Provider, Callback>,
+        dag: &JudgeDag<Realisation>,
+        payload_builder: &mut Builder,
+        pipeline_id: PipelineId,
+        job_ids: Vec<JobId>,
+    ) -> Result<PipelineId, SubmitError<Provider::Error, Callback::Error>>
+    where
+        Provider: UnitOfWorkProvider,
+        Callback: JobStartCallback,
+        Builder: JudgePayloadBuilder<Input = Callback::Input> + ?Sized,
+    {
         self.validate_dag(dag)?;
-        let pipeline_id = PipelineId::new();
-        let job_ids: Vec<_> = dag.executions.iter().map(|_| JobId::new()).collect();
+        if job_ids.len() != dag.executions.len() {
+            return Err(OnePlayerError::JobIdCount.into());
+        }
         let producers: BTreeMap<_, _> = dag
             .executions
             .iter()
@@ -182,6 +201,8 @@ pub enum SubmitError<
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
 pub enum OnePlayerError {
+    #[error("one job ID is required for each execution")]
+    JobIdCount,
     #[error(transparent)]
     Dag(#[from] DagError),
     #[error(transparent)]

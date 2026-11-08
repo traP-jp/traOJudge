@@ -213,3 +213,28 @@ async fn payload_builder_failure_prevents_workflow_dispatch() {
     assert_eq!(payload_builder.calls, vec![0, 1]);
     assert!(callback.jobs.lock().unwrap().is_empty());
 }
+
+#[tokio::test]
+async fn retained_ids_resume_without_dispatching_running_jobs_again() {
+    let provider = InMemoryUnitOfWorkProvider::new().await.unwrap();
+    let callback = RecordingStart::default();
+    let engine = Engine::new(provider, callback.clone());
+    let pipeline = traojudge_workflow::PipelineId::new();
+    let ids = vec![JobId::new(), JobId::new()];
+    let mut builder = NamePayloadBuilder::default();
+    OnePlayerJudgeContract
+        .start_dag_with_ids(&engine, &dag(), &mut builder, pipeline, ids.clone())
+        .await
+        .unwrap();
+    OnePlayerJudgeContract
+        .start_dag_with_ids(&engine, &dag(), &mut builder, pipeline, ids)
+        .await
+        .unwrap();
+    assert_eq!(callback.jobs.lock().unwrap().len(), 1);
+    assert!(
+        OnePlayerJudgeContract
+            .start_dag_with_ids(&engine, &dag(), &mut builder, pipeline, vec![])
+            .await
+            .is_err()
+    );
+}
