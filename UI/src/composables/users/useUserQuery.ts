@@ -1,11 +1,22 @@
 import { type MaybeRefOrGetter, toValue } from 'vue'
 
-import { UsersApi } from '@/api/generated'
-import { useSessionQuery } from '@/composables/useSessionQuery'
+import { apiClient, requireData } from '@/api/client'
+import { useApiQuery } from '@/composables/useApiQuery'
+import { useUserStore } from '@/stores/user'
 
-export const useUserQuery = (userId: MaybeRefOrGetter<string>) =>
-  useSessionQuery({
-    key: () => ['user', toValue(userId)],
+export const useUserQuery = (userId: MaybeRefOrGetter<string>) => {
+  const session = useUserStore()
+  return useApiQuery({
+    keyPrefix: 'user',
+    key: () => [toValue(userId)],
     enabled: () => !!toValue(userId),
-    fetch: (signal) => new UsersApi().getUser({ userId: toValue(userId) }, { signal })
+    fetch: async (signal) => {
+      const { data } = await apiClient.GET('/users/{userId}', {
+        params: { path: { userId: toValue(userId) } },
+        credentials: session.isAuthenticated ? 'include' : 'omit',
+        signal
+      })
+      return requireData(data)
+    }
   })
+}

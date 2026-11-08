@@ -3,7 +3,7 @@ import { computed, onScopeDispose, ref, watch } from 'vue'
 
 import { apiClient, type CurrentUser, requireData } from '@/api/client'
 import { ApiError } from '@/api/errors'
-import { queryClient, sessionQueryKey } from '@/api/queryClient'
+import { queryClient } from '@/api/queryClient'
 import AlertBox from '@/components/AlertBox.vue'
 import PlainTextArea from '@/components/controls/PlainTextArea.vue'
 import PrimaryButton from '@/components/controls/PrimaryButton.vue'
@@ -109,7 +109,7 @@ const saveProfile = async () => {
     etag.value = response.headers.get('ETag')
     saveSuccess.value = true
     void queryClient.invalidateQueries({
-      queryKey: sessionQueryKey(session.epoch, ['user', user.id])
+      queryKey: ['user']
     })
   } catch (error) {
     if (!operation.isCurrent()) return

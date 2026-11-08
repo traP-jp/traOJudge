@@ -51,6 +51,17 @@ test(
     const initial = await read()
     assert.equal(initial.status, 200)
     const original = await initial.json()
+    const publicUrl = `${url.replace(/\/me$/, '/users')}/${original.id}`
+    const publicProfile = await fetch(publicUrl)
+    assert.equal(publicProfile.status, 200)
+    const expectedPublic = { ...original }
+    delete expectedPublic.roles
+    assert.deepEqual(await publicProfile.json(), expectedPublic)
+    const other = await fetch(
+      `${url.replace(/\/me$/, '/users')}/01420957-ceb7-4c4f-9be0-478e699bf4ce`
+    )
+    assert.equal(other.status, 200)
+    assert.notEqual((await other.json()).displayName, original.displayName)
     const etag = initial.headers.get('ETag')
     assert.ok(etag)
     const responses = await Promise.all([
@@ -63,6 +74,9 @@ test(
     const saved = await winner.json()
     assert.notEqual(saved.revision, original.revision)
     assert.deepEqual(saved.roles, original.roles)
+    const savedPublic = { ...saved }
+    delete savedPublic.roles
+    assert.deepEqual(await (await fetch(publicUrl)).json(), savedPublic)
     assert.equal((await loser.json()).code, 'precondition_failed')
     assert.equal(loser.headers.get('ETag'), winner.headers.get('ETag'))
     const current = await read()

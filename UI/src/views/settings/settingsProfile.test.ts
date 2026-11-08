@@ -48,7 +48,7 @@ it('saves edits and cleared fields with the ETag without changing sessions', asy
     .mockResolvedValue(profileResponse(updated, '"profile-2"'))
   const { wrapper, session } = await openProfile()
   const epoch = session.epoch
-  const userKey = sessionQueryKey(epoch, ['user', me.id])
+  const userKey = ['user', epoch, me.id, me.id]
   queryClient.setQueryData(userKey, me)
   await wrapper.get('#display-name').setValue(updated.displayName)
   await wrapper.get('#introduction').setValue(updated.bio)

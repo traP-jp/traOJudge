@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { User } from '@/api/generated'
+import type { Profile } from '@/api/client'
 import NumberedPagination from '@/components/controls/pagination/NumberedPagination.vue'
 import QueryState from '@/components/QueryState.vue'
 import SubmissionsFilter from '@/components/submissions/SubmissionsFilter.vue'
 import SubmissionsTable from '@/components/submissions/SubmissionsTable.vue'
 import { useSubmissionsQuery } from '@/composables/submissions/useSubmissionsQuery'
 import { useListRoute } from '@/router/listConditions'
-const props = defineProps<{ userId: string; user: User | null }>()
+const props = defineProps<{ userId: string; user: Profile | null }>()
 const { conditions, updateConditions } = useListRoute()
 const { view, refresh } = useSubmissionsQuery(
   () => ({ kind: 'user', userId: props.userId }),
@@ -18,7 +18,7 @@ const { view, refresh } = useSubmissionsQuery(
   <div class="flex w-full flex-col gap-6 py-6">
     <SubmissionsFilter
       ><template #title
-        ><span>{{ props.user?.name }}</span
+        ><span>{{ props.user?.displayName }}</span
         ><span>の提出</span></template
       ></SubmissionsFilter
     >

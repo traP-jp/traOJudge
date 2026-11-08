@@ -4,6 +4,7 @@ import { ApiError } from '@/api/errors'
 import type { components, paths } from '@/api/generated/schema'
 
 export type CurrentUser = components['schemas']['CurrentUser']
+export type Profile = components['schemas']['Profile']
 export type Contest = components['schemas']['Contest']
 export type Editorial = components['schemas']['Editorial']
 export type EditorialRole = Pick<components['schemas']['RoleAssignment'], 'role' | 'scope'>
