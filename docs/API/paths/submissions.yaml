@@ -166,7 +166,10 @@ submissionsBySubmissionId:
     tags:
       - 'submissions'
     summary: '提出の受付内容と現在の採点の識別子を取得する'
-    description: '提出者本人、その提出先の大会の運営担当、または通常大会のチーム戦で同じチームに所属するメンバーに返す。運営担当の閲覧は対象大会の提出に限る。チーム戦では、提出者本人のuserIdと得点集計先のteamIdを返す。提出ソースや非公開テストはこの応答に含めない。'
+    description: '提出者本人，その提出先の大会の運営担当，または通常大会のチーム戦で同じチームに所属するメンバーに返す．運営担当の閲覧は対象大会の提出に限る．チーム戦では，提出者本人のuserIdと得点集計先のteamIdを返す．提出ソースや非公開テストはこの応答に含めない．通常大会に紐づく提出は，その大会のendsAt到達後，ログインの有無や問題の公開状態によらず取得できる．'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
@@ -179,6 +182,7 @@ submissionsBySubmissionId:
           scope: 'submission.contestId'
         - role: 'virtual-contest-setter'
           scope: 'submission.virtualContestId'
+        - condition: '提出が通常大会に紐づき，その大会のendsAtに到達している．非公開問題への提出も含み，ログイン不要'
     x-scenarios:
       - 'S4'
     responses:
@@ -306,7 +310,10 @@ submissionsBySubmissionIdJudgeRunsByJudgeRunId:
     tags:
       - 'submissions'
     summary: '今回の採点の進捗と確定結果を取得する'
-    description: '完了したテストケース数を、最終結果を待たずに取得できる。ケースの不正解・時間切れも完了に数え、残りをすべて実行する。同じrun内のrevisionで新旧を判断し、再接続時もこの最新状態から復帰できる。提出者本人、運営担当、または通常大会のチーム戦で同じチームに所属するメンバーが取得できる。ケースの名前・入出力・各判定は含めない。HTTPでの最新状態取得を先に定義し、更新の通知手段や間隔はMUT-10で決める。'
+    description: '完了したテストケース数を，最終結果を待たずに取得できる．ケースの不正解・時間切れも完了に数え，残りをすべて実行する．同じrun内のrevisionで新旧を判断し，再接続時もこの最新状態から復帰できる．提出者本人，運営担当，または通常大会のチーム戦で同じチームに所属するメンバーが取得できる．ケースの名前・入出力・各判定は含めない．HTTPでの最新状態取得を先に定義し，更新の通知手段や間隔はMUT-10で決める．通常大会に紐づく提出は，その大会のendsAt到達後，ログインの有無や問題の公開状態によらず取得できる．'
+    security:
+      - {}
+      - sessionCookie: []
     x-authorization:
       status: 'defined'
       anyOf:
@@ -319,6 +326,7 @@ submissionsBySubmissionIdJudgeRunsByJudgeRunId:
           scope: 'submission.contestId'
         - role: 'virtual-contest-setter'
           scope: 'submission.virtualContestId'
+        - condition: '提出が通常大会に紐づき，その大会のendsAtに到達している．非公開問題への提出も含み，ログイン不要'
     x-scenarios:
       - 'S4'
     responses:
