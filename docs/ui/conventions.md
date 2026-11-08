@@ -27,6 +27,8 @@
 
 ## 自動チェック
 
+- Node.jsは`UI/.node-version`に合わせ，ローカルとCIで24.12.0を使う．ESLint 10とlint-staged 17の実行要件を満たすため，旧指定の20.11.1から更新している．
+- `.github/workflows/ui-main.yaml` — PRで依存関係のインストール，APIクライアント生成，ESLint，テスト，型チェックとビルドを実行する．
 - `.claude/hooks/ui-format.sh` — Edit/Write 直後に Prettier → ESLint `--fix` を該当ファイルに実行
 - `.claude/hooks/ui-typecheck.sh` — タスク完了時に `vue-tsc` を実行 (UI ファイルを編集したセッションのみ)
 - `.husky/pre-commit` — コミット時に lint-staged (ESLint+Prettier) と `vue-tsc` を実行

@@ -13,6 +13,10 @@ updates:
         patterns:
           - '*eslint*'
           - '*prettier*'
+      shiki:
+        patterns:
+          - 'shiki'
+          - '@shikijs/*'
       patches:
         update-types:
           - 'patch'
