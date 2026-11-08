@@ -21,9 +21,7 @@ const isMenuOpen = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
-const canCreateProblem = computed(
-  () => userStore.user?.role === 'Admin' || !!userStore.user?.authentication?.traqAuth
-)
+const canCreateProblem = computed(() => userStore.isAuthenticated)
 
 const modalHandler = (e: MouseEvent) => {
   if (!(e.target instanceof HTMLElement) || e.target.closest('#top-navbar-menu')) return
@@ -43,6 +41,7 @@ const setMenuState = (state: boolean) => {
 const handleLogout = async () => {
   try {
     await userStore.logout()
+    setMenuState(false)
     router.push('/login')
   } catch (error) {
     console.error('ログアウトエラー:', error)
@@ -64,13 +63,15 @@ const handleSettings = () => {
 
 <template>
   <header
-    class="sticky top-0 z-50 flex h-14 w-full items-center bg-background-tertiary px-8 font-primary text-text-primary"
+    class="sticky top-0 z-50 flex min-h-14 w-full items-center gap-4 bg-background-tertiary px-4 py-2 font-primary text-text-primary sm:h-14 sm:px-8"
   >
-    <RouterLink class="flex items-center gap-3" to="/">
-      <img :src="traOLogo" class="inline-block size-7.5" />
-      <span class="text-xl font-semibold">traO Judge</span>
+    <RouterLink class="flex shrink-0 items-center gap-3" to="/" aria-label="traO Judge ホーム">
+      <img :src="traOLogo" class="inline-block size-7.5" alt="" />
+      <span class="hidden whitespace-nowrap text-xl font-semibold sm:inline">traO Judge</span>
     </RouterLink>
-    <span class="fontstyle-ui-control-strong ml-auto flex items-center gap-5">
+    <span
+      class="fontstyle-ui-control-strong ml-auto flex min-w-0 flex-wrap items-center justify-end gap-3 whitespace-nowrap sm:flex-nowrap sm:gap-5"
+    >
       <RouterLink v-if="canCreateProblem" to="/problems/create" class="hover:text-text-secondary"
         >問題作成</RouterLink
       >
@@ -84,9 +85,9 @@ const handleSettings = () => {
       <PrimaryButton v-if="!isLoggedIn" padding="1rem" class="h-10 px-3 py-2" @click="handleLogin">
         ログイン
       </PrimaryButton>
-      <div id="top-navbar-menu" class="relative">
-        <button v-if="isLoggedIn" class="flex items-center gap-1" @click="toggleMenu">
-          <span class="inline-block">{{ username }}</span>
+      <div v-if="isLoggedIn" id="top-navbar-menu" class="relative">
+        <button class="flex items-center gap-1" @click="toggleMenu">
+          <span class="inline-block max-w-24 truncate sm:max-w-none">{{ username }}</span>
           <IconDropdownTriangle
             class="inline-block h-1.625"
             :class="isMenuOpen ? [] : ['rotate-180']"

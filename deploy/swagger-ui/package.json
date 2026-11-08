@@ -1,0 +1,8 @@
+{
+  "name": "@traojudge/swagger-ui-build",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@apidevtools/swagger-parser": "12.1.0"
+  }
+}

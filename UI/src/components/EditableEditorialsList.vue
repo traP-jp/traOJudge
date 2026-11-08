@@ -2,14 +2,14 @@
 import { onMounted, ref } from 'vue'
 import ListingTable, { type Column } from '@/components/ListingTable.vue'
 import { EditorialsApi, type EditorialSummary } from '@/api/generated'
-import { useTraqAuthGuard } from '@/composables/useTraqAuthGuard'
+import { useMockAuthGuard } from '@/composables/useMockAuthGuard'
 import { dateToString } from '@/utils/date'
 import MenuButton from '@/components/Navigations/MenuButton.vue'
 import MaterialIcon from '@/components/MaterialIcon.vue'
 import BorderedButton from './Controls/BorderedButton.vue'
 import router from '@/router'
 
-const { requireTraqAuth } = useTraqAuthGuard()
+const { requireMockLogin } = useMockAuthGuard()
 
 const { problemId } = defineProps<{
   problemId: string
@@ -60,7 +60,7 @@ async function deleteEditorial() {
   if (!editorial) return
 
   try {
-    await requireTraqAuth(() => editorialsApi.deleteEditorial({ editorialId: editorial.id }))
+    await requireMockLogin(() => editorialsApi.deleteEditorial({ editorialId: editorial.id }))
     editorials.value.delete(focused.value)
     editorialIds.value = editorialIds.value.filter((id) => id !== editorial.id)
   } catch (error) {

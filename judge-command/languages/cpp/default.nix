@@ -22,6 +22,13 @@
       prebuildSourceFile = ./main.cpp;
       displayName = "C++ (GCC 23)";
       extension = "cpp";
+      checks = {
+        helloWorld = {
+          sourceFile = ./main.cpp;
+          input = "";
+          expectedOutput = "Hello, World!";
+        };
+      };
     };
     cpp-23-clang = {
       builder =
@@ -38,6 +45,16 @@
             cp /build/main $out/bin/${name}
           '';
         };
+      prebuildSourceFile = ./main.cpp;
+      displayName = "C++ (GCC 23)";
+      extension = "cpp";
+      checks = {
+        helloWorld = {
+          sourceFile = ./main.cpp;
+          input = "";
+          expectedOutput = "Hello, World!";
+        };
+      };
     };
   };
 }

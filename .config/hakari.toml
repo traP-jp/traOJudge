@@ -1,0 +1,12 @@
+hakari-package = "workspace-hack"
+dep-format-version = "4"
+resolver = "3"
+workspace-hack-line-style = "workspace-dotted"
+
+# Match the Linux and macOS architectures supported by the development flake.
+platforms = [
+    "x86_64-unknown-linux-gnu",
+    "aarch64-unknown-linux-gnu",
+    "x86_64-apple-darwin",
+    "aarch64-apple-darwin",
+]

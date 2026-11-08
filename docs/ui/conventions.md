@@ -27,6 +27,8 @@
 
 ## 自動チェック
 
+- Node.jsは`UI/.node-version`に合わせ，ローカルとCIで24.12.0を使う．ESLint 10とlint-staged 17の実行要件を満たすため，旧指定の20.11.1から更新している．
+- `.github/workflows/ui-main.yaml` — PRで依存関係のインストール，APIクライアント生成，ESLint，テスト，型チェックとビルドを実行する．
 - `.claude/hooks/ui-format.sh` — Edit/Write 直後に Prettier → ESLint `--fix` を該当ファイルに実行
 - `.claude/hooks/ui-typecheck.sh` — タスク完了時に `vue-tsc` を実行 (UI ファイルを編集したセッションのみ)
 - `.husky/pre-commit` — コミット時に lint-staged (ESLint+Prettier) と `vue-tsc` を実行
@@ -92,6 +94,10 @@
   - 早すぎる抽象は将来の API 変更時に「ラッパー側も追従させる」二重作業を生む。必要になった時点で設計し直す方針。
 - スキーマ変更時は **ルートディレクトリ** で `./scripts/gen-api.sh development` を実行して再生成
 - 開発環境では `./scripts/run-mock-api.sh` でモックサーバーを `localhost:4010` に立てる
+
+コンテストtopの新契約クライアントとモックの確認方法は，[コンテストtopの開発](./contest-top.md)を参照する．
+
+認証処理が未実装の間に画面を確認する方法は，[モックを使った仮ログイン](./mock-login.md)を参照する．
 
 ### 型の書き方バランス
 
