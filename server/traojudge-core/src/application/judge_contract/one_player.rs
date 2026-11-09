@@ -14,11 +14,90 @@ use crate::domain::model::judge_dag::{
 };
 use crate::ports::judge_payload_builder::JudgePayloadBuilder;
 
+pub trait OnePlayerRealisation: Clone + Send + Sync + 'static {
+    fn validate(&self, artifact: &NodeName) -> Result<(), OnePlayerError>;
+    fn is_submission(&self) -> bool;
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Realisation {
     File { path: String },
     Submission {},
+}
+
+impl OnePlayerRealisation for Realisation {
+    fn validate(&self, artifact: &NodeName) -> Result<(), OnePlayerError> {
+        match self {
+            Self::File { path } => {
+                if path.trim().is_empty() {
+                    return Err(OnePlayerError::EmptyFilePath(artifact.clone()));
+                }
+                Ok(())
+            }
+            Self::Submission {} => Ok(()),
+        }
+    }
+
+    fn is_submission(&self) -> bool {
+        matches!(self, Self::Submission {})
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum UploadedObjectRealisation {
+    Object {
+        bucket: String,
+        key: String,
+        hash: String,
+    },
+    Submission {},
+}
+
+impl UploadedObjectRealisation {
+    pub fn object(
+        bucket: impl Into<String>,
+        key: impl Into<String>,
+        hash: impl Into<String>,
+    ) -> Self {
+        Self::Object {
+            bucket: bucket.into(),
+            key: key.into(),
+            hash: hash.into(),
+        }
+    }
+}
+
+fn is_valid_sha256(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+impl OnePlayerRealisation for UploadedObjectRealisation {
+    fn validate(&self, artifact: &NodeName) -> Result<(), OnePlayerError> {
+        match self {
+            Self::Object { bucket, key, hash } => {
+                if bucket.trim().is_empty() {
+                    return Err(OnePlayerError::EmptyBucket(artifact.clone()));
+                }
+                if key.trim().is_empty() {
+                    return Err(OnePlayerError::EmptyObjectKey(artifact.clone()));
+                }
+                if !is_valid_sha256(hash) {
+                    return Err(OnePlayerError::InvalidObjectHash(artifact.clone()));
+                }
+                Ok(())
+            }
+            Self::Submission {} => Ok(()),
+        }
+    }
+
+    fn is_submission(&self) -> bool {
+        matches!(self, Self::Submission {})
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
@@ -65,9 +144,9 @@ impl SubmissionParameters {
 pub struct OnePlayerJudgeContract;
 
 impl OnePlayerJudgeContract {
-    pub fn validate_problem(
+    pub fn validate_problem<R: OnePlayerRealisation>(
         &self,
-        problem: &ProblemJudgeDags<Realisation>,
+        problem: &ProblemJudgeDags<R>,
     ) -> Result<(), OnePlayerError> {
         problem.validate()?;
         for dag in &problem.dags {
@@ -76,20 +155,21 @@ impl OnePlayerJudgeContract {
         Ok(())
     }
 
-    pub fn validate_dag(&self, dag: &JudgeDag<Realisation>) -> Result<(), OnePlayerError> {
+    pub fn validate_dag<R: OnePlayerRealisation>(
+        &self,
+        dag: &JudgeDag<R>,
+    ) -> Result<(), OnePlayerError> {
         dag.validate()?;
         self.validate_contract(dag)
     }
 
-    fn validate_contract(&self, dag: &JudgeDag<Realisation>) -> Result<(), OnePlayerError> {
+    fn validate_contract<R: OnePlayerRealisation>(
+        &self,
+        dag: &JudgeDag<R>,
+    ) -> Result<(), OnePlayerError> {
         for artifact in &dag.artifacts {
-            if let ArtifactKind::Input {
-                realisation: Realisation::File { path },
-            } = &artifact.kind
-            {
-                if path.trim().is_empty() {
-                    return Err(OnePlayerError::EmptyFilePath(artifact.name.clone()));
-                }
+            if let ArtifactKind::Input { realisation } = &artifact.kind {
+                realisation.validate(&artifact.name)?;
             }
         }
         let artifacts: BTreeMap<_, _> = dag
@@ -102,30 +182,31 @@ impl OnePlayerJudgeContract {
             for input in &execution.inputs {
                 if input.environment_variable.as_deref()
                     == Some(SUBMISSION_SOURCE_ENVIRONMENT_VARIABLE)
-                    && !matches!(
-                        artifacts[&input.artifact],
-                        ArtifactKind::Input {
-                            realisation: Realisation::Submission {}
-                        }
-                    )
                 {
-                    return Err(OnePlayerError::InvalidSubmissionSource {
-                        execution: execution.name.clone(),
-                        artifact: input.artifact.clone(),
-                    });
+                    let is_submission = match artifacts.get(&input.artifact) {
+                        Some(ArtifactKind::Input { realisation }) => realisation.is_submission(),
+                        _ => false,
+                    };
+                    if !is_submission {
+                        return Err(OnePlayerError::InvalidSubmissionSource {
+                            execution: execution.name.clone(),
+                            artifact: input.artifact.clone(),
+                        });
+                    }
                 }
             }
         }
         Ok(())
     }
 
-    pub async fn start_dag<Provider, Callback, Builder>(
+    pub async fn start_dag<R, Provider, Callback, Builder>(
         &self,
         engine: &Engine<Provider, Callback>,
-        dag: &JudgeDag<Realisation>,
+        dag: &JudgeDag<R>,
         payload_builder: &mut Builder,
     ) -> Result<PipelineId, SubmitError<Provider::Error, Callback::Error>>
     where
+        R: OnePlayerRealisation,
         Provider: UnitOfWorkProvider,
         Callback: JobStartCallback,
         Builder: JudgePayloadBuilder<Input = Callback::Input> + ?Sized,
@@ -190,6 +271,12 @@ pub enum OnePlayerError {
     EmptyLanguage,
     #[error("input artifact {0} has an empty file path")]
     EmptyFilePath(NodeName),
+    #[error("input artifact {0} has an empty bucket")]
+    EmptyBucket(NodeName),
+    #[error("input artifact {0} has an empty object key")]
+    EmptyObjectKey(NodeName),
+    #[error("input artifact {0} has an invalid object hash")]
+    InvalidObjectHash(NodeName),
     #[error("execution {execution} binds {artifact} to {variable}, but it is not a submission input", variable = SUBMISSION_SOURCE_ENVIRONMENT_VARIABLE)]
     InvalidSubmissionSource {
         execution: NodeName,

@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use serde_json::json;
 use traojudge_core::application::judge_contract::one_player::{
     NodeOutput, OnePlayerError, OnePlayerJudgeContract, Realisation, SubmissionParameters,
+    UploadedObjectRealisation,
 };
 use traojudge_core::application::judge_contract::{
     ContractError, INIT_SCRIPT_ENVIRONMENT_VARIABLE, SUBMISSION_LANGUAGE_ENVIRONMENT_VARIABLE,
@@ -180,4 +181,166 @@ fn realisation_uses_the_shared_submission_keyword_and_rejects_unknown_fields() {
         serde_json::from_value::<Realisation>(json!({"kind": "submission", "player": 2})).is_err()
     );
     assert!(serde_json::from_value::<Realisation>(json!({"kind": "other"})).is_err());
+}
+
+fn uploaded_problem() -> ProblemJudgeDags<UploadedObjectRealisation> {
+    ProblemJudgeDags::new(vec![JudgeDag {
+        artifacts: vec![
+            Artifact {
+                name: name("script"),
+                kind: ArtifactKind::Input {
+                    realisation: UploadedObjectRealisation::Object {
+                        bucket: "problem-bucket".into(),
+                        key: "problems/1/run.sh".into(),
+                        hash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+                            .into(),
+                    },
+                },
+            },
+            Artifact {
+                name: name("source"),
+                kind: ArtifactKind::Input {
+                    realisation: UploadedObjectRealisation::Submission {},
+                },
+            },
+        ],
+        executions: vec![ExecutionNode {
+            name: name("run"),
+            inputs: vec![
+                ExecutionInput {
+                    artifact: name("script"),
+                    environment_variable: Some(INIT_SCRIPT_ENVIRONMENT_VARIABLE.into()),
+                },
+                ExecutionInput {
+                    artifact: name("source"),
+                    environment_variable: Some(SUBMISSION_SOURCE_ENVIRONMENT_VARIABLE.into()),
+                },
+            ],
+            outputs: vec![],
+        }],
+    }])
+    .unwrap()
+}
+
+#[test]
+fn accepts_uploaded_object_dag_and_validates_contract() {
+    let problem = uploaded_problem();
+    OnePlayerJudgeContract.validate_problem(&problem).unwrap();
+}
+
+#[test]
+fn validates_uploaded_object_specifications_in_core() {
+    let mut problem = uploaded_problem();
+    problem.dags[0].artifacts[0].kind = ArtifactKind::Input {
+        realisation: UploadedObjectRealisation::Object {
+            bucket: " ".into(),
+            key: "problems/1/run.sh".into(),
+            hash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".into(),
+        },
+    };
+    assert_eq!(
+        OnePlayerJudgeContract.validate_problem(&problem),
+        Err(OnePlayerError::EmptyBucket(name("script")))
+    );
+
+    let mut problem = uploaded_problem();
+    problem.dags[0].artifacts[0].kind = ArtifactKind::Input {
+        realisation: UploadedObjectRealisation::Object {
+            bucket: "problem-bucket".into(),
+            key: "  ".into(),
+            hash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".into(),
+        },
+    };
+    assert_eq!(
+        OnePlayerJudgeContract.validate_problem(&problem),
+        Err(OnePlayerError::EmptyObjectKey(name("script")))
+    );
+
+    for invalid_hash in [
+        "",
+        "   ",
+        "0123456789abcdef",
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef00",
+        "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+        "g123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    ] {
+        let mut problem = uploaded_problem();
+        problem.dags[0].artifacts[0].kind = ArtifactKind::Input {
+            realisation: UploadedObjectRealisation::Object {
+                bucket: "problem-bucket".into(),
+                key: "problems/1/run.sh".into(),
+                hash: invalid_hash.into(),
+            },
+        };
+        assert_eq!(
+            OnePlayerJudgeContract.validate_problem(&problem),
+            Err(OnePlayerError::InvalidObjectHash(name("script")))
+        );
+    }
+}
+
+#[test]
+fn rejects_non_submission_artifact_for_submission_source_with_uploaded_object() {
+    let mut problem = uploaded_problem();
+    problem.dags[0].executions[0].inputs[1].artifact = name("script");
+    assert!(matches!(
+        OnePlayerJudgeContract.validate_problem(&problem),
+        Err(OnePlayerError::InvalidSubmissionSource { .. })
+    ));
+}
+
+#[test]
+fn uploaded_object_realisation_serde() {
+    assert_eq!(
+        serde_json::from_value::<UploadedObjectRealisation>(json!({"kind": "submission"})).unwrap(),
+        UploadedObjectRealisation::Submission {}
+    );
+    assert_eq!(
+        serde_json::from_value::<UploadedObjectRealisation>(json!({
+            "kind": "object",
+            "bucket": "test-bucket",
+            "key": "test-key",
+            "hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        }))
+        .unwrap(),
+        UploadedObjectRealisation::Object {
+            bucket: "test-bucket".into(),
+            key: "test-key".into(),
+            hash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".into(),
+        }
+    );
+
+    let object = UploadedObjectRealisation::object(
+        "test-bucket",
+        "test-key",
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    );
+    let json_val = serde_json::to_value(&object).unwrap();
+    assert_eq!(
+        json_val,
+        json!({
+            "kind": "object",
+            "bucket": "test-bucket",
+            "key": "test-key",
+            "hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        })
+    );
+
+    assert!(
+        serde_json::from_value::<UploadedObjectRealisation>(json!({
+            "kind": "object",
+            "bucket": "test-bucket",
+            "key": "test-key",
+            "hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            "unknown": 123
+        }))
+        .is_err()
+    );
+    assert!(
+        serde_json::from_value::<UploadedObjectRealisation>(json!({
+            "kind": "submission",
+            "extra": true
+        }))
+        .is_err()
+    );
 }
