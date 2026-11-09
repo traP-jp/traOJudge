@@ -64,6 +64,39 @@
   line-height: 1.75rem;
 }
 
+@utility contest-page-heading {
+  @apply text-xl leading-7 font-semibold text-text-primary;
+
+  @variant sm {
+    @apply text-2xl leading-8;
+  }
+}
+
+@utility contest-markdown {
+  @apply text-base;
+
+  & h3 {
+    @apply text-lg! leading-7! font-semibold;
+
+    @variant sm {
+      @apply text-xl!;
+    }
+  }
+
+  & h4 {
+    @apply text-base! leading-6! font-semibold;
+
+    @variant sm {
+      @apply text-lg! leading-7!;
+    }
+  }
+
+  & h5,
+  & h6 {
+    @apply mt-4 mb-2 text-base leading-6 font-semibold;
+  }
+}
+
 @utility fontstyle-ui-body {
   @apply font-primary;
   font-size: 1rem;

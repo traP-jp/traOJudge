@@ -25,12 +25,12 @@ const editorial = computed(() =>
 <template>
   <RouterLink
     :to="contestLocation(contestId, 'editorials')"
-    class="my-6 inline-block text-brand-primary underline"
+    class="mt-6 inline-block text-brand-primary underline sm:mt-8"
     >解説一覧へ戻る</RouterLink
   >
   <article class="flex min-w-0 flex-col gap-6 py-6">
     <header v-if="editorial">
-      <h2 class="fontstyle-ui-subtitle wrap-break-word">{{ editorial.title }}</h2>
+      <h2 class="contest-page-heading wrap-break-word">{{ editorial.title }}</h2>
       <div class="mt-2 flex flex-wrap gap-4 text-sm text-text-secondary">
         <span
           >著者
@@ -51,7 +51,12 @@ const editorial = computed(() =>
         <p v-if="page.awaitingRelease" class="py-10 text-text-secondary">
           解説はコンテスト終了後に公開されます。
         </p>
-        <MarkdownContent v-else-if="page.editorial" :source="page.editorial.body" />
+        <MarkdownContent
+          v-else-if="page.editorial"
+          :source="page.editorial.body"
+          :heading-level="3"
+          class="contest-markdown"
+        />
       </template>
     </QueryState>
   </article>

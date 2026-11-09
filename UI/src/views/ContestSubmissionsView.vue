@@ -122,8 +122,8 @@ const problemLabels = computed(() =>
 </script>
 
 <template>
-  <section class="space-y-6 py-8">
-    <h2 class="fontstyle-ui-subtitle">提出一覧</h2>
+  <section class="space-y-6 py-6 sm:py-8">
+    <h2 class="contest-page-heading">提出一覧</h2>
     <div class="flex flex-wrap items-end gap-4">
       <SelectBox
         v-model="selectedScope"

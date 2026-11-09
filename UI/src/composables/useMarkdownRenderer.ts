@@ -53,7 +53,7 @@ function initHighlighter(): void {
 }
 
 export function useMarkdownRenderer(): {
-  renderMarkdown: (source: string, typographer?: boolean) => string
+  renderMarkdown: (source: string, typographer?: boolean, headingLevel?: number) => string
   isReady: ComputedRef<boolean>
 } {
   // markdown-it の同期 API に合わせ，初期化が終わるまでは通常のコード表示を使う．
@@ -77,8 +77,19 @@ export function useMarkdownRenderer(): {
     trust: false
   })
 
-  const renderMarkdown = (source: string, typographer = false): string => {
-    const rawHtml = md.set({ typographer }).render(source)
+  const renderMarkdown = (source: string, typographer = false, headingLevel?: number): string => {
+    const environment = {}
+    const tokens = md.set({ typographer }).parse(source, environment)
+    if (headingLevel !== undefined) {
+      const headings = tokens.filter(
+        (token) => token.type === 'heading_open' || token.type === 'heading_close'
+      )
+      const firstLevel = Math.min(...headings.map((token) => Number(token.tag.slice(1))))
+      for (const token of headings) {
+        token.tag = `h${Math.min(6, Number(token.tag.slice(1)) - firstLevel + headingLevel)}`
+      }
+    }
+    const rawHtml = md.renderer.render(tokens, md.options, environment)
     // KaTeX の SVG・MathML・インラインスタイルを保ち，ページ全体に及ぶ CSS は除去する．
     return DOMPurify.sanitize(rawHtml, { FORBID_TAGS: ['style'] })
   }

@@ -5,9 +5,17 @@ import { computed } from 'vue'
 
 import { useMarkdownRenderer } from '@/composables/useMarkdownRenderer'
 
-const { source, typographer = false } = defineProps<{ source: string; typographer?: boolean }>()
+const {
+  source,
+  typographer = false,
+  headingLevel
+} = defineProps<{
+  source: string
+  typographer?: boolean
+  headingLevel?: number
+}>()
 const { renderMarkdown } = useMarkdownRenderer()
-const renderedContent = computed(() => renderMarkdown(source, typographer))
+const renderedContent = computed(() => renderMarkdown(source, typographer, headingLevel))
 </script>
 
 <template>

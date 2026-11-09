@@ -14,8 +14,8 @@ const { view, refresh } = useContestProblemsQuery(contest)
 </script>
 
 <template>
-  <section class="py-8">
-    <h2 class="mb-6 fontstyle-ui-subtitle">問題一覧</h2>
+  <section class="max-w-4xl py-6 sm:py-8">
+    <h2 class="mb-6 contest-page-heading">問題一覧</h2>
     <QueryState :view="view" @retry="refresh">
       <template #default="{ data: page }">
         <p v-if="page.awaitingStart" class="text-text-secondary">コンテスト開始前です。</p>

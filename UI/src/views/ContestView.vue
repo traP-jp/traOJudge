@@ -7,11 +7,16 @@ defineProps<{ contest: Contest | undefined }>()
 </script>
 
 <template>
-  <div class="flex min-w-0 flex-col gap-10 py-8 lg:flex-row lg:gap-12">
+  <div class="flex min-w-0 flex-col gap-10 py-6 sm:py-8 lg:flex-row lg:gap-12">
     <article aria-labelledby="contest-overview" class="min-w-0 flex-1">
-      <h2 id="contest-overview" class="mb-6 fontstyle-ui-subtitle">コンテスト概要</h2>
+      <h2 id="contest-overview" class="mb-6 contest-page-heading">コンテスト概要</h2>
       <p v-if="!contest" role="status" class="py-8 text-text-secondary">読み込み中...</p>
-      <MarkdownContent v-else-if="contest.description?.trim()" :source="contest.description" />
+      <MarkdownContent
+        v-else-if="contest.description?.trim()"
+        :source="contest.description"
+        :heading-level="3"
+        class="contest-markdown"
+      />
       <p v-else class="leading-7 text-text-secondary">コンテストの概要はまだ掲載されていません．</p>
     </article>
 
@@ -20,7 +25,7 @@ defineProps<{ contest: Contest | undefined }>()
         aria-labelledby="contest-schedule"
         class="border-t border-border-primary pt-6 lg:border-t-0 lg:pt-0"
       >
-        <h2 id="contest-schedule" class="mb-5 fontstyle-ui-subtitle">開催情報</h2>
+        <h2 id="contest-schedule" class="mb-5 contest-page-heading">開催情報</h2>
         <dl v-if="contest" class="space-y-5 text-sm">
           <div>
             <dt class="mb-1 text-text-secondary">開始日時</dt>
@@ -46,7 +51,7 @@ defineProps<{ contest: Contest | undefined }>()
       </section>
 
       <section aria-labelledby="contest-rules" class="mt-8 border-t border-border-primary pt-6">
-        <h2 id="contest-rules" class="mb-5 fontstyle-ui-subtitle">ルール</h2>
+        <h2 id="contest-rules" class="mb-5 contest-page-heading">ルール</h2>
         <dl v-if="contest" class="space-y-5 text-sm">
           <div>
             <dt class="mb-1 text-text-secondary">同点時の順位</dt>

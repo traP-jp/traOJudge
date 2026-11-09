@@ -43,6 +43,24 @@ describe('Markdown rendering', () => {
     expect(output.querySelector('.katex-html [style]')).not.toBeNull()
   })
 
+  it('places article headings below the page title without changing default rendering or code', () => {
+    const { renderMarkdown } = useMarkdownRenderer()
+    const source = '## 入力\n\n### 形式\n\n###### 詳細\n\n```text\n# 入力例\n```'
+    const output = fragment(renderMarkdown(source, false, 3))
+    expect(
+      [...output.querySelectorAll('h3, h4, h6')].map((heading) => heading.textContent)
+    ).toEqual(['入力', '形式', '詳細'])
+    expect(output.querySelector('h1, h2, h7')).toBeNull()
+    expect(output.querySelector('code')?.textContent).toBe('# 入力例\n')
+    expect(fragment(renderMarkdown('# 題名', false, 3)).querySelector('h3')?.textContent).toBe(
+      '題名'
+    )
+    expect(fragment(renderMarkdown(source)).querySelector('h2')?.textContent).toBe('入力')
+    expect(fragment(renderMarkdown('本文だけ', false, 3)).querySelector('p')?.textContent).toBe(
+      '本文だけ'
+    )
+  })
+
   it('keeps malformed math and unclosed delimiters readable', () => {
     const { renderMarkdown } = useMarkdownRenderer()
     expect(fragment(renderMarkdown('$\\frac{1}{$')).querySelector('.katex-error')).not.toBeNull()

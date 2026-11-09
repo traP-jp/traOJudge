@@ -88,9 +88,9 @@ const submit = async () => {
 </script>
 
 <template>
-  <section class="space-y-6 py-8">
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <h2 class="fontstyle-ui-subtitle">質問と回答</h2>
+  <section class="space-y-6 py-6 sm:py-8">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <h2 class="contest-page-heading">質問と回答</h2>
       <div class="ml-auto flex items-center gap-3">
         <MonochromeButton
           :disabled="

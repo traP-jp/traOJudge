@@ -13,8 +13,8 @@ const contest = computed(() => props.contest)
 const { view, refresh } = useEditorialsQuery(contest)
 </script>
 <template>
-  <section aria-labelledby="contest-editorials-heading" class="max-w-5xl py-8">
-    <h2 id="contest-editorials-heading" class="mb-2 fontstyle-ui-subtitle">解説一覧</h2>
+  <section aria-labelledby="contest-editorials-heading" class="max-w-5xl py-6 sm:py-8">
+    <h2 id="contest-editorials-heading" class="mb-2 contest-page-heading">解説一覧</h2>
     <QueryState :view="view" @retry="refresh">
       <template #default="{ data: page }">
         <p v-if="page.awaitingRelease" class="py-10 leading-7 text-text-secondary">
@@ -30,9 +30,9 @@ const { view, refresh } = useEditorialsQuery(contest)
                 class="shrink-0 rounded-sm bg-background-secondary px-3 py-1 text-sm font-semibold text-text-primary"
                 >{{ problem.label }}</span
               >
-              <h2 class="min-w-0 text-lg font-semibold wrap-break-word text-text-primary">
+              <h3 class="min-w-0 text-lg font-semibold wrap-break-word text-text-primary">
                 {{ problem.title || `問題 ${problem.label}` }}
-              </h2>
+              </h3>
             </div>
             <div v-if="problem.error" role="alert" class="flex items-center gap-3">
               <p class="leading-7 text-text-secondary">この問題の解説を読み込めませんでした．</p>
