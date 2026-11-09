@@ -85,13 +85,18 @@ it('keeps question drafts through closing and failure, then closes and refreshes
   await router.push('/contest/contest-a/clarifications')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- ESLintでは、.vueからimportしたコンポーネントの型を解決できないため。
   const wrapper: VueWrapper = mount(ContestClarificationsView, {
+    props: { contest: undefined },
     attachTo: document.body,
     global: {
-      plugins: [context.pinia, [VueQueryPlugin, { queryClient }], router],
-      stubs: { ContestHeader: true }
+      plugins: [context.pinia, [VueQueryPlugin, { queryClient }], router]
     }
   })
   wrappers.push(wrapper)
+  await flushPromises()
+  expect(wrapper.get('h2').text()).toBe('質問と回答')
+  expect(wrapper.find('article').exists()).toBe(false)
+  expect(button(wrapper, '質問する')).toBeUndefined()
+  await wrapper.setProps({ contest })
   await flushPromises()
   expect(wrapper.find('textarea').exists()).toBe(false)
   expect(wrapper.text()).toContain('入力について')

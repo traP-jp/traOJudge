@@ -23,7 +23,7 @@ defineEmits<{ retry: [] }>()
       <span>{{ view.warning }}</span>
       <MonochromeButton small @click="$emit('retry')">再試行</MonochromeButton>
     </div>
-    <span v-else-if="view.refreshing" role="status" class="text-text-secondary">更新中...</span>
+    <span v-else-if="view.refreshing" role="status" class="sr-only">更新中...</span>
     <slot :data="view.data" />
   </template>
 </template>

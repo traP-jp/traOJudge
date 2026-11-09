@@ -18,45 +18,51 @@ const router = createRouter({
     { path: '/login', component: () => import('@/views/LoginView.vue') },
     {
       path: '/contest/:contestId',
-      name: 'contest-top',
-      component: () => import('@/views/ContestView.vue')
-    },
-    {
-      path: '/contest/:contestId/editorials',
-      name: 'contest-editorials',
-      component: () => import('@/views/ContestEditorialsView.vue')
-    },
-    {
-      path: '/contest/:contestId/problems',
-      name: 'contest-problems',
-      component: () => import('@/views/ContestProblemsView.vue')
-    },
-    {
-      path: '/contest/:contestId/problems/:problemId',
-      name: 'contest-problem',
-      component: () => import('@/views/ContestProblemView.vue')
-    },
-    {
-      path: '/contest/:contestId/submit',
-      name: 'contest-submit',
-      component: () => import('@/views/ContestSubmitView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/contest/:contestId/clarifications',
-      name: 'contest-clarifications',
-      component: () => import('@/views/ContestClarificationsView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/contest/:contestId/submissions',
-      name: 'contest-submissions',
-      component: () => import('@/views/ContestSubmissionsView.vue')
-    },
-    {
-      path: '/contest/:contestId/problems/:problemId/editorials/:editorialId',
-      name: 'contest-editorial',
-      component: () => import('@/views/ContestEditorialView.vue')
+      component: () => import('@/views/ContestLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'contest-top',
+          component: () => import('@/views/ContestView.vue')
+        },
+        {
+          path: 'editorials',
+          name: 'contest-editorials',
+          component: () => import('@/views/ContestEditorialsView.vue')
+        },
+        {
+          path: 'problems',
+          name: 'contest-problems',
+          component: () => import('@/views/ContestProblemsView.vue')
+        },
+        {
+          path: 'problems/:problemId',
+          name: 'contest-problem',
+          component: () => import('@/views/ContestProblemView.vue')
+        },
+        {
+          path: 'submit',
+          name: 'contest-submit',
+          component: () => import('@/views/ContestSubmitView.vue'),
+          meta: { requiresAuth: true }
+        },
+        {
+          path: 'clarifications',
+          name: 'contest-clarifications',
+          component: () => import('@/views/ContestClarificationsView.vue'),
+          meta: { requiresAuth: true }
+        },
+        {
+          path: 'submissions',
+          name: 'contest-submissions',
+          component: () => import('@/views/ContestSubmissionsView.vue')
+        },
+        {
+          path: 'problems/:problemId/editorials/:editorialId',
+          name: 'contest-editorial',
+          component: () => import('@/views/ContestEditorialView.vue')
+        }
+      ]
     },
     {
       path: '/reset-password/:pathMatch(.*)*',

@@ -2,7 +2,7 @@
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import ContestHeader from '@/components/contests/ContestHeader.vue'
+import type { Contest } from '@/api/client'
 import MonochromeButton from '@/components/controls/MonochromeButton.vue'
 import CursorPagination from '@/components/controls/pagination/CursorPagination.vue'
 import SelectBox from '@/components/controls/SelectBox.vue'
@@ -10,7 +10,6 @@ import QueryState from '@/components/QueryState.vue'
 import JudgeRunResult from '@/components/submissions/JudgeRunResult.vue'
 import { useContestPhase } from '@/composables/contests/useContestPhase'
 import { useContestProblemsQuery } from '@/composables/contests/useContestProblemsQuery'
-import { useContestQuery } from '@/composables/contests/useContestQuery'
 import {
   type ContestSubmissionScope,
   useContestSubmissionsQuery
@@ -27,10 +26,8 @@ const id = useContestId()
 const route = useRoute()
 const router = useRouter()
 const session = useUserStore()
-const contestQuery = useContestQuery(id)
-const contest = computed(() =>
-  contestQuery.view.value.status === 'success' ? contestQuery.view.value.data : undefined
-)
+const props = defineProps<{ contest: Contest | undefined }>()
+const contest = computed(() => props.contest)
 const { phase } = useContestPhase(contest)
 const problems = useContestProblemsQuery(contest)
 const languages = useSubmissionLanguages()
@@ -125,137 +122,129 @@ const problemLabels = computed(() =>
 </script>
 
 <template>
-  <main class="mx-auto min-h-header-offset max-w-7xl px-4 py-8 font-primary sm:px-8 lg:px-12">
-    <QueryState :view="contestQuery.view.value" @retry="contestQuery.refresh">
-      <template #default="{ data }">
-        <ContestHeader :contest="data" />
-        <section class="space-y-6 py-8">
-          <h2 class="fontstyle-ui-subtitle">提出一覧</h2>
-          <div class="flex flex-wrap items-end gap-4">
-            <SelectBox
-              v-model="selectedScope"
-              :options="scopeOptions"
-              label="提出者"
-              container-class="min-w-48 flex-1 sm:max-w-64"
-              :disabled="session.isLoading"
-            />
-            <MonochromeButton
-              v-if="canRead"
-              small
-              class="ml-auto"
-              :disabled="updating"
-              @click="submissions.refresh"
-              >{{ updating ? '更新中…' : '更新' }}</MonochromeButton
-            >
-          </div>
-          <template v-if="!canRead">
-            <p v-if="scope === 'all'" class="text-text-secondary">
-              コンテスト終了後に公開されます。
-            </p>
-            <p v-else-if="!session.isAuthenticated">
-              <RouterLink
-                :to="{ path: '/login', query: { redirect: route.fullPath } }"
-                class="text-brand-primary underline"
-                >ログイン</RouterLink
-              >して提出を確認してください。
-            </p>
-            <p v-else class="text-text-secondary">
-              所属チームを確認できません。
-              <RouterLink :to="{ query: { scope: 'mine' } }" class="text-brand-primary underline"
-                >自分の提出</RouterLink
-              >
-            </p>
-          </template>
-          <template v-else>
-            <QueryState :view="submissions.view.value" @retry="submissions.refresh">
-              <template #default="{ data: page }">
-                <div class="overflow-x-auto">
-                  <table class="w-full min-w-3xl text-left text-sm">
-                    <caption class="sr-only">
-                      コンテストの提出一覧
-                    </caption>
-                    <thead class="border-b border-border-primary text-text-secondary">
-                      <tr>
-                        <th scope="col" class="p-3">提出日時</th>
-                        <th scope="col" class="p-3">問題</th>
-                        <th scope="col" class="p-3">提出者</th>
-                        <th scope="col" class="p-3">言語</th>
-                        <th scope="col" class="p-3">判定</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="item in page.items"
-                        :key="`${session.epoch}:${scope}:${teamId}:${item.id}`"
-                        class="border-b border-border-primary align-top"
-                      >
-                        <td class="p-3 whitespace-nowrap">
-                          <time :datetime="item.submittedAt">{{
-                            formatContestDate(item.submittedAt)
-                          }}</time>
-                        </td>
-                        <td class="p-3">
-                          <RouterLink
-                            :to="contestProblemLocation(data.id, item.problemId)"
-                            class="text-brand-primary underline"
-                            >{{
-                              problemLabels.find((option) => option.id === item.problemId)?.name ??
-                              item.problemId
-                            }}</RouterLink
-                          >
-                        </td>
-                        <td class="max-w-48 p-3 wrap-break-word">
-                          {{ item.userId === session.userId ? '自分' : item.userId }}
-                          <RouterLink
-                            v-if="item.userId === session.userId && item.teamId"
-                            :to="{ query: { scope: 'team', teamId: item.teamId } }"
-                            class="block text-brand-primary underline"
-                            >チームの提出</RouterLink
-                          >
-                        </td>
-                        <td class="p-3">
-                          {{
-                            languages.view.value.status === 'success'
-                              ? (languages.view.value.data.find(
-                                  (language) => language.id === item.languageId
-                                )?.name ?? item.languageId)
-                              : item.languageId
-                          }}
-                        </td>
-                        <td class="min-w-48 p-3">
-                          <JudgeRunResult
-                            :submission-id="item.id"
-                            :judge-run-id="item.currentJudgeRunId"
-                            :can-read="
-                              session.isAuthenticated &&
-                              (setter || item.userId === session.userId || scope === 'team')
-                            "
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p
-                  v-if="!page.items.length && !cursor && !page.nextCursor"
-                  class="py-4 text-text-secondary"
+  <section class="space-y-6 py-8">
+    <h2 class="fontstyle-ui-subtitle">提出一覧</h2>
+    <div class="flex flex-wrap items-end gap-4">
+      <SelectBox
+        v-model="selectedScope"
+        :options="scopeOptions"
+        label="提出者"
+        container-class="min-w-48 flex-1 sm:max-w-64"
+        :disabled="session.isLoading"
+      />
+      <MonochromeButton
+        v-if="canRead"
+        small
+        class="ml-auto"
+        :disabled="updating"
+        @click="submissions.refresh"
+        >{{ updating ? '更新中…' : '更新' }}</MonochromeButton
+      >
+    </div>
+    <QueryState v-if="!contest" :view="{ status: 'pending' }" />
+    <template v-else-if="!canRead">
+      <p v-if="scope === 'all'" class="text-text-secondary">コンテスト終了後に公開されます。</p>
+      <p v-else-if="!session.isAuthenticated">
+        <RouterLink
+          :to="{ path: '/login', query: { redirect: route.fullPath } }"
+          class="text-brand-primary underline"
+          >ログイン</RouterLink
+        >して提出を確認してください。
+      </p>
+      <p v-else class="text-text-secondary">
+        所属チームを確認できません。
+        <RouterLink :to="{ query: { scope: 'mine' } }" class="text-brand-primary underline"
+          >自分の提出</RouterLink
+        >
+      </p>
+    </template>
+    <template v-else>
+      <QueryState :view="submissions.view.value" @retry="submissions.refresh">
+        <template #default="{ data: page }">
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-3xl text-left text-sm">
+              <caption class="sr-only">
+                コンテストの提出一覧
+              </caption>
+              <thead class="border-b border-border-primary text-text-secondary">
+                <tr>
+                  <th scope="col" class="p-3">提出日時</th>
+                  <th scope="col" class="p-3">問題</th>
+                  <th scope="col" class="p-3">提出者</th>
+                  <th scope="col" class="p-3">言語</th>
+                  <th scope="col" class="p-3">判定</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="item in page.items"
+                  :key="`${session.epoch}:${scope}:${teamId}:${item.id}`"
+                  class="border-b border-border-primary align-top"
                 >
-                  提出はありません。
-                </p>
-                <CursorPagination
-                  :cursor="cursor"
-                  :previous-cursor="previousCursor"
-                  :next-cursor="page.nextCursor"
-                  :loading="
-                    submissions.view.value.status === 'success' && submissions.view.value.refreshing
-                  "
-                  @change="changeCursor"
-                />
-              </template>
-            </QueryState>
-          </template>
-        </section>
-      </template>
-    </QueryState>
-  </main>
+                  <td class="p-3 whitespace-nowrap">
+                    <time :datetime="item.submittedAt">{{
+                      formatContestDate(item.submittedAt)
+                    }}</time>
+                  </td>
+                  <td class="p-3">
+                    <RouterLink
+                      :to="contestProblemLocation(id, item.problemId)"
+                      class="text-brand-primary underline"
+                      >{{
+                        problemLabels.find((option) => option.id === item.problemId)?.name ??
+                        item.problemId
+                      }}</RouterLink
+                    >
+                  </td>
+                  <td class="max-w-48 p-3 wrap-break-word">
+                    {{ item.userId === session.userId ? '自分' : item.userId }}
+                    <RouterLink
+                      v-if="item.userId === session.userId && item.teamId"
+                      :to="{ query: { scope: 'team', teamId: item.teamId } }"
+                      class="block text-brand-primary underline"
+                      >チームの提出</RouterLink
+                    >
+                  </td>
+                  <td class="p-3">
+                    {{
+                      languages.view.value.status === 'success'
+                        ? (languages.view.value.data.find(
+                            (language) => language.id === item.languageId
+                          )?.name ?? item.languageId)
+                        : item.languageId
+                    }}
+                  </td>
+                  <td class="min-w-48 p-3">
+                    <JudgeRunResult
+                      :submission-id="item.id"
+                      :judge-run-id="item.currentJudgeRunId"
+                      :can-read="
+                        session.isAuthenticated &&
+                        (setter || item.userId === session.userId || scope === 'team')
+                      "
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p
+            v-if="!page.items.length && !cursor && !page.nextCursor"
+            class="py-4 text-text-secondary"
+          >
+            提出はありません。
+          </p>
+          <CursorPagination
+            :cursor="cursor"
+            :previous-cursor="previousCursor"
+            :next-cursor="page.nextCursor"
+            :loading="
+              submissions.view.value.status === 'success' && submissions.view.value.refreshing
+            "
+            @change="changeCursor"
+          />
+        </template>
+      </QueryState>
+    </template>
+  </section>
 </template>

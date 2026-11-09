@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
+import type { Contest } from '@/api/client'
 import ClarificationCard from '@/components/contests/ClarificationCard.vue'
-import ContestHeader from '@/components/contests/ContestHeader.vue'
 import MonochromeButton from '@/components/controls/MonochromeButton.vue'
 import CursorPagination from '@/components/controls/pagination/CursorPagination.vue'
 import PlainTextArea from '@/components/controls/PlainTextArea.vue'
@@ -12,7 +12,6 @@ import QueryState from '@/components/QueryState.vue'
 import { useClarificationActions } from '@/composables/contests/useClarificationActions'
 import { useClarificationsQuery } from '@/composables/contests/useClarificationsQuery'
 import { useContestProblemsQuery } from '@/composables/contests/useContestProblemsQuery'
-import { useContestQuery } from '@/composables/contests/useContestQuery'
 import { useContestId } from '@/router/locations'
 import { useCursorRoute } from '@/router/useCursorRoute'
 import { useUserStore } from '@/stores/user'
@@ -21,15 +20,15 @@ import { hasContestRole } from '@/utils/contestAccess'
 
 const id = useContestId()
 const session = useUserStore()
-const contestQuery = useContestQuery(id)
-const contest = computed(() =>
-  contestQuery.view.value.status === 'success' ? contestQuery.view.value.data : undefined
-)
+const props = defineProps<{ contest: Contest | undefined }>()
+const contest = computed(() => props.contest)
 const problems = useContestProblemsQuery(contest)
 const { cursor, previousCursor, changeCursor } = useCursorRoute()
 const questions = useClarificationsQuery(id, cursor)
 const { create, isSaving } = useClarificationActions(id)
-const canAsk = computed(() => hasContestRole(session.user, id.value, 'contestant'))
+const canAsk = computed(
+  () => !!contest.value && hasContestRole(session.user, id.value, 'contestant')
+)
 const canAnswer = computed(() => hasContestRole(session.user, id.value, 'contest-setter'))
 const options = computed(() => [
   { id: 'contest', name: 'コンテスト全体' },
@@ -89,92 +88,79 @@ const submit = async () => {
 </script>
 
 <template>
-  <main class="mx-auto min-h-header-offset max-w-7xl px-4 py-8 font-primary sm:px-8 lg:px-12">
-    <QueryState :view="contestQuery.view.value" @retry="contestQuery.refresh">
-      <template #default="{ data }">
-        <ContestHeader :contest="data" />
-        <section class="space-y-6 py-8">
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <h2 class="fontstyle-ui-subtitle">質問と回答</h2>
-            <div class="ml-auto flex items-center gap-3">
-              <MonochromeButton
-                :disabled="
-                  questions.view.value.status === 'pending' ||
-                  (questions.view.value.status === 'success' && questions.view.value.refreshing)
-                "
-                @click="questions.refresh"
-                >更新</MonochromeButton
-              >
-              <PrimaryButton
-                v-if="canAsk"
-                :id="buttonId"
-                class="h-10 px-5"
-                :aria-expanded="expanded"
-                :aria-controls="formId"
-                :disabled="isSaving"
-                @click="setExpanded(!expanded)"
-                >質問する</PrimaryButton
-              >
-            </div>
-          </div>
-          <p v-if="saved" role="status">質問を送信しました。</p>
-          <form
-            v-if="canAsk && expanded"
-            :id="formId"
-            ref="form"
-            class="space-y-4 rounded-sm border border-border-primary p-4"
-            @submit.prevent="submit"
-          >
-            <h3 class="font-semibold">質問する</h3>
-            <SelectBox
-              v-model="selected"
-              :options="options"
-              label="質問の対象"
-              :disabled="isSaving"
-            />
-            <PlainTextArea v-model="body" label="質問" :disabled="isSaving" :rows="4" required />
-            <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
-            <div class="flex items-center gap-3">
-              <PrimaryButton type="submit" :disabled="isSaving || !body.trim()" class="h-10 px-5">{{
-                isSaving ? '送信中...' : '質問を送信'
-              }}</PrimaryButton>
-              <MonochromeButton type="button" :disabled="isSaving" @click="setExpanded(false)">
-                閉じる
-              </MonochromeButton>
-            </div>
-          </form>
-          <QueryState :view="questions.view.value" @retry="questions.refresh">
-            <template #default="{ data: page }">
-              <p
-                v-if="!page.items.length && !cursor && !page.nextCursor"
-                class="text-text-secondary"
-              >
-                質問はありません。
-              </p>
-              <ClarificationCard
-                v-for="question in page.items"
-                :key="`${session.epoch}:${data.id}:${question.id}`"
-                :contest-id="data.id"
-                :question="question"
-                :can-answer="canAnswer"
-                :problem-label="
-                  options.find((option) => option.id === question.problemId)?.name ??
-                  (question.problemId ? '問題への質問' : 'コンテスト全体')
-                "
-              />
-              <CursorPagination
-                :cursor="cursor"
-                :previous-cursor="previousCursor"
-                :next-cursor="page.nextCursor"
-                :loading="
-                  questions.view.value.status === 'success' && questions.view.value.refreshing
-                "
-                @change="changeCursor"
-              />
-            </template>
-          </QueryState>
-        </section>
+  <section class="space-y-6 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <h2 class="fontstyle-ui-subtitle">質問と回答</h2>
+      <div class="ml-auto flex items-center gap-3">
+        <MonochromeButton
+          :disabled="
+            !contest ||
+            questions.view.value.status === 'pending' ||
+            (questions.view.value.status === 'success' && questions.view.value.refreshing)
+          "
+          @click="questions.refresh"
+          >更新</MonochromeButton
+        >
+        <PrimaryButton
+          v-if="canAsk"
+          :id="buttonId"
+          class="h-10 px-5"
+          :aria-expanded="expanded"
+          :aria-controls="formId"
+          :disabled="isSaving"
+          @click="setExpanded(!expanded)"
+          >質問する</PrimaryButton
+        >
+      </div>
+    </div>
+    <p v-if="saved" role="status">質問を送信しました。</p>
+    <form
+      v-if="canAsk && expanded"
+      :id="formId"
+      ref="form"
+      class="space-y-4 rounded-sm border border-border-primary p-4"
+      @submit.prevent="submit"
+    >
+      <h3 class="font-semibold">質問する</h3>
+      <SelectBox v-model="selected" :options="options" label="質問の対象" :disabled="isSaving" />
+      <PlainTextArea v-model="body" label="質問" :disabled="isSaving" :rows="4" required />
+      <p v-if="error" role="alert" class="text-status-error">{{ error }}</p>
+      <div class="flex items-center gap-3">
+        <PrimaryButton type="submit" :disabled="isSaving || !body.trim()" class="h-10 px-5">{{
+          isSaving ? '送信中...' : '質問を送信'
+        }}</PrimaryButton>
+        <MonochromeButton type="button" :disabled="isSaving" @click="setExpanded(false)">
+          閉じる
+        </MonochromeButton>
+      </div>
+    </form>
+    <QueryState
+      :view="contest ? questions.view.value : { status: 'pending' }"
+      @retry="questions.refresh"
+    >
+      <template #default="{ data: page }">
+        <p v-if="!page.items.length && !cursor && !page.nextCursor" class="text-text-secondary">
+          質問はありません。
+        </p>
+        <ClarificationCard
+          v-for="question in page.items"
+          :key="`${session.epoch}:${id}:${question.id}`"
+          :contest-id="id"
+          :question="question"
+          :can-answer="canAnswer"
+          :problem-label="
+            options.find((option) => option.id === question.problemId)?.name ??
+            (question.problemId ? '問題への質問' : 'コンテスト全体')
+          "
+        />
+        <CursorPagination
+          :cursor="cursor"
+          :previous-cursor="previousCursor"
+          :next-cursor="page.nextCursor"
+          :loading="questions.view.value.status === 'success' && questions.view.value.refreshing"
+          @change="changeCursor"
+        />
       </template>
     </QueryState>
-  </main>
+  </section>
 </template>
