@@ -1694,7 +1694,7 @@
       "responses": [
         {
           "uuid": "0c516d58-4018-5b97-908d-0aeb82077d48",
-          "body": "{\n  \"id\": \"e064ea23-4e10-5cb5-90d7-32d2e667520c\",\n  \"title\": \"数列の探索\",\n  \"statement\": \"\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
+          "body": "{\n  \"id\": \"e064ea23-4e10-5cb5-90d7-32d2e667520c\",\n  \"title\": \"数列の探索\",\n  \"statement\": \"長さ $N$ の整数列 $A$ と整数 $X$ が与えられます。$X$ が最初に現れる位置を1から数えて出力してください。含まれない場合は $-1$ を出力してください。\\n\\n## 制約\\n\\n- $1 \\\\le N \\\\le 10^5$\\n- 入力はすべて整数です。\\n\\n## 入力\\n\\n```text\\nN X\\nA_1 A_2 ... A_N\\n```\\n\\n## 入力例\\n\\n```text\\n5 7\\n3 7 2 7 1\\n```\\n\\n## 出力例\\n\\n```text\\n2\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "公開コンテスト",
@@ -2329,7 +2329,7 @@
       "responses": [
         {
           "uuid": "0e7a99c0-201d-4686-ace8-9f929019e515",
-          "body": "{\n  \"items\": [\n    {\n      \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n      \"label\": \"A\",\n      \"order\": 0\n    }\n  ]\n}",
+          "body": "{\n  \"items\": [\n    {\n      \"problemId\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n      \"label\": \"A\",\n      \"order\": 0\n    },\n    {\n      \"problemId\": \"e064ea23-4e10-5cb5-90d7-32d2e667520c\",\n      \"label\": \"B\",\n      \"order\": 1\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2365,7 +2365,7 @@
       "responses": [
         {
           "uuid": "24b21f5b-c1d4-41bf-8076-64c0ffe779d1",
-          "body": "{\n  \"id\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"title\": \"開催中のサンプル問題\",\n  \"statement\": \"# A + B\\n\\n整数 $A$, $B$ の和を出力してください。\\n\\n## 入力\\n```text\\nA B\\n```\\n\\n## 入力例\\n```text\\n1 2\\n```\\n\\n## 出力例\\n```text\\n3\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
+          "body": "{\n  \"id\": \"afa35e34-c0cf-55ba-a3d4-16a59852d9bd\",\n  \"title\": \"A + B\",\n  \"statement\": \"整数 $A$, $B$ の和を出力してください。\\n\\n## 入力\\n```text\\nA B\\n```\\n\\n## 入力例\\n```text\\n1 2\\n```\\n\\n## 出力例\\n```text\\n3\\n```\",\n  \"visibility\": \"public\",\n  \"revision\": \"7e75693c-91da-50e8-920c-7f268c7d99c4\",\n  \"currentVersionId\": null,\n  \"createdAt\": \"2026-10-01T07:00:00Z\",\n  \"updatedAt\": \"2026-10-01T07:00:00Z\",\n  \"createdByUserId\": \"bb4003b3-d8e0-5fd9-a8ed-2e1691e39368\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2913,10 +2913,10 @@
               "invert": true
             },
             {
-              "target": "body",
-              "modifier": "problemId",
-              "value": "afa35e34-c0cf-55ba-a3d4-16a59852d9bd",
-              "operator": "equals",
+              "target": "templating",
+              "modifier": "{{body 'context.contestId'}}/{{body 'problemId'}}",
+              "value": "^(4bea2487-758f-5acc-b44b-2959fbdc887f/(afa35e34-c0cf-55ba-a3d4-16a59852d9bd|e064ea23-4e10-5cb5-90d7-32d2e667520c)|00f34a9a-2232-4ab3-a13e-187a6173475e/afa35e34-c0cf-55ba-a3d4-16a59852d9bd)$",
+              "operator": "regex",
               "invert": true
             },
             {

@@ -26,15 +26,16 @@ const { view, refresh } = useContestProblemsQuery(contest)
           <li
             v-for="entry in page.problems"
             :key="entry.problemId"
-            class="flex items-start gap-4 py-5"
+            class="flex items-start gap-3 py-4"
           >
-            <span class="rounded-sm bg-background-secondary px-3 py-1 font-semibold">{{
-              entry.label
-            }}</span>
-            <div class="min-w-0 flex-1">
+            <span
+              class="min-w-9 shrink-0 rounded-sm bg-background-secondary px-3 py-1 text-center text-sm font-semibold"
+              >{{ entry.label }}</span
+            >
+            <div class="min-w-0 flex-1 py-0.5">
               <RouterLink
                 :to="contestProblemLocation(contestId, entry.problemId)"
-                class="wrap-break-word text-brand-primary underline underline-offset-2"
+                class="wrap-break-word text-brand-primary underline underline-offset-2 hover:text-brand-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
               >
                 {{ entry.problem?.title || `問題 ${entry.label}` }}
               </RouterLink>

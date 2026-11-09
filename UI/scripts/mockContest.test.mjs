@@ -52,6 +52,21 @@ test(
       files: [{ path: 'main.cpp', byteLength: 3, sha256: 'a'.repeat(64) }]
     }
     assert.equal((await post('/submissions/uploads', body, crypto.randomUUID(), false)).status, 401)
+    const problemB = { ...body, problemId: 'e064ea23-4e10-5cb5-90d7-32d2e667520c' }
+    assert.equal((await post('/submissions/uploads', problemB, crypto.randomUUID())).status, 201)
+    assert.equal(
+      (
+        await post(
+          '/submissions/uploads',
+          {
+            ...problemB,
+            context: { kind: 'contest', contestId: '00f34a9a-2232-4ab3-a13e-187a6173475e' }
+          },
+          crypto.randomUUID()
+        )
+      ).status,
+      403
+    )
     const uploadKey = crypto.randomUUID()
     const uploaded = await post('/submissions/uploads', body, uploadKey)
     assert.equal(uploaded.status, 201, await uploaded.clone().text())
