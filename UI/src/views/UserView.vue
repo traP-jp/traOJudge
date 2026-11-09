@@ -12,8 +12,7 @@ const { view, refresh } = useUserQuery(userId)
     <nav class="sticky top-14 h-header-offset">
       <SideMenuUserPage
         :user-id="userId"
-        :username="(view.status === 'success' ? view.data.name : '') ?? ''"
-        :icon-url="(view.status === 'success' ? view.data.iconUrl : '') ?? ''"
+        :username="view.status === 'success' ? view.data.displayName : ''"
       />
     </nav>
     <main class="flex-auto py-6">

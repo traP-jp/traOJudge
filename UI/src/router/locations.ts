@@ -12,9 +12,16 @@ export const useRouteId = () => {
   return computed(() => (typeof route.params.id === 'string' ? route.params.id : ''))
 }
 
-export const contestLocation = (contestId: string, tab: 'top' | 'editorials' = 'top') => ({
+export const contestLocation = (
+  contestId: string,
+  tab: 'top' | 'problems' | 'submit' | 'submissions' | 'clarifications' | 'editorials' = 'top'
+) => ({
   name: `contest-${tab}`,
   params: { contestId }
+})
+export const contestProblemLocation = (contestId: string, problemId: string) => ({
+  name: 'contest-problem',
+  params: { contestId, problemId }
 })
 export const contestEditorialLocation = (
   contestId: string,

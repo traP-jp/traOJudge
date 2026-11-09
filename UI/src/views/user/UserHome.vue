@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { User } from '@/api/generated'
+import type { Profile } from '@/api/client'
 import TextLink from '@/components/TextLink.vue'
 
-const { user } = defineProps<{ userId: string; user: User | null }>()
+const { user } = defineProps<{ userId: string; user: Profile | null }>()
 
 /**
  * GitHub username validation
@@ -35,20 +35,23 @@ const isValidXUsername = (username: string): boolean => {
   return X_USERNAME_REGEX.test(username)
 }
 
-const traqId = computed(() => user?.traqId ?? '')
+const atcoderId = computed(() => user?.atcoderId ?? '')
 const githubId = computed(() => user?.githubId ?? '')
 const xId = computed(() => user?.xId ?? '')
-const selfIntroduction = computed(() => user?.selfIntroduction ?? '')
+const selfIntroduction = computed(() => user?.bio ?? '')
 
 const isGithubIdValid = computed(() => isValidGithubUsername(githubId.value))
 const isXIdValid = computed(() => isValidXUsername(xId.value))
+const isAtcoderIdValid = computed(() => /^[A-Za-z0-9_]+$/.test(atcoderId.value))
 </script>
 
 <template>
   <div>
     <h2 class="fontstyle-ui-subtitle">自己紹介</h2>
   </div>
-  <div class="self-stretch py-4 fontstyle-ui-body">{{ selfIntroduction }}</div>
+  <div class="self-stretch py-4 fontstyle-ui-body wrap-break-word whitespace-pre-wrap">
+    {{ selfIntroduction }}
+  </div>
   <hr class="w-full border-border-primary" />
   <div class="flex flex-col items-start gap-2 py-4 fontstyle-ui-body text-text-primary">
     <div v-if="githubId" class="flex items-center">
@@ -73,11 +76,12 @@ const isXIdValid = computed(() => isValidXUsername(xId.value))
         <span v-else>@{{ xId }}</span>
       </span>
     </div>
-    <div v-if="traqId" class="flex items-center">
-      <span>
-        <img src="/src/assets/service_icons/traq.svg" alt="traQ" class="size-5" />
-      </span>
-      <span class="px-2"> @{{ traqId }} </span>
+    <div v-if="atcoderId" class="flex items-center gap-2">
+      <span>AtCoder</span>
+      <TextLink v-if="isAtcoderIdValid" :href="`https://atcoder.jp/users/${atcoderId}`" new-tab>{{
+        atcoderId
+      }}</TextLink>
+      <span v-else>{{ atcoderId }}</span>
     </div>
   </div>
 </template>

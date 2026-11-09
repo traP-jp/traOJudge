@@ -7,11 +7,10 @@ import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import { onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 
-import { type Language } from '@/api/generated'
 import { getSyntaxName, initializeCodeHighlighter } from '@/components/editor/codeHighlighter'
 
 const { language } = defineProps<{
-  language: Language
+  language: { name: string }
 }>()
 
 const model = defineModel<string | null>({ required: false })

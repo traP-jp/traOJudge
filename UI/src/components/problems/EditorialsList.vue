@@ -2,9 +2,10 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { EditorialsApi, type EditorialSummary, type User, UsersApi } from '@/api/generated'
+import { EditorialsApi, type EditorialSummary } from '@/api/generated'
 import MaterialIcon from '@/components/icons/MaterialIcon.vue'
 import ListingTable from '@/components/ListingTable.vue'
+import UserName from '@/components/users/UserName.vue'
 import type { Column } from '@/types/listingTable'
 import { dateToString } from '@/utils/date'
 
@@ -17,10 +18,8 @@ const router = useRouter()
 const isLoaded = ref<boolean>(false)
 const editorialIds = ref<string[]>([])
 const editorials = ref<Map<string, EditorialSummary>>(new Map())
-const users = ref<Map<string, User>>(new Map())
 
 const editorialsApi = new EditorialsApi()
-const usersApi = new UsersApi()
 
 async function loadEditorials() {
   isLoaded.value = false
@@ -31,11 +30,6 @@ async function loadEditorials() {
 
     editorialIds.value = summaries.map(({ id }) => id)
     editorials.value = new Map(summaries.map((editorial) => [editorial.id, editorial]))
-
-    const userIds = [...new Set(summaries.map((e) => e.authorId))]
-    const userPromises = userIds.map((userId) => usersApi.getUser({ userId }))
-    const userProfiles = await Promise.all(userPromises)
-    users.value = new Map(userProfiles.map((user: User) => [user.id, user]))
   } catch (error) {
     console.error('API Error:', error)
     alert(`API Error: ${String(error)}`)
@@ -81,7 +75,7 @@ function handleUserClick(userId: string) {
           class="flex items-center gap-1 text-text-primary hover:underline"
           @click="handleUserClick(editorials.get(rowId)?.authorId || '')"
         >
-          {{ users.get(editorials.get(rowId)?.authorId || '')?.name || 'Unknown' }}
+          <UserName :user-id="editorials.get(rowId)?.authorId || ''" />
           <MaterialIcon icon="open_in_new" size="20px" />
         </button>
       </template>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { User } from '@/api/generated'
+import type { Profile } from '@/api/client'
 import NumberedPagination from '@/components/controls/pagination/NumberedPagination.vue'
 import ProblemFilters from '@/components/problems/ProblemFilters.vue'
 import ProblemsList from '@/components/problems/ProblemsList.vue'
 import QueryState from '@/components/QueryState.vue'
 import { useProblemsQuery } from '@/composables/problems/useProblemsQuery'
 import { useListRoute } from '@/router/listConditions'
-const props = defineProps<{ userId: string; user: User | null }>()
+const props = defineProps<{ userId: string; user: Profile | null }>()
 const { conditions, updateConditions } = useListRoute()
 const { view, refresh } = useProblemsQuery(
   () => ({ kind: 'user', userId: props.userId }),
@@ -21,7 +21,7 @@ const { view, refresh } = useProblemsQuery(
       :difficulty-end="conditions.difficultyEnd"
       @filter="updateConditions($event)"
     >
-      <span class="mr-1">{{ props.user?.name }}</span
+      <span class="mr-1">{{ props.user?.displayName }}</span
       ><span class="grow">の問題</span>
     </ProblemFilters>
     <QueryState :view="view" @retry="refresh">
